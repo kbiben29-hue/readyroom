@@ -1,0 +1,10 @@
+.claude/worktrees
+/dist
+/coverage
+/package-lock.json
+/vendor
+/public/stcc
+/cards
+/tools/bin
+/venv
+/tmp

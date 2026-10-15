@@ -1,0 +1,17 @@
+# Only what the image needs; the STCC data is fetched inside the build from
+# the pinned upstream commit (tools/stcc-source.json), never copied from here.
+.git
+.claude
+node_modules
+dist
+server/data
+vendor/stcc
+public/stcc
+cards
+tts
+tmp
+rules/pdf
+venv
+**/__pycache__
+*.pdf
+coverage

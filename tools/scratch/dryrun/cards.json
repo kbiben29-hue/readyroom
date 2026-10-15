@@ -1,0 +1,182 @@
+[
+	{
+		"id": "dry-payres",
+		"cardId": null,
+		"name": "DRYRUN: Pay Resources",
+		"suit": "PERSON",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "GAIN_ACTION",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "dry-paydiscard",
+		"cardId": null,
+		"name": "DRYRUN: Pay Discard",
+		"suit": "PERSON",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"filter": {
+							"suits": ["CARGO"]
+						},
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_ACTION",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "dry-reaction-may",
+		"cardId": null,
+		"name": "DRYRUN: Reaction May",
+		"suit": "LOCATION",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_PLAYED",
+					"filter": {
+						"suits": ["ENCOUNTER"]
+					},
+					"seat": "SELF"
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "GAIN_RESOURCE",
+						"res": "GLO",
+						"amount": 1
+					}
+				}
+			}
+		],
+		"locationTier": "STARTING"
+	},
+	{
+		"id": "dry-support-person",
+		"cardId": null,
+		"name": "Support Person",
+		"suit": "PERSON",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": []
+	},
+	{
+		"id": "dry-support-cargo-a",
+		"cardId": null,
+		"name": "Cargo Pod A",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": []
+	},
+	{
+		"id": "dry-support-cargo-b",
+		"cardId": null,
+		"name": "Cargo Pod B",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": []
+	},
+	{
+		"id": "dry-support-cargo-c",
+		"cardId": null,
+		"name": "Cargo Pod C",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": []
+	},
+	{
+		"id": "dry-support-ship",
+		"cardId": null,
+		"name": "DrySupportShip",
+		"suit": "SHIP",
+		"deck": "COMMON",
+		"traits": ["ATTACK"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": []
+	}
+]

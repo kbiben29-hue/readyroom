@@ -1,0 +1,506 @@
+[
+	{
+		"deck": "KOL",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 11,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 7
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 7
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1KOL/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									},
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP", "LOCATION"]
+								}
+							},
+							"value": 6
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Enlist two Reserves",
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "ENLIST_RESERVE"
+											},
+											{
+												"k": "ENLIST_RESERVE"
+											}
+										]
+									}
+								},
+								{
+									"label": "Enlist a Development",
+									"body": {
+										"k": "ENLIST_DEVELOPMENT"
+									}
+								}
+							]
+						},
+						{
+							"k": "DISMISS",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "KOL",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 2
+					},
+					{
+						"step": 11,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1KOL/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									},
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP", "LOCATION"]
+								}
+							},
+							"value": 6
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Enlist two Reserves",
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "ENLIST_RESERVE"
+											},
+											{
+												"k": "ENLIST_RESERVE"
+											}
+										]
+									}
+								},
+								{
+									"label": "Enlist a Development",
+									"body": {
+										"k": "ENLIST_DEVELOPMENT"
+									}
+								}
+							]
+						},
+						{
+							"k": "DISMISS",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							}
+						}
+					]
+				},
+				"vp": 3
+			},
+			{
+				"index": 1,
+				"cardId": "1KOL/M2",
+				"goal": {
+					"k": "SAME_SHIP",
+					"requirements": [
+						{
+							"filter": {
+								"traits": ["ROMULAN"]
+							}
+						},
+						{
+							"filter": {
+								"traits": ["KLINGON"]
+							}
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": ["IN_PLAY"],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["ROMULAN"]
+									}
+								}
+							}
+						},
+						{
+							"k": "ENLIST_DEVELOPMENT",
+							"free": true,
+							"filter": {
+								"ids": ["1KOL03-24"]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "JUNK",
+								"target": {
+									"zones": [
+										{
+											"k": "MARKET_OFFER",
+											"suit": "PERSON"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "CARGO"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "SHIP"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "ALLY"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				"vp": 1
+			},
+			{
+				"index": 2,
+				"cardId": "1KOL/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "DIFFERENT_SPECIES_IN_PLAY",
+							"count": 2,
+							"filter": {
+								"not": {
+									"traits": ["KLINGON"]
+								}
+							}
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["WEAPON"],
+									"not": {
+										"suits": ["CAPTAIN"]
+									}
+								}
+							},
+							"value": 2
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["SCIENTIST"]
+								}
+							},
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_RESERVE"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FORCE",
+								"body": {
+									"k": "TAKE",
+									"deck": "INCIDENT",
+									"count": 2
+								}
+							}
+						}
+					]
+				},
+				"vp": 4,
+				"isAttack": true
+			}
+		]
+	}
+]

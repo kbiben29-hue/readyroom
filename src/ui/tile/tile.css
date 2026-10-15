@@ -1,0 +1,615 @@
+/* <CardTile> (src/ui/tile/CardTile.tsx, docs/ui-mobile.md §3).
+ *
+ * One component, four densities, chosen by the width of the SLOT through a
+ * container query — never the viewport:
+ *
+ *   pip   ≤ 66px   suit glyph, VP                         stacks, counts
+ *   chip  ≤ 112px  suit, 2-line name, first line clipped  hand dock
+ *   tile  ≤ 180px  name, VP, tokens, every line (small)   Market grid
+ *   wide  > 180px  + traits, skill/focus icons, state chips, why-not
+ *
+ * The markup always carries every part; the rules below hide what a density
+ * does not show. Every class is `pb-` prefixed (the console's ui.css owns the
+ * bare names). Tokens come from lcars.css; the few extra greys are local. */
+
+.pb-slot {
+	container: pb-slot / inline-size;
+	min-width: 0;
+	--pb-raise: #1e2231;
+	--pb-hair-2: #3a4056;
+	--pb-faint: #6f6c80;
+}
+
+.pb-gl {
+	display: inline-block;
+	width: 1.3em;
+	height: 1.3em;
+	flex: none;
+	vertical-align: -0.28em;
+	font-style: normal;
+}
+.pb-gl:has(> .pb-img) {
+	width: auto;
+}
+.pb-img {
+	display: block;
+	height: 100%;
+	width: auto;
+}
+.pb-mask {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: currentColor;
+	mask: center / contain no-repeat;
+	-webkit-mask: center / contain no-repeat;
+}
+.pb-gl svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.9;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	overflow: visible;
+}
+.pb-g-DIL {
+	color: var(--sh-dil);
+}
+.pb-g-LAT {
+	color: var(--sh-lat);
+}
+.pb-g-GLO {
+	color: var(--sh-glo);
+}
+.pb-g-ACT {
+	color: var(--sh-act);
+}
+.pb-g-VP {
+	color: var(--sh-vp);
+}
+.pb-g-RESEARCH {
+	color: var(--research);
+}
+.pb-g-INFLUENCE {
+	color: var(--influence);
+}
+.pb-g-MILITARY {
+	color: var(--military);
+}
+.pb-g-AWAY {
+	color: var(--ice);
+}
+.pb-suit-PERSON {
+	color: var(--sh-person);
+}
+.pb-suit-CARGO {
+	color: var(--sh-cargo);
+}
+.pb-suit-SHIP {
+	color: var(--sh-ship);
+}
+.pb-suit-ALLY {
+	color: var(--sh-ally);
+}
+.pb-suit-LOCATION {
+	color: var(--sh-location);
+}
+.pb-suit-DIRECTIVE {
+	color: var(--sh-directive);
+}
+.pb-suit-INCIDENT {
+	color: var(--sh-incident);
+}
+.pb-suit-ENCOUNTER {
+	color: var(--sh-encounter);
+}
+.pb-suit-CAPTAIN {
+	color: var(--sh-captain);
+}
+.pb-suit-STATUS,
+.pb-suit-MISSION {
+	color: var(--sh-status);
+}
+
+/* ------------------------------------------------------------ the tile */
+.pb-tile {
+	--sc: var(--sh-directive);
+	position: relative;
+	display: block;
+	width: 100%;
+	padding: 8px 8px 7px 12px;
+	overflow: hidden;
+	text-align: left;
+	color: var(--text);
+	background: var(--panel-2);
+	border: 1px solid var(--hair);
+	border-radius: 10px;
+	font:
+		400 14px/1.4 'Barlow',
+		sans-serif;
+}
+.pb-tile::before {
+	content: '';
+	position: absolute;
+	inset: 0 auto 0 0;
+	width: 4px;
+	background: var(--sc);
+}
+.pb-tile.s-PERSON {
+	--sc: var(--sh-person);
+}
+.pb-tile.s-CARGO {
+	--sc: var(--sh-cargo);
+}
+.pb-tile.s-SHIP {
+	--sc: var(--sh-ship);
+}
+.pb-tile.s-ALLY {
+	--sc: var(--sh-ally);
+}
+.pb-tile.s-LOCATION {
+	--sc: var(--sh-location);
+}
+.pb-tile.s-DIRECTIVE {
+	--sc: var(--sh-directive);
+}
+.pb-tile.s-INCIDENT {
+	--sc: var(--sh-incident);
+}
+.pb-tile.s-ENCOUNTER {
+	--sc: var(--sh-encounter);
+}
+.pb-tile.s-CAPTAIN {
+	--sc: var(--sh-captain);
+}
+.pb-tile.s-STATUS,
+.pb-tile.s-MISSION {
+	--sc: var(--sh-status);
+}
+.pb-tile[role='button'] {
+	cursor: pointer;
+}
+
+.pb-th {
+	display: flex;
+	align-items: flex-start;
+	gap: 6px;
+	min-height: 20px;
+}
+.pb-th[role='button'] {
+	cursor: pointer;
+	border-radius: 6px;
+}
+.pb-sg {
+	color: var(--sc);
+	width: 17px;
+	height: 17px;
+	margin-top: -1px;
+}
+.pb-th h4 {
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+	font:
+		600 14px/1.12 'Antonio',
+		'Arial Narrow',
+		sans-serif;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	overflow-wrap: anywhere;
+}
+.pb-vp {
+	flex: none;
+	padding: 3px 5px 2px;
+	border: 1px solid color-mix(in srgb, var(--sh-vp) 45%, transparent);
+	border-radius: 5px;
+	font:
+		700 12px/1 'Antonio',
+		sans-serif;
+	color: var(--sh-vp);
+}
+.pb-vp.pb-neg {
+	color: #ff8a80;
+	border-color: color-mix(in srgb, #ff8a80 45%, transparent);
+}
+.pb-tok {
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	padding: 3px 6px 2px 4px;
+	border-radius: 999px;
+	font:
+		600 12px/1 'Antonio',
+		sans-serif;
+	color: var(--sh-glo);
+	background: color-mix(in srgb, var(--sh-glo) 14%, transparent);
+}
+.pb-tok .pb-gl {
+	width: 13px;
+	height: 13px;
+}
+.pb-tok-DIL {
+	color: var(--sh-dil);
+	background: color-mix(in srgb, var(--sh-dil) 14%, transparent);
+}
+.pb-tok-LAT {
+	color: var(--sh-lat);
+	background: color-mix(in srgb, var(--sh-lat) 14%, transparent);
+}
+
+.pb-traits {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 3px;
+	margin: 6px 0 0;
+	font:
+		600 13px/1.3 'Antonio',
+		sans-serif;
+}
+.pb-traits .pb-gl {
+	width: 15px;
+	height: 15px;
+}
+.pb-traits .pb-skill,
+.pb-traits .pb-focus {
+	padding: 1px;
+	border: 1.3px solid currentColor;
+	width: 17px;
+	height: 17px;
+}
+.pb-traits .pb-skill:has(> .pb-img),
+.pb-traits .pb-focus:has(> .pb-img) {
+	padding: 0;
+	border: none;
+	width: auto;
+}
+.pb-traits .pb-skill {
+	border-radius: 3px;
+}
+.pb-traits .pb-focus {
+	border-radius: 50%;
+}
+.pb-traits .pb-variable {
+	border-style: dashed;
+}
+.pb-traits .sh-trait {
+	font-size: 0.7em;
+}
+
+.pb-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-top: 6px;
+}
+.pb-meta:empty {
+	display: none;
+}
+.pb-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 4px 7px 3px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--pb-raise);
+	color: #d9d2c3;
+	font:
+		600 10.5px/1 'Antonio',
+		sans-serif;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.pb-chip .pb-gl {
+	width: 12px;
+	height: 12px;
+}
+.pb-chip-btn {
+	cursor: pointer;
+	min-height: 28px;
+}
+.pb-chip-seat {
+	color: var(--ice);
+	background: color-mix(in srgb, var(--ice) 14%, transparent);
+}
+.pb-opp .pb-chip-seat {
+	color: var(--salmon);
+	background: color-mix(in srgb, var(--salmon) 14%, transparent);
+}
+.pb-chip-warn {
+	color: var(--sunflower);
+}
+.pb-pool {
+	display: inline-flex;
+	gap: 1px;
+}
+.pb-pool .pb-out {
+	color: var(--pb-hair-2);
+}
+.pb-opp .pb-g-AWAY {
+	color: var(--salmon);
+}
+.pb-opp {
+	border-color: color-mix(in srgb, var(--salmon) 30%, var(--hair));
+}
+
+/* ------------------------------------------------------------ lines */
+.pb-lines {
+	display: grid;
+	gap: 2px;
+	margin-top: 6px;
+}
+.pb-nolines {
+	padding: 2px 4px;
+	font:
+		500 12px/1.3 'Barlow',
+		sans-serif;
+	color: var(--pb-faint);
+}
+.pb-ln {
+	position: relative;
+	display: grid;
+	gap: 2px;
+	padding: 4px 6px 4px 4px;
+	border-radius: 7px;
+}
+.pb-ln .sh-line {
+	font-size: 13px;
+}
+.pb-lit {
+	min-height: 44px;
+	align-content: center;
+	padding-right: 22px;
+	cursor: pointer;
+	background: color-mix(in srgb, var(--orange) 11%, transparent);
+	box-shadow: inset 2px 0 0 var(--orange);
+}
+.pb-lit::after {
+	content: '›';
+	position: absolute;
+	right: 7px;
+	top: 50%;
+	translate: 0 -50%;
+	color: var(--orange);
+	font:
+		700 17px/1 'Antonio',
+		sans-serif;
+}
+.pb-lit:hover {
+	background: color-mix(in srgb, var(--orange) 17%, transparent);
+}
+.pb-dim > .sh-line,
+.pb-later > .sh-line,
+.pb-na > .sh-line {
+	opacity: 0.4;
+}
+.pb-done {
+	box-shadow: inset 2px 0 0 #57c98a;
+}
+.pb-why {
+	font:
+		500 11.5px/1.3 'Barlow',
+		sans-serif;
+	color: #d6a79f;
+	padding-left: 2px;
+}
+.pb-why::before {
+	content: 'Why not: ';
+	color: var(--pb-faint);
+}
+.pb-why-cand {
+	margin-top: 6px;
+}
+.pb-via {
+	font:
+		500 11px/1.2 'Barlow',
+		sans-serif;
+	color: var(--dim);
+}
+
+/* ------------------------------------------------------------ state */
+.pb-cand {
+	border-color: var(--orange);
+	box-shadow:
+		0 0 0 1.5px var(--orange),
+		0 0 26px -6px var(--orange);
+	animation: pb-ring 1.8s ease-in-out infinite;
+}
+.pb-picked {
+	border-color: var(--orange);
+	box-shadow: 0 0 0 2.5px var(--orange);
+	animation: none;
+}
+.pb-picked::after {
+	content: '✓';
+	position: absolute;
+	bottom: 5px;
+	right: 6px;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	display: grid;
+	place-items: center;
+	background: var(--orange);
+	color: #1a0f00;
+	font:
+		700 12px/1 'Antonio',
+		sans-serif;
+}
+.pb-blocked {
+	opacity: 0.55;
+}
+@keyframes pb-ring {
+	50% {
+		box-shadow:
+			0 0 0 1.5px var(--orange),
+			0 0 8px -6px var(--orange);
+	}
+}
+
+.pb-back {
+	min-height: 64px;
+	display: grid;
+	place-items: center;
+	background: repeating-linear-gradient(
+		135deg,
+		#171a26 0 6px,
+		#12141e 6px 12px
+	);
+}
+.pb-back::before {
+	display: none;
+}
+.pb-backface {
+	display: grid;
+	justify-items: center;
+	gap: 4px;
+	font:
+		600 11px/1 'Antonio',
+		sans-serif;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--dim);
+}
+.pb-backface .pb-sg {
+	color: var(--dim);
+}
+
+/* ------------------------------------------------------------ tile ≤180 */
+@container pb-slot (max-width: 180px) {
+	.pb-tile {
+		padding: 7px 6px 6px 10px;
+	}
+	.pb-th h4 {
+		font-size: 12.5px;
+	}
+	.pb-traits,
+	.pb-meta,
+	.pb-why,
+	.pb-via {
+		display: none;
+	}
+	.pb-ln {
+		padding: 3px;
+	}
+	.pb-ln .sh-line {
+		font-size: 12px;
+	}
+	.pb-lit {
+		padding-right: 18px;
+	}
+	.pb-lit::after {
+		right: 5px;
+	}
+}
+
+/* ------------------------------------------------------------ chip ≤112 */
+@container pb-slot (max-width: 112px) {
+	.pb-tile {
+		padding: 6px 5px 5px 8px;
+	}
+	.pb-tile::before {
+		width: 3px;
+	}
+	.pb-th {
+		gap: 4px;
+	}
+	.pb-sg {
+		width: 13px;
+		height: 13px;
+	}
+	.pb-th h4 {
+		font-size: 11px;
+		line-height: 1.1;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.pb-vp,
+	.pb-tok {
+		display: none;
+	}
+	.pb-lines {
+		margin-top: 5px;
+	}
+	.pb-ln:not(:first-child),
+	.pb-nolines {
+		display: none;
+	}
+	.pb-ln,
+	.pb-lit {
+		min-height: 0;
+		padding: 0;
+		background: none;
+		box-shadow: none;
+	}
+	.pb-ln::after {
+		display: none;
+	}
+	.pb-ln .sh-line {
+		font-size: 11px;
+	}
+	.pb-ln .sh-body {
+		flex-wrap: nowrap;
+		overflow: hidden;
+		mask-image: linear-gradient(90deg, #000 70%, transparent);
+		-webkit-mask-image: linear-gradient(90deg, #000 70%, transparent);
+	}
+	.pb-picked::after {
+		width: 14px;
+		height: 14px;
+		font-size: 10px;
+		bottom: 3px;
+		right: 3px;
+	}
+}
+
+/* ------------------------------------------------------------ pip ≤66 */
+@container pb-slot (max-width: 66px) {
+	.pb-tile {
+		display: grid;
+		place-items: center;
+		aspect-ratio: 5 / 7;
+		padding: 6px 3px;
+		border-radius: 7px;
+	}
+	.pb-tile::before {
+		inset: 0 0 auto 0;
+		width: auto;
+		height: 3px;
+	}
+	.pb-th {
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+	}
+	.pb-sg {
+		width: 18px;
+		height: 18px;
+	}
+	.pb-th h4,
+	.pb-lines,
+	.pb-traits,
+	.pb-meta,
+	.pb-why {
+		display: none;
+	}
+	.pb-vp {
+		display: block;
+		font-size: 11px;
+		padding: 2px 4px 1px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.pb-cand {
+		animation: none;
+	}
+}

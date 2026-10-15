@@ -1,0 +1,365 @@
+[
+	{
+		"deck": "SHR",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 11,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1SHR/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "CONTROLS_LOCATION",
+							"count": 3
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["WEAPON"]
+								}
+							},
+							"value": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 1,
+							"suits": ["SHIP"]
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "SHR",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 2
+					},
+					{
+						"step": 11,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1SHR/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "CONTROLS_LOCATION",
+							"count": 3
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["WEAPON"]
+								}
+							},
+							"value": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 1,
+							"suits": ["SHIP"]
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						}
+					]
+				},
+				"vp": 2
+			},
+			{
+				"index": 1,
+				"cardId": "1SHR/M2",
+				"goal": {
+					"k": "SAME_SHIP",
+					"requirements": [
+						{
+							"filter": {
+								"traits": ["HUMAN"]
+							}
+						},
+						{
+							"count": 3,
+							"different": [
+								"VULCAN",
+								"TELLARITE",
+								"ANDORIAN",
+								"ALIEN",
+								"AMBASSADOR",
+								"COMMUNICATION"
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 2
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 2
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 2
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"],
+										"traits": ["STARBASE"]
+									}
+								}
+							}
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 2,
+				"cardId": "1SHR/M3",
+				"goal": {
+					"k": "COUNT_AT_LEAST",
+					"query": {
+						"zones": ["IN_PLAY"],
+						"seat": "SELF",
+						"filter": {
+							"traits": ["BUSINESS"]
+						}
+					},
+					"value": 3
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 1,
+							"suits": ["CARGO"]
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 2
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FREE_PLAY",
+										"filter": {
+											"suits": ["INCIDENT"]
+										},
+										"bind": "$mission.played"
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "DID",
+											"bind": "$mission.played"
+										},
+										"then": {
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				},
+				"vp": 3
+			}
+		]
+	}
+]

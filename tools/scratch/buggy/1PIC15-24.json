@@ -1,0 +1,62 @@
+[
+	{
+		"id": "1PIC15-24",
+		"cardId": "1PIC15/24",
+		"suit": "DIRECTIVE",
+		"deck": "PIC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["SHIP"]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"filter": {
+							"suits": ["CARGO"]
+						},
+						"count": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["CARGO"]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				}
+			}
+		]
+	}
+]

@@ -1,0 +1,2557 @@
+[
+	{
+		"id": "1SEL01-24",
+		"cardId": "1SEL01/24",
+		"suit": "CAPTAIN",
+		"deck": "SEL",
+		"traits": ["SHADY", "HUMAN", "ROMULAN"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "ATTACK_MADE"
+				},
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Gain 1 {DIL}",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							}
+						},
+						{
+							"label": "Gain 1 {LAT}",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "LAT",
+								"amount": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_DISCARD",
+								"count": 1,
+								"filter": {
+									"ids": ["1SEL21-24", "1KOL16-24", "1SEL10-24"]
+								}
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "LAT",
+								"amount": 3
+							}
+						]
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": ["KLINGON", "VULCAN", "STARFLEET"]
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "COUNT",
+						"query": {
+							"zones": ["ALL_OWNED"],
+							"seat": "SELF",
+							"filter": {
+								"traits": ["ATTACK"],
+								"not": {
+									"traits": ["ROMULAN", "REMAN"]
+								}
+							}
+						}
+					}
+				}
+			}
+		],
+		"awayTeams": 4
+	},
+	{
+		"id": "1SEL02-24",
+		"cardId": "1SEL02/24",
+		"suit": "SHIP",
+		"deck": "SEL",
+		"traits": ["CLOAK", "ROMULAN"],
+		"skills": ["SKILL_MILITARY"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"ignoreBlocking": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": ["PERSON"]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL03-24",
+		"cardId": "1SEL03/24",
+		"suit": "SHIP",
+		"deck": "SEL",
+		"traits": ["CLOAK", "ATTACK", "ROMULAN"],
+		"skills": ["SKILL_ANY"],
+		"focus": null,
+		"vp": 4,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 5
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"ignoreBlocking": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "WARP",
+									"ship": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": ["SHIP"]
+										},
+										"thisCard": true
+									},
+									"to": {
+										"zones": ["LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										}
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"count": 1,
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 1
+							},
+							{
+								"k": "FORCE",
+								"body": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"seat": "SELF",
+										"filter": {
+											"suits": ["SHIP"]
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL04-24",
+		"cardId": "1SEL04/24",
+		"suit": "PERSON",
+		"deck": "SEL",
+		"traits": ["ROMULAN"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 3,
+							"bind": ["$1sel04.d1", "$1sel04.d2", "$1sel04.d3"]
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Spend 1 DIL to keep it",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_RESOURCE",
+											"res": "DIL",
+											"amount": 1
+										},
+										"body": {
+											"k": "NOOP"
+										}
+									}
+								},
+								{
+									"label": "Discard it",
+									"body": {
+										"k": "DISCARD",
+										"count": 1,
+										"from": "HAND",
+										"onlyBound": ["$1sel04.d1"]
+									}
+								}
+							]
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Spend 1 DIL to keep it",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_RESOURCE",
+											"res": "DIL",
+											"amount": 1
+										},
+										"body": {
+											"k": "NOOP"
+										}
+									}
+								},
+								{
+									"label": "Discard it",
+									"body": {
+										"k": "DISCARD",
+										"count": 1,
+										"from": "HAND",
+										"onlyBound": ["$1sel04.d2"]
+									}
+								}
+							]
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Spend 1 DIL to keep it",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_RESOURCE",
+											"res": "DIL",
+											"amount": 1
+										},
+										"body": {
+											"k": "NOOP"
+										}
+									}
+								},
+								{
+									"label": "Discard it",
+									"body": {
+										"k": "DISCARD",
+										"count": 1,
+										"from": "HAND",
+										"onlyBound": ["$1sel04.d3"]
+									}
+								}
+							]
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							}
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISMISS",
+						"count": 1,
+						"filter": {
+							"suits": ["SHIP"]
+						}
+					},
+					"body": {
+						"k": "DRAW",
+						"count": 2
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL05-24",
+		"cardId": "1SEL05/24",
+		"suit": "PERSON",
+		"deck": "SEL",
+		"traits": ["ROMULAN", "IMPERIAL", "COMMUNICATION"],
+		"skills": ["SKILL_INFLUENCE"],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": ["INCIDENT"]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": ["ROMULAN"]
+									}
+								},
+								"body": {
+									"k": "PROMOTE",
+									"from": "STAGING",
+									"target": "THIS"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "LOCATION_CONTROLLED"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_ACTION",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL06-24",
+		"cardId": "1SEL06/24",
+		"suit": "PERSON",
+		"deck": "SEL",
+		"traits": ["HUMAN", "REMAN", "ATTACK", "IMPERIAL"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 3
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "LAT",
+									"amount": 2
+								},
+								"body": {
+									"k": "SCAN_FOR_TRAIT",
+									"traits": ["SYNTHETIC"]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"ids": ["1SEL07-24"]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						},
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "LOG",
+							"target": {
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"traits": ["ROMULAN"]
+								}
+							},
+							"bind": "$1sel06.logged"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$1sel06.logged"
+							},
+							"then": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "MILITARY",
+								"amount": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL07-24",
+		"cardId": "1SEL07/24",
+		"suit": "SHIP",
+		"deck": "SEL",
+		"traits": ["CLOAK", "REMAN", "ATTACK"],
+		"skills": ["SKILL_MILITARY"],
+		"focus": null,
+		"vp": 4,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 5
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {
+								"traits": ["ROMULAN"]
+							},
+							"zones": [
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							],
+							"bind": "$1sel07.found"
+						},
+						{
+							"k": "DESTROY",
+							"target": {
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									}
+								],
+								"bound": "$1sel07.found"
+							}
+						},
+						{
+							"k": "BEAM",
+							"count": 1,
+							"to": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": ["1SEL19-24"]
+								}
+							},
+							"bind": "$1sel07.beamed"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": ["$1sel07.found", "$1sel07.beamed"]
+							},
+							"then": {
+								"k": "DEPLOY",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									},
+									"thisCard": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WARP",
+					"ship": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": ["SHIP"]
+						},
+						"thisCard": true
+					},
+					"to": {
+						"zones": ["LOCATIONS"],
+						"filter": {
+							"suits": ["LOCATION"]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": true,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 7
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "LOG",
+							"target": {
+								"zones": ["IN_PLAY"],
+								"seat": "OPPONENT",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"bind": "logged"
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": {
+								"k": "ICON_COUNT",
+								"bind": "logged",
+								"kind": "SKILL"
+							}
+						},
+						{
+							"k": "DISMISS",
+							"target": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 9
+				},
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": {
+						"zones": ["NEUTRAL_LOCATIONS"],
+						"filter": {
+							"suits": ["LOCATION"]
+						},
+						"atThisShip": true
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL08-24",
+		"cardId": "1SEL08/24",
+		"suit": "CARGO",
+		"deck": "SEL",
+		"traits": ["ONGOING", "ANOMALY", "ROMULAN"],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_DISMISS",
+			"count": 1,
+			"filter": {
+				"suits": ["SHIP"]
+			}
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "FIND",
+									"filter": {
+										"traits": ["ENGINEER", "OPS"]
+									},
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										},
+										{
+											"k": "DRAW",
+											"seat": 0
+										},
+										{
+											"k": "RESERVE",
+											"seat": 0
+										}
+									]
+								}
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							},
+							"body": {
+								"k": "DEPLOY",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 3
+				},
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "1CAR05_DUTY"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": ["ENGINEER"]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 2,
+								"bind": ["$1sel08.one", "$1sel08.two"]
+							},
+							{
+								"k": "PUT_ON_DECK_TOP",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										}
+									],
+									"bound": ["$1sel08.one", "$1sel08.two"]
+								}
+							}
+						]
+					}
+				}
+			}
+		],
+		"passives": ["1CAR05_DUTY"]
+	},
+	{
+		"id": "1SEL09-24",
+		"cardId": "1SEL09/24",
+		"suit": "DIRECTIVE",
+		"deck": "SEL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 4
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["SHIP"]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["CARGO"]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL10-24",
+		"cardId": "1SEL10/24",
+		"suit": "DIRECTIVE",
+		"deck": "SEL",
+		"traits": [],
+		"skills": ["SKILL_ANY"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "COST_DISCARD",
+											"count": 1,
+											"filter": {
+												"suits": ["PERSON"]
+											}
+										},
+										{
+											"k": "COST_TAKE_INCIDENT",
+											"count": 1
+										}
+									]
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 2,
+									"target": {
+										"zones": ["LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										},
+										"withShip": true
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISMISS",
+									"count": 1,
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								},
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Gain a PERSON",
+											"body": {
+												"k": "GAIN_CARD",
+												"suits": ["PERSON"]
+											}
+										},
+										{
+											"label": "Gain a SHIP",
+											"body": {
+												"k": "GAIN_CARD",
+												"suits": ["SHIP"]
+											}
+										},
+										{
+											"label": "Gain an ALLY",
+											"body": {
+												"k": "GAIN_CARD",
+												"suits": ["ALLY"]
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL11-24",
+		"cardId": "1SEL11/24",
+		"suit": "DIRECTIVE",
+		"deck": "SEL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REMOVE_AWAY_TEAM",
+						"count": 3,
+						"from": {
+							"zones": [
+								{
+									"k": "LOCATION_AREA",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						},
+						"distinct": true
+					},
+					"body": {
+						"k": "TAKE",
+						"deck": "ENCOUNTER",
+						"count": 1,
+						"look": 2,
+						"returnUnpicked": true
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 10
+							},
+							{
+								"k": "COST_LOG",
+								"filter": {
+									"suits": ["LOCATION"]
+								},
+								"from": {
+									"k": "LOCATION_AREA",
+									"seat": 0
+								},
+								"bind": "$1sel11.logged"
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "NOT",
+									"term": {
+										"k": "BOUND_SHARES_TRAIT",
+										"bind": "$1sel11.logged",
+										"with": {
+											"zones": [
+												{
+													"k": "CAPTAIN",
+													"seat": 0
+												}
+											]
+										}
+									}
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "INFLUENCE",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL12-24",
+		"cardId": "1SEL12/24",
+		"suit": "PERSON",
+		"deck": "SEL",
+		"traits": ["VULCAN", "ROMULAN", "AMBASSADOR", "SPY"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 4
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "LAT",
+								"amount": 1
+							},
+							"body": {
+								"k": "TRIGGER_CONTROL",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								}
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "1PER23_HAND"
+				}
+			}
+		],
+		"passives": ["1PER23_HAND"]
+	},
+	{
+		"id": "1SEL13-24",
+		"cardId": "1SEL13/24",
+		"suit": "INCIDENT",
+		"deck": "SEL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "HAS_TRAIT_IN_PLAY",
+									"trait": "ENGINEER"
+								},
+								"then": {
+									"k": "GAIN_ACTION",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL14-24",
+		"cardId": "1SEL14/24",
+		"suit": "PERSON",
+		"deck": "SEL",
+		"traits": ["ATTACK", "ROMULAN"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							},
+							"body": {
+								"k": "GAIN_CARD",
+								"suits": ["SHIP"]
+							}
+						},
+						{
+							"k": "LET",
+							"bind": "$1sel14.dos",
+							"value": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 1
+									}
+								],
+								"seat": "OPPONENT",
+								"filter": {
+									"traits": ["STARFLEET"]
+								}
+							},
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FOR_EACH",
+										"over": {
+											"zones": [
+												{
+													"k": "DUTY_OFFICER",
+													"seat": 1
+												}
+											],
+											"seat": "OPPONENT",
+											"bound": "$1sel14.dos"
+										},
+										"bind": "$1sel14.do",
+										"body": {
+											"k": "DISMISS",
+											"target": {
+												"zones": [
+													{
+														"k": "DUTY_OFFICER",
+														"seat": 1
+													}
+												],
+												"seat": "OPPONENT",
+												"bound": "$1sel14.do"
+											}
+										}
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													{
+														"k": "DISCARD",
+														"seat": 1
+													}
+												],
+												"seat": "OPPONENT",
+												"bound": "$1sel14.dos"
+											},
+											"value": 1
+										},
+										"then": {
+											"k": "FORCE",
+											"body": {
+												"k": "DISCARD",
+												"count": 1,
+												"from": "HAND"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "DRAW_FROM_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": ["SHIP"]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "DRAW_FROM_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": ["ATTACK"]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL15-24",
+		"cardId": "1SEL15/24",
+		"suit": "CARGO",
+		"deck": "SEL",
+		"traits": ["ATTACK", "WEAPON", "ROMULAN"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": ["ROMULAN"]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "REPEAT",
+								"times": {
+									"k": "UP_TO",
+									"max": 2
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "REMOVE_AWAY_TEAM",
+											"count": 1,
+											"target": {
+												"zones": ["NEUTRAL_LOCATIONS"],
+												"filter": {
+													"suits": ["LOCATION"]
+												},
+												"withShip": true
+											},
+											"whose": "OPPONENT",
+											"bind": "$1sel15.loc"
+										},
+										{
+											"k": "IF",
+											"cond": {
+												"k": "DID",
+												"bind": "$1sel15.loc"
+											},
+											"then": {
+												"k": "GAIN_RESOURCE",
+												"res": "GLO",
+												"amount": 1
+											}
+										}
+									]
+								}
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "JUNK",
+									"target": {
+										"zones": [
+											{
+												"k": "MARKET_OFFER",
+												"suit": "PERSON"
+											},
+											{
+												"k": "MARKET_OFFER",
+												"suit": "CARGO"
+											},
+											{
+												"k": "MARKET_OFFER",
+												"suit": "SHIP"
+											},
+											{
+												"k": "MARKET_OFFER",
+												"suit": "ALLY"
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL16-24",
+		"cardId": "1SEL16/24",
+		"suit": "PERSON",
+		"deck": "SEL",
+		"traits": ["ROMULAN", "ENGINEER"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "DRAW_FROM_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": ["CLOAK"]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": ["CLOAK"]
+					}
+				},
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL17-24",
+		"cardId": "1SEL17/24",
+		"suit": "SHIP",
+		"deck": "SEL",
+		"traits": ["CLOAK", "ROMULAN"],
+		"skills": ["SKILL_INFLUENCE"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"ignoreBlocking": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL18-24",
+		"cardId": "1SEL18/24",
+		"suit": "PERSON",
+		"deck": "SEL",
+		"traits": ["ROMULAN", "OPS"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_DISCARD",
+								"count": 1,
+								"filter": {
+									"traits": ["ATTACK"]
+								}
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							}
+						]
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": ["SHADY"]
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DRAW",
+					"count": {
+						"k": "MIN",
+						"terms": [
+							{
+								"k": "PER",
+								"every": 2,
+								"of": {
+									"k": "COUNT",
+									"query": {
+										"zones": ["IN_PLAY"],
+										"seat": "SELF",
+										"filter": {
+											"allTraits": ["SHADY"]
+										}
+									}
+								}
+							},
+							4
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "FREE_PLAY",
+									"filter": {
+										"traits": ["ATTACK"]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL19-24",
+		"cardId": "1SEL19/24",
+		"suit": "LOCATION",
+		"deck": "SEL",
+		"traits": ["REMAN", "ATTACK"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "FORCE",
+					"body": {
+						"k": "DISCARD",
+						"count": 1,
+						"from": "HAND"
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": ["REMAN"]
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 2
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL20-24",
+		"cardId": "1SEL20/24",
+		"suit": "LOCATION",
+		"deck": "SEL",
+		"traits": ["ROMULAN", "IMPERIAL"],
+		"skills": ["SKILL_MILITARY", "SKILL_INFLUENCE"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "FREE_PLAY",
+						"filter": {
+							"suits": ["SHIP"]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"seat": "SELF",
+								"value": 1
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"seat": "SELF",
+								"value": 3
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL21-24",
+		"cardId": "1SEL21/24",
+		"suit": "DIRECTIVE",
+		"deck": "SEL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WARP",
+					"ship": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": ["SHIP"],
+							"traits": ["CLOAK"]
+						}
+					},
+					"to": {
+						"zones": ["LOCATIONS"],
+						"filter": {
+							"suits": ["LOCATION"]
+						}
+					},
+					"count": {
+						"k": "UP_TO",
+						"max": 3
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_DISCARD",
+								"count": 2
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							}
+						]
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["PERSON", "CARGO", "ALLY"]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL22-24",
+		"cardId": "1SEL22/24",
+		"suit": "DIRECTIVE",
+		"deck": "SEL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"bind": "loc",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "CHOICE",
+					"amount": {
+						"k": "SKILL_ICONS",
+						"specialty": "CHOSEN"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL23-24",
+		"cardId": "1SEL23/24",
+		"suit": "SHIP",
+		"deck": "SEL",
+		"traits": ["CLOAK", "ROMULAN"],
+		"skills": ["SKILL_RESEARCH"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"ignoreBlocking": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1SEL24-24",
+		"cardId": "1SEL24/24",
+		"suit": "ALLY",
+		"deck": "SEL",
+		"traits": ["REMAN", "SECURITY", "TELEPATH"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								}
+							},
+							{
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Log this card",
+										"body": {
+											"k": "LOG",
+											"target": "THIS"
+										}
+									},
+									{
+										"label": "Your opponent may draw a card",
+										"body": {
+											"k": "OPPONENT",
+											"body": {
+												"k": "MAY",
+												"body": {
+													"k": "DRAW",
+													"count": 1
+												}
+											}
+										}
+									}
+								]
+							}
+						]
+					}
+				}
+			}
+		]
+	}
+]

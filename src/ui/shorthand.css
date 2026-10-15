@@ -1,0 +1,423 @@
+/* Shorthand lines (docs/shorthand.md, src/ui/shorthand.tsx). Tokens live in
+ * lcars.css (--sh-*). Every class is `sh-` prefixed so the line drops into any
+ * component — card face, detail modal, choice bar — without cascade fights.
+ *
+ * Sizes: sm (card faces on the board), md (detail modal), lg (showcases). The
+ * size only sets the font size; glyphs are 1.3em, so everything scales. */
+
+.sh-line {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 0.45em;
+	align-items: start;
+	font:
+		600 13px/1.3 'Antonio',
+		'Arial Narrow',
+		sans-serif;
+	letter-spacing: 0.02em;
+	color: var(--text);
+	min-width: 0;
+}
+.sh-bare {
+	grid-template-columns: minmax(0, 1fr);
+}
+.sh-sm {
+	font-size: 10.5px;
+	gap: 0.35em;
+}
+.sh-md {
+	font-size: 14px;
+}
+.sh-lg {
+	font-size: 20px;
+}
+
+.sh-body {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25em 0.38em;
+	min-width: 0;
+}
+.sh-body > *,
+.sh-seq {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25em 0.3em;
+}
+
+/* timing mark: the printed strip colour, as a shaped square */
+.sh-tm {
+	--tc: var(--sh-t-play);
+	width: 1.55em;
+	height: 1.55em;
+	border-radius: 0.36em;
+	display: grid;
+	place-items: center;
+	color: var(--tc);
+	background: color-mix(in srgb, var(--tc) 16%, transparent);
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc) 42%, transparent);
+	font-style: normal;
+}
+.sh-tm svg {
+	width: 1em;
+	height: 1em;
+}
+.sh-tm-play {
+	--tc: var(--sh-t-play);
+}
+.sh-tm-table {
+	--tc: var(--sh-t-table);
+}
+.sh-tm-turn {
+	--tc: var(--sh-t-turn);
+}
+.sh-tm-end {
+	--tc: var(--sh-t-end);
+}
+.sh-tm-special {
+	--tc: var(--sh-t-special);
+}
+.sh-tm-dev {
+	--tc: var(--sh-t-dev);
+}
+
+/* glyphs */
+.sh-mark {
+	font-size: inherit;
+	vertical-align: -0.28em;
+}
+.sh-mark.sh-tm {
+	display: inline-grid;
+}
+.sh-line svg,
+.sh-mark svg {
+	display: block;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.9;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	overflow: visible;
+}
+.sh-g {
+	display: inline-block;
+	width: 1.3em;
+	height: 1.3em;
+	flex: none;
+	font-style: normal;
+}
+.sh-g svg {
+	width: 100%;
+	height: 100%;
+}
+/* the game's printed icons (src/ui/printedIcons.ts): tokens and skill/focus
+   icons as images, at their own width; suit shapes as a mask in suit colour */
+.sh-g:has(> .sh-img) {
+	width: auto;
+}
+.sh-img {
+	display: block;
+	height: 100%;
+	width: auto;
+}
+.sh-mask {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: currentColor;
+	mask: center / contain no-repeat;
+	-webkit-mask: center / contain no-repeat;
+}
+.sh-tk {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.08em;
+	white-space: nowrap;
+}
+.sh-n {
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+.sh-w {
+	font-size: 0.72em;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--dim);
+	margin-left: 0.15em;
+}
+.sh-note {
+	font:
+		500 0.74em/1.1 'Barlow',
+		sans-serif;
+	color: var(--dim);
+	letter-spacing: 0;
+}
+
+.sh-DIL {
+	color: var(--sh-dil);
+}
+.sh-LAT {
+	color: var(--sh-lat);
+}
+.sh-GLO {
+	color: var(--sh-glo);
+}
+.sh-ACT {
+	color: var(--sh-act);
+}
+.sh-VP {
+	color: var(--sh-vp);
+}
+.sh-RESEARCH {
+	color: var(--research);
+}
+.sh-INFLUENCE {
+	color: var(--influence);
+}
+.sh-MILITARY {
+	color: var(--military);
+}
+.sh-AWAY,
+.sh-SEND {
+	color: var(--ice);
+}
+.sh-opp .sh-AWAY,
+.sh-opp .sh-SEND,
+.sh-STEAL {
+	color: var(--salmon);
+}
+.sh-attack {
+	color: var(--mars);
+}
+.sh-attack .sh-ATTACK,
+.sh-trigger .sh-ATTACK {
+	color: inherit;
+}
+.sh-suit-person {
+	color: var(--sh-person);
+}
+.sh-suit-cargo {
+	color: var(--sh-cargo);
+}
+.sh-suit-ship {
+	color: var(--sh-ship);
+}
+.sh-suit-ally {
+	color: var(--sh-ally);
+}
+.sh-suit-location {
+	color: var(--sh-location);
+}
+.sh-suit-directive {
+	color: var(--sh-directive);
+}
+.sh-suit-incident {
+	color: var(--sh-incident);
+}
+.sh-suit-encounter {
+	color: var(--sh-encounter);
+}
+.sh-suit-captain {
+	color: var(--sh-captain);
+}
+.sh-suit-status,
+.sh-suit-mission {
+	color: var(--sh-status);
+}
+.sh-gain .sh-n {
+	color: var(--text);
+}
+
+/* skill icons boxed, focus icons ringed — as printed */
+.sh-skill .sh-g,
+.sh-focus .sh-g {
+	border: 1.3px solid currentColor;
+	padding: 0.14em;
+}
+.sh-skill .sh-g:has(> .sh-img),
+.sh-focus .sh-g:has(> .sh-img) {
+	border: none;
+	padding: 0;
+}
+.sh-skill .sh-g {
+	border-radius: 0.2em;
+}
+.sh-focus .sh-g {
+	border-radius: 50%;
+}
+
+/* grammar groups */
+.sh-then,
+.sh-colon {
+	font-style: normal;
+	font-weight: 700;
+	color: var(--dim);
+	font-size: 1.1em;
+}
+.sh-sep,
+.sh-slash {
+	font-style: normal;
+	color: var(--dim);
+	font-weight: 400;
+}
+.sh-slash {
+	font-size: 1.15em;
+}
+.sh-cost {
+	padding: 0.05em 0.35em;
+	border-radius: 0.35em;
+	background: rgba(255, 255, 255, 0.07);
+}
+.sh-may {
+	padding: 0.05em 0.35em;
+	border-radius: 0.4em;
+	border: 1.3px dashed #59607a;
+}
+.sh-opp {
+	padding: 0.05em 0.35em;
+	border-radius: 0.4em;
+	border: 1.3px solid color-mix(in srgb, var(--salmon) 75%, transparent);
+	background: repeating-linear-gradient(
+		135deg,
+		color-mix(in srgb, var(--salmon) 18%, transparent) 0 2.5px,
+		transparent 2.5px 6px
+	);
+}
+.sh-opt {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25em 0.35em;
+	padding: 0.05em 0.35em;
+	border-radius: 0.4em;
+	background: var(--panel-2);
+}
+.sh-orw {
+	font:
+		italic 500 0.8em/1 'Barlow',
+		sans-serif;
+	color: var(--dim);
+}
+.sh-pick,
+.sh-times,
+.sh-max {
+	font-size: 0.76em;
+	font-style: normal;
+	color: var(--dim);
+	letter-spacing: 0.04em;
+}
+.sh-cond {
+	padding: 0 0.45em;
+	border-radius: 999px;
+	border: 1px solid #4a5068;
+}
+.sh-cond::after {
+	content: '?';
+	color: var(--dim);
+	font-weight: 700;
+}
+.sh-cond.sh-did {
+	padding: 0 0.2em;
+	color: #8fe3b0;
+}
+.sh-cond.sh-did::after {
+	content: none;
+}
+.sh-did .sh-CHECK {
+	color: inherit;
+}
+.sh-cond.sh-holds {
+	border-color: color-mix(in srgb, #57c98a 70%, transparent);
+	background: color-mix(in srgb, #57c98a 12%, transparent);
+}
+.sh-cond.sh-fails {
+	opacity: 0.55;
+}
+.sh-live {
+	font-style: normal;
+	font-size: 0.8em;
+	letter-spacing: 0.04em;
+	color: var(--ice);
+	background: color-mix(in srgb, var(--ice) 13%, transparent);
+	padding: 0.2em 0.45em 0.1em;
+	border-radius: 999px;
+}
+.sh-qual {
+	font-size: 0.84em;
+}
+.sh-req {
+	padding: 0 0.3em;
+	border-radius: 0.3em;
+	background: rgba(255, 255, 255, 0.07);
+}
+.sh-req > .sh-LOCK {
+	color: var(--dim);
+}
+.sh-is::before {
+	content: '=';
+	color: var(--dim);
+}
+
+/* words that stay words */
+.sh-trait {
+	font-size: 0.7em;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	padding: 0.28em 0.45em 0.2em;
+	border-radius: 2px;
+	background: #2a2f40;
+	color: #e2dacb;
+	white-space: nowrap;
+}
+.sh-trait.sh-species {
+	clip-path: polygon(
+		4px 0,
+		calc(100% - 4px) 0,
+		100% 4px,
+		100% calc(100% - 4px),
+		calc(100% - 4px) 100%,
+		4px 100%,
+		0 calc(100% - 4px),
+		0 4px
+	);
+	background: #3d2b14;
+	color: #ffcf96;
+}
+.sh-trait.sh-gameplay {
+	background: #4c1915;
+	color: #ffa399;
+}
+.sh-name {
+	font-size: 0.82em;
+	letter-spacing: 0.05em;
+	color: #e9dfcc;
+	border-bottom: 1px dotted var(--dim);
+}
+.sh-word {
+	font:
+		500 0.8em/1.15 'Barlow',
+		sans-serif;
+	color: var(--dim);
+}
+/* a sentence, not a row of chips: flows as one paragraph with its § */
+.sh-body > .sh-rule,
+.sh-rule {
+	display: inline;
+	font:
+		italic 500 0.9em/1.3 'Barlow',
+		sans-serif;
+	color: #d9d2c3;
+	letter-spacing: 0;
+}
+.sh-rule .sh-tk {
+	display: inline-flex;
+	vertical-align: -0.2em;
+	font-style: normal;
+}
+.sh-rule::before {
+	content: '§ ';
+	font-style: normal;
+	color: var(--dim);
+}

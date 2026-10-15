@@ -1,0 +1,31 @@
+# Fly.io app for the hosted game (docs/deploy.md). One machine, one volume:
+# the server keeps game state on disk and runs deadline timers, so it stays up
+# and must never be scaled past one machine.
+
+app = "your-app-name" # copy this file to fly.toml and pick a name unique across Fly (docs/deploy.md)
+primary_region = "fra"
+
+[build]
+
+[[mounts]]
+  source = "games"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "20s"
+    interval = "30s"
+    method = "GET"
+    path = "/health"
+    timeout = "5s"
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

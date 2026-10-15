@@ -1,0 +1,3172 @@
+/* Ready Room — LCARS UI shell (todo/14, docs/ui-lcars.md).
+ *
+ * Design rule, enforced throughout: **the frame carries state, the table never
+ * moves.** Everything coloured is chrome — rail, elbows, bars, panel headers,
+ * the choice bar. Cards sit on the black ground and move only when the rules
+ * move them.
+ *
+ * Tokens and chrome primitives live in lcars.css; this file dresses the
+ * components. Class names are unchanged from the pre-LCARS shell, so the
+ * component tree and its tests are untouched by the restyle.
+ *
+ * Accessibility (docs/ui-spec.md §8): 44px min targets, nothing colour-alone
+ * (specialties pair hue + glyph + label), reduced motion respected.
+ */
+
+@import './lcars.css';
+@import './shorthand.css';
+
+:root {
+	/* Legacy aliases — components and older rules still read these names. */
+	--bg: var(--ground);
+	--line: var(--hair);
+	--muted: var(--dim);
+	--accent: var(--orange);
+	--good: #7ee0a8;
+	--warn: var(--sunflower);
+	--bad: var(--mars);
+}
+
+* {
+	box-sizing: border-box;
+}
+html,
+body,
+#root {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	background: var(--ground);
+	color: var(--text);
+	font:
+		14px/1.45 'Barlow',
+		ui-sans-serif,
+		system-ui,
+		-apple-system,
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Condensed caps = system chrome. Normal width = game text. The split is
+ * informational, not decorative — see docs/ui-lcars.md §3. */
+h1,
+h2,
+h3,
+.btn,
+.phase-chip,
+.stack-count,
+.track-label,
+.op-type,
+.log-kind,
+.card-name,
+.card-suit,
+.secured-badge,
+.chip,
+.remaining-chip {
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+	letter-spacing: 0.06em;
+}
+h1,
+h2,
+h3,
+.btn,
+.op-type,
+.log-kind,
+.card-suit,
+.secured-badge {
+	text-transform: uppercase;
+}
+
+.muted {
+	color: var(--dim);
+}
+.small {
+	font-size: 12px;
+}
+:focus-visible {
+	outline: 2px solid var(--orange);
+	outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------- buttons */
+/* LCARS buttons are pills with the label bottom-right. Sizes keep the 44px
+ * minimum target from ui-spec §8. */
+.btn {
+	min-height: 44px;
+	padding: 6px 18px;
+	border: 0;
+	border-radius: var(--radius-pill);
+	background: var(--panel-2);
+	color: var(--text);
+	box-shadow: inset 0 0 0 1px var(--hair);
+	font-size: 15px;
+	font-weight: 600;
+	cursor: pointer;
+}
+.btn:hover:not(:disabled) {
+	background: #202030;
+	box-shadow: inset 0 0 0 1px var(--orange);
+}
+.btn:disabled {
+	opacity: 0.38;
+	cursor: not-allowed;
+}
+.btn-primary {
+	background: var(--orange);
+	color: #1a1200;
+	box-shadow: none;
+}
+.btn-primary:hover:not(:disabled) {
+	filter: brightness(1.12);
+	background: var(--orange);
+}
+.btn-warn {
+	background: var(--mars);
+	color: #fff;
+	box-shadow: none;
+}
+.btn-warn:hover:not(:disabled) {
+	background: var(--mars);
+	filter: brightness(1.1);
+}
+.btn-lg {
+	padding: 10px 26px;
+	font-size: 17px;
+}
+.btn.micro,
+.btn-micro {
+	min-height: 32px;
+	padding: 2px 12px;
+	font-size: 13px;
+}
+.btn-active {
+	background: var(--periwinkle);
+	color: #0a0a12;
+	box-shadow: none;
+}
+.btn-active:hover:not(:disabled) {
+	background: var(--periwinkle);
+	filter: brightness(1.12);
+}
+
+/* ----------------------------------------------------------------- setup */
+.setup-screen {
+	max-width: 800px;
+	margin: 6vh auto;
+	padding: 24px 16px;
+}
+.setup-screen h1 {
+	margin: 0 0 6px;
+	font-size: 34px;
+	color: var(--orange);
+	letter-spacing: 0.04em;
+}
+.setup-form {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	margin-top: 18px;
+}
+.deck-picker {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px;
+	background: var(--panel);
+	border-radius: 4px;
+	border-left: 5px solid var(--periwinkle);
+}
+.deck-picker select,
+.seed-field input,
+.cardlist-controls input,
+.cardlist-controls select {
+	min-height: 44px;
+	padding: 4px 10px;
+	background: var(--panel-2);
+	color: var(--text);
+	border: 1px solid var(--hair);
+	border-radius: 4px;
+	font: inherit;
+}
+.side-toggle {
+	display: flex;
+	gap: var(--gap);
+}
+.seed-field {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.seed-field input {
+	width: 120px;
+}
+.error-text {
+	color: var(--mars);
+}
+
+/* ---------------------------------------------------------------- frame */
+/* The console fills the viewport: capped title bar and nav strip across the
+ * head, capped status bar at the foot, the board scrolling between them. No
+ * left rail — at this complexity the board needs the width more than the
+ * chrome does (docs/ui-lcars.md §4). */
+.app {
+	height: 100%;
+	/* viewport-fit=cover draws under the notch and status bar; keep the
+	 * console's screens out of them (the fixed .pb shell pads itself) */
+	padding: env(safe-area-inset-top) env(safe-area-inset-right)
+		env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.frame {
+	display: grid;
+	height: 100%;
+	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	gap: var(--gap);
+	padding: var(--gap) 12px;
+	background: var(--ground);
+}
+.frame-head {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	min-width: 0;
+}
+.frame-body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	min-width: 0;
+	min-height: 0;
+	overflow: hidden;
+}
+.frame-foot {
+	display: flex;
+	gap: var(--gap);
+	min-width: 0;
+}
+
+.head-row {
+	display: flex;
+	gap: var(--gap);
+	align-items: stretch;
+	min-width: 0;
+}
+.head-cap,
+.foot-cap {
+	flex: none;
+	width: 72px;
+	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+	background: var(--sunflower);
+}
+.foot-cap {
+	width: 56px;
+	background: var(--lilac);
+}
+
+/* console strip — the nav, one block-row under the title bar */
+.console-nav {
+	display: flex;
+	align-items: stretch;
+	gap: var(--gap);
+	flex-wrap: wrap;
+	min-height: 30px;
+	min-width: 0;
+}
+.console-nav .btn {
+	min-height: 30px;
+	padding: 0 16px;
+	border-radius: 0;
+	box-shadow: none;
+	background: var(--periwinkle);
+	color: #0a0a12;
+	font-size: 14px;
+	display: inline-flex;
+	align-items: center;
+}
+.console-nav .btn:hover:not(:disabled) {
+	background: var(--periwinkle);
+	filter: brightness(1.14);
+	box-shadow: none;
+}
+.console-nav .btn:disabled {
+	background: var(--panel-2);
+	color: var(--dim);
+}
+.console-nav .btn-active {
+	background: var(--orange);
+	color: #1a1200;
+}
+.console-nav .btn.micro {
+	background: var(--lilac);
+	font-size: 13px;
+}
+/* The strip reads as one bar: rounded only where it actually ends. */
+.console-nav > :first-child {
+	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+}
+.console-nav > :last-child {
+	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+}
+.nav-label {
+	display: inline-flex;
+	align-items: center;
+	padding: 0 14px;
+	background: var(--panel);
+	color: var(--orange);
+	font-family: 'Antonio', sans-serif;
+	font-size: 12px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.nav-spacer {
+	flex: 1;
+	min-width: 8px;
+	background: var(--panel);
+	border-radius: 0;
+}
+.nav-num {
+	display: inline-flex;
+	align-items: center;
+	padding: 0 14px;
+	background: var(--panel);
+	color: var(--dim);
+	font-family: 'Antonio', sans-serif;
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- topbar */
+/* The title bar carries this turn and nothing else: who is acting, in what
+ * phase, with how many actions, and the one obvious next move. */
+.topbar {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 16px;
+	min-height: var(--bar-h);
+	padding: 3px 16px;
+	background: var(--orange);
+	color: #1a1200;
+	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+}
+.topbar-left {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	min-width: 0;
+	overflow: hidden;
+}
+.topbar-left > * {
+	white-space: nowrap;
+}
+.topbar-left strong {
+	font-family: 'Antonio', sans-serif;
+	font-size: 19px;
+	text-transform: uppercase;
+	letter-spacing: 0.07em;
+	font-weight: 600;
+}
+.topbar-actions {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	flex: none;
+}
+.topbar .btn {
+	min-height: 34px;
+	padding: 3px 18px;
+}
+.phase-chip {
+	padding: 1px 12px;
+	border-radius: 999px;
+	background: #1a1200;
+	color: var(--sunflower);
+	font-size: 13px;
+	font-weight: 600;
+}
+.phase-action {
+	color: var(--ice);
+}
+.phase-cleanup {
+	color: var(--lilac);
+}
+.topbar .muted {
+	color: #5a3e00;
+}
+/* The active player's resources, always visible next to their actions. */
+.topbar-resources {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 2px 10px;
+	border-radius: var(--radius-pill);
+	background: #000c;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+}
+.score-est {
+	font-size: 12px;
+	color: #5a3e00;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+/* foot status bar — the two end conditions, always legible, never a modal */
+.bottombar {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	align-items: center;
+	gap: var(--gap);
+	min-height: var(--bar-h);
+	padding: 0 14px;
+	background: var(--orange);
+	color: #1a1200;
+	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+	font-family: 'Antonio', sans-serif;
+	font-size: 13px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	flex-wrap: wrap;
+}
+.bottombar .seg {
+	background: #1a120080;
+	border-radius: 10px;
+	padding: 1px 14px;
+	font-variant-numeric: tabular-nums;
+}
+.bottombar .seg-alert {
+	background: #1a1200;
+	color: var(--sunflower);
+}
+
+/* Alert is the ONE thing allowed to recolour the frame: the Burn one card
+ * away, or an ATTACK aimed at you. docs/ui-lcars.md §7. */
+.frame-alert .topbar,
+.frame-alert .bottombar {
+	background: var(--mars);
+	color: #fff;
+}
+.frame-alert .head-cap {
+	background: var(--mars);
+}
+.frame-alert .topbar .muted,
+.frame-alert .score-est {
+	color: #ffd9d9;
+}
+.frame-alert .phase-chip {
+	background: #3a0000;
+	color: #ffd9d9;
+}
+.frame-alert .bottombar .seg {
+	background: #3a000080;
+}
+.frame-alert .bottombar .seg-alert {
+	background: #3a0000;
+	color: #fff;
+}
+@keyframes lcars-alert {
+	50% {
+		filter: brightness(0.74);
+	}
+}
+.frame-alert .topbar {
+	animation: lcars-alert 1.6s ease-in-out infinite;
+}
+
+.error-banner {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 8px 14px;
+	background: #24080c;
+	border-left: 6px solid var(--mars);
+	border-radius: 4px;
+	color: #ffc8cc;
+}
+.warning-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 8px 14px;
+	background: #241c06;
+	border-left: 6px solid var(--sunflower);
+	border-radius: 4px;
+	color: #f2e6b3;
+}
+
+/* ------------------------------------------------------------------ grid */
+/* Two working columns and a pinned hand. The main column carries everything
+ * the active player acts on; the side column carries reference — the opponent
+ * and the log. (Card zoom used to hold a third panel here; it is an
+ * Option-held overlay now, and the log got the space.) */
+.board-grid {
+	position: relative; /* the hand overlay anchors here */
+	flex: 1;
+	min-height: 0;
+	display: grid;
+	gap: var(--gap);
+	grid-template-columns: minmax(0, 1fr) 328px;
+	grid-template-rows: minmax(0, 1fr);
+	grid-template-areas: 'main side';
+}
+.main-col {
+	grid-area: main;
+	min-width: 0;
+	min-height: 0;
+	overflow: auto;
+	display: grid;
+	grid-template-rows: auto auto minmax(190px, 1fr);
+	gap: var(--gap);
+}
+.side-col {
+	grid-area: side;
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	overflow: auto;
+	min-width: 0;
+}
+
+/* The strip is one line high: heading, chips and note side by side. Three
+ * stacked panels here cost 160px for what is six numbers. */
+.ops-strip > .panel {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 5px 10px;
+	flex-wrap: wrap;
+}
+.ops-strip > .panel > h3 {
+	margin: 0;
+	flex: none;
+}
+.ops-strip > .panel > h3::after {
+	display: none;
+}
+.ops-strip .piles-bar {
+	gap: 12px;
+}
+.ops-strip .stardate-row {
+	gap: 10px;
+}
+/* The Burn explainer is the foot bar's job — it states the count and warns at
+ * ≤2. Repeating the sentence here cost the strip half its height. */
+.ops-strip .piles-bar .muted.small {
+	display: none;
+}
+
+/* Counters, not cards: Stardate, Junk, Incidents and your deck in one thin bar.
+ * A facedown deck's only information is its count, so it gets a chip, not a
+ * card-sized slot — that space belongs to cards you can actually read. */
+.ops-strip {
+	display: flex;
+	gap: var(--gap);
+	flex-wrap: nowrap;
+	align-items: stretch;
+}
+.ops-strip .cardstack,
+.market-col .cardstack {
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+}
+/* In the strip each chip is only as wide as its label; in a Market column the
+ * chip spans the column so it lines up over the offer card. */
+.ops-strip .cardstack {
+	width: auto;
+	flex: 0 1 auto;
+}
+.market-col .cardstack {
+	width: 100%;
+}
+.ops-strip .piles-bar {
+	flex-wrap: nowrap;
+}
+.ops-strip .stack-back,
+.market-col .stack-back {
+	width: 34px;
+	height: 26px;
+	min-height: 26px;
+	border-radius: 3px;
+	font-size: 13px;
+	flex: none;
+}
+.ops-strip .stack-count,
+.market-col .stack-count {
+	font-size: 12px;
+}
+.ops-strip > .panel {
+	flex: 1 1 0;
+	min-width: 0;
+}
+.ops-strip > .stardate-track {
+	flex: 2 1 300px;
+}
+.ops-strip > .player-deck {
+	flex: 0 1 240px;
+}
+
+/* All seven shared card slots in one row — Market's four and the Zone's three. */
+.shared-row {
+	display: grid;
+	grid-template-columns: 4fr 3fr;
+	gap: var(--gap);
+	align-items: start;
+}
+.own-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 340px;
+	gap: var(--gap);
+	align-items: start;
+	min-height: 190px;
+	overflow: auto;
+}
+/* Cards away from the hand are read at a glance and clicked for detail, so
+ * they run smaller: five zone rows at hand size would never fit a laptop, and
+ * the shared board has seven slots to fit across one row. */
+.player-area.full .card-board {
+	width: 94px;
+}
+.player-area.full .card-board .card-inner {
+	min-height: 132px;
+}
+.market .card-board,
+.neutral-zone .card-board {
+	width: 104px;
+}
+.market .card-board .card-inner,
+.neutral-zone .card-board .card-inner {
+	min-height: 146px;
+}
+.market-offer-slot {
+	min-height: 0;
+}
+.opp-block {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+
+/* The hand never scrolls away — ui-spec §5 calls it always-visible, which on a
+ * laptop is only true if it is pinned. */
+/* The hand floats over the board's bottom-right corner instead of taking a
+ * full-width row. It shrink-wraps its cards, so the board stays readable to
+ * its left rather than being pushed up by a band that is mostly empty panel —
+ * and the board reclaims the row height the strip used to reserve.
+ *
+ * Right-alignment falls out of the shrink-wrap: the panel is exactly as wide
+ * as the cards and pinned to the right edge, which beats `justify-content:
+ * flex-end` on the row — that clips the first card once the hand overflows. */
+.hand-strip {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	z-index: 25;
+	max-width: 100%;
+}
+.hand-strip .hand {
+	width: max-content;
+	max-width: 100%;
+	box-shadow:
+		-10px -10px 30px #000000b3,
+		0 0 0 1px #ffffff14;
+}
+
+/* ---------------------------------------------------------------- panels */
+/* A panel is framed by one left stripe in its system's hue. One border, no
+ * shadow, no radius soup — hierarchy comes from the stripe. */
+.panel {
+	background: var(--panel);
+	border: 0;
+	border-left: 5px solid var(--c, var(--orange));
+	border-radius: 4px;
+	padding: 10px 12px;
+	min-width: 0;
+}
+/* Panel header doubles as the LCARS divider bar: nub, label, rule. */
+.panel h3 {
+	margin: 0 0 10px;
+	font-size: 14px;
+	letter-spacing: 0.1em;
+	color: var(--c, var(--orange));
+	display: flex;
+	align-items: center;
+	gap: var(--gap);
+}
+.panel h3::before {
+	content: '';
+	width: 26px;
+	height: 14px;
+	flex: none;
+	border-radius: 7px 0 0 7px;
+	background: var(--c, var(--orange));
+}
+.panel h3::after {
+	content: '';
+	flex: 1;
+	height: 5px;
+	min-width: 10px;
+	border-radius: 3px;
+	background: var(--c, var(--orange));
+	opacity: 0.38;
+}
+
+/* One hue per system. Never decorative — the colour IS the key. */
+.stardate-track {
+	--c: var(--lilac);
+}
+.market {
+	--c: var(--sunflower);
+}
+.neutral-zone {
+	--c: var(--periwinkle);
+}
+.piles-bar {
+	--c: var(--mars);
+}
+.player-deck {
+	--c: var(--ice);
+}
+.log-panel {
+	--c: var(--orange);
+}
+.hand {
+	--c: var(--orange);
+}
+.choice-panel {
+	--c: var(--sunflower);
+}
+.score-col {
+	--c: var(--lilac);
+}
+.saved-games,
+.error-session,
+.replay-state {
+	--c: var(--periwinkle);
+}
+/* Seat identity: ice = you, salmon = opponent. Held everywhere. */
+.player-area {
+	--c: var(--salmon);
+}
+.player-area.full {
+	--c: var(--ice);
+}
+.opp-block .crew-board {
+	--c: var(--salmon);
+}
+.own-row .crew-board {
+	--c: var(--ice);
+}
+.hand-opponent {
+	--c: var(--salmon);
+}
+
+/* -------------------------------------------------------------- stardate */
+.stardate-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.stardate-name {
+	font-family: 'Antonio', sans-serif;
+	font-size: 18px;
+	letter-spacing: 0.05em;
+}
+.stardate-glory {
+	display: inline-flex;
+	gap: 3px;
+}
+.stardate-count {
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+.resolution-banner {
+	margin-top: 8px;
+	padding: 6px 12px;
+	border-radius: 4px;
+	background: #2a1030;
+	border-left: 5px solid var(--lilac);
+	color: #f0d0ff;
+	font-family: 'Antonio', sans-serif;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------- market */
+.market-row {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--gap);
+}
+.market-col {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: center;
+}
+.empty-slot {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 64px;
+	border: 1px dashed var(--hair);
+	border-radius: 4px;
+	color: var(--dim);
+	font-family: 'Antonio', sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	font-size: 12px;
+}
+
+/* ---------------------------------------------------------- neutral zone */
+.nz-row {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--gap);
+}
+.location-slot {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: center;
+}
+.location-slot.location-secured .card {
+	outline: 2px solid var(--ice);
+}
+.location-tokens {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	justify-content: center;
+	font-size: 12px;
+}
+.secured-badge {
+	background: var(--ice);
+	color: #04121f;
+	padding: 1px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+}
+/* Away Teams: token icons stacked down a Location card's edges, half over
+   the card — P1 left, P2 right. */
+.location-with-teams {
+	position: relative;
+	display: inline-block;
+}
+.away-stack {
+	position: absolute;
+	top: 64px; /* below the suit banner and card name */
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	pointer-events: none;
+}
+.away-stack-0 {
+	left: 0;
+	transform: translateX(-50%);
+}
+.away-stack-1 {
+	right: 0;
+	transform: translateX(50%);
+}
+.away-marker {
+	display: grid;
+	place-items: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: var(--ground);
+	box-shadow: 0 0 0 2px currentColor;
+}
+.away-stack-0 .away-marker {
+	color: var(--ice);
+}
+.away-stack-1 .away-marker {
+	color: var(--salmon);
+}
+.away-marker .icon {
+	vertical-align: 0;
+}
+/* Many teams: overlap the icons so the stack stays within the card. */
+.away-stack-dense {
+	gap: 0;
+}
+.away-stack-dense .away-marker + .away-marker {
+	margin-top: -10px;
+}
+
+/* ----------------------------------------------------------- shared piles */
+.piles-bar {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	flex-wrap: wrap;
+}
+.cardstack {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+}
+.stack-back {
+	width: 60px;
+	height: 84px;
+	border: 1px solid #26304a;
+	border-radius: 4px;
+	background: repeating-linear-gradient(
+		135deg,
+		#131a2c 0 6px,
+		#0f1424 6px 12px
+	);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 22px;
+	color: var(--periwinkle);
+	cursor: pointer;
+}
+.stack-back:disabled {
+	cursor: default;
+}
+/* Incident deck ≤2: a module-level warning, distinct from the frame alarm. */
+.cardstack-warn .stack-back {
+	border-color: var(--mars);
+	box-shadow: 0 0 0 2px var(--mars);
+}
+.cardstack-warn .stack-count {
+	color: var(--mars);
+}
+.stack-count {
+	font-size: 13px;
+	letter-spacing: 0.06em;
+	color: var(--dim);
+}
+.stack-count strong,
+.stack-count b {
+	color: var(--text);
+}
+.stack-extra {
+	font-size: 11px;
+}
+
+/* ----------------------------------------------------------- player area */
+.area-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+.area-resources {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+/* The player area is one grid, not five independent rows (rules/02 §2.3):
+ *
+ *   col 1        cols 2…n
+ *   Duty Officer Location Area ───────►
+ *   Captain      Fleet Area ──────────►
+ *   Staging Area ──────────────────────►   (starts back at column 1)
+ *
+ * Every cell's cards step on the same --slot-w rhythm, and the Staging Area
+ * spans the full width starting at column 1 — so Duty Officer, Captain and the
+ * first Staging card share a column, and nothing is half a card out of line.
+ * Labels sit ABOVE their cards for the same reason: a label between two cards
+ * would break the rhythm. */
+.player-area.full {
+	--slot-w: 94px;
+	--slot-gap: 6px;
+}
+.area-grid {
+	display: grid;
+	/* --do-slots (set inline): one column per Duty Officer, so a second Duty
+	 * Officer shifts the Location Area right (rules/08 promote). */
+	grid-template-columns:
+		calc(
+			var(--slot-w) * var(--do-slots, 1) + var(--slot-gap) *
+				(var(--do-slots, 1) - 1)
+		)
+		minmax(0, 1fr);
+	gap: 10px var(--slot-gap);
+	align-items: start;
+}
+.area-row {
+	min-width: 0;
+}
+.area-slot {
+	grid-column: 1;
+}
+.area-full {
+	grid-column: 1 / -1;
+}
+/* Cards flow on the shared rhythm; an area picks up exactly where the slot
+ * column's grid line leaves off. */
+.area-row .slot-group {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, var(--slot-w));
+	gap: var(--slot-gap);
+	justify-content: start;
+}
+/* Chips, not card backs: these three are counts you glance at, and at card
+ * size they pushed the crew board down behind the hand overlay. */
+.crew-piles {
+	margin: 0 0 8px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #ffffff12;
+	gap: 12px;
+}
+.crew-piles .cardstack {
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+}
+.crew-piles .stack-back {
+	width: 34px;
+	height: 26px;
+	min-height: 26px;
+	border-radius: 3px;
+	font-size: 13px;
+	flex: none;
+}
+.crew-piles .stack-count {
+	font-size: 12px;
+}
+.area-slot-label {
+	color: var(--dim);
+	font-size: 11px;
+	line-height: 1.2;
+	margin-bottom: 3px;
+	font-family: 'Antonio', sans-serif;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+.slot-group {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+.area-row .empty-slot {
+	grid-column: 1 / -1;
+	min-height: 40px;
+}
+.piles-row {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-bottom: 6px;
+}
+.area-compact-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	font-size: 12px;
+}
+
+/* ------------------------------------------------------------ crew board */
+.crew-head {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+.tracks {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin: 6px 0;
+}
+.track {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+.track-label {
+	width: 124px;
+	font-size: 13px;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+}
+/* Specialty hue is never alone — the component pairs it with a glyph + label. */
+.s-research {
+	color: var(--research);
+}
+.s-influence {
+	color: var(--influence);
+}
+.s-military {
+	color: var(--military);
+}
+.track-ruler {
+	position: relative;
+	flex: 1;
+	display: flex;
+	align-items: flex-end;
+	height: 30px;
+	border-bottom: 2px solid var(--hair);
+}
+.track-step {
+	width: 6.25%;
+	font-size: 9px;
+	color: var(--dim);
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+.track-mult {
+	color: var(--lilac);
+	font-weight: 700;
+}
+.track-marker {
+	background: var(--orange);
+	border-radius: 2px;
+}
+.track-position {
+	position: absolute;
+	bottom: -7px;
+	transform: translateX(-50%);
+	color: var(--sunflower);
+	font-size: 14px;
+}
+
+.missions {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+	margin-top: 8px;
+}
+.mission {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	padding: 5px 8px;
+	border-radius: 4px;
+	background: var(--panel-2);
+	border-left: 4px solid var(--hair);
+}
+.mission-done {
+	opacity: 0.55;
+}
+/* A completable mission is a persistent nudge, never a modal (todo/14 §5). */
+.mission-ready {
+	border-left-color: var(--ice);
+	background: #0d1c2a;
+}
+.mission-ready .mission-index {
+	color: var(--ice);
+	font-weight: 700;
+}
+.mission-text {
+	font-size: 12px;
+	flex-basis: 100%;
+}
+
+/* -------------------------------------------------------------------hand */
+.hand-row {
+	display: flex;
+	gap: 10px;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	padding-bottom: 4px;
+}
+.hand-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+/* ----------------------------------------------------------------- icons */
+/* Printed marks lifted off the card art (tools/extract-icons.ts). They carry
+ * the count beside them, never alone — the image is decorative and the number
+ * or label is the content. Rendered small: the source is 15–20px of print, so
+ * anything larger only magnifies the halftone. */
+.icon {
+	height: 15px;
+	width: auto;
+	vertical-align: -3px;
+	image-rendering: auto;
+	filter: drop-shadow(0 1px 1px #0008);
+}
+.icon-md {
+	height: 19px;
+	vertical-align: -4px;
+}
+.res-pip .icon {
+	margin-right: 1px;
+}
+.stardate-glory {
+	display: inline-flex;
+	gap: 3px;
+	align-items: center;
+}
+.suit-pill {
+	font-size: 13px;
+	min-height: 20px;
+}
+.away-count {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+/* ----------------------------------------------------------------- cards */
+/* The face is the printed card (sprite) or its text fallback; STATE is drawn
+ * over it and never baked in — ui-spec §3. */
+.card {
+	position: relative;
+	border: 1px solid var(--hair);
+	border-radius: 5px;
+	overflow: hidden;
+	transition:
+		transform 0.12s ease,
+		box-shadow 0.12s ease;
+}
+.card-board {
+	width: 120px;
+}
+.card-hand {
+	width: 156px;
+}
+.card-micro {
+	width: 60px;
+}
+.card-preview {
+	width: 240px;
+}
+.card-review {
+	width: 190px;
+}
+.card-zoom {
+	width: 360px;
+}
+.card-inner {
+	width: 100%;
+	display: block;
+	text-align: left;
+	background: #12121c;
+	color: var(--text);
+	border: 0;
+	font: inherit;
+	padding: 0;
+	cursor: pointer;
+	min-height: 44px;
+}
+.card-board .card-inner {
+	min-height: 168px;
+}
+.card-hand .card-inner {
+	min-height: 214px;
+}
+.card-micro .card-inner {
+	min-height: 84px;
+}
+.card-preview .card-inner {
+	min-height: 336px;
+}
+.card-review .card-inner {
+	min-height: 266px;
+}
+.card-zoom .card-inner {
+	min-height: 504px;
+}
+.card-clickable:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 6px 18px #000a;
+}
+
+/* Illegal: dim + hatch + a reason on hover. Opacity alone reads as "loading". */
+.card-dimmed {
+	opacity: 0.34;
+}
+.card-dimmed .card-inner {
+	cursor: not-allowed;
+}
+.card-dimmed::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background: repeating-linear-gradient(45deg, #0000 0 7px, #ff414118 7px 14px);
+}
+.card-selected {
+	outline: 3px solid var(--ice);
+	outline-offset: 1px;
+}
+.card-highlight {
+	outline: 2px solid var(--orange);
+	box-shadow: 0 0 20px #ff9c0055;
+}
+.card-exhausted .card-inner {
+	transform: rotate(2deg);
+	filter: saturate(0.45);
+}
+.card-clickable .card-inner {
+	cursor: pointer;
+}
+/* A face-down card: the back pattern fills the whole card, whatever its
+   min-height. */
+.card-hidden .card-inner {
+	display: flex;
+	flex-direction: column;
+}
+.card-back {
+	flex: 1;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: repeating-linear-gradient(
+		135deg,
+		#131a2c 0 6px,
+		#0f1424 6px 12px
+	);
+	color: var(--periwinkle);
+	font-size: 28px;
+}
+.card-art {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	border-radius: inherit;
+	background: transparent;
+}
+.card-art-img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	pointer-events: none;
+}
+
+/* Suit identity — the bar along the card head, not a whole-card tint. The
+ * hues follow the printed suit banners: --sc is the banner, --sc-ink its text. */
+.card-suit-person {
+	--sc: #c9a227;
+	--sc-ink: #fff;
+}
+.card-suit-cargo {
+	--sc: #1b7fb0;
+	--sc-ink: #fff;
+}
+.card-suit-ship {
+	--sc: #5a5456;
+	--sc-ink: #fff;
+}
+.card-suit-ally {
+	--sc: #b02a9a;
+	--sc-ink: #fff;
+}
+.card-suit-location {
+	--sc: #22a653;
+	--sc-ink: #fff;
+}
+.card-suit-incident {
+	--sc: #c9391e;
+	--sc-ink: #fff;
+}
+.card-suit-encounter {
+	--sc: #d6a9c8;
+	--sc-ink: #fff;
+}
+.card-suit-captain {
+	--sc: #e4e4e4;
+	--sc-ink: #111;
+}
+.card-suit-directive {
+	--sc: #8a7a3a;
+	--sc-ink: #fff;
+}
+.card-suit-status,
+.card-suit-mission {
+	--sc: var(--salmon);
+	--sc-ink: #1a0d08;
+}
+.card {
+	border-top: 4px solid var(--sc, var(--hair));
+}
+
+.card-head {
+	display: flex;
+	justify-content: space-between;
+	padding: 4px 6px;
+	font-size: 10px;
+}
+.card-suit {
+	font-size: 10px;
+	letter-spacing: 0.06em;
+}
+
+/* Suit banner — the printed card's rounded label: icon + suit name on the
+ * suit colour, flat left edge, round right end. */
+.suit-banner {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 1px 10px 1px 6px;
+	border-radius: 0 999px 999px 0;
+	background: var(--sc, var(--orange));
+	color: var(--sc-ink, #111);
+	font-family: 'Antonio', sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	line-height: 1.3;
+}
+.suit-banner .icon {
+	height: 1.05em;
+	vertical-align: 0;
+	filter: none;
+}
+.suit-banner .icon-glyph {
+	display: none;
+}
+.card-vp {
+	color: var(--lilac);
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+.card-name {
+	padding: 0 6px;
+	font-size: 13px;
+	line-height: 1.05;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+}
+.card-hand .card-name {
+	font-size: 14px;
+}
+.card-traits {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3px;
+	padding: 4px 6px;
+}
+.trait {
+	font-size: 9px;
+	background: #21212e;
+	border-radius: 3px;
+	padding: 0 5px;
+	color: var(--dim);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+.skill-chip {
+	font-size: 9px;
+	border: 1px solid var(--hair);
+	border-radius: 3px;
+	padding: 0 4px;
+}
+.focus-chip {
+	border-color: var(--lilac);
+	color: var(--lilac);
+}
+.card-ops {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 2px 6px 6px;
+}
+.op-type {
+	font-size: 9px;
+	font-weight: 600;
+	padding: 0 5px;
+	border-radius: 3px;
+	background: #21212e;
+	color: var(--dim);
+	margin-right: 4px;
+	letter-spacing: 0.08em;
+}
+/* Operation types read as a family, tinted by what they cost you, not by nine
+ * unrelated hues: amber = you choose to spend, periwinkle = it fires itself. */
+.op-type-play {
+	background: var(--sunflower);
+	color: #1a1200;
+}
+.op-type-activation {
+	background: #4a3a14;
+	color: var(--sunflower);
+}
+.op-type-reaction {
+	background: var(--periwinkle);
+	color: #0a0a12;
+}
+.op-type-passive {
+	background: #2b2b52;
+	color: var(--periwinkle);
+}
+.op-type-resupply {
+	background: #123040;
+	color: var(--ice);
+}
+.op-type-cleanup {
+	background: #3a1a2e;
+	color: var(--lilac);
+}
+.op-type-control {
+	background: var(--ice);
+	color: #04121f;
+}
+.op-type-endgame {
+	background: var(--lilac);
+	color: #14101a;
+}
+.op-type-special {
+	background: #3a2a14;
+	color: var(--sunflower);
+}
+.op-costs {
+	display: inline-flex;
+	gap: 4px;
+	margin-left: 2px;
+}
+.op-text {
+	margin: 2px 0 0;
+	font-size: 9.5px;
+	line-height: 1.35;
+}
+.card-hand .op-text {
+	font-size: 10px;
+}
+.op-activate {
+	margin-top: 6px;
+}
+.micro-truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Option-held zoom: the card lifts out of the board to the middle of the
+ * screen at 3×.
+ *
+ * Top of the stack (above the choice bar at 60, the drawers at 50 and the
+ * modals at 40): reading a card is most often exactly what you are doing while
+ * a choice is pending, so a prompt covering the zoom defeats the feature. It
+ * can sit there safely because `pointer-events: none` means it never
+ * intercepts a click — whatever is underneath stays operable, and the zoom is
+ * gone the moment Option is released. */
+.zoom-layer {
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+	pointer-events: none;
+	background: #05050ab8;
+}
+.zoom-layer .card {
+	box-shadow:
+		0 0 0 3px var(--orange),
+		0 24px 60px #000c;
+	animation: zoom-in 0.1s ease-out;
+}
+@keyframes zoom-in {
+	from {
+		transform: scale(0.94);
+	}
+	to {
+		transform: none;
+	}
+}
+/* the zoomed card carries its own text at readable size */
+.card-zoom .card-name {
+	font-size: 22px;
+}
+.card-zoom .op-text {
+	font-size: 13px;
+	line-height: 1.4;
+}
+.card-zoom .op-type {
+	font-size: 11px;
+}
+.card-zoom .trait,
+.card-zoom .skill-chip {
+	font-size: 12px;
+}
+.card-zoom .card-head {
+	font-size: 13px;
+	padding: 6px 8px;
+}
+
+.token {
+	display: inline-block;
+	padding: 0 5px;
+	border-radius: 3px;
+	font-size: 0.95em;
+}
+.token-action {
+	background: var(--orange);
+	color: #1a1200;
+}
+.token-attack {
+	background: var(--mars);
+	color: #fff;
+}
+.token-res {
+	font-weight: 700;
+}
+/* A resource and its count never split across lines ("2 {DIL}", "{LAT} x3"). */
+.token-group {
+	white-space: nowrap;
+}
+.pip-dil,
+.token-dil {
+	color: var(--research);
+}
+.pip-lat,
+.token-lat {
+	color: var(--influence);
+}
+.pip-glo,
+.token-glo {
+	color: var(--lilac);
+}
+
+.chip,
+.remaining-chip {
+	background: var(--panel-2);
+	border-radius: 999px;
+	padding: 1px 10px;
+	font-size: 12px;
+	letter-spacing: 0.06em;
+}
+.keyword-link {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	font: inherit;
+}
+/* the inert term: keyword text on a clickable card face (no nested button) */
+.keyword-link,
+.keyword-term {
+	color: var(--sunflower);
+	padding: 0 2px;
+	border-bottom: 1px dotted var(--sunflower);
+}
+.keyword-link:hover {
+	color: #fff;
+	border-bottom-color: #fff;
+}
+
+.card-tokens {
+	position: absolute;
+	bottom: 4px;
+	left: 4px;
+	display: flex;
+	gap: 3px;
+}
+.action-token-chips {
+	display: inline-flex;
+	gap: 3px;
+}
+.action-chip {
+	background: var(--orange);
+	color: #1a1200;
+	border-radius: 50%;
+	width: 15px;
+	height: 15px;
+	font-size: 10px;
+	font-weight: 700;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+.resource-pips {
+	top: 4px;
+	right: 4px;
+	left: auto;
+	bottom: auto;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	max-width: 100%;
+}
+.res-pip {
+	font-weight: 700;
+}
+.ship-chip {
+	background: var(--periwinkle);
+	color: #0a0a12;
+	border-radius: 3px;
+	padding: 0 6px;
+	font-size: 10px;
+	font-weight: 600;
+}
+.card-badge {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+}
+
+/* ----------------------------------------------------------------- modal */
+.modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: #000000cc;
+	z-index: 40;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+}
+.modal {
+	background: var(--ground);
+	border: 0;
+	border-radius: 4px;
+	box-shadow: 0 0 0 3px var(--orange);
+	max-width: min(92vw, 1100px);
+	max-height: 88vh;
+	overflow: auto;
+}
+.modal-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 6px 14px;
+	background: var(--orange);
+	color: #1a1200;
+	font-family: 'Antonio', sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+.modal-head .btn {
+	min-height: 34px;
+	padding: 2px 14px;
+}
+.modal-foot {
+	padding: 8px 14px;
+	border-top: 1px solid var(--hair);
+}
+.pile-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 14px;
+}
+.detail-modal {
+	display: flex;
+	flex-direction: column;
+	max-width: min(92vw, 560px);
+}
+.detail-body {
+	display: flex;
+	gap: 16px;
+	padding: 14px;
+}
+.detail-card {
+	flex: 0 0 auto;
+}
+.detail-text {
+	flex: 1;
+	min-width: 0;
+}
+.detail-line {
+	margin: 0 0 8px;
+}
+.detail-ids {
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11px;
+	color: var(--dim);
+}
+/* The "why can't I do this?" surface — one op per block, with its verdict. */
+.op-detail {
+	border-left: 4px solid var(--sunflower);
+	background: var(--panel);
+	border-radius: 4px;
+	padding: 7px 11px;
+	margin-bottom: 6px;
+}
+.op-detail-blocked {
+	border-left-color: var(--mars);
+	opacity: 0.85;
+}
+.op-detail-head {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-bottom: 4px;
+}
+.op-reason {
+	margin: 6px 0 0;
+	color: #ff9b9b;
+	font-size: 13.5px;
+}
+
+/* The detail overlay exists to be READ — it is where "why can't I do this?"
+ * gets answered. On a card, 9.5px rules text is the right scale for 104px of
+ * card; here it is just small. Everything in the overlay runs at body size. */
+.op-detail .op-text {
+	font-size: 14px;
+	line-height: 1.5;
+	margin-top: 4px;
+}
+.op-detail .op-type {
+	font-size: 11px;
+	padding: 1px 8px;
+}
+.op-detail .token {
+	font-size: 13px;
+	padding: 0 6px;
+}
+.op-detail .keyword-link {
+	font-size: inherit;
+}
+.detail-text .detail-line {
+	font-size: 15px;
+}
+/* the id line is a debug aid, not prose — it keeps its small mono size */
+.detail-text .detail-ids {
+	font-size: 11px;
+}
+.detail-text .icon {
+	height: 17px;
+}
+
+/* ---------------------------------------------------------------- choice */
+/* The choice dialog: centre stage, vertically centred over the board, left
+ * stripe in the colour of the system the choice concerns. A pending choice
+ * is the one thing the player must attend to, so it sits where the eye is. */
+.choice-panel {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: min(1180px, calc(100vw - 24px));
+	max-height: 70vh;
+	overflow: auto;
+	z-index: 60;
+	border-left: 6px solid var(--c, var(--sunflower));
+	box-shadow: 0 10px 48px #000c;
+}
+.choice-head {
+	margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.choice-prompt {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	min-width: 0;
+}
+.choice-prompt strong {
+	font-family: 'Antonio', sans-serif;
+	font-size: 17px;
+	letter-spacing: 0.04em;
+}
+.source-card {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 12px;
+	color: var(--dim);
+}
+.source-card .card {
+	width: 40px;
+	height: 56px;
+}
+.choice-count {
+	font-size: 12px;
+	color: var(--sunflower);
+	font-variant-numeric: tabular-nums;
+}
+.choice-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-top: 10px;
+}
+.choice-options {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+.choice-options-row {
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+.specialty-research {
+	--sp: var(--research);
+}
+.specialty-influence {
+	--sp: var(--influence);
+}
+.specialty-military {
+	--sp: var(--military);
+}
+.specialty-btn,
+.specialty-btn:hover:not(:disabled) {
+	flex: 1 1 0;
+	min-width: 110px;
+	justify-content: center;
+	background: var(--sp);
+	color: #0c0c14;
+	font-weight: 700;
+}
+.specialty-btn:hover:not(:disabled) {
+	filter: brightness(1.12);
+	box-shadow: inset 0 0 0 2px #fff8;
+}
+.location-tile {
+	align-items: center;
+	text-align: center;
+}
+.option-row {
+	text-align: left;
+	border-radius: 4px;
+	justify-content: flex-start;
+}
+.option-disabled {
+	opacity: 0.5;
+}
+.option-selected {
+	background: var(--ice);
+	color: #04121f;
+	box-shadow: none;
+}
+.amount-row {
+	align-items: center;
+}
+.amount-value {
+	font-family: 'Antonio', sans-serif;
+	font-size: 26px;
+	min-width: 52px;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Groups sit side by side (Market offer next to the deck top), wrapping only
+   when they do not fit. */
+.candidate-groups {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 8px 20px;
+	margin-top: 10px;
+}
+.candidate-group {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.candidate-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+.candidate-tile {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	max-width: 130px;
+}
+.candidate-tile .card {
+	width: 110px;
+}
+.candidate-selected .card {
+	outline: 3px solid var(--ice);
+	outline-offset: 1px;
+}
+.candidate-disabled {
+	opacity: 0.5;
+}
+.why-not {
+	font-size: 10px;
+	color: #ff9b9b;
+}
+
+.choice-dest {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+.dest-btn {
+	min-width: 150px;
+}
+.dest-default {
+	box-shadow: inset 0 0 0 2px var(--sunflower);
+}
+
+.order-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+.order-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 10px;
+	background: var(--panel-2);
+	border-radius: 4px;
+	border-left: 4px solid var(--periwinkle);
+}
+.order-index {
+	width: 22px;
+	text-align: center;
+	color: var(--dim);
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+.order-actions {
+	margin-left: auto;
+	display: flex;
+	gap: var(--gap);
+}
+.op-name {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex: 1;
+	min-width: 0;
+	flex-wrap: wrap;
+}
+
+.trigger-list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+.trigger-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 10px;
+	background: var(--panel-2);
+	border-radius: 4px;
+	border-left: 4px solid var(--periwinkle);
+}
+.trigger-picked {
+	border-left-color: var(--ice);
+	background: #0d1c2a;
+}
+.witness-sets {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+.witness-set {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	align-items: flex-start;
+}
+.witness-cards {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+/* Hot-seat handover — its own colour so it is never mistaken for a choice. */
+.pass-device {
+	border-left-color: var(--lilac);
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.pass-bar {
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: calc(var(--bar-h) + 12px + env(safe-area-inset-bottom, 0px));
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 18px;
+	background: var(--panel);
+	border-left: 6px solid var(--lilac);
+	border-radius: 4px;
+	box-shadow: 0 -8px 32px #000c;
+	z-index: 30;
+}
+
+/* ------------------------------------------------------------------- log */
+.log-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	max-height: 40vh;
+	overflow: auto;
+}
+.log-row {
+	display: flex;
+	gap: 8px;
+	align-items: baseline;
+	padding: 3px 5px;
+	border-radius: 3px;
+	font-size: 12.5px;
+}
+.log-row:hover {
+	background: #ffffff0d;
+}
+.log-seat {
+	min-width: 22px;
+	font-weight: 700;
+	font-family: 'Antonio', sans-serif;
+}
+.seat-0 {
+	color: var(--ice);
+}
+.seat-1 {
+	color: var(--salmon);
+}
+.log-kind {
+	font-size: 10px;
+	padding: 0 6px;
+	border-radius: 999px;
+	white-space: nowrap;
+	background: #21212e;
+	color: var(--dim);
+	letter-spacing: 0.08em;
+}
+.log-kind-benefit {
+	background: #0f2a1c;
+	color: #7ee0a8;
+}
+.log-kind-cost {
+	background: #2a1414;
+	color: #ffb3b3;
+}
+.log-kind-skipped {
+	background: #2a2110;
+	color: var(--sunflower);
+}
+.log-kind-failed {
+	background: var(--mars);
+	color: #fff;
+}
+.log-kind-event {
+	background: #21214a;
+	color: var(--periwinkle);
+}
+.log-kind-choice {
+	background: #2a2110;
+	color: var(--sunflower);
+}
+.log-message {
+	word-break: break-word;
+}
+
+/* ----------------------------------------------------------------- rules */
+.drawer-backdrop {
+	position: fixed;
+	inset: 0;
+	background: #000000b3;
+	z-index: 50;
+	display: flex;
+	justify-content: flex-end;
+}
+.drawer {
+	width: min(94vw, 760px);
+	height: 100%;
+	background: var(--ground);
+	border-left: 5px solid var(--orange);
+	display: flex;
+	flex-direction: column;
+}
+.drawer-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 6px 14px;
+	background: var(--orange);
+	color: #1a1200;
+	font-family: 'Antonio', sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+.drawer-head .btn {
+	min-height: 34px;
+	padding: 2px 14px;
+}
+.drawer-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gap);
+	padding: 8px;
+	background: var(--panel);
+}
+.drawer-tabs .btn {
+	min-height: 34px;
+	padding: 2px 14px;
+	font-size: 13px;
+}
+.rules-content {
+	flex: 1;
+	overflow: auto;
+	padding: 14px 20px;
+	max-width: 72ch;
+}
+.rules-content h1 {
+	font-size: 22px;
+	color: var(--orange);
+}
+.rules-content h2 {
+	font-size: 17px;
+	margin-top: 22px;
+	color: var(--sunflower);
+	border-bottom: 1px solid var(--hair);
+	padding-bottom: 4px;
+}
+.rules-content h3 {
+	font-size: 15px;
+	color: var(--periwinkle);
+}
+.rules-content blockquote {
+	border-left: 4px solid var(--periwinkle);
+	margin: 8px 0;
+	padding: 4px 12px;
+	color: var(--dim);
+}
+.rule-code {
+	background: #12121c;
+	padding: 0 5px;
+	border-radius: 3px;
+	color: var(--sunflower);
+}
+
+.cardlist-drawer {
+	width: min(94vw, 900px);
+}
+.cardlist-controls {
+	display: flex;
+	gap: 8px;
+	padding: 10px;
+	flex-wrap: wrap;
+	background: var(--panel);
+}
+.cardlist-remaining {
+	display: flex;
+	gap: 8px;
+	padding: 0 10px 8px;
+	flex-wrap: wrap;
+	background: var(--panel);
+}
+.cardlist-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 10px;
+	overflow: auto;
+}
+
+/* ------------------------------------------------------------- deck review */
+/* The printed face beside its interpreted operations, one row per card. The
+ * two columns are the whole point of the page, so they are what the colour
+ * marks: amber for what the card says, ice for what the engine does. */
+.deck-review-backdrop {
+	justify-content: flex-end;
+}
+.deck-review {
+	width: min(98vw, 1600px);
+	height: 100%;
+	background: var(--ground);
+	border-left: 5px solid var(--periwinkle);
+	display: flex;
+	flex-direction: column;
+}
+.deck-review-controls {
+	display: flex;
+	gap: 8px;
+	padding: 10px;
+	flex-wrap: wrap;
+	background: var(--panel);
+}
+.deck-review-controls input,
+.deck-review-controls select {
+	min-height: 44px;
+	padding: 4px 10px;
+	background: var(--panel-2);
+	color: var(--text);
+	border: 1px solid var(--hair);
+	border-radius: 4px;
+	font: inherit;
+}
+.deck-review-controls input {
+	flex: 1;
+	min-width: 200px;
+}
+.deck-review-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gap) 10px;
+	padding: 8px 10px;
+	background: var(--panel);
+}
+.deck-review-jump {
+	color: var(--sunflower);
+	text-decoration: none;
+	font-size: 13px;
+	font-family: 'Antonio', sans-serif;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.deck-review-jump:hover {
+	color: #fff;
+}
+.deck-review-body {
+	flex: 1;
+	overflow: auto;
+	padding: 12px 16px;
+}
+.deck-review-empty {
+	padding: 16px 0;
+}
+.deck-section {
+	margin-bottom: 26px;
+	scroll-margin-top: 12px;
+}
+.deck-section-head {
+	font-size: 20px;
+	margin: 0 0 8px;
+	padding-bottom: 6px;
+	color: var(--orange);
+	border-bottom: 2px solid var(--orange);
+}
+.deck-suit {
+	margin-bottom: 16px;
+}
+.deck-suit-head {
+	font-size: 13px;
+	margin: 10px 0 8px;
+	padding: 2px 12px;
+	border-radius: 999px;
+	display: inline-block;
+	background: var(--periwinkle);
+	color: #0a0a12;
+	letter-spacing: 0.08em;
+}
+.review-card {
+	display: flex;
+	gap: 16px;
+	margin-bottom: var(--gap);
+	padding: 12px;
+	background: var(--panel);
+	border-radius: 4px;
+	border-left: 5px solid var(--periwinkle);
+}
+.review-art {
+	flex: 0 0 auto;
+	align-self: flex-start;
+}
+.review-detail {
+	flex: 1;
+	min-width: 0;
+}
+.review-title {
+	display: flex;
+	align-items: baseline;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+.review-title h4 {
+	margin: 0;
+	font-size: 17px;
+	color: var(--text);
+}
+.review-id {
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11px;
+	color: var(--dim);
+}
+.review-facts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gap);
+	align-items: center;
+	margin: 6px 0;
+}
+.review-vp {
+	color: var(--lilac);
+	font-weight: 700;
+}
+.review-dev {
+	margin: 2px 0 8px;
+}
+.review-op {
+	border-top: 1px solid #ffffff12;
+	padding: 8px 0;
+}
+.review-op-head {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-bottom: 6px;
+}
+.review-op-cols {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+.review-col {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	font-size: 13px;
+}
+.review-col-label {
+	align-self: flex-start;
+	font-size: 10px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--sunflower);
+	color: #1a1200;
+	font-family: 'Antonio', sans-serif;
+}
+.review-col-printed {
+	border-right: 1px solid #ffffff12;
+	padding-right: 12px;
+}
+.review-col-interpreted .review-col-label {
+	background: var(--ice);
+	color: #04121f;
+}
+.review-col p {
+	margin: 0;
+}
+
+/* ------------------------------------------------------------------- end */
+.end-screen {
+	max-width: 900px;
+	margin: 5vh auto;
+	padding: 0 16px;
+	text-align: center;
+}
+.end-screen h1 {
+	font-size: 34px;
+	color: var(--orange);
+}
+.score-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--gap);
+	text-align: left;
+	margin: 20px 0;
+}
+.score-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-variant-numeric: tabular-nums;
+}
+.score-table td {
+	padding: 6px 8px;
+	border-bottom: 1px solid #ffffff12;
+}
+.score-total td {
+	font-weight: 800;
+	font-size: 16px;
+	border-top: 2px solid var(--lilac);
+}
+.focus-suppression {
+	text-align: left;
+}
+
+/* ---------------------------------------------------------- autosave/undo */
+.undo-lock {
+	font-size: 0.75em;
+	opacity: 0.8;
+}
+.undo-policy-chip {
+	font-style: italic;
+}
+.debug-reveal {
+	opacity: 0.8;
+}
+
+/* ----------------------------------------------------------- load screen */
+.saved-games {
+	margin: 20px auto 0;
+	max-width: 760px;
+}
+.saved-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.saved-games h3 {
+	margin: 0;
+}
+.file-btn {
+	position: relative;
+	cursor: pointer;
+}
+.hidden-file {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+.save-list {
+	list-style: none;
+	margin: 10px 0 0;
+	padding: 0;
+	display: grid;
+	gap: var(--gap);
+}
+.save-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+	padding: 10px 12px;
+	background: var(--panel-2);
+	border-radius: 4px;
+	border-left: 4px solid var(--periwinkle);
+}
+.save-drift {
+	border-left-color: var(--sunflower);
+}
+.save-meta {
+	display: grid;
+	gap: 2px;
+	min-width: 0;
+}
+.save-title {
+	font-size: 1.05em;
+}
+.save-warn-badge {
+	display: inline-block;
+	margin-top: 4px;
+	padding: 1px 10px;
+	border-radius: 999px;
+	background: #2a2110;
+	color: var(--sunflower);
+	font-size: 0.78em;
+}
+.setup-note {
+	max-width: 760px;
+	margin: 10px auto 0;
+}
+
+/* ---------------------------------------------------------- error screen */
+.error-screen {
+	padding: 40px 20px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+.error-screen h1 {
+	color: var(--mars);
+}
+.error-session {
+	margin-top: 16px;
+}
+.session-head {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+.session-json summary {
+	cursor: pointer;
+	color: var(--sunflower);
+}
+.session-json pre {
+	max-height: 200px;
+	overflow: auto;
+	font-size: 0.78em;
+}
+.error-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-top: 10px;
+}
+
+/* --------------------------------------------------------- replay viewer */
+.replay-modal {
+	width: min(880px, 92vw);
+	max-height: 88vh;
+	display: flex;
+	flex-direction: column;
+}
+.replay-controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 14px;
+}
+.replay-slider {
+	flex: 1;
+	accent-color: var(--orange);
+}
+.replay-body {
+	display: grid;
+	grid-template-columns: 300px minmax(0, 1fr);
+	gap: 12px;
+	min-height: 0;
+	flex: 1;
+	overflow: hidden;
+	padding: 0 14px;
+}
+.replay-intents {
+	overflow: auto;
+	border-right: 1px solid var(--hair);
+	padding-right: 10px;
+}
+.replay-log {
+	list-style: none;
+	margin: 8px 0 0;
+	padding: 0;
+	display: grid;
+	gap: 1px;
+	font-size: 0.85em;
+}
+.replay-intent {
+	padding: 3px 6px;
+	border-radius: 3px;
+}
+.replay-idx {
+	opacity: 0.6;
+	margin-right: 6px;
+	font-variant-numeric: tabular-nums;
+}
+.replay-current {
+	background: #2a2110;
+	color: var(--sunflower);
+	font-weight: 600;
+}
+.replay-future {
+	opacity: 0.4;
+}
+.replay-frame {
+	overflow: auto;
+}
+.replay-state h3 {
+	margin-top: 0;
+}
+.replay-headline {
+	margin: 0 0 8px;
+}
+.replay-seats {
+	display: grid;
+	gap: var(--gap);
+}
+.replay-seat {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	padding: 8px 10px;
+	background: var(--panel-2);
+	border-radius: 4px;
+	border-left: 4px solid var(--periwinkle);
+}
+.replay-foot {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	padding: 8px 14px;
+}
+.sync-error {
+	margin: 4px 0 0;
+}
+.pending-chip {
+	margin-left: 8px;
+}
+
+/* -------------------------------------------------------- malformed card */
+.card-malformed {
+	position: relative;
+	padding: 10px;
+	border: 1px dashed var(--sunflower);
+	border-radius: 4px;
+	background: #1a1610;
+	min-height: 60px;
+	display: grid;
+	gap: 6px;
+}
+.malformed-badge {
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: #2a2110;
+	color: var(--sunflower);
+	font-size: 0.7em;
+	letter-spacing: 0.06em;
+}
+
+/* --------------------------------------------------------------- responsive */
+@media (max-width: 1240px) {
+	.own-row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+@media (max-width: 1080px) {
+	/* One column: the hand rejoins the flow rather than covering the board. */
+	.board-grid {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: minmax(0, 1fr) auto auto;
+		grid-template-areas: 'main' 'hand' 'side';
+	}
+	.side-col {
+		overflow: visible;
+	}
+	.shared-row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.hand-strip {
+		position: sticky;
+		grid-area: hand;
+		right: auto;
+		bottom: 0;
+		max-width: none;
+	}
+	.hand-strip .hand {
+		width: auto;
+		box-shadow: 0 -10px 28px #000000a6;
+	}
+}
+@media (max-width: 900px) {
+	/* Below this the console stops being one screen; the page scrolls normally. */
+	.frame {
+		height: auto;
+		min-height: 100%;
+	}
+	.frame-body {
+		overflow: visible;
+	}
+	.main-col {
+		overflow: visible;
+	}
+	.head-cap,
+	.foot-cap {
+		display: none;
+	}
+	.topbar,
+	.bottombar {
+		border-radius: var(--radius-pill);
+	}
+	.console-nav > :first-child,
+	.console-nav > :last-child {
+		border-radius: var(--radius-pill);
+	}
+	.nav-spacer {
+		display: none;
+	}
+}
+
+/* ------------------------------------------------------ token motion ----
+ * What just happened, made visible (flow.ts / flight.tsx / delta.tsx):
+ * tokens fly from their source to the pool they land in, and every counter
+ * they leave or reach floats its delta. The one deliberate exception to
+ * "the table never moves" — tokens may fly, cards still never do. */
+
+.flight-layer {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 90;
+}
+.flight-token {
+	position: fixed;
+	width: 30px;
+	height: 30px;
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
+	background: radial-gradient(circle, #ffffff30 0%, #ffffff00 70%);
+	color: var(--text);
+	font-weight: 700;
+	will-change: transform, opacity;
+}
+.flight-token img {
+	width: 26px;
+	height: 26px;
+	object-fit: contain;
+	filter: drop-shadow(0 0 6px #fff9) drop-shadow(0 2px 3px #000c);
+}
+.flight-glo img {
+	filter: drop-shadow(0 0 8px var(--lilac)) drop-shadow(0 2px 3px #000c);
+}
+.flight-action svg {
+	width: 26px;
+	height: 26px;
+	color: var(--orange);
+	filter: drop-shadow(0 0 8px var(--orange)) drop-shadow(0 2px 3px #000c);
+}
+.flight-action img {
+	filter: drop-shadow(0 0 8px var(--orange)) drop-shadow(0 2px 3px #000c);
+}
+.flight-count {
+	position: absolute;
+	left: 100%;
+	top: -4px;
+	padding: 0 5px;
+	border-radius: 999px;
+	background: #000c;
+	font-family: 'Antonio', sans-serif;
+	font-size: 13px;
+	white-space: nowrap;
+}
+
+/* the card whose effect fired glows as its tokens leave */
+.card.fx-source {
+	box-shadow:
+		0 0 0 2px var(--sunflower),
+		0 0 22px 4px color-mix(in srgb, var(--sunflower) 60%, transparent);
+	transition: box-shadow 0.25s ease-out;
+}
+.fx-land {
+	animation: fx-land 0.45s ease-out;
+}
+@keyframes fx-land {
+	40% {
+		filter: brightness(1.6);
+		transform: scale(1.12);
+	}
+}
+
+/* ---- delta badges */
+.delta-host {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	border-radius: 999px;
+}
+.delta-up {
+	animation: delta-pulse-up 0.9s ease-out;
+}
+.delta-down {
+	animation: delta-pulse-down 0.9s ease-out;
+}
+@keyframes delta-pulse-up {
+	0% {
+		box-shadow: 0 0 0 0 #9f9c;
+	}
+	100% {
+		box-shadow: 0 0 0 10px #9f90;
+	}
+}
+@keyframes delta-pulse-down {
+	0% {
+		box-shadow: 0 0 0 0 #fff8;
+	}
+	100% {
+		box-shadow: 0 0 0 10px #fff0;
+	}
+}
+.delta-badge {
+	position: absolute;
+	right: -10px;
+	top: -14px;
+	z-index: 5;
+	padding: 0 6px;
+	border-radius: 999px;
+	font-family: 'Antonio', sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 18px;
+	white-space: nowrap;
+	pointer-events: none;
+	animation: delta-rise 1.6s ease-out forwards;
+}
+.delta-badge-up {
+	background: #7dffb0;
+	color: #04210f;
+	box-shadow: 0 0 10px #7dffb099;
+}
+/* a loss is quiet, never --mars (reserved for alerts, docs/ui-lcars.md §2) */
+.delta-badge-down {
+	background: #e8e2f0;
+	color: #1a1622;
+	box-shadow: 0 0 8px #0009;
+}
+@keyframes delta-rise {
+	0% {
+		transform: translateY(6px) scale(0.6);
+		opacity: 0;
+	}
+	15% {
+		transform: translateY(0) scale(1.15);
+		opacity: 1;
+	}
+	70% {
+		transform: translateY(-6px) scale(1);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(-14px);
+		opacity: 0;
+	}
+}
+
+/* ---- the action tray */
+.action-tray {
+	gap: 6px;
+	padding: 2px 8px 2px 4px;
+	background: #1a1200;
+	border: 2px solid var(--orange);
+	color: var(--text);
+}
+.tray-icons {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+}
+.tray-token .icon {
+	filter: drop-shadow(
+		0 0 4px color-mix(in srgb, var(--orange) 70%, transparent)
+	);
+}
+.tray-spent .icon {
+	opacity: 0.28;
+	filter: grayscale(1);
+}
+.tray-count {
+	font-family: 'Antonio', sans-serif;
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	white-space: nowrap;
+}
+.tray-count strong {
+	font-size: 17px;
+	margin-right: 2px;
+}
+.tray-seat-0 {
+	border-color: var(--ice);
+}
+.tray-seat-1 {
+	border-color: var(--salmon);
+}
+.tray-lg {
+	padding: 3px 12px 3px 6px;
+}
+.tray-lg .icon-md {
+	height: 24px;
+	vertical-align: -6px;
+}
+.tray-lg .tray-count strong {
+	font-size: 22px;
+}
+/* the top bar clips overflow, so the big tray's badge sits inside it, over
+ * the count it is changing */
+.tray-lg .delta-badge {
+	top: 50%;
+	right: 6px;
+	margin-top: -9px;
+}
+.tray-empty {
+	border-color: var(--sunflower);
+}
+.tray-empty .tray-count {
+	color: var(--sunflower);
+}
+.btn-nudge {
+	animation: btn-nudge 1.4s ease-in-out infinite;
+}
+@keyframes btn-nudge {
+	50% {
+		box-shadow:
+			0 0 0 4px #1a1200,
+			0 0 0 7px var(--sunflower);
+	}
+}
+
+/* ---- counters, tracks, missions */
+.res-pip.delta-host {
+	padding: 1px 6px 1px 3px;
+	background: #ffffff0d;
+}
+.res-n {
+	font-variant-numeric: tabular-nums;
+	font-size: 15px;
+}
+.stardate-glory-n {
+	font-variant-numeric: tabular-nums;
+	margin-left: 2px;
+}
+.icon-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+}
+.track-position {
+	width: 12px;
+	height: 12px;
+	bottom: -6px;
+	border-radius: 50%;
+	background: var(--sunflower);
+	box-shadow:
+		0 0 0 2px #05050a,
+		0 0 8px var(--sunflower);
+}
+.track-position-seat-0 {
+	background: var(--ice);
+	box-shadow:
+		0 0 0 2px #05050a,
+		0 0 8px var(--ice);
+}
+.track-position-seat-1 {
+	background: var(--salmon);
+	box-shadow:
+		0 0 0 2px #05050a,
+		0 0 8px var(--salmon);
+}
+.mission-index {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+.mission-state {
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
+	border: 2px solid var(--dim);
+}
+.mission-ready .mission-state {
+	border-color: var(--ice);
+	background: var(--ice);
+	box-shadow: 0 0 6px var(--ice);
+}
+.mission-done .mission-state {
+	border-color: var(--lilac);
+	background: var(--lilac);
+}
+.mission:not(.mission-done):not(.mission-ready) .mission-index .icon {
+	opacity: 0.45;
+}
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* ---- log: the rows the last step added */
+.log-fresh {
+	box-shadow: inset 3px 0 0 var(--sunflower);
+	animation: log-fresh 2.4s ease-out;
+}
+@keyframes log-fresh {
+	0% {
+		background: color-mix(in srgb, var(--sunflower) 22%, transparent);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		transition: none !important;
+		animation: none !important;
+	}
+	/* no motion, still a signal: the delta sits still until its window ends */
+	.delta-up,
+	.delta-down {
+		outline: 2px solid var(--sunflower);
+		outline-offset: 1px;
+	}
+}
+
+/* Printed rules text (fetched STCC data): [[token]] icons and card-area sections. */
+.ptoken {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	vertical-align: -2px;
+}
+.ptoken-icon {
+	height: 1.15em;
+	width: auto;
+}
+.ptoken-chip {
+	padding: 0 5px 0 2px;
+	border-radius: 999px;
+	background: #2a2f3d;
+	color: var(--ice);
+	font-family: 'Antonio', sans-serif;
+	font-weight: 600;
+	font-size: 0.9em;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+.ptoken-chip .ptoken-icon {
+	height: 1.1em;
+}
+.printed-text {
+	margin: 0 0 10px;
+	display: grid;
+	gap: 4px;
+}
+.printed-section {
+	margin: 0;
+	padding: 4px 8px;
+	border-radius: 6px;
+	background: #1a1d27;
+	line-height: 1.45;
+	font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+	font-size: 15px;
+}
+.printed-label {
+	font-family: 'Antonio', sans-serif;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--dim);
+	margin-right: 4px;
+}
+.printed-table {
+	background: #17263a;
+}
+.printed-goal {
+	background: #2f1a1a;
+}
+.icon-glyph {
+	display: inline-block;
+	height: auto;
+	filter: none;
+	font-weight: 700;
+}
+.icon-chip {
+	color: var(--orange);
+}
+.icon-chip svg {
+	display: block;
+	width: 15px;
+	height: 15px;
+}
+.icon-md.icon-chip svg {
+	width: 19px;
+	height: 19px;
+}

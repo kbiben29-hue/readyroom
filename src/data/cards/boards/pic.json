@@ -1,0 +1,475 @@
+[
+	{
+		"deck": "PIC",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 11,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 7
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1PIC/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 3,
+									"filter": {
+										"suits": ["ALLY"]
+									}
+								}
+							]
+						},
+						{
+							"k": "OR",
+							"terms": [
+								{
+									"k": "AND",
+									"terms": [
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "RESEARCH",
+											"value": 4
+										},
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "INFLUENCE",
+											"value": 4
+										}
+									]
+								},
+								{
+									"k": "AND",
+									"terms": [
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "RESEARCH",
+											"value": 4
+										},
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "MILITARY",
+											"value": 4
+										}
+									]
+								},
+								{
+									"k": "AND",
+									"terms": [
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "INFLUENCE",
+											"value": 4
+										},
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "MILITARY",
+											"value": 4
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 4
+						},
+						{
+							"k": "DRAW",
+							"count": 4
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "JUNK",
+								"target": {
+									"zones": [
+										{
+											"k": "MARKET_OFFER",
+											"suit": "PERSON"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "CARGO"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "SHIP"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "ALLY"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "PIC",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 2
+					},
+					{
+						"step": 11,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1PIC/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 3,
+									"filter": {
+										"suits": ["ALLY"]
+									}
+								}
+							]
+						},
+						{
+							"k": "OR",
+							"terms": [
+								{
+									"k": "AND",
+									"terms": [
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "RESEARCH",
+											"value": 4
+										},
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "INFLUENCE",
+											"value": 4
+										}
+									]
+								},
+								{
+									"k": "AND",
+									"terms": [
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "RESEARCH",
+											"value": 4
+										},
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "MILITARY",
+											"value": 4
+										}
+									]
+								},
+								{
+									"k": "AND",
+									"terms": [
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "INFLUENCE",
+											"value": 4
+										},
+										{
+											"k": "SPECIALTY_AT_LEAST",
+											"specialty": "MILITARY",
+											"value": 4
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 4
+						},
+						{
+							"k": "DRAW",
+							"count": 4
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "JUNK",
+								"target": {
+									"zones": [
+										{
+											"k": "MARKET_OFFER",
+											"suit": "PERSON"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "CARGO"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "SHIP"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "ALLY"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				"vp": 5
+			},
+			{
+				"index": 1,
+				"cardId": "1PIC/M2",
+				"goal": {
+					"k": "SAME_SHIP",
+					"requirements": [
+						{
+							"count": 3,
+							"filter": {
+								"traits": ["KLINGON"]
+							}
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 1 INFLUENCE",
+									"body": {
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "INFLUENCE",
+										"amount": 1
+									}
+								},
+								{
+									"label": "Gain 1 MILITARY",
+									"body": {
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "MILITARY",
+										"amount": 1
+									}
+								}
+							]
+						},
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "JUNK",
+								"target": {
+									"zones": [
+										{
+											"k": "MARKET_OFFER",
+											"suit": "PERSON"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "CARGO"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "SHIP"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "ALLY"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				"vp": 3
+			},
+			{
+				"index": 2,
+				"cardId": "1PIC/M3",
+				"goal": {
+					"k": "DIFFERENT_SPECIES_IN_PLAY",
+					"count": 6,
+					"filter": {
+						"not": {
+							"traits": ["HUMAN", "STARFLEET"]
+						}
+					},
+					"eachDistinct": ["ALIEN", "TRANSCENDENT"]
+				},
+				"reward": {
+					"k": "TAKE",
+					"deck": "ENCOUNTER",
+					"count": 1
+				},
+				"vp": 2
+			}
+		]
+	}
+]

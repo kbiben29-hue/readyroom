@@ -1,0 +1,39 @@
+import type { Effect } from '../nodes'
+import type { Primitive } from './index'
+import { resolveQuery } from '../../queries/resolveQuery'
+import { pickCards, moveCard } from '../runtime'
+import { cardDef, isLocationDef } from '../../cards'
+import type { GameState, EffectCtx } from '../../state'
+import type { CardInstanceId } from '../../ids'
+
+export const recall: Primitive<Extract<Effect, { k: 'RECALL' }>> = {
+	isCost: false,
+	canResolve(state, node, ctx) {
+		return candidates(state, node, ctx).length > 0
+	},
+	execute(state, node, ctx, _frame) {
+		const cands = candidates(state, node, ctx)
+		const r = pickCards(state, node, ctx, 'recall', {
+			prompt: 'Recall a card',
+			candidates: cands,
+			min: 1,
+			max: 1,
+			from: 'IN_PLAY',
+		})
+		if (r.kind === 'suspended') return r.state
+		if (r.kind === 'none') return state
+		return moveCard(state, r.iids[0]!, { k: 'HAND', seat: ctx.actor })
+	},
+}
+
+/** Locations can never be recalled (rules/06 §6.1.3), so they are filtered out
+ *  of every RECALL target regardless of the query. */
+function candidates(
+	state: GameState,
+	node: Effect & { k: 'RECALL' },
+	ctx: EffectCtx,
+): CardInstanceId[] {
+	return resolveQuery(state, node.target, ctx).filter(
+		(iid) => !isLocationDef(cardDef(state.cards[iid]!.def)),
+	)
+}

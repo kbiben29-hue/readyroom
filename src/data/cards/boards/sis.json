@@ -1,0 +1,418 @@
+[
+	{
+		"deck": "SIS",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 11,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 7
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 4,
+						"value": 2
+					},
+					{
+						"step": 9,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1SIS/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							},
+							"value": 4
+						},
+						{
+							"k": "OR",
+							"terms": [
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "INFLUENCE",
+									"value": 7
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "MILITARY",
+									"value": 7
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "ENLIST_DEVELOPMENT",
+					"discount": [
+						{
+							"res": ["DIL", "LAT"],
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": ["IN_PLAY"],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["STARBASE"]
+									}
+								}
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "SIS",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 2
+					},
+					{
+						"step": 11,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 4,
+						"value": 1
+					},
+					{
+						"step": 9,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1SIS/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							},
+							"value": 4
+						},
+						{
+							"k": "OR",
+							"terms": [
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "INFLUENCE",
+									"value": 7
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "MILITARY",
+									"value": 7
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "ENLIST_DEVELOPMENT",
+					"discount": [
+						{
+							"res": ["DIL", "LAT"],
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": ["IN_PLAY"],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["STARBASE"]
+									}
+								}
+							}
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 1,
+				"cardId": "1SIS/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["STARFLEET"],
+									"not": {
+										"suits": ["CAPTAIN"]
+									}
+								}
+							},
+							"value": 2
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["BAJORAN"]
+								}
+							},
+							"value": 3
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["LOCATIONS"],
+								"seat": "ANY",
+								"filter": {
+									"ids": ["1SIS02-25"]
+								},
+								"withShip": true
+							},
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TRIGGER_CONTROL",
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							}
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": ["LOCATIONS"],
+								"seat": "ANY",
+								"filter": {
+									"ids": ["1SIS02-25"]
+								}
+							}
+						}
+					]
+				},
+				"vp": 5
+			},
+			{
+				"index": 2,
+				"cardId": "1SIS/M3",
+				"goal": {
+					"k": "COUNT_AT_LEAST",
+					"query": {
+						"zones": ["IN_PLAY"],
+						"seat": "SELF",
+						"filter": {
+							"traits": ["DOMINION", "CHANGELING"]
+						}
+					},
+					"value": 3
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 3
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Scan 1 PERSON",
+									"body": {
+										"k": "SCAN_N",
+										"n": 1,
+										"suits": ["PERSON"]
+									}
+								},
+								{
+									"label": "Scan 1 CARGO",
+									"body": {
+										"k": "SCAN_N",
+										"n": 1,
+										"suits": ["CARGO"]
+									}
+								},
+								{
+									"label": "Scan 1 SHIP",
+									"body": {
+										"k": "SCAN_N",
+										"n": 1,
+										"suits": ["SHIP"]
+									}
+								}
+							]
+						},
+						{
+							"k": "DRAW",
+							"count": 2
+						}
+					]
+				},
+				"vp": 3
+			}
+		]
+	}
+]

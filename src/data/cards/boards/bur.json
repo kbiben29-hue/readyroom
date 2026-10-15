@@ -1,0 +1,409 @@
+[
+	{
+		"deck": "BUR",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1BUR/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 2,
+									"filter": {
+										"suits": ["INCIDENT"]
+									}
+								},
+								{
+									"filter": {
+										"traits": ["SCIENTIST"]
+									}
+								},
+								{
+									"filter": {
+										"traits": ["KELPIEN"]
+									}
+								}
+							]
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "RESEARCH",
+							"value": 5
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "ENCOUNTER",
+							"count": 1,
+							"to": "DECK_TOP"
+						},
+						{
+							"k": "RECRYSTALLIZE",
+							"amount": {
+								"k": "UP_TO",
+								"max": 2
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "BUR",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1BUR/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 2,
+									"filter": {
+										"suits": ["INCIDENT"]
+									}
+								},
+								{
+									"filter": {
+										"traits": ["SCIENTIST"]
+									}
+								},
+								{
+									"filter": {
+										"traits": ["KELPIEN"]
+									}
+								}
+							]
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "RESEARCH",
+							"value": 5
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "ENCOUNTER",
+							"count": 1,
+							"to": "DECK_TOP"
+						},
+						{
+							"k": "RECRYSTALLIZE",
+							"amount": {
+								"k": "UP_TO",
+								"max": 2
+							}
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 1,
+				"cardId": "1BUR/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOG",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["ANOMALY"]
+								}
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["STARFLEET"],
+									"not": {
+										"suits": ["CAPTAIN"]
+									}
+								}
+							},
+							"value": 3
+						},
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 3,
+									"different": "SPECIES",
+									"filter": {
+										"not": {
+											"traits": ["STARFLEET"]
+										}
+									}
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "TAKE_CONTROL",
+					"target": "FROM_LOCATION_DECK"
+				},
+				"vp": 3
+			},
+			{
+				"index": 2,
+				"cardId": "1BUR/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["BUSINESS", "ORION"]
+								}
+							},
+							"value": 2
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOG",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["SHADY"]
+								}
+							},
+							"value": 2
+						}
+					]
+				},
+				"reward": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": ["INCIDENT"]
+								},
+								"bind": "$mission.played"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$mission.played"
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 2
+										},
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "DIL",
+											"amount": 2
+										},
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 2
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				"vp": 6
+			}
+		]
+	}
+]

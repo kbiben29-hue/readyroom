@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+	<!-- Ready Room app icon: our own drawing (the Shorthand Duty Officer
+	     chair glyph), no printed or STCC artwork. -->
+	<rect width="512" height="512" rx="112" fill="#05050a"/>
+	<rect x="96" y="72" width="320" height="40" rx="20" fill="#ff9c00"/>
+	<g fill="none" stroke="#ff9c00" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+		<path d="M176 160h160v136H176Z"/>
+		<path d="M128 296h256v56H128Z"/>
+		<path d="M184 352v88M328 352v88"/>
+	</g>
+</svg>

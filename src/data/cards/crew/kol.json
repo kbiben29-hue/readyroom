@@ -1,0 +1,2465 @@
+[
+	{
+		"id": "1KOL01-24",
+		"cardId": "1KOL01/24",
+		"suit": "CAPTAIN",
+		"deck": "KOL",
+		"traits": ["WEAPON", "KLINGON"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								}
+							},
+							{
+								"k": "OPPONENT",
+								"body": {
+									"k": "MAY",
+									"body": {
+										"k": "DRAW",
+										"count": 1
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		],
+		"awayTeams": 6
+	},
+	{
+		"id": "1KOL02-24",
+		"cardId": "1KOL02/24",
+		"suit": "SHIP",
+		"deck": "KOL",
+		"traits": ["KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": ["SHIP"]
+						},
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEND_AWAY_TEAM",
+					"count": 1,
+					"target": {
+						"zones": ["LOCATIONS"],
+						"filter": {
+							"suits": ["LOCATION"]
+						},
+						"atThisShip": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": ["PERSON"]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL03-24",
+		"cardId": "1KOL03/24",
+		"suit": "CARGO",
+		"deck": "KOL",
+		"traits": ["CLOAK", "ATTACK", "ONGOING"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 3
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["SHIP"]
+								}
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 1
+										}
+									],
+									"seat": "OPPONENT",
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								},
+								"value": 2
+							},
+							"then": {
+								"k": "FORCE",
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Dismiss one of your SHIPs",
+											"body": {
+												"k": "DISMISS",
+												"target": {
+													"zones": [
+														{
+															"k": "FLEET",
+															"seat": 0
+														}
+													],
+													"seat": "SELF",
+													"filter": {
+														"suits": ["SHIP"]
+													}
+												}
+											}
+										},
+										{
+											"label": "Take an INCIDENT",
+											"body": {
+												"k": "TAKE",
+												"deck": "INCIDENT",
+												"count": 1
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DEPLOYED",
+					"filter": {
+						"suits": ["SHIP"],
+						"not": {
+							"traits": ["CLOAK"]
+						}
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MODIFIER_ATTACH",
+							"id": "TEMP_CLOAK",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"bound": "$event.card"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": ["LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										}
+									},
+									"ignoreBlocking": true
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL04-24",
+		"cardId": "1KOL04/24",
+		"suit": "CARGO",
+		"deck": "KOL",
+		"traits": ["WEAPON", "KLINGON", "IMPERIAL"],
+		"skills": [],
+		"focus": null,
+		"vp": 6,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "IF",
+			"cond": {
+				"k": "COUNT_AT_LEAST",
+				"query": {
+					"zones": ["IN_PLAY"],
+					"seat": "SELF",
+					"filter": {
+						"ids": ["1KOL09-24"]
+					}
+				},
+				"value": 1
+			},
+			"then": {
+				"k": "NOOP"
+			},
+			"else": {
+				"k": "COST_RESOURCE",
+				"res": "DIL",
+				"amount": 5
+			}
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 9
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_DISMISS",
+								"count": 1,
+								"filter": {
+									"suits": ["PERSON"],
+									"traits": ["KLINGON"]
+								},
+								"from": {
+									"k": "DUTY_OFFICER",
+									"seat": 0
+								}
+							},
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 4
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL05-24",
+		"cardId": "1KOL05/24",
+		"suit": "LOCATION",
+		"deck": "KOL",
+		"traits": ["ANOMALY", "KLINGON", "TIME_TRAVEL"],
+		"skills": ["SKILL_ANY"],
+		"focus": null,
+		"vp": 1,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 6
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "RESOURCE",
+							"res": "GLO"
+						},
+						"op": "GE",
+						"b": 10
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							],
+							"bind": "found"
+						},
+						{
+							"k": "FREE_PLAY",
+							"filter": {},
+							"bound": "found"
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "DRAW",
+						"count": 1,
+						"fromBottom": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							{
+								"k": "COST_DISCARD",
+								"count": 1
+							}
+						]
+					},
+					"body": {
+						"k": "RECALL",
+						"target": {
+							"zones": [
+								{
+									"k": "STAGING",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"not": {
+									"traits": ["TIME_TRAVEL"]
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "COUNT",
+						"query": {
+							"zones": [
+								{
+									"k": "STAGING",
+									"seat": 0
+								},
+								{
+									"k": "FLEET",
+									"seat": 0
+								},
+								{
+									"k": "LOCATION_AREA",
+									"seat": 0
+								},
+								{
+									"k": "DUTY_OFFICER",
+									"seat": 0
+								},
+								{
+									"k": "CAPTAIN",
+									"seat": 0
+								},
+								{
+									"k": "STATUS",
+									"seat": 0
+								}
+							],
+							"seat": "SELF",
+							"countIcons": "SKILL"
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL06-24",
+		"cardId": "1KOL06/24",
+		"suit": "PERSON",
+		"deck": "KOL",
+		"traits": ["TRILL", "AMBASSADOR"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 2
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "SPECIALTY",
+							"specialty": "INFLUENCE"
+						},
+						"op": "LT",
+						"b": {
+							"k": "SPECIALTY",
+							"specialty": "MILITARY"
+						}
+					},
+					"then": {
+						"k": "ADVANCE_SPECIALTY",
+						"specialty": "INFLUENCE",
+						"amount": 1
+					},
+					"else": {
+						"k": "IF",
+						"cond": {
+							"k": "COMPARE",
+							"a": {
+								"k": "SPECIALTY",
+								"specialty": "MILITARY"
+							},
+							"op": "LT",
+							"b": {
+								"k": "SPECIALTY",
+								"specialty": "INFLUENCE"
+							}
+						},
+						"then": {
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						},
+						"else": {
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 1 INFLUENCE",
+									"body": {
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "INFLUENCE",
+										"amount": 1
+									}
+								},
+								{
+									"label": "Gain 1 MILITARY",
+									"body": {
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "MILITARY",
+										"amount": 1
+									}
+								}
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "RETURN_INCIDENT",
+					"target": {
+						"zones": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": ["INCIDENT"]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "SCAN_N",
+						"n": 2,
+						"suits": ["ALLY"]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL07-24",
+		"cardId": "1KOL07/24",
+		"suit": "PERSON",
+		"deck": "KOL",
+		"traits": ["WEAPON", "KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 4
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "RESOURCE",
+							"res": "GLO"
+						},
+						"op": "GE",
+						"b": 8
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "RETURN_INCIDENT",
+							"target": {
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["INCIDENT"]
+								}
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "RESOURCE",
+							"res": "GLO"
+						},
+						"op": "GE",
+						"b": 15
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DESTROY",
+								"target": "THIS"
+							},
+							{
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 3
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SPECIALTY_ADVANCED",
+					"specialty": "INFLUENCE"
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL08-24",
+		"cardId": "1KOL08/24",
+		"suit": "PERSON",
+		"deck": "KOL",
+		"traits": ["WEAPON", "KLINGON"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "RESOURCE",
+							"res": "GLO"
+						},
+						"op": "GE",
+						"b": 10
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": ["NEUTRAL_LOCATIONS"],
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"bind": "sent"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": ["NEUTRAL_LOCATIONS"],
+									"bound": "sent",
+									"secured": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_ACTION"
+									},
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "TAKE_CONTROL",
+												"target": {
+													"zones": ["NEUTRAL_LOCATIONS"],
+													"bound": "sent"
+												},
+												"requireSecured": true
+											},
+											{
+												"k": "LOG",
+												"target": "THIS"
+											}
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SPECIALTY_ADVANCED",
+					"specialty": "INFLUENCE"
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								},
+								"to": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL09-24",
+		"cardId": "1KOL09/24",
+		"suit": "SHIP",
+		"deck": "KOL",
+		"traits": ["KLINGON"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 5
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEND_AWAY_TEAM",
+					"count": 1,
+					"target": {
+						"zones": ["LOCATIONS"],
+						"filter": {
+							"suits": ["LOCATION"]
+						},
+						"atThisShip": true
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL10-24",
+		"cardId": "1KOL10/24",
+		"suit": "DIRECTIVE",
+		"deck": "KOL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["PERSON"]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["ALLY"]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL11-24",
+		"cardId": "1KOL11/24",
+		"suit": "INCIDENT",
+		"deck": "KOL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "HAS_TRAIT_IN_PLAY",
+									"trait": "ENGINEER"
+								},
+								"then": {
+									"k": "GAIN_ACTION",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL12-24",
+		"cardId": "1KOL12/24",
+		"suit": "INCIDENT",
+		"deck": "KOL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"bind": "discarded"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "discarded",
+									"filter": {
+										"exhibits": ["MILITARY"]
+									}
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 2
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "HAS_TRAIT_IN_PLAY",
+						"trait": "COMMUNICATION"
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL13-24",
+		"cardId": "1KOL13/24",
+		"suit": "LOCATION",
+		"deck": "KOL",
+		"traits": [],
+		"skills": ["SKILL_INFLUENCE"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				},
+				"costsAction": true
+			},
+			{
+				"type": "CONTROL",
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"effect": {
+					"k": "FOR_EACH",
+					"over": {
+						"zones": [
+							{
+								"k": "BEAMED_TO",
+								"host": "THIS"
+							}
+						],
+						"filter": {
+							"suits": ["PERSON"]
+						}
+					},
+					"bind": "p",
+					"body": {
+						"k": "GAIN_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"effect": {
+					"k": "BEAM",
+					"filter": {
+						"suits": ["PERSON"]
+					},
+					"count": 1,
+					"to": {
+						"zones": [
+							{
+								"k": "LOCATION_AREA",
+								"seat": 0
+							}
+						],
+						"seat": "SELF",
+						"thisCard": true
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL14-24",
+		"cardId": "1KOL14/24",
+		"suit": "PERSON",
+		"deck": "KOL",
+		"traits": ["KLINGON", "SCIENTIST"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 3
+							},
+							"body": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "CHOICE",
+								"amount": 2
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": ["PERSON"],
+										"not": {
+											"traits": ["KLINGON"]
+										}
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "RESEARCH",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL15-24",
+		"cardId": "1KOL15/24",
+		"suit": "DIRECTIVE",
+		"deck": "KOL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 4
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["SHIP"]
+					}
+				},
+				"isAttack": false
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["CARGO"]
+					}
+				},
+				"isAttack": false
+			},
+			{
+				"type": "PLAY",
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				},
+				"costsAction": false,
+				"isAttack": false
+			}
+		]
+	},
+	{
+		"id": "1KOL16-24",
+		"cardId": "1KOL16/24",
+		"suit": "DIRECTIVE",
+		"deck": "KOL",
+		"traits": [],
+		"skills": ["SKILL_ANY"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "COST_DISCARD",
+											"count": 1,
+											"filter": {
+												"suits": ["PERSON"]
+											}
+										},
+										{
+											"k": "COST_TAKE_INCIDENT",
+											"count": 1
+										}
+									]
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 2,
+									"target": {
+										"zones": ["LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										},
+										"withShip": true
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISMISS",
+									"count": 1,
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								},
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Gain a PERSON",
+											"body": {
+												"k": "GAIN_CARD",
+												"suits": ["PERSON"]
+											}
+										},
+										{
+											"label": "Gain a SHIP",
+											"body": {
+												"k": "GAIN_CARD",
+												"suits": ["SHIP"]
+											}
+										},
+										{
+											"label": "Gain an ALLY",
+											"body": {
+												"k": "GAIN_CARD",
+												"suits": ["ALLY"]
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL17-24",
+		"cardId": "1KOL17/24",
+		"suit": "DIRECTIVE",
+		"deck": "KOL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"filter": {
+										"suits": ["PERSON"]
+									},
+									"from": "BEAMED_TO_SHIP"
+								},
+								"body": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "MILITARY",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "COST_LOG",
+										"filter": {
+											"suits": ["SHIP"]
+										},
+										"from": {
+											"k": "FLEET",
+											"seat": 0
+										}
+									},
+									{
+										"k": "COST_DISMISS",
+										"count": 1,
+										"filter": {
+											"suits": ["SHIP"]
+										}
+									}
+								]
+							},
+							"body": {
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"look": 2,
+								"returnUnpicked": true
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL18-24",
+		"cardId": "1KOL18/24",
+		"suit": "DIRECTIVE",
+		"deck": "KOL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"bind": "loc",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "CHOICE",
+					"amount": {
+						"k": "SKILL_ICONS",
+						"specialty": "CHOSEN"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL19-24",
+		"cardId": "1KOL19/24",
+		"suit": "CARGO",
+		"deck": "KOL",
+		"traits": ["ATTACK", "WEAPON"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": ["KLINGON"]
+						}
+					},
+					"body": {
+						"k": "REPEAT",
+						"times": {
+							"k": "UP_TO",
+							"max": 2
+						},
+						"body": {
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "REMOVE_AWAY_TEAM",
+									"count": 1,
+									"whose": "OPPONENT",
+									"target": {
+										"zones": ["NEUTRAL_LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										},
+										"withAwayTeam": true
+									},
+									"bind": "$1kol19.loc"
+								},
+								{
+									"k": "IF",
+									"cond": {
+										"k": "DID",
+										"bind": "$1kol19.loc"
+									},
+									"then": {
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									}
+								}
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "MILITARY",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL20-24",
+		"cardId": "1KOL20/24",
+		"suit": "LOCATION",
+		"deck": "KOL",
+		"traits": ["KLINGON", "IMPERIAL"],
+		"skills": ["SKILL_MILITARY", "SKILL_MILITARY"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "INFLUENCE",
+					"amount": 1
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"value": 3
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "COST_RESOURCE",
+											"res": "DIL",
+											"amount": 2
+										},
+										{
+											"k": "COST_DISCARD",
+											"count": 1
+										}
+									]
+								},
+								"body": {
+									"k": "DRAW",
+									"count": 1
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL21-24",
+		"cardId": "1KOL21/24",
+		"suit": "PERSON",
+		"deck": "KOL",
+		"traits": ["SPY", "HUMAN", "ATTACK", "KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "STEAL",
+							"res": "DIL",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 4
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FORCE",
+							"body": {
+								"k": "DISMISS",
+								"target": {
+									"zones": [
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["PERSON"]
+									}
+								}
+							}
+						},
+						{
+							"k": "TAKE",
+							"deck": "INCIDENT",
+							"count": 1
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 3
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "1KOL21_HAND"
+				}
+			}
+		],
+		"passives": ["1KOL21_HAND"]
+	},
+	{
+		"id": "1KOL22-24",
+		"cardId": "1KOL22/24",
+		"suit": "PERSON",
+		"deck": "KOL",
+		"traits": ["ATTACK", "KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "DISCARD",
+							"from": "DECK_TOP",
+							"count": 1,
+							"whose": "OPPONENT",
+							"bind": "top"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "BOUND_IS",
+								"bind": "top",
+								"filter": {
+									"suits": ["PERSON"]
+								}
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "TAKE",
+										"deck": "INCIDENT",
+										"count": 1
+									},
+									{
+										"k": "OPPONENT",
+										"body": {
+											"k": "TAKE",
+											"deck": "INCIDENT",
+											"count": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UNUSED_ACTIONS"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "MODIFIER_ATTACH",
+								"id": "TEMP_HAND_PLUS_1",
+								"stack": true
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": ["1KOL02-24"]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "REFRESH",
+									"target": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": ["SHIP"],
+											"traits": ["KLINGON"],
+											"not": {
+												"ids": ["1KOL02-24"]
+											}
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL23-24",
+		"cardId": "1KOL23/24",
+		"suit": "PERSON",
+		"deck": "KOL",
+		"traits": ["KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							"body": {
+								"k": "SCAN_N",
+								"n": 2,
+								"suits": ["CARGO"],
+								"bind": "gained"
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "BOUND_IS",
+								"bind": "gained",
+								"filter": {
+									"traits": ["WEAPON"]
+								}
+							},
+							"then": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "INFLUENCE",
+								"amount": 1
+							}
+						}
+					]
+				},
+				"costsAction": true,
+				"isAttack": false
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										},
+										{
+											"k": "FLEET",
+											"seat": 0
+										},
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										},
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 0
+										},
+										{
+											"k": "STATUS",
+											"seat": 0
+										},
+										"BEAMED_ANY"
+									],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["WEAPON"]
+									}
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "LAT",
+										"amount": 1
+									},
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									}
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										},
+										{
+											"k": "FLEET",
+											"seat": 0
+										},
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										},
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 0
+										},
+										{
+											"k": "STATUS",
+											"seat": 0
+										},
+										"BEAMED_ANY"
+									],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["WEAPON"]
+									}
+								},
+								"value": 2
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1KOL24-24",
+		"cardId": "1KOL24/24",
+		"suit": "SHIP",
+		"deck": "KOL",
+		"traits": ["KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": ["SHIP"]
+						},
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"effect": {
+					"k": "SEND_AWAY_TEAM",
+					"count": 1,
+					"target": {
+						"zones": ["LOCATIONS"],
+						"filter": {
+							"suits": ["LOCATION"]
+						},
+						"atThisShip": true
+					}
+				}
+			}
+		]
+	}
+]

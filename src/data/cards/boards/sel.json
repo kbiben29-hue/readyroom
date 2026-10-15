@@ -1,0 +1,397 @@
+[
+	{
+		"deck": "SEL",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1SEL/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "INFLUENCE",
+							"value": 6
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "MILITARY",
+							"value": 6
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT"
+						},
+						{
+							"k": "FIND",
+							"filter": {
+								"traits": ["ATTACK"]
+							},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							]
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "SEL",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "1SEL/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "INFLUENCE",
+							"value": 6
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "MILITARY",
+							"value": 6
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT"
+						},
+						{
+							"k": "FIND",
+							"filter": {
+								"traits": ["ATTACK"]
+							},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							]
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 1,
+				"cardId": "1SEL/M2",
+				"goal": {
+					"k": "COUNT_AT_LEAST",
+					"query": {
+						"zones": ["IN_PLAY"],
+						"seat": "SELF",
+						"filter": {
+							"traits": ["VULCAN"]
+						}
+					},
+					"value": 4
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 3
+						},
+						{
+							"k": "DRAW",
+							"count": {
+								"k": "COUNT",
+								"query": {
+									"zones": ["IN_PLAY"],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["SHADY"]
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": ["INCIDENT"]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "JUNK",
+								"target": {
+									"zones": [
+										{
+											"k": "MARKET_OFFER",
+											"suit": "PERSON"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "CARGO"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "SHIP"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "ALLY"
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 2,
+				"cardId": "1SEL/M3",
+				"goal": {
+					"k": "SAME_SHIP",
+					"requirements": [
+						{
+							"filter": {
+								"traits": ["KLINGON"]
+							}
+						},
+						{
+							"filter": {
+								"traits": ["CLOAK"]
+							}
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": ["IN_PLAY"],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["CLOAK"]
+									}
+								}
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "COUNT",
+								"query": {
+									"zones": ["IN_PLAY"],
+									"seat": "SELF",
+									"filter": {
+										"traits": ["KLINGON"]
+									}
+								}
+							},
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 2,
+								"fromSupply": true
+							}
+						},
+						{
+							"k": "DISMISS",
+							"target": {
+								"zones": ["IN_PLAY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["CLOAK"]
+								}
+							}
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": ["BEAMED_ANY"],
+								"seat": "SELF",
+								"filter": {
+									"traits": ["KLINGON"]
+								}
+							},
+							"bind": "$1selm3.klingon",
+							"body": {
+								"k": "DISMISS",
+								"target": {
+									"zones": ["BEAMED_ANY"],
+									"seat": "SELF",
+									"bound": "$1selm3.klingon"
+								}
+							}
+						}
+					]
+				},
+				"vp": 1
+			}
+		]
+	}
+]

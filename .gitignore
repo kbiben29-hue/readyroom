@@ -1,0 +1,33 @@
+node_modules/
+dist/
+cards/raw/
+cards/ocr/
+cards/gaps/
+tts/
+tools/bin/
+venv/
+cards/fields/
+cards/idzoom/
+cards/ops/
+cards/spliced/
+cards/icon_features.json
+__pycache__/
+server/data/
+
+# STCC card database, fetched locally by `npm run fetch-cards` (never committed)
+vendor/stcc/
+public/stcc/
+
+# Copyrighted source material (WizKids/CBS) — kept locally, never published:
+# OCR card records and reports, rulebook/Cyclopedia PDFs, card image scratch.
+/cards/
+rules/pdf/
+*.pdf
+tmp/
+
+# test runner cache
+.vitest/
+coverage/
+
+# your own Fly.io app config (copy fly.example.toml)
+/fly.toml

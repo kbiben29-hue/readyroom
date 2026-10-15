@@ -1,0 +1,826 @@
+[
+	{
+		"id": "sd-01",
+		"cardId": null,
+		"name": "2-PLAYER",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-02",
+		"cardId": null,
+		"name": "2-PLAYER",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-03",
+		"cardId": null,
+		"name": "2-PLAYER",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WIPE_MARKET"
+						},
+						{
+							"k": "WIPE_NEUTRAL_ZONE"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-04",
+		"cardId": null,
+		"name": "2-PLAYER",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-05",
+		"cardId": null,
+		"name": "2-PLAYER",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-06",
+		"cardId": null,
+		"name": "SOLO CADET PRACTICE",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WIPE_MARKET"
+						},
+						{
+							"k": "WIPE_NEUTRAL_ZONE"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-07",
+		"cardId": null,
+		"name": "SOLO CADET PRACTICE",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-08",
+		"cardId": null,
+		"name": "SOLO VS ENSIGN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-09",
+		"cardId": null,
+		"name": "SOLO VS ENSIGN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-10",
+		"cardId": null,
+		"name": "SOLO VS ENSIGN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WIPE_MARKET"
+						},
+						{
+							"k": "WIPE_NEUTRAL_ZONE"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-11",
+		"cardId": null,
+		"name": "SOLO VS ENSIGN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-12",
+		"cardId": null,
+		"name": "SOLO VS ENSIGN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-13",
+		"cardId": null,
+		"name": "SOLO VS LIEUTENANT BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-14",
+		"cardId": null,
+		"name": "SOLO VS LIEUTENANT BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-15",
+		"cardId": null,
+		"name": "SOLO VS LIEUTENANT BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WIPE_MARKET"
+						},
+						{
+							"k": "WIPE_NEUTRAL_ZONE"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-16",
+		"cardId": null,
+		"name": "SOLO VS LIEUTENANT BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-17",
+		"cardId": null,
+		"name": "SOLO VS LIEUTENANT BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-18",
+		"cardId": null,
+		"name": "SOLO VS COMMANDER BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-19",
+		"cardId": null,
+		"name": "SOLO VS COMMANDER BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-20",
+		"cardId": null,
+		"name": "SOLO VS COMMANDER BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WIPE_MARKET"
+						},
+						{
+							"k": "WIPE_NEUTRAL_ZONE"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-21",
+		"cardId": null,
+		"name": "SOLO VS COMMANDER BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-22",
+		"cardId": null,
+		"name": "SOLO VS COMMANDER BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-23",
+		"cardId": null,
+		"name": "SOLO VS CAPTAIN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-24",
+		"cardId": null,
+		"name": "SOLO VS CAPTAIN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-25",
+		"cardId": null,
+		"name": "SOLO VS CAPTAIN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WIPE_MARKET"
+						},
+						{
+							"k": "WIPE_NEUTRAL_ZONE"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-26",
+		"cardId": null,
+		"name": "SOLO VS CAPTAIN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-27",
+		"cardId": null,
+		"name": "SOLO VS CAPTAIN BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-28",
+		"cardId": null,
+		"name": "SOLO VS ADMIRAL BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-29",
+		"cardId": null,
+		"name": "SOLO VS ADMIRAL BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-30",
+		"cardId": null,
+		"name": "SOLO VS ADMIRAL BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WIPE_MARKET"
+						},
+						{
+							"k": "WIPE_NEUTRAL_ZONE"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-31",
+		"cardId": null,
+		"name": "SOLO VS ADMIRAL BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WIPE_MARKET"
+				}
+			}
+		]
+	},
+	{
+		"id": "sd-32",
+		"cardId": null,
+		"name": "SOLO VS ADMIRAL BOT",
+		"suit": "DIRECTIVE",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			}
+		]
+	}
+]

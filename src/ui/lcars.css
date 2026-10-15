@@ -1,0 +1,88 @@
+/* LCARS design tokens + frame primitives for Ready Room.
+ *
+ * The rule this file encodes: **the frame carries state, the table never
+ * moves.** Everything coloured is chrome — rail, elbows, bars, panel headers.
+ * Cards sit on the black ground and never shift for a cosmetic reason.
+ * Rationale and the full component map: docs/ui-lcars.md.
+ *
+ * This file holds ONLY tokens and the bar geometry. Component dress lives in
+ * ui.css, which imports this. Deliberately single-theme: LCARS is a dark
+ * console, and every colour is painted explicitly so nothing is inherited.
+ *
+ * Fonts: Antonio (chrome, numerals) + Barlow (rules text), loaded in index.html.
+ */
+
+:root {
+	/* ground — blue-biased near-black, not a default grey */
+	--ground: #05050a;
+	--panel: #0e0e16;
+	--panel-2: #171722;
+	--hair: #2a2a3a;
+	--text: #f4ecdd;
+	--dim: #9a93a8;
+
+	/* LCARS hues, each bound to one game system. Never decorative. */
+	--orange: #ff9c00; /* system frame, turn control, candidate ring */
+	--sunflower: #ffcc66; /* Market / commerce / pending choice          */
+	--periwinkle: #9c9cff; /* Neutral Zone, contested space, reactions    */
+	--lilac: #cc99cc; /* Stardate track, Glory, VP — time and score  */
+	--ice: #99ccff; /* YOU — seat 0                                */
+	--salmon: #cc6666; /* OPPONENT — seat 1                           */
+	--mars: #ff4141; /* alert only: the Burn, ATTACK, illegal       */
+
+	/* Specialties keep their printed hues. ui-spec §8 forbids colour alone, so
+   * every use pairs the hue with a glyph and a text label. */
+	--research: #5fb0ff;
+	--influence: #ffd24a;
+	--military: #ff6a5e;
+
+	/* Shorthand (docs/shorthand.md). Glyph hues: resources differ in shape
+   * too, suits follow the printed banners, timing marks follow the printed
+   * operation strips (play grey, table blue, turn green, endgame red…). */
+	--sh-dil: #ff6fb0;
+	--sh-lat: #e7c55e;
+	--sh-glo: #c79bff;
+	--sh-act: var(--orange);
+	--sh-vp: #f3d9a0;
+	--sh-person: #f2b544;
+	--sh-cargo: #45a6e6;
+	--sh-ship: #b9c3d3;
+	--sh-ally: #e2589f;
+	--sh-location: #5cc47f;
+	--sh-directive: #d9ccb0;
+	--sh-incident: #ff5145;
+	--sh-encounter: #a58cff;
+	--sh-captain: #ffcc66;
+	--sh-status: #8c93a8;
+	--sh-t-play: #d9dde6;
+	--sh-t-table: #6f9dff;
+	--sh-t-turn: #57c98a;
+	--sh-t-end: #ff5a4e;
+	--sh-t-special: #b684ff;
+	--sh-t-dev: #8a8fa3;
+
+	--bar-h: 34px; /* the one bar height, shared by every chrome bar */
+	--gap: 4px; /* LCARS blocks sit 4px apart. Always. */
+	--radius-pill: 18px;
+
+	color-scheme: dark;
+}
+
+/* LCARS bar end-caps. With the console mounted across the head rather than
+ * down a rail, the frame's signature is the capped bar, not the elbow: a thick
+ * rounded block butted against a square-ended bar. Same geometry rule as the
+ * elbow — every bar is --bar-h tall, every block sits --gap from the next. */
+.bar-cap {
+	flex: none;
+	width: 64px;
+	height: var(--bar-h);
+	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+	background: var(--sunflower);
+}
+.bar-end {
+	flex: none;
+	width: 44px;
+	height: var(--bar-h);
+	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+	background: var(--sunflower);
+}

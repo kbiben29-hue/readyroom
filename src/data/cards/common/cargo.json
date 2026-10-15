@@ -1,0 +1,1753 @@
+[
+	{
+		"id": "1CAR01-16",
+		"cardId": "1CAR01/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["DOCTOR"],
+		"skills": ["SKILL_RESEARCH"],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Free play an INCIDENT",
+									"body": {
+										"k": "FREE_PLAY",
+										"filter": {
+											"suits": ["INCIDENT"]
+										}
+									}
+								},
+								{
+									"label": "Find a DOCTOR",
+									"body": {
+										"k": "FIND",
+										"filter": {
+											"traits": ["DOCTOR"]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											},
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										]
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR02-16",
+		"cardId": "1CAR02/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["BORG", "SCIENTIST"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UP_TO",
+						"max": 3
+					},
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Beam it to a SHIP",
+								"body": {
+									"k": "BEAM",
+									"from": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["PERSON"]
+									},
+									"to": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": ["SHIP"]
+										}
+									},
+									"count": 1
+								}
+							},
+							{
+								"label": "Put it on your deck top; send an Away Team",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_PUT",
+										"count": 1,
+										"to": {
+											"k": "DRAW",
+											"seat": 0
+										},
+										"filter": {
+											"suits": ["PERSON"]
+										},
+										"from": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											}
+										]
+									},
+									"body": {
+										"k": "SEND_AWAY_TEAM",
+										"count": 1,
+										"target": {
+											"zones": ["LOCATIONS"],
+											"filter": {
+												"suits": ["LOCATION"]
+											}
+										}
+									}
+								}
+							}
+						]
+					}
+				},
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 4
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COLLECTIVE_AT_LEAST",
+						"value": 6
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRONE",
+								"verb": "REGENERATE",
+								"count": 1
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "DRONE",
+									"verb": "SEND",
+									"count": 1,
+									"to": {
+										"zones": ["LOCATIONS"],
+										"seat": "ANY",
+										"filter": {
+											"suits": ["LOCATION"]
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR03-16",
+		"cardId": "1CAR03/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["CLOAK", "ONGOING"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 3
+							},
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								}
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": 2
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DEPLOYED",
+					"filter": {
+						"suits": ["SHIP"],
+						"not": {
+							"traits": ["CLOAK"]
+						}
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MODIFIER_ATTACH",
+							"id": "TEMP_CLOAK",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"bound": "$event.card"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": ["LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										}
+									},
+									"ignoreBlocking": true
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR04-16",
+		"cardId": "1CAR04/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["FERENGI", "BEVERAGE"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": {
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "SUM",
+										"terms": [
+											{
+												"k": "COUNT",
+												"query": {
+													"zones": ["IN_PLAY"],
+													"filter": {
+														"traits": ["FERENGI"]
+													}
+												}
+											},
+											{
+												"k": "COUNT",
+												"query": {
+													"zones": ["IN_PLAY"],
+													"filter": {
+														"traits": ["BUSINESS"]
+													}
+												}
+											}
+										]
+									},
+									5
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COMPARE",
+								"a": {
+									"k": "MIN",
+									"terms": [
+										{
+											"k": "SUM",
+											"terms": [
+												{
+													"k": "COUNT",
+													"query": {
+														"zones": ["IN_PLAY"],
+														"filter": {
+															"traits": ["FERENGI"]
+														}
+													}
+												},
+												{
+													"k": "COUNT",
+													"query": {
+														"zones": ["IN_PLAY"],
+														"filter": {
+															"traits": ["BUSINESS"]
+														}
+													}
+												}
+											]
+										},
+										5
+									]
+								},
+								"op": "GE",
+								"b": 3
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						}
+					]
+				},
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 5
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "LAT",
+								"amount": 2
+							},
+							"body": {
+								"k": "SCAN_N",
+								"n": 1,
+								"suits": ["ALLY"],
+								"includeJunk": true
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR05-16",
+		"cardId": "1CAR05/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ONGOING", "ANOMALY", "ROMULAN"],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "FIND",
+									"filter": {
+										"traits": ["ENGINEER", "OPS"]
+									},
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										},
+										{
+											"k": "DRAW",
+											"seat": 0
+										},
+										{
+											"k": "RESERVE",
+											"seat": 0
+										}
+									]
+								}
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							},
+							"body": {
+								"k": "DEPLOY",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 3
+				},
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "1CAR05_DUTY"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": ["ENGINEER"]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 2,
+								"bind": ["$1car05.a", "$1car05.b"]
+							},
+							{
+								"k": "PUT_ON_DECK_TOP",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										}
+									],
+									"bound": ["$1car05.a", "$1car05.b"]
+								}
+							}
+						]
+					}
+				}
+			}
+		],
+		"passives": ["1CAR05_DUTY"]
+	},
+	{
+		"id": "1CAR06-16",
+		"cardId": "1CAR06/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["BUSINESS", "HOLOGRAM"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 2
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 0
+										}
+									]
+								}
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Spend 1 to scan 1",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "LAT",
+									"amount": 1
+								},
+								"body": {
+									"k": "SCAN_N",
+									"n": 1,
+									"suits": ["PERSON", "CARGO", "ALLY"]
+								}
+							}
+						},
+						{
+							"label": "Spend 2 to scan 2 and draw",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "LAT",
+									"amount": 2
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "SCAN_N",
+											"n": 2,
+											"suits": ["PERSON", "CARGO", "ALLY"]
+										},
+										{
+											"k": "DRAW",
+											"count": 1
+										}
+									]
+								}
+							}
+						},
+						{
+							"label": "Spend 3 to scan 3 and draw",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "LAT",
+									"amount": 3
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "SCAN_N",
+											"n": 3,
+											"suits": ["PERSON", "CARGO", "ALLY"]
+										},
+										{
+											"k": "DRAW",
+											"count": 1
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR07-16",
+		"cardId": "1CAR07/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ALIEN", "ONGOING", "CREATURE"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"filter": {
+										"traits": ["ATTACK"]
+									}
+								},
+								"body": {
+									"k": "ENLIST_DEVELOPMENT"
+								}
+							}
+						},
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 4
+				},
+				"trigger": {
+					"on": "RESOURCE_GAINED",
+					"res": "DIL"
+				},
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR08-16",
+		"cardId": "1CAR08/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ATTACK", "WEAPON", "VULCAN"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FORCE",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "DISMISS",
+										"target": {
+											"zones": [
+												{
+													"k": "DUTY_OFFICER",
+													"seat": 0
+												}
+											]
+										},
+										"bind": "$1car08.dismissed"
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "DID",
+											"bind": "$1car08.dismissed"
+										},
+										"then": {
+											"k": "MAY",
+											"body": {
+												"k": "DRAW",
+												"count": 1
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_PUT",
+									"count": 1,
+									"to": {
+										"k": "DRAW",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": {
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": ["IN_PLAY"],
+											"seat": "SELF",
+											"filter": {
+												"traits": ["VULCAN"]
+											},
+											"exceptThis": true
+										}
+									},
+									5
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR09-16",
+		"cardId": "1CAR09/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ATTACK", "WEAPON", "KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_DISCARD",
+								"count": 1
+							},
+							"body": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "MILITARY",
+								"amount": 1
+							}
+						},
+						{
+							"k": "REVEAL",
+							"whose": "OPPONENT"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": ["ATTACK"]
+									},
+									"whose": "OPPONENT"
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR10-16",
+		"cardId": "1CAR10/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["BAJORAN", "TIME_TRAVEL", "TRANSCENDENT"],
+		"skills": [],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_TAKE_INCIDENT",
+									"count": 1
+								},
+								"body": {
+									"k": "DUPLICATE",
+									"suits": ["PERSON", "CARGO", "ALLY"],
+									"from": ["LOG"],
+									"opType": "PLAY"
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "RECALL",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"not": {
+											"traits": ["TIME_TRAVEL"]
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR11-16",
+		"cardId": "1CAR11/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["WEAPON", "ONGOING", "SECURITY", "STARFLEET"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							"body": {
+								"k": "GAIN_ACTION",
+								"amount": 1
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				},
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 4
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISMISS",
+						"target": "THIS",
+						"count": 1
+					},
+					"body": {
+						"k": "IGNORE_ATTACK",
+						"scope": "EFFECT"
+					}
+				},
+				"trigger": {
+					"on": "WOULD_BE_ATTACKED",
+					"effect": "REMOVE_AWAY_TEAM"
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR12-16",
+		"cardId": "1CAR12/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ENGINEER"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 3
+					},
+					"body": {
+						"k": "GAIN_ACTION",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR13-16",
+		"cardId": "1CAR13/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ATTACK", "COMMUNICATION"],
+		"skills": [],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISMISS",
+									"count": 1,
+									"filter": {
+										"suits": ["SHIP"]
+									},
+									"from": {
+										"k": "FLEET",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 2
+								}
+							}
+						},
+						{
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "FORCE",
+									"body": {
+										"k": "LOG",
+										"target": {
+											"zones": ["IN_PLAY"],
+											"filter": {
+												"traits": ["CLOAK"]
+											}
+										},
+										"bind": "$1car13.logged"
+									}
+								},
+								{
+									"k": "IF",
+									"cond": {
+										"k": "DID",
+										"bind": "$1car13.logged"
+									},
+									"then": {
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									}
+								}
+							]
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "HAS_TRAIT_IN_PLAY",
+								"trait": "SECURITY"
+							},
+							"then": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "MILITARY",
+								"amount": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR14-16",
+		"cardId": "1CAR14/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ATTACK", "CREATURE"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 1
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "FORCE",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						},
+						{
+							"k": "LET",
+							"bind": "$1car14.dos",
+							"value": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 1
+									}
+								],
+								"seat": "OPPONENT",
+								"filter": {
+									"traits": ["KLINGON"]
+								}
+							},
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FOR_EACH",
+										"over": {
+											"zones": [
+												{
+													"k": "DUTY_OFFICER",
+													"seat": 1
+												}
+											],
+											"seat": "OPPONENT",
+											"bound": "$1car14.dos"
+										},
+										"bind": "$1car14.do",
+										"body": {
+											"k": "DISMISS",
+											"target": {
+												"zones": [
+													{
+														"k": "DUTY_OFFICER",
+														"seat": 1
+													}
+												],
+												"seat": "OPPONENT",
+												"bound": "$1car14.do"
+											}
+										}
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													{
+														"k": "DISCARD",
+														"seat": 1
+													}
+												],
+												"seat": "OPPONENT",
+												"bound": "$1car14.dos"
+											},
+											"value": 1
+										},
+										"then": {
+											"k": "FORCE",
+											"body": {
+												"k": "DISCARD",
+												"count": 1,
+												"from": "HAND"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR15-16",
+		"cardId": "1CAR15/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ATTACK", "WEAPON"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": ["KLINGON", "ROMULAN", "BREEN"]
+									}
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "REMOVE_AWAY_TEAM",
+											"count": 1,
+											"whose": "OPPONENT",
+											"target": {
+												"zones": ["LOCATIONS"],
+												"seat": "ANY",
+												"filter": {
+													"suits": ["LOCATION"]
+												}
+											},
+											"bind": "$1car15.loc"
+										},
+										{
+											"k": "IF",
+											"cond": {
+												"k": "DID",
+												"bind": "$1car15.loc"
+											},
+											"then": {
+												"k": "SEQ",
+												"steps": [
+													{
+														"k": "GAIN_RESOURCE",
+														"res": "GLO",
+														"amount": 1
+													},
+													{
+														"k": "MAY",
+														"body": {
+															"k": "SEQ",
+															"steps": [
+																{
+																	"k": "REMOVE_AWAY_TEAM",
+																	"count": 1,
+																	"whose": "OPPONENT",
+																	"target": {
+																		"zones": ["LOCATIONS"],
+																		"seat": "ANY",
+																		"bound": "$1car15.loc"
+																	},
+																	"bind": "$1car15.loc2"
+																},
+																{
+																	"k": "IF",
+																	"cond": {
+																		"k": "DID",
+																		"bind": "$1car15.loc2"
+																	},
+																	"then": {
+																		"k": "GAIN_RESOURCE",
+																		"res": "GLO",
+																		"amount": 1
+																	}
+																}
+															]
+														}
+													}
+												]
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1CAR16-16",
+		"cardId": "1CAR16/16",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": ["ANOMALY"],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ARRANGE_DECK",
+							"decks": ["LOCATION", "ENCOUNTER"],
+							"n": 2
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 6
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 3
+							},
+							"body": {
+								"k": "TAKE_CONTROL",
+								"target": "FROM_LOCATION_DECK"
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "DESTROY",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	}
+]

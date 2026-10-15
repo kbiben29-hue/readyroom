@@ -1,0 +1,734 @@
+[
+	{
+		"id": "1ALL01-13",
+		"cardId": "1ALL01/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["KLINGON"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 3
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": ["IN_PLAY"],
+											"filter": {
+												"traits": ["KLINGON"]
+											}
+										}
+									},
+									5
+								]
+							},
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Gain 2 DIL",
+										"body": {
+											"k": "GAIN_RESOURCE",
+											"res": "DIL",
+											"amount": 2
+										}
+									},
+									{
+										"label": "Gain 1 LAT",
+										"body": {
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 1
+										}
+									},
+									{
+										"label": "Discard a card to gain 1 GLO",
+										"body": {
+											"k": "PAY_THEN",
+											"cost": {
+												"k": "COST_DISCARD",
+												"count": 1
+											},
+											"body": {
+												"k": "GAIN_RESOURCE",
+												"res": "GLO",
+												"amount": 1
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL02-13",
+		"cardId": "1ALL02/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						},
+						{
+							"k": "DRAW",
+							"count": 1,
+							"bind": "$1all02.card"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {},
+								"bound": "$1all02.card"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL03-13",
+		"cardId": "1ALL03/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["ALIEN", "ENGINEER"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_CARD",
+							"suits": ["CARGO"]
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 3
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 3,
+							"suits": ["CARGO"]
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL04-13",
+		"cardId": "1ALL04/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_CARD",
+							"suits": ["PERSON"]
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 3
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 3,
+							"suits": ["PERSON"]
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL05-13",
+		"cardId": "1ALL05/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["ALIEN"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2,
+							"bind": ["$1all05.a", "$1all05.b"]
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND",
+							"onlyBound": ["$1all05.a", "$1all05.b"]
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 5
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_PUT",
+								"count": 3,
+								"to": {
+									"k": "DRAW",
+									"seat": 0
+								}
+							},
+							"body": {
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"look": 2,
+								"returnUnpicked": true
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL06-13",
+		"cardId": "1ALL06/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["SHADY", "ORION", "ATTACK", "ANDORIAN"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						},
+						{
+							"k": "STEAL",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"traits": ["BUSINESS"]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL07-13",
+		"cardId": "1ALL07/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "HAS_TRAIT_IN_PLAY",
+						"trait": "ATTACK"
+					},
+					"then": {
+						"k": "LOG",
+						"target": "THIS"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL08-13",
+		"cardId": "1ALL08/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["DOMINION", "BUSINESS"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 3
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 2
+					},
+					"body": {
+						"k": "GAIN_ACTION",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL09-13",
+		"cardId": "1ALL09/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["KELPIEN"],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 2
+							},
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["INCIDENT"]
+									}
+								}
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL10-13",
+		"cardId": "1ALL10/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["SHADY", "ATTACK", "TELEPATH"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DISMISS",
+							"target": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 1
+									}
+								],
+								"seat": "OPPONENT"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SCAN_FOR_TRAIT",
+								"traits": ["SHADY"]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW_FROM_DISCARD",
+								"filter": {
+									"suits": ["CARGO"]
+								},
+								"count": 1
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL11-13",
+		"cardId": "1ALL11/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["ANOMALY", "TRANSCENDENT"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 4
+				},
+				"effect": {
+					"k": "ENLIST_RESERVE"
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 6
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT"
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL12-13",
+		"cardId": "1ALL12/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["ALIEN", "TIME_TRAVEL"],
+		"skills": [],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "RECALL",
+									"target": {
+										"zones": [
+											{
+												"k": "STAGING",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"not": {
+												"traits": ["TIME_TRAVEL"]
+											}
+										}
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DUPLICATE",
+								"suits": ["ALLY"],
+								"from": ["MARKET"],
+								"opType": "PLAY"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "1ALL13-13",
+		"cardId": "1ALL13/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": ["ALIEN"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"bind": "loc",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "LAT",
+										"amount": 1
+									},
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 2
+									}
+								]
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	}
+]

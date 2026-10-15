@@ -1,0 +1,34 @@
+{
+	"compilerOptions": {
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+		"target": "ES2023",
+		"lib": ["ES2023"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"noEmit": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"exactOptionalPropertyTypes": true,
+		"noImplicitOverride": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"paths": {
+			"@engine/*": ["./src/engine/*"],
+			"@data/*": ["./src/data/*"],
+			"@ui/*": ["./src/ui/*"],
+			"@session/*": ["./src/session/*"]
+		}
+	},
+	"include": [
+		"vite.config.ts",
+		"vitest.config.ts",
+		"eslint.config.js",
+		"tools",
+		"server"
+	]
+}

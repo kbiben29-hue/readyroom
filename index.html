@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+		/>
+		<meta name="theme-color" content="#05050a" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta
+			name="apple-mobile-web-app-status-bar-style"
+			content="black-translucent"
+		/>
+		<meta name="apple-mobile-web-app-title" content="Ready Room" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="icon" href="/icon.svg" type="image/svg+xml" />
+		<title>Ready Room</title>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;500;600;700&amp;family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@400;500;600&amp;display=swap"
+		/>
+		<!-- first-paint loader: the bundle can take seconds on a phone; React
+		     replaces #root's children on its first render -->
+		<style>
+			html,
+			body {
+				margin: 0;
+				background: #05050a;
+			}
+			.boot {
+				position: fixed;
+				inset: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 18px;
+				color: #9a93a8;
+				font:
+					500 14px/1 'Antonio',
+					'Arial Narrow',
+					sans-serif;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+			}
+			.boot-title {
+				color: #ff9c00;
+				font-size: 22px;
+				letter-spacing: 0.06em;
+			}
+			.boot-bar {
+				width: 160px;
+				height: 6px;
+				border-radius: 3px;
+				background: #1e2231;
+				overflow: hidden;
+			}
+			.boot-bar::after {
+				content: '';
+				display: block;
+				width: 40%;
+				height: 100%;
+				border-radius: 3px;
+				background: #9c9cff;
+				animation: boot-sweep 1.1s ease-in-out infinite alternate;
+			}
+			@keyframes boot-sweep {
+				to {
+					transform: translateX(150%);
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.boot-bar::after {
+					width: 100%;
+					animation: none;
+					opacity: 0.6;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root">
+			<div class="boot" role="status">
+				<div class="boot-title">Ready Room</div>
+				<div class="boot-bar"></div>
+				<div>Loading</div>
+			</div>
+		</div>
+		<script type="module" src="/src/main.tsx"></script>
+	</body>
+</html>

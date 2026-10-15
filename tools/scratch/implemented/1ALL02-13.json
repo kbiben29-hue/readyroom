@@ -1,0 +1,49 @@
+[
+	{
+		"id": "1ALL02-13",
+		"cardId": "1ALL02/13",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 1
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": ["PERSON", "CARGO", "SHIP", "ALLY"]
+								},
+								"from": {
+									"k": "HAND",
+									"seat": 0
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+]

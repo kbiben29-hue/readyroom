@@ -36,6 +36,15 @@ import { SKIP_CONTROL } from '../engine/phases'
 import { cardDef, hasCardDef } from '../engine/cards'
 import { next, type Rng } from '../engine/rng'
 import type { Bot, BotId } from './types'
+import {
+	NOTE_EASY,
+	NOTE_FORCED,
+	NOTE_MISSION,
+	ruleInfo,
+	topOptions,
+	type DecisionInfo,
+	type DecisionOption,
+} from './explain'
 import { candidates } from './candidates'
 import { determinizeWith, seedFromView } from './determinize'
 import {
@@ -347,44 +356,82 @@ export function makeHeuristicBot(opts: HeuristicOptions = {}): Bot {
 	const missionsFirst = opts.missionsFirst ?? true
 	const weights =
 		opts.weights === undefined ? WEIGHT_VECTOR : weightVector(opts.weights)
+	const id = opts.id ?? 'normal'
+	/** The decision; with `explain` also its DecisionInfo (built from the
+	 *  scores already computed — the chosen intent never depends on it). */
+	const choose = (
+		state: GameState,
+		seat: Seat,
+		legal: Intent[],
+		explain: boolean,
+	): { intent: Intent; info: DecisionInfo | null } => {
+		const cands = candidates(state, seat, legal)
+		const forced = (intent: Intent) => ({
+			intent,
+			info: explain ? ruleInfo(id, 'forced', NOTE_FORCED) : null,
+		})
+		if (cands.length === 0) return forced(legal[0]!)
+		if (cands.length === 1) return forced(cands[0]!)
+		if (missionsFirst) {
+			const mission = cands.find((c) => c.t === 'COMPLETE_MISSION')
+			if (mission !== undefined)
+				return {
+					intent: mission,
+					info: explain ? ruleInfo(id, 'rule', NOTE_MISSION) : null,
+				}
+		}
+		let rng: Rng = {
+			seed: (seedFromView(state, seat) ^ SAMPLER_SALT) >>> 0,
+			counter: 0,
+		}
+		const bonus = cands.map((c) => priorBonus(state, seat, c))
+		// the work cap: fewer worlds first, then only the top-prior candidates
+		const worldsN = cands.length * samples <= maxSims ? samples : 1
+		let pool = cands.map((_, i) => i)
+		if (pool.length > maxSims) {
+			pool = pool
+				.sort((a, b) => bonus[b]! - bonus[a]! || a - b)
+				.slice(0, maxSims)
+				.sort((a, b) => a - b)
+		}
+		const worlds: GameState[] = []
+		for (let k = 0; k < worldsN; k++) {
+			const [w, r] = determinizeWith(state, seat, rng)
+			worlds.push(w)
+			rng = r
+		}
+		const scores = pool.map((i) => {
+			let total = 0
+			for (const w of worlds)
+				total += simulate(w, seat, cands[i]!, horizon, maxSettle, weights)
+			return total / worlds.length + bonus[i]!
+		})
+		const pick = noise > 0 ? softmaxPick(scores, noise, rng) : argmax(scores)
+		const intent = cands[pool[pick]!]!
+		if (!explain) return { intent, info: null }
+		const rows: DecisionOption[] = pool.map((ci, k) => ({
+			intent: cands[ci]!,
+			score: Number.isFinite(scores[k]!) ? scores[k]! : -1e3,
+			chosen: k === pick,
+		}))
+		return {
+			intent,
+			info: {
+				botId: id,
+				kind: 'heuristic',
+				options: topOptions(rows, (o) => o.score),
+				note: noise > 0 ? NOTE_EASY : undefined,
+			},
+		}
+	}
 	return {
-		id: opts.id ?? 'normal',
+		id,
 		decide(state, seat, legal) {
-			const cands = candidates(state, seat, legal)
-			if (cands.length === 0) return legal[0]!
-			if (cands.length === 1) return cands[0]!
-			if (missionsFirst) {
-				const mission = cands.find((c) => c.t === 'COMPLETE_MISSION')
-				if (mission !== undefined) return mission
-			}
-			let rng: Rng = {
-				seed: (seedFromView(state, seat) ^ SAMPLER_SALT) >>> 0,
-				counter: 0,
-			}
-			const bonus = cands.map((c) => priorBonus(state, seat, c))
-			// the work cap: fewer worlds first, then only the top-prior candidates
-			const worldsN = cands.length * samples <= maxSims ? samples : 1
-			let pool = cands.map((_, i) => i)
-			if (pool.length > maxSims) {
-				pool = pool
-					.sort((a, b) => bonus[b]! - bonus[a]! || a - b)
-					.slice(0, maxSims)
-					.sort((a, b) => a - b)
-			}
-			const worlds: GameState[] = []
-			for (let k = 0; k < worldsN; k++) {
-				const [w, r] = determinizeWith(state, seat, rng)
-				worlds.push(w)
-				rng = r
-			}
-			const scores = pool.map((i) => {
-				let total = 0
-				for (const w of worlds)
-					total += simulate(w, seat, cands[i]!, horizon, maxSettle, weights)
-				return total / worlds.length + bonus[i]!
-			})
-			const pick = noise > 0 ? softmaxPick(scores, noise, rng) : argmax(scores)
-			return cands[pool[pick]!]!
+			return choose(state, seat, legal, false).intent
+		},
+		decideExplained(state, seat, legal) {
+			const r = choose(state, seat, legal, true)
+			return { intent: r.intent, info: r.info! }
 		},
 	}
 }

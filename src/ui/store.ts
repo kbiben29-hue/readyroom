@@ -41,7 +41,21 @@ import {
 	validateChoice,
 	IllegalSelectionError,
 } from '../engine/resolver/choices'
-import { createInThreadRunner, isAbortError, type BotRunner } from './botRunner'
+import {
+	createInThreadRunner,
+	decideWithInfo,
+	isAbortError,
+	type BotRunner,
+} from './botRunner'
+import { ruleInfo, type DecisionInfo } from '../bot/explain'
+import {
+	addBotIntent,
+	emptyBotLog,
+	humanDecided,
+	trimBotLog,
+	type BotMoveLog,
+	type Viewer,
+} from './botMoves'
 import { project, HIDDEN_DEF, type ProjectedState } from './projection'
 import { poolDiff } from '../engine/fx'
 import { residualChanges, type Motion } from './flow'
@@ -342,18 +356,22 @@ function pumpBot(): void {
 	const stale = () =>
 		gen !== botGen || ctrl.signal.aborted || adapter?.state !== state
 
-	let asked: Promise<Intent>
+	let asked: Promise<{ intent: Intent; info?: DecisionInfo | undefined }>
 	try {
-		asked = botRunner.decide(state, seat, legal, botId, ctrl.signal)
+		asked = decideWithInfo(botRunner, state, seat, legal, botId, ctrl.signal)
 	} catch (e) {
 		asked = Promise.reject(e)
 	}
 	void asked
 		.then(
-			(intent) => ({ intent, failed: false }),
-			(e: unknown) => ({ intent: undefined, failed: !isAbortError(e) }),
+			({ intent, info }) => ({ intent, info, failed: false }),
+			(e: unknown) => ({
+				intent: undefined,
+				info: undefined,
+				failed: !isAbortError(e),
+			}),
 		)
-		.then(({ intent, failed }) => {
+		.then(({ intent, info, failed }) => {
 			if (stale()) {
 				// a superseded generation was already reset by cancelBot; a state
 				// that moved on without one is re-pumped from where it is now
@@ -380,7 +398,11 @@ function pumpBot(): void {
 				botBusy = false
 				botAbort = null
 				if (warning !== null) useGameStore.setState({ warning })
-				if (!commitBot(chosen, seat, state, legal)) return
+				const explained =
+					warning === null
+						? (info ?? null)
+						: ruleInfo(botId, 'rule', 'fell back to the first legal option')
+				if (!commitBot(chosen, seat, state, legal, botId, explained)) return
 				pumpBot()
 			}, wait)
 		})
@@ -393,19 +415,31 @@ function commitBot(
 	seat: Seat,
 	state: GameState,
 	legal: Intent[],
+	botId: BotId,
+	info: DecisionInfo | null,
 ): boolean {
 	const attempts: (Intent | undefined)[] = [
 		intent,
 		nextAutoIntent(state, legal, firstLegalPolicy),
 	]
-	for (const attempt of attempts) {
+	for (let i = 0; i < attempts.length; i++) {
+		const attempt = attempts[i]
 		if (attempt === undefined) continue
 		try {
 			commit(attempt, seat)
-			return true
 		} catch {
-			// try the fallback
+			continue // try the fallback
 		}
+		recordBotMove(
+			attempt,
+			seat,
+			botId,
+			state,
+			i === 0
+				? info
+				: ruleInfo(botId, 'rule', 'fell back to the first legal option'),
+		)
+		return true
 	}
 	useGameStore.setState({
 		botThinking: null,
@@ -413,6 +447,55 @@ function commitBot(
 		error: 'The House AI could not find a legal move — the bots are paused.',
 	})
 	return false
+}
+
+/** Who the bot-move history is recorded for: the one human (masked), or
+ *  nobody in a spectator game (botMoves.ts). */
+function moveViewer(): Viewer {
+	const humans = humanSeats(adapter?.session.opponents)
+	return { seat: humans.length === 0 ? null : humans[0]! }
+}
+
+/** Add a just-committed bot intent to the move history (botMoves.ts). */
+function recordBotMove(
+	intent: Intent,
+	seat: Seat,
+	botId: BotId,
+	before: GameState,
+	info: DecisionInfo | null,
+): void {
+	const a = adapter
+	if (a === null) return
+	try {
+		const botLog = addBotIntent(
+			useGameStore.getState().botLog,
+			{
+				seat,
+				botId,
+				intent,
+				info,
+				before,
+				after: a.state,
+				logIndex: a.session.log.length - 1,
+			},
+			moveViewer(),
+		)
+		useGameStore.setState({ botLog })
+	} catch {
+		// the history is a convenience: never let it break play
+	}
+}
+
+/** A fresh history (new game, resume, online), keeping ids increasing. */
+function resetBotLog(): BotMoveLog {
+	return { ...emptyBotLog(), nextId: useGameStore.getState().botLog.nextId }
+}
+
+/** A human decided: the AI's running burst of moves is over. */
+function noteHumanDecision(): void {
+	const log = useGameStore.getState().botLog
+	const next = humanDecided(log)
+	if (next !== log) useGameStore.setState({ botLog: next })
 }
 
 /**
@@ -515,6 +598,14 @@ export interface GameStore {
 	botPaused: boolean
 	/** How long a bot's move stays visible (BOT_SPEED_MS); per device. */
 	botSpeed: BotSpeed
+	/** The house AI's recent moves (botMoves.ts): the ticker, the move
+	 *  history and the "Why?" panel read it. Cleared on a new game / resume,
+	 *  trimmed on undo. */
+	botLog: BotMoveLog
+	/** The AI move history is open; `whyMove` is the move whose "Why?" panel
+	 *  is expanded in it (or null). */
+	botHistoryOpen: boolean
+	whyMove: number | null
 	/** Token movement of the last dispatch/settle, for the flight layer and
 	 *  delta badges (flow.ts). Null after anything that is not play — undo,
 	 *  passing the device, loading — so those never animate. */
@@ -547,6 +638,9 @@ export interface GameStore {
 	/** Paused spectator game: let exactly one bot intent run. */
 	stepBot: () => void
 	setBotSpeed: (speed: BotSpeed) => void
+	/** Open / close the AI move history, optionally on one move's "Why?". */
+	openBotHistory: (whyMove?: number | null) => void
+	closeBotHistory: () => void
 	cardClicked: (iid: CardInstanceId) => void
 	setSelected: (iids: CardInstanceId[]) => void
 	clearSelection: () => void
@@ -706,6 +800,9 @@ export const useGameStore = create<GameStore>((set) => ({
 	botThinking: null,
 	botPaused: false,
 	botSpeed: loadBotSpeed(),
+	botLog: emptyBotLog(),
+	botHistoryOpen: false,
+	whyMove: null,
 	revealAll: false,
 	showCardDetails: false,
 	online: null,
@@ -731,6 +828,9 @@ export const useGameStore = create<GameStore>((set) => ({
 		set({
 			botToMove: null,
 			botPaused: false,
+			botLog: resetBotLog(),
+			botHistoryOpen: false,
+			whyMove: null,
 			online: null,
 			session: null,
 			state: null,
@@ -773,6 +873,9 @@ export const useGameStore = create<GameStore>((set) => ({
 			)
 			set({
 				botPaused: false,
+				botLog: resetBotLog(),
+				botHistoryOpen: false,
+				whyMove: null,
 				catalog,
 				viewerSeat,
 				selected: [],
@@ -821,6 +924,9 @@ export const useGameStore = create<GameStore>((set) => ({
 				catalog,
 				viewerSeat,
 				botPaused: false,
+				botLog: resetBotLog(),
+				botHistoryOpen: false,
+				whyMove: null,
 				selected: [],
 				detailIid: null,
 				hoverIid: null,
@@ -853,6 +959,7 @@ export const useGameStore = create<GameStore>((set) => ({
 			set({ error: (e as Error).message })
 			return
 		}
+		noteHumanDecision()
 		pumpBot()
 	},
 
@@ -878,6 +985,7 @@ export const useGameStore = create<GameStore>((set) => ({
 			set({ error: (e as Error).message })
 			return
 		}
+		noteHumanDecision()
 		pumpBot()
 	},
 
@@ -901,6 +1009,11 @@ export const useGameStore = create<GameStore>((set) => ({
 		if (!adapter.undo(policy.count)) return
 		deciders = deciders.slice(0, adapter.session.log.length)
 		set({
+			botLog: trimBotLog(
+				useGameStore.getState().botLog,
+				adapter.session.log.length,
+			),
+			whyMove: null,
 			...snapshot(viewerSeat),
 			selected: [],
 			detailIid: null,
@@ -949,6 +1062,9 @@ export const useGameStore = create<GameStore>((set) => ({
 		}
 		set({ botSpeed: speed })
 	},
+
+	openBotHistory: (whyMove = null) => set({ botHistoryOpen: true, whyMove }),
+	closeBotHistory: () => set({ botHistoryOpen: false, whyMove: null }),
 
 	cardClicked: (iid) => {
 		const { selected, state, viewerSeat, pendingChoice, botToMove } =
@@ -1041,6 +1157,7 @@ export const useGameStore = create<GameStore>((set) => ({
 		adapter?.dispose()
 		adapter = null
 		deciders = []
+		set({ botLog: resetBotLog(), botHistoryOpen: false, whyMove: null })
 		// engine helpers (scoring, tile legality, describe) look cards up in the
 		// engine registry, which local play fills in setup(); online there is
 		// no local setup, so register the catalogue here (idempotent per id)

@@ -10,6 +10,9 @@
 // a pulsing dot while it thinks; the full sentence stays for screen readers),
 // icon buttons with labels in aria-label/title, and a compact speed select.
 //
+// Below the strip sits the AI move ticker, and the strip's Moves button opens
+// the move history with its "Why?" panels (src/ui/BotTicker.tsx).
+//
 // It reads and drives only the store; the bots themselves run in the store's
 // BotRunner (src/ui/botRunner.ts).
 
@@ -23,6 +26,12 @@ import {
 } from '../session/opponents'
 import { seatLabel } from './format'
 import { BOT_SPEEDS, useGameStore, type BotSpeed } from './store'
+import {
+	BotHighlight,
+	BotHistory,
+	BotHistoryButton,
+	BotTicker,
+} from './BotTicker'
 
 const SPEED_LABEL: Record<BotSpeed, string> = {
 	slow: 'Slow',
@@ -111,157 +120,175 @@ export function BotBar({ variant }: { variant: 'console' | 'mobile' }) {
 	const store = useGameStore.getState
 	if (variant === 'mobile')
 		return (
+			<>
+				<div
+					className="bot-bar bot-bar-mobile"
+					role="group"
+					aria-label="House AI"
+				>
+					<span
+						className={`bot-status${thinking !== null ? ' bot-thinking' : ''}`}
+						title={status(thinking, botToMove, paused, over)}
+					>
+						{thinking !== null ? (
+							<span className="bot-pulse" aria-hidden="true" />
+						) : (
+							paused && botToMove !== null && !over && <Glyph k="pause" />
+						)}
+						<span aria-hidden="true">
+							{shortStatus(thinking, botToMove, over)}
+						</span>
+						<span className="sr-only" role="status" aria-live="polite">
+							{status(thinking, botToMove, paused, over)}
+						</span>
+					</span>
+					{spectator && (
+						<span className="bot-controls">
+							<button
+								type="button"
+								className="btn micro bot-icon"
+								onClick={() => store().setBotPaused(!paused)}
+								disabled={over}
+								aria-label={paused ? 'Resume' : 'Pause'}
+								title={paused ? 'Resume' : 'Pause'}
+							>
+								<Glyph k={paused ? 'play' : 'pause'} />
+							</button>
+							<button
+								type="button"
+								className="btn micro bot-icon"
+								onClick={() => store().stepBot()}
+								disabled={!paused || over || botToMove === null}
+								aria-label="Step"
+								title="Play one House AI move"
+							>
+								<Glyph k="step" />
+							</button>
+							<span className="bot-seg" role="group" aria-label="View">
+								{([0, 1] as const).map((seat) => (
+									<button
+										key={seat}
+										type="button"
+										className={`btn micro bot-icon${viewer === seat ? ' btn-active' : ''}`}
+										aria-pressed={viewer === seat}
+										aria-label={seatLabel(seat)}
+										onClick={() => store().setViewer(seat)}
+									>
+										{seatShort(seat)}
+									</button>
+								))}
+							</span>
+							<button
+								type="button"
+								className={`btn micro bot-icon${revealAll ? ' btn-active' : ''}`}
+								aria-pressed={revealAll}
+								onClick={() => store().setRevealAll(!revealAll)}
+								aria-label="Reveal hands"
+								title="Show both captains' hands"
+							>
+								<Glyph k="eye" />
+							</button>
+						</span>
+					)}
+					<BotHistoryButton compact />
+					<select
+						className="bot-speed-compact"
+						value={speed}
+						onChange={(e) => store().setBotSpeed(e.target.value as BotSpeed)}
+						aria-label="House AI speed"
+						title="House AI speed"
+					>
+						{BOT_SPEEDS.map((sp) => (
+							<option key={sp} value={sp}>
+								{SPEED_SHORT[sp]}
+							</option>
+						))}
+					</select>
+				</div>
+				<BotTicker variant="mobile" />
+				<BotHistory />
+				<BotHighlight />
+			</>
+		)
+	return (
+		<>
 			<div
-				className="bot-bar bot-bar-mobile"
+				className="bot-bar bot-bar-console"
 				role="group"
 				aria-label="House AI"
 			>
 				<span
 					className={`bot-status${thinking !== null ? ' bot-thinking' : ''}`}
-					title={status(thinking, botToMove, paused, over)}
+					role="status"
+					aria-live="polite"
 				>
-					{thinking !== null ? (
+					{thinking !== null && (
 						<span className="bot-pulse" aria-hidden="true" />
-					) : (
-						paused && botToMove !== null && !over && <Glyph k="pause" />
 					)}
-					<span aria-hidden="true">
-						{shortStatus(thinking, botToMove, over)}
-					</span>
-					<span className="sr-only" role="status" aria-live="polite">
-						{status(thinking, botToMove, paused, over)}
-					</span>
+					{status(thinking, botToMove, paused, over)}
 				</span>
 				{spectator && (
 					<span className="bot-controls">
 						<button
 							type="button"
-							className="btn micro bot-icon"
+							className="btn micro"
 							onClick={() => store().setBotPaused(!paused)}
 							disabled={over}
-							aria-label={paused ? 'Resume' : 'Pause'}
-							title={paused ? 'Resume' : 'Pause'}
 						>
-							<Glyph k={paused ? 'play' : 'pause'} />
+							{paused ? 'Resume' : 'Pause'}
 						</button>
 						<button
 							type="button"
-							className="btn micro bot-icon"
+							className="btn micro"
 							onClick={() => store().stepBot()}
 							disabled={!paused || over || botToMove === null}
-							aria-label="Step"
 							title="Play one House AI move"
 						>
-							<Glyph k="step" />
+							Step
 						</button>
 						<span className="bot-seg" role="group" aria-label="View">
 							{([0, 1] as const).map((seat) => (
 								<button
 									key={seat}
 									type="button"
-									className={`btn micro bot-icon${viewer === seat ? ' btn-active' : ''}`}
+									className={`btn micro${viewer === seat ? ' btn-active' : ''}`}
 									aria-pressed={viewer === seat}
-									aria-label={seatLabel(seat)}
 									onClick={() => store().setViewer(seat)}
 								>
-									{seatShort(seat)}
+									{seatLabel(seat)}
 								</button>
 							))}
 						</span>
 						<button
 							type="button"
-							className={`btn micro bot-icon${revealAll ? ' btn-active' : ''}`}
+							className={`btn micro${revealAll ? ' btn-active' : ''}`}
 							aria-pressed={revealAll}
 							onClick={() => store().setRevealAll(!revealAll)}
-							aria-label="Reveal hands"
 							title="Show both captains' hands"
 						>
-							<Glyph k="eye" />
+							Reveal hands
 						</button>
 					</span>
 				)}
-				<select
-					className="bot-speed-compact"
-					value={speed}
-					onChange={(e) => store().setBotSpeed(e.target.value as BotSpeed)}
-					aria-label="House AI speed"
-					title="House AI speed"
-				>
-					{BOT_SPEEDS.map((sp) => (
-						<option key={sp} value={sp}>
-							{SPEED_SHORT[sp]}
-						</option>
-					))}
-				</select>
-			</div>
-		)
-	return (
-		<div className="bot-bar bot-bar-console" role="group" aria-label="House AI">
-			<span
-				className={`bot-status${thinking !== null ? ' bot-thinking' : ''}`}
-				role="status"
-				aria-live="polite"
-			>
-				{thinking !== null && <span className="bot-pulse" aria-hidden="true" />}
-				{status(thinking, botToMove, paused, over)}
-			</span>
-			{spectator && (
-				<span className="bot-controls">
-					<button
-						type="button"
-						className="btn micro"
-						onClick={() => store().setBotPaused(!paused)}
-						disabled={over}
+				<label className="bot-speed">
+					<span>Speed</span>
+					<select
+						value={speed}
+						onChange={(e) => store().setBotSpeed(e.target.value as BotSpeed)}
+						aria-label="House AI speed"
 					>
-						{paused ? 'Resume' : 'Pause'}
-					</button>
-					<button
-						type="button"
-						className="btn micro"
-						onClick={() => store().stepBot()}
-						disabled={!paused || over || botToMove === null}
-						title="Play one House AI move"
-					>
-						Step
-					</button>
-					<span className="bot-seg" role="group" aria-label="View">
-						{([0, 1] as const).map((seat) => (
-							<button
-								key={seat}
-								type="button"
-								className={`btn micro${viewer === seat ? ' btn-active' : ''}`}
-								aria-pressed={viewer === seat}
-								onClick={() => store().setViewer(seat)}
-							>
-								{seatLabel(seat)}
-							</button>
+						{BOT_SPEEDS.map((s) => (
+							<option key={s} value={s}>
+								{SPEED_LABEL[s]}
+							</option>
 						))}
-					</span>
-					<button
-						type="button"
-						className={`btn micro${revealAll ? ' btn-active' : ''}`}
-						aria-pressed={revealAll}
-						onClick={() => store().setRevealAll(!revealAll)}
-						title="Show both captains' hands"
-					>
-						Reveal hands
-					</button>
-				</span>
-			)}
-			<label className="bot-speed">
-				<span>Speed</span>
-				<select
-					value={speed}
-					onChange={(e) => store().setBotSpeed(e.target.value as BotSpeed)}
-					aria-label="House AI speed"
-				>
-					{BOT_SPEEDS.map((s) => (
-						<option key={s} value={s}>
-							{SPEED_LABEL[s]}
-						</option>
-					))}
-				</select>
-			</label>
-		</div>
+					</select>
+				</label>
+				<BotHistoryButton compact={false} />
+			</div>
+			<BotTicker variant="console" />
+			<BotHistory />
+			<BotHighlight />
+		</>
 	)
 }

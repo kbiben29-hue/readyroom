@@ -2,9 +2,12 @@
 // (src/ui/botRunner.ts `createWorkerRunner`) posts a decision request and the
 // worker answers with the intent, so a slow search (Hard) never blocks the UI.
 //
-//   main → worker   { id, state, seat, legal, botId }
-//   worker → main   { id, intent } | { id, error }    (and { ready: true } once
-//                                                       the module has loaded)
+//   main → worker   { id, state, seat, legal, botId, explain? }
+//   worker → main   { id, intent, info? } | { id, error }   (and { ready: true }
+//                                               once the module has loaded)
+//
+// With `explain` the answer carries the bot's DecisionInfo (src/bot/explain.ts,
+// plain JSON) for the UI's AI move ticker; the intent is the same either way.
 //
 // The worker is its own module graph: the engine's card registry
 // (src/engine/cards.ts) is empty here until we register the catalogue. The
@@ -18,11 +21,12 @@
 // so tests can drive it directly; the wiring only runs inside a worker.
 
 import type { BotId, Bot } from '../bot/types'
+import type { DecisionInfo } from '../bot/explain'
 import { registerCards } from '../engine/cards'
 import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
 import type { GameState } from '../engine/state'
-import { createBotForWorker, uiCatalog } from './workerBots'
+import { createBotForWorker, runExplained, uiCatalog } from './workerBots'
 
 export interface BotRequest {
 	id: number
@@ -30,10 +34,13 @@ export interface BotRequest {
 	seat: Seat
 	legal: Intent[]
 	botId: BotId
+	/** answer with the bot's DecisionInfo too */
+	explain?: boolean | undefined
 }
 
 export type BotResponse =
-	{ id: number; intent: Intent } | { id: number; error: string }
+	| { id: number; intent: Intent; info?: DecisionInfo }
+	| { id: number; error: string }
 
 /** Posted once when the worker module has evaluated (the runner's proof that
  *  the worker started). */
@@ -67,7 +74,12 @@ export function handleBotRequest(req: BotRequest): BotResponse {
 	const id = typeof req?.id === 'number' ? req.id : -1
 	try {
 		ensureCatalog()
-		const intent = botOf(req.botId).decide(req.state, req.seat, req.legal)
+		const bot = botOf(req.botId)
+		if (req.explain === true) {
+			const { intent, info } = runExplained(bot, req.state, req.seat, req.legal)
+			return { id, intent, info }
+		}
+		const intent = bot.decide(req.state, req.seat, req.legal)
 		return { id, intent }
 	} catch (e) {
 		return { id, error: e instanceof Error ? e.message : String(e) }

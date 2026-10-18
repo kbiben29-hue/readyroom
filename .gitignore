@@ -34,3 +34,5 @@ coverage/
 
 # house AI self-play records, candidate weights and arena runs (tools/selfplay.ts, tools/retrain.ts)
 .bot-data/
+# local screenshots from browser checks
+.screens/

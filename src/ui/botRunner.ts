@@ -15,7 +15,8 @@
 // state that is no longer current) is discarded.
 
 import type { BotId, Bot } from '../bot/types'
-import { createBotInThread } from './workerBots'
+import type { DecisionInfo } from '../bot/explain'
+import { createBotInThread, runExplained } from './workerBots'
 import type { GameState } from '../engine/state'
 import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
@@ -30,8 +31,43 @@ export interface BotRunner {
 		botId: BotId,
 		signal?: AbortSignal,
 	): Promise<Intent>
+	/** Optional: the same decision plus the bot's DecisionInfo (src/bot/
+	 *  explain.ts) for the AI move ticker. The intent is exactly what `decide`
+	 *  would answer; `info` is plain JSON. Runners without it (test fakes) are
+	 *  asked through `decide` and the move simply has no explanation. */
+	decideExplained?(
+		state: GameState,
+		seat: Seat,
+		legal: Intent[],
+		botId: BotId,
+		signal?: AbortSignal,
+	): Promise<ExplainedIntent>
 	/** Release whatever the runner holds (a worker, timers). */
 	dispose(): void
+}
+
+/** A decision with its explanation (`info` is absent when the bot or the
+ *  runner had none). */
+export interface ExplainedIntent {
+	intent: Intent
+	info?: DecisionInfo | undefined
+}
+
+/** Ask `runner` for an explained decision when it can give one, else for a
+ *  plain one. */
+export function decideWithInfo(
+	runner: BotRunner,
+	state: GameState,
+	seat: Seat,
+	legal: Intent[],
+	botId: BotId,
+	signal?: AbortSignal,
+): Promise<ExplainedIntent> {
+	if (runner.decideExplained !== undefined)
+		return runner.decideExplained(state, seat, legal, botId, signal)
+	return runner
+		.decide(state, seat, legal, botId, signal)
+		.then((intent) => ({ intent }))
 }
 
 function abortError(): Error {
@@ -60,34 +96,39 @@ export function createInThreadRunner(
 		}
 		return bot
 	}
-	return {
-		decide(state, seat, legal, botId, signal) {
-			return new Promise<Intent>((resolve, reject) => {
+	const run = <T>(signal: AbortSignal | undefined, work: () => T): Promise<T> =>
+		new Promise<T>((resolve, reject) => {
+			if (signal?.aborted === true) {
+				reject(abortError())
+				return
+			}
+			const onAbort = () => {
+				clearTimeout(timer)
+				timers.delete(timer)
+				reject(abortError())
+			}
+			const timer = setTimeout(() => {
+				timers.delete(timer)
+				signal?.removeEventListener('abort', onAbort)
 				if (signal?.aborted === true) {
 					reject(abortError())
 					return
 				}
-				const onAbort = () => {
-					clearTimeout(timer)
-					timers.delete(timer)
-					reject(abortError())
+				try {
+					resolve(work())
+				} catch (e) {
+					reject(e instanceof Error ? e : new Error(String(e)))
 				}
-				const timer = setTimeout(() => {
-					timers.delete(timer)
-					signal?.removeEventListener('abort', onAbort)
-					if (signal?.aborted === true) {
-						reject(abortError())
-						return
-					}
-					try {
-						resolve(botOf(botId).decide(state, seat, legal))
-					} catch (e) {
-						reject(e instanceof Error ? e : new Error(String(e)))
-					}
-				}, 0)
-				timers.add(timer)
-				signal?.addEventListener('abort', onAbort, { once: true })
-			})
+			}, 0)
+			timers.add(timer)
+			signal?.addEventListener('abort', onAbort, { once: true })
+		})
+	return {
+		decide(state, seat, legal, botId, signal) {
+			return run(signal, () => botOf(botId).decide(state, seat, legal))
+		},
+		decideExplained(state, seat, legal, botId, signal) {
+			return run(signal, () => runExplained(botOf(botId), state, seat, legal))
 		},
 		dispose() {
 			for (const t of timers) clearTimeout(t)
@@ -135,8 +176,10 @@ interface Pending {
 		seat: Seat
 		legal: Intent[]
 		botId: BotId
+		/** answer with the DecisionInfo too */
+		explain?: boolean | undefined
 	}
-	resolve: (intent: Intent) => void
+	resolve: (answer: ExplainedIntent) => void
 	reject: (e: Error) => void
 	signal: AbortSignal | undefined
 	onAbort: () => void
@@ -206,9 +249,12 @@ export function createWorkerRunner(
 		for (const id of [...pending.keys()]) {
 			const p = settle(id)!
 			const m = p.message
-			runner
-				.decide(m.state, m.seat, m.legal, m.botId, p.signal)
-				.then(p.resolve, p.reject)
+			;(m.explain === true
+				? decideWithInfo(runner, m.state, m.seat, m.legal, m.botId, p.signal)
+				: runner
+						.decide(m.state, m.seat, m.legal, m.botId, p.signal)
+						.then((intent) => ({ intent }))
+			).then(p.resolve, p.reject)
 		}
 	}
 
@@ -223,7 +269,7 @@ export function createWorkerRunner(
 		w.onmessage = (ev: MessageEvent) => {
 			const data = ev.data as
 				| { ready: true }
-				| { id: number; intent: Intent }
+				| { id: number; intent: Intent; info?: DecisionInfo }
 				| { id: number; error: string }
 			if ('ready' in data) {
 				started = true
@@ -233,7 +279,12 @@ export function createWorkerRunner(
 			const p = settle(data.id)
 			if (p === undefined) return // aborted or disposed meanwhile
 			if ('error' in data) p.reject(new Error(`bot worker: ${data.error}`))
-			else p.resolve(data.intent)
+			else
+				p.resolve(
+					data.info === undefined
+						? { intent: data.intent }
+						: { intent: data.intent, info: data.info },
+				)
 		}
 		w.onerror = (ev: ErrorEvent) => {
 			ev.preventDefault?.()
@@ -257,39 +308,55 @@ export function createWorkerRunner(
 		return true
 	}
 
+	const ask = (
+		state: GameState,
+		seat: Seat,
+		legal: Intent[],
+		botId: BotId,
+		signal: AbortSignal | undefined,
+		explain: boolean,
+	): Promise<ExplainedIntent> =>
+		new Promise<ExplainedIntent>((resolve, reject) => {
+			if (signal?.aborted === true) {
+				reject(abortError())
+				return
+			}
+			const id = nextId++
+			const p: Pending = {
+				message: explain
+					? { id, state, seat, legal, botId, explain: true }
+					: { id, state, seat, legal, botId },
+				resolve,
+				reject,
+				signal,
+				onAbort: () => {
+					if (settle(id) === undefined) return
+					reject(abortError())
+					// the sync search can't be interrupted: drop the worker and
+					// move any other pending request onto a fresh one
+					kill()
+					for (const other of pending.values()) {
+						if (!post(other)) {
+							degrade()
+							return
+						}
+					}
+				},
+			}
+			pending.set(id, p)
+			signal?.addEventListener('abort', p.onAbort, { once: true })
+			if (!post(p)) degrade()
+		})
 	return {
 		decide(state, seat, legal, botId, signal) {
 			if (fallback !== null)
 				return fallback.decide(state, seat, legal, botId, signal)
-			return new Promise<Intent>((resolve, reject) => {
-				if (signal?.aborted === true) {
-					reject(abortError())
-					return
-				}
-				const id = nextId++
-				const p: Pending = {
-					message: { id, state, seat, legal, botId },
-					resolve,
-					reject,
-					signal,
-					onAbort: () => {
-						if (settle(id) === undefined) return
-						reject(abortError())
-						// the sync search can't be interrupted: drop the worker and
-						// move any other pending request onto a fresh one
-						kill()
-						for (const other of pending.values()) {
-							if (!post(other)) {
-								degrade()
-								return
-							}
-						}
-					},
-				}
-				pending.set(id, p)
-				signal?.addEventListener('abort', p.onAbort, { once: true })
-				if (!post(p)) degrade()
-			})
+			return ask(state, seat, legal, botId, signal, false).then((a) => a.intent)
+		},
+		decideExplained(state, seat, legal, botId, signal) {
+			if (fallback !== null)
+				return decideWithInfo(fallback, state, seat, legal, botId, signal)
+			return ask(state, seat, legal, botId, signal, true)
 		},
 		dispose() {
 			kill()

@@ -66,6 +66,15 @@ import {
 } from './evaluate'
 import { priorBonus, priorSelection, settle, simulate } from './heuristic'
 import { firstLegalPolicy } from './autoPlay'
+import {
+	marginOfValue,
+	NOTE_FORCED,
+	NOTE_MISSION,
+	ruleInfo,
+	topOptions,
+	type DecisionInfo,
+	type DecisionOption,
+} from './explain'
 
 /** How a node's edges get their prior scores (VP; softmax over them is P):
  *  - `bonus`: the heuristic's rule priors only (`priorBonus`);
@@ -622,20 +631,80 @@ function cmp(a: string, b: string): number {
 	return a < b ? -1 : a > b ? 1 : 0
 }
 
+/** The search's root statistics as a DecisionInfo (src/bot/explain.ts):
+ *  ranked by visits, each option's mean value mapped back to a VP margin
+ *  (unvisited edges: their prior score). No extra search. */
+export function searchInfo(
+	id: BotId,
+	chosen: Intent,
+	stats: IsmctsStats,
+	scale: number = EVAL_SCALE,
+	ms?: number,
+): DecisionInfo {
+	const total = stats.root.reduce((a, r) => a + r.n, 0)
+	const key = intentKey(chosen)
+	const rows: DecisionOption[] = stats.root.map((r) => ({
+		intent: r.intent,
+		score: r.n > 0 ? marginOfValue(r.q, scale) : r.prior,
+		share: total > 0 ? r.n / total : 0,
+		chosen: intentKey(r.intent) === key,
+	}))
+	return {
+		botId: id,
+		kind: 'search',
+		options: topOptions(rows, (o) => (o.share ?? 0) * 1e6 + o.score),
+		iterations: stats.iterations,
+		ms,
+	}
+}
+
 /** The ISMCTS bot (see the header). */
 export function makeIsmctsBot(opts: IsmctsOptions = {}): Bot {
 	const missionsFirst = opts.missionsFirst ?? true
+	const id = opts.id ?? 'hard'
+	/** The decision; with `explain` also its DecisionInfo (from the search
+	 *  already run — the chosen intent never depends on it). */
+	const choose = (
+		state: GameState,
+		seat: Seat,
+		legal: Intent[],
+		explain: boolean,
+	): { intent: Intent; info: DecisionInfo | null } => {
+		const cands = candidates(state, seat, legal)
+		const forced = (intent: Intent) => ({
+			intent,
+			info: explain ? ruleInfo(id, 'forced', NOTE_FORCED) : null,
+		})
+		if (cands.length === 0) return forced(legal[0]!)
+		if (cands.length === 1) return forced(cands[0]!)
+		if (missionsFirst) {
+			const mission = cands.find((c) => c.t === 'COMPLETE_MISSION')
+			if (mission !== undefined)
+				return {
+					intent: mission,
+					info: explain ? ruleInfo(id, 'rule', NOTE_MISSION) : null,
+				}
+		}
+		const t0 = explain ? opts.clock?.() : undefined
+		const { intent, stats } = search(state, seat, cands, opts)
+		if (!explain) return { intent, info: null }
+		const ms =
+			t0 !== undefined && opts.clock !== undefined
+				? opts.clock() - t0
+				: undefined
+		return {
+			intent,
+			info: searchInfo(id, intent, stats, opts.scale ?? EVAL_SCALE, ms),
+		}
+	}
 	return {
-		id: opts.id ?? 'hard',
+		id,
 		decide(state, seat, legal) {
-			const cands = candidates(state, seat, legal)
-			if (cands.length === 0) return legal[0]!
-			if (cands.length === 1) return cands[0]!
-			if (missionsFirst) {
-				const mission = cands.find((c) => c.t === 'COMPLETE_MISSION')
-				if (mission !== undefined) return mission
-			}
-			return search(state, seat, cands, opts).intent
+			return choose(state, seat, legal, false).intent
+		},
+		decideExplained(state, seat, legal) {
+			const r = choose(state, seat, legal, true)
+			return { intent: r.intent, info: r.info! }
 		},
 	}
 }

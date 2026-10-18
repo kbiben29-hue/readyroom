@@ -179,8 +179,8 @@ function OnlineGame({ shell }: { shell: Shell }) {
 			<RecapView
 				recap={online.recap}
 				names={[
-					view.players[0].name ?? view.players[0].deckName,
-					view.players[1].name ?? view.players[1].deckName,
+					view.players[0].name ?? deckLabel(view.players[0].deck),
+					view.players[1].name ?? deckLabel(view.players[1].deck),
 				]}
 				defs={defs}
 				defOfIid={(iid) => view.state.cards[iid]?.def ?? null}

@@ -2,8 +2,9 @@
 //
 // Vite bundles vendor/stcc/*.json when it exists (after `npm run fetch-cards`);
 // when it doesn't, the glob is empty and every lookup returns null, so the UI
-// falls back to its text faces. The desktop app ships without the data and
-// installs it at startup with `loadStccFrom` (src/desktop/). Tests start with
+// falls back to its text faces. The desktop and hosted builds ship without
+// it; the desktop app installs its own copy at startup with `loadStccFrom`
+// (src/desktop/). Tests start with
 // an empty index for determinism and inject one through `setStccIndex`.
 
 import { setCardNameIndex } from '../data/cardNames'
@@ -16,13 +17,14 @@ import {
 	type StccCard,
 } from '../data/stcc'
 
-const modules: Record<string, unknown> =
-	import.meta.env.MODE === 'test' || import.meta.env.MODE === 'desktop'
-		? {}
-		: import.meta.glob('../../vendor/stcc/*.json', {
-				eager: true,
-				import: 'default',
-			})
+const modules: Record<string, unknown> = ['test', 'desktop', 'hosted'].includes(
+	import.meta.env.MODE,
+)
+	? {}
+	: import.meta.glob('../../vendor/stcc/*.json', {
+			eager: true,
+			import: 'default',
+		})
 
 /** Where scans and icons are served from: public/stcc/ for the web build. */
 let assetBase = `${import.meta.env.BASE_URL}stcc`

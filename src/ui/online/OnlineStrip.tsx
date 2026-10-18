@@ -4,6 +4,7 @@
 
 import { useDefIndex } from '../defs'
 import { useGameStore } from '../store'
+import { deckLabel } from '../../data/cardNames'
 import { PendingNotice } from './Orders'
 import './online.css'
 
@@ -13,8 +14,8 @@ export function OnlineStrip() {
 	const view = online?.view ?? null
 	if (online === null || view === null) return null
 	const names: [string, string] = [
-		view.players[0].name ?? view.players[0].deckName,
-		view.players[1].name ?? view.players[1].deckName,
+		view.players[0].name ?? deckLabel(view.players[0].deck),
+		view.players[1].name ?? deckLabel(view.players[1].deck),
 	]
 	const them = view.seat === 0 ? 1 : 0
 	const link =

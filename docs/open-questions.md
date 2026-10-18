@@ -102,3 +102,5 @@ Still open: a _hosted_ build (`dist/` includes `public/stcc/`) would redistribut
 don't deploy a build that includes fetched data.
 The desktop installers (docs/desktop.md) ship code only as well: `vite build --mode desktop`
 leaves the STCC data out, and the app fetches each player's own copy on first launch.
+Since 2026-10-18 the hosted build is code only too (no fetch in the Dockerfile,
+`vite build --mode hosted`), which settles the hosted-build question above.

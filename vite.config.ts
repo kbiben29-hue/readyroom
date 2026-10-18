@@ -5,10 +5,13 @@ import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
 
-/** `vite build --mode desktop` (the Tauri build) ships code only: the STCC
- *  JSON is not bundled (src/ui/stcc.ts) and the scans/icons Vite copied from
- *  public/stcc/ are removed, even when they were fetched on this machine. The
- *  app downloads its own copy on first launch (docs/desktop.md). */
+/** `vite build --mode desktop` (the Tauri build) and `--mode hosted` (the Fly
+ *  image) ship code only: the STCC JSON is not bundled (src/ui/stcc.ts) and
+ *  the scans/icons Vite copied from public/stcc/ are removed, even when they
+ *  were fetched on this machine. The desktop app downloads its own copy on
+ *  first launch (docs/desktop.md). */
+const CODE_ONLY = new Set(['desktop', 'hosted'])
+
 function dropStcc(): Plugin {
 	let outDir = 'dist'
 	return {
@@ -24,7 +27,7 @@ function dropStcc(): Plugin {
 }
 
 export default defineConfig(({ mode }) => ({
-	plugins: [react(), ...(mode === 'desktop' ? [dropStcc()] : [])],
+	plugins: [react(), ...(CODE_ONLY.has(mode) ? [dropStcc()] : [])],
 	resolve: {
 		alias: {
 			'@engine': fileURLToPath(new URL('./src/engine', import.meta.url)),

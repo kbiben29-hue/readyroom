@@ -31,3 +31,6 @@ coverage/
 
 # your own Fly.io app config (copy fly.example.toml)
 /fly.toml
+
+# local screenshots from browser checks
+.screens/

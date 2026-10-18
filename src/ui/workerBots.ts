@@ -5,6 +5,10 @@
 
 import { makeBot } from '../bot/index'
 import type { Bot, BotId } from '../bot/types'
+import { explainDecision, type DecisionInfo } from '../bot/explain'
+import type { GameState } from '../engine/state'
+import type { Intent } from '../engine/intents'
+import type { Seat } from '../engine/resolver/queries'
 
 /** The bot `botId` plays with inside the worker (cached per id by the
  *  worker, so this runs once per level per worker lifetime). */
@@ -16,4 +20,22 @@ export function createBotForWorker(botId: BotId): Bot {
 	if (botId === 'hard')
 		return makeBot('hard', { clock: () => performance.now() })
 	return makeBot(botId)
+}
+
+/** One explained decision of `bot` (src/bot/explain.ts), timed in ms when
+ *  the bot did not time itself. Shared by the worker and the in-thread
+ *  runner (kept here so the worker never imports botRunner.ts, which spawns
+ *  workers). */
+export function runExplained(
+	bot: Bot,
+	state: GameState,
+	seat: Seat,
+	legal: Intent[],
+): { intent: Intent; info: DecisionInfo } {
+	const t0 = performance.now()
+	const { intent, info } = explainDecision(bot, state, seat, legal)
+	return {
+		intent,
+		info: { ...info, ms: info.ms ?? Math.round(performance.now() - t0) },
+	}
 }

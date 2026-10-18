@@ -9,6 +9,7 @@
 import type { GameState } from '../engine/state'
 import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
+import type { DecisionInfo } from './explain'
 
 /** The registered bot levels (src/bot/index.ts `makeBot`).
  *  - `first-legal`: the deterministic fuzz driver (src/bot/autoPlay.ts).
@@ -46,6 +47,14 @@ export type BotId = 'first-legal' | 'easy' | 'normal' | 'hard'
 export interface Bot {
 	id: BotId
 	decide(state: GameState, seat: Seat, legal: Intent[]): Intent
+	/** Optional: the same decision plus why (src/bot/explain.ts). Its `intent`
+	 *  is always exactly `decide`'s answer; building `info` must not run any
+	 *  extra search. `explainDecision` covers bots without it. */
+	decideExplained?(
+		state: GameState,
+		seat: Seat,
+		legal: Intent[],
+	): { intent: Intent; info: DecisionInfo }
 }
 
 /** The asynchronous face of a bot, e.g. one running in a Web Worker. Same

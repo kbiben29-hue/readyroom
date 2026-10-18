@@ -100,3 +100,5 @@ Card defs carry mechanics only, with no printed `text`. The OCR records, the rul
 Cyclopedia PDF are untracked, and `npm run audit:publish` (part of `build`) keeps it that way.
 Still open: a _hosted_ build (`dist/` includes `public/stcc/`) would redistribute the scans, so
 don't deploy a build that includes fetched data.
+The desktop installers (docs/desktop.md) ship code only as well: `vite build --mode desktop`
+leaves the STCC data out, and the app fetches each player's own copy on first launch.

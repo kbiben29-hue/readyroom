@@ -41,7 +41,20 @@ you have the full game, while neither repository redistributes the other's mater
 
 You still need to know the rules — [buy the game](https://wizkids.com/).
 
-## Installation
+## Desktop app
+
+Prebuilt apps for **macOS** and **Windows** are on the
+[Releases page](https://github.com/rwolffgang/ready-room/releases). On first launch the app
+downloads the STCC card database (about 340 MB) onto your computer, the same way
+`npm run fetch-cards` does. The card database is not part of the download. The builds are not
+code-signed, so the first launch needs one extra click:
+
+- macOS: right-click the app → **Open**.
+- Windows: SmartScreen → **More info** → **Run anyway**.
+
+See [`docs/desktop.md`](docs/desktop.md) for details.
+
+## Installation from source
 
 **You need:** [Node.js](https://nodejs.org/) 22 or newer (with npm), git, and an internet
 connection for the card download.

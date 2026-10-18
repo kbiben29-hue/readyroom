@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
+import { DesktopRoot } from './desktop/DesktopRoot'
+import { isDesktop } from './desktop/bridge'
 import App from './ui/App'
 import { RecoverableErrorBoundary } from './ui/errorScreen'
 import './ui/ui.css'
@@ -12,7 +14,13 @@ import './ui/ui.css'
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<RecoverableErrorBoundary>
-			<App />
+			{isDesktop() ? (
+				<DesktopRoot>
+					<App />
+				</DesktopRoot>
+			) : (
+				<App />
+			)}
 		</RecoverableErrorBoundary>
 	</StrictMode>,
 )

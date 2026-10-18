@@ -8,6 +8,7 @@ RUN npm ci --ignore-scripts
 # Card data and scans from the pinned STCC commit — its own layer, so it is
 # only fetched again when the pin changes.
 COPY tools/fetch-stcc.ts tools/stcc-source.json tools/
+COPY src/data/stcc.ts src/data/stccFetch.ts src/data/
 RUN node_modules/.bin/tsx tools/fetch-stcc.ts
 COPY . .
 RUN npm run validate:cards && node_modules/.bin/vite build

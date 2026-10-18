@@ -3170,3 +3170,20 @@ h3,
 	width: 19px;
 	height: 19px;
 }
+
+/* ------------------------------------------------ desktop: card database */
+.stcc-setup {
+	padding: 40px 20px;
+	max-width: 720px;
+	margin: 0 auto;
+}
+.stcc-progress {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 12px 0;
+}
+.stcc-progress progress {
+	flex: 1;
+	accent-color: var(--accent);
+}

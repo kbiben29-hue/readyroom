@@ -94,13 +94,23 @@ export function removeSeat(token: string): void {
 	persist(loadSeats().filter((s) => s.token !== token))
 }
 
-/** The game server: an explicit setting, else — in a production build, which
- *  the game server itself serves (docs/deploy.md) — the app's own origin, and
- *  in development port 8787 on the host that served the app (`npm run server`
- *  next to `npm run dev`, also from a phone on the same network). */
+/** The hosted game, baked into builds that are not served by it — the
+ *  desktop app (docs/desktop.md) — or undefined. */
+function publicUrl(): string | undefined {
+	const url = import.meta.env.VITE_PUBLIC_URL?.trim().replace(/\/+$/, '')
+	return url === undefined || url === '' ? undefined : url
+}
+
+/** The game server: an explicit setting, else the build's hosted game (desktop
+ *  builds), else — in a production build, which the game server itself serves
+ *  (docs/deploy.md) — the app's own origin, and in development port 8787 on
+ *  the host that served the app (`npm run server` next to `npm run dev`, also
+ *  from a phone on the same network). */
 export function serverUrl(): string {
 	const set = readStorage(SERVER_KEY)
 	if (set !== null && set.trim() !== '') return set.trim().replace(/\/+$/, '')
+	const hosted = publicUrl()
+	if (hosted !== undefined) return hosted
 	const loc = globalThis.location
 	if (loc === undefined) return 'http://127.0.0.1:8787'
 	if (import.meta.env.PROD) return loc.origin
@@ -114,8 +124,11 @@ export function setServerUrl(url: string | null): void {
 	)
 }
 
-/** The page an invite link opens (this app, without any fragment). */
+/** The page an invite link opens (this app, without any fragment). A build
+ *  with a hosted game (desktop) links to the server's copy of the app, which
+ *  the friend can open in any browser. */
 export function appUrl(): string {
+	if (publicUrl() !== undefined) return `${serverUrl()}/`
 	const loc = globalThis.location
 	if (loc === undefined) return ''
 	return `${loc.origin}${loc.pathname}`

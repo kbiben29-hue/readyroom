@@ -2,8 +2,9 @@
 //
 // Vite bundles vendor/stcc/*.json when it exists (after `npm run fetch-cards`);
 // when it doesn't, the glob is empty and every lookup returns null, so the UI
-// falls back to its text faces. Tests start with an empty index for
-// determinism and inject one through `setStccIndex`.
+// falls back to its text faces. The desktop app ships without the data and
+// installs it at startup with `loadStccFrom` (src/desktop/). Tests start with
+// an empty index for determinism and inject one through `setStccIndex`.
 
 import { setCardNameIndex } from '../data/cardNames'
 import type { CardDef } from '../data/schema'
@@ -16,12 +17,15 @@ import {
 } from '../data/stcc'
 
 const modules: Record<string, unknown> =
-	import.meta.env.MODE === 'test'
+	import.meta.env.MODE === 'test' || import.meta.env.MODE === 'desktop'
 		? {}
 		: import.meta.glob('../../vendor/stcc/*.json', {
 				eager: true,
 				import: 'default',
 			})
+
+/** Where scans and icons are served from: public/stcc/ for the web build. */
+let assetBase = `${import.meta.env.BASE_URL}stcc`
 
 function fromModules(): Map<string, StccCard> {
 	const boxes: Partial<Record<StccBox, unknown>> = {}
@@ -29,7 +33,7 @@ function fromModules(): Map<string, StccCard> {
 		const key = `../../vendor/stcc/${box}.json`
 		if (key in modules) boxes[box] = modules[key]
 	}
-	return buildStccIndex(boxes, `${import.meta.env.BASE_URL}stcc`)
+	return buildStccIndex(boxes, assetBase)
 }
 
 let index: Map<string, StccCard> = fromModules()
@@ -39,6 +43,26 @@ setCardNameIndex(index)
 let icons: Record<string, string> =
 	(modules['../../vendor/stcc/icons.json'] as
 		Record<string, string> | undefined) ?? {}
+
+/** Install STCC data read at runtime: `readJson` reads a fetched JSON file by
+ *  its name (`box1.json`, `icons.json`) or returns null; scans and icons are
+ *  then served from `base`. Missing files leave those lookups empty. */
+export async function loadStccFrom(
+	base: string,
+	readJson: (name: string) => Promise<unknown>,
+): Promise<void> {
+	const boxes: Partial<Record<StccBox, unknown>> = {}
+	for (const box of STCC_BOXES) {
+		const data = await readJson(`${box}.json`)
+		if (data !== null) boxes[box] = data
+	}
+	const nextIcons = await readJson('icons.json')
+	assetBase = base
+	setStccIndex(
+		buildStccIndex(boxes, base),
+		(nextIcons as Record<string, string> | null) ?? {},
+	)
+}
 
 /** Test seam: replace the index (pass an empty Map to clear it). */
 export function setStccIndex(
@@ -63,7 +87,7 @@ export function cardImageUrl(def: Pick<CardDef, 'cardId'>): string | null {
 /** Public URL of a fetched cardface icon, e.g. `stccIconUrl('token/dilithium')`, or null. */
 export function stccIconUrl(key: string): string | null {
 	const path = icons[key]
-	return path === undefined ? null : `${import.meta.env.BASE_URL}stcc/${path}`
+	return path === undefined ? null : `${assetBase}/${path}`
 }
 
 // ---------------------------------------------------------------------------

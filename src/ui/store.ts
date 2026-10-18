@@ -24,7 +24,24 @@ import type { PendingChoice } from '../engine/resolver/choices'
 import type { CardInstanceId } from '../engine/ids'
 import type { Seat } from '../engine/resolver/queries'
 import { createSession, checkCardData, type Session } from '../session/log'
-import { SessionAdapter } from '../session/adapter'
+import { SessionAdapter, IllegalIntentError } from '../session/adapter'
+import {
+	botFor,
+	botLabel,
+	decidersOf,
+	hasBots,
+	humanSeats,
+	isSpectator,
+	type Opponents,
+} from '../session/opponents'
+import { decisionSeat } from '../session/interrupts'
+import type { BotId } from '../bot/types'
+import { firstLegalPolicy, nextAutoIntent } from '../bot/autoPlay'
+import {
+	validateChoice,
+	IllegalSelectionError,
+} from '../engine/resolver/choices'
+import { createInThreadRunner, isAbortError, type BotRunner } from './botRunner'
 import { project, HIDDEN_DEF, type ProjectedState } from './projection'
 import { poolDiff } from '../engine/fx'
 import { residualChanges, type Motion } from './flow'
@@ -52,40 +69,351 @@ export const AUTOSAVE_DEBOUNCE_MS = 1000
 export interface UndoPolicy {
 	allowed: boolean
 	reason: string | null
+	/** How many logged intents one Undo truncates (1 except in a game against
+	 *  the house AI, where it also takes back the bot's replies). */
+	count: number
 }
 
-export function undoPolicy(session: Session | null): UndoPolicy {
+const isBoundary = (intent: Intent): boolean =>
+	intent.t === 'START' || intent.t === 'PASS' || intent.t === 'END_TURN'
+
+/**
+ * The undo gate. `deciders[i]` is the seat that decided `session.log[i]`
+ * (the store keeps it in step with the log); it only matters in a game
+ * against the house AI (`session.opponents`):
+ *
+ *   - spectator (both seats bots): undo is off;
+ *   - one human: Undo takes back the human's previous decision together with
+ *     every bot intent after it (a bot's reaction, or the bot's whole turn
+ *     after the human's clean-up choice), landing on that decision, so the
+ *     bot does not simply replay. The hot-seat spirit holds: the human's own
+ *     turn boundary (START / PASS / END_TURN) is never taken back.
+ */
+export function undoPolicy(
+	session: Session | null,
+	deciders?: readonly Seat[],
+): UndoPolicy {
 	if (session === null)
-		return { allowed: false, reason: 'No game in progress.' }
+		return { allowed: false, reason: 'No game in progress.', count: 0 }
 	const last = session.log[session.log.length - 1]
 	if (last === undefined)
-		return { allowed: false, reason: 'Nothing to undo yet.' }
+		return { allowed: false, reason: 'Nothing to undo yet.', count: 0 }
 	if (session.setup.mode === 'CADET') {
-		return { allowed: true, reason: 'Solo — take-backs enabled, undo freely.' }
+		return {
+			allowed: true,
+			reason: 'Solo — take-backs enabled, undo freely.',
+			count: 1,
+		}
 	}
-	if (last.t === 'START' || last.t === 'PASS' || last.t === 'END_TURN') {
+	if (hasBots(session.opponents) && deciders !== undefined)
+		return botUndoPolicy(session, deciders)
+	if (isBoundary(last)) {
 		return {
 			allowed: false,
 			reason:
 				"Hot-seat take-backs stop at your turn's end — the opponent's turn is never rewound.",
+			count: 0,
 		}
 	}
-	return { allowed: true, reason: 'Take-backs enabled within your own turn.' }
+	return {
+		allowed: true,
+		reason: 'Take-backs enabled within your own turn.',
+		count: 1,
+	}
+}
+
+function botUndoPolicy(
+	session: Session,
+	deciders: readonly Seat[],
+): UndoPolicy {
+	const humans = humanSeats(session.opponents)
+	if (humans.length === 0)
+		return {
+			allowed: false,
+			reason: 'Spectator game — undo is off.',
+			count: 0,
+		}
+	const human = humans[0]!
+	let i = Math.min(deciders.length, session.log.length) - 1
+	while (i >= 0 && deciders[i] !== human) i--
+	if (i < 0)
+		return { allowed: false, reason: 'Nothing of yours to undo yet.', count: 0 }
+	if (isBoundary(session.log[i]!))
+		return {
+			allowed: false,
+			reason: "Take-backs stop at your turn's end — it is never rewound.",
+			count: 0,
+		}
+	return {
+		allowed: true,
+		reason: 'Takes back your last decision and the House AI replies after it.',
+		count: session.log.length - i,
+	}
 }
 
 /** Short label shown next to the Undo control (todo/17 §2 "state it in the UI"). */
 export function undoPolicyLabel(
 	mode: Session['setup']['mode'] | undefined,
+	opponents?: Opponents,
 ): string {
-	return mode === 'CADET'
-		? 'Take-backs enabled — free undo (solo).'
-		: 'Take-backs: undo within your own turn — stops at a turn boundary.'
+	if (mode === 'CADET') return 'Take-backs enabled — free undo (solo).'
+	if (isSpectator(opponents)) return 'Spectator game — undo is off.'
+	if (hasBots(opponents))
+		return "Take-backs: undo your last decision and the House AI's replies — stops at your turn's end."
+	return 'Take-backs: undo within your own turn — stops at a turn boundary.'
 }
 
 /** The single live adapter (one game at a time). Kept out of the store object
  *  so only the derived snapshots drive React renders; the adapter itself is
  *  mutable and owns the incremental state. */
 let adapter: SessionAdapter | null = null
+
+/** `deciders[i]` = the seat that decided `adapter.session.log[i]` (the undo
+ *  gate of a game against the house AI needs it). Kept in step with the log
+ *  by every commit / undo / start / resume. */
+let deciders: Seat[] = []
+
+// ---------------------------------------------------------------------------
+// House AI driver (todo/15 §4). After every local commit the store "pumps":
+// when the seat the game waits on (`decisionSeat`) is a bot in
+// `session.opponents`, it asks the BotRunner for that bot's intent, waits a
+// visible delay and commits the answer through the same path a human intent
+// takes (motion snapshot, autosave, log), then pumps again — until a human
+// seat must decide, the game is over, or a spectator game is paused.
+//
+// Cancellation: every lifecycle change (undo, new game, start, resume, leaving
+// for an online game, swapping the runner) bumps `botGen` and aborts the
+// in-flight request; an answer from an older generation, or for a state that
+// is no longer the adapter's, is dropped, never dispatched.
+// ---------------------------------------------------------------------------
+
+export type BotSpeed = 'slow' | 'normal' | 'fast' | 'instant'
+
+export const BOT_SPEEDS: readonly BotSpeed[] = [
+	'slow',
+	'normal',
+	'fast',
+	'instant',
+]
+
+/** The visible pause before a bot's move lands, per speed. A forced move
+ *  (the only legal intent, e.g. Continue through an empty phase) takes a
+ *  quarter of it. Thinking time counts against the delay. */
+export const BOT_SPEED_MS: Record<BotSpeed, number> = {
+	slow: 1400,
+	normal: 600,
+	fast: 200,
+	instant: 0,
+}
+
+export function botDelay(speed: BotSpeed, forced: boolean): number {
+	const ms = BOT_SPEED_MS[speed]
+	return forced ? Math.round(ms / 4) : ms
+}
+
+const BOT_SPEED_KEY = 'ready-room:bot-speed'
+
+function loadBotSpeed(): BotSpeed {
+	try {
+		const v = globalThis.localStorage?.getItem(BOT_SPEED_KEY)
+		return BOT_SPEEDS.includes(v as BotSpeed) ? (v as BotSpeed) : 'normal'
+	} catch {
+		return 'normal'
+	}
+}
+
+let botRunner: BotRunner = createInThreadRunner()
+let botGen = 0
+let botAbort: AbortController | null = null
+let botTimer: ReturnType<typeof setTimeout> | null = null
+let botBusy = false
+/** One bot intent may run while a spectator game is paused (Step). */
+let botStep = false
+
+/** Swap where the house AI thinks (e.g. a Web Worker runner). The previous
+ *  runner is disposed and any in-flight decision dropped; a bot that must
+ *  move is asked again on the new runner. */
+export function setBotRunner(runner: BotRunner): void {
+	cancelBot()
+	const old = botRunner
+	botRunner = runner
+	if (old !== runner) old.dispose()
+	pumpBot()
+}
+
+export function getBotRunner(): BotRunner {
+	return botRunner
+}
+
+/** Drop any in-flight bot decision (it will never be dispatched). */
+function cancelBot(): void {
+	botGen++
+	botAbort?.abort()
+	botAbort = null
+	if (botTimer !== null) clearTimeout(botTimer)
+	botTimer = null
+	botBusy = false
+	botStep = false
+	if (useGameStore.getState().botThinking !== null)
+		useGameStore.setState({ botThinking: null })
+}
+
+/** Stop the house AI (tests / teardown): cancels the in-flight decision. */
+export function stopBots(): void {
+	cancelBot()
+}
+
+/** The bot the game waits on right now (local play only), or null. */
+function botToMove(): BotId | null {
+	if (adapter === null || onlineController.active()) return null
+	const seat = decisionSeat(adapter.state)
+	if (seat === null) return null
+	return botFor(adapter.session.opponents, seat) ?? null
+}
+
+/** Is `intent` a legal answer in `state`? A RESOLVE_CHOICE must answer the
+ *  open choice (same choiceId) with a valid selection; anything else must be
+ *  one of `legal` (structurally). */
+function acceptable(
+	state: GameState,
+	legal: Intent[],
+	intent: Intent,
+): boolean {
+	if (typeof intent !== 'object' || intent === null) return false
+	const choice = state.pendingChoice
+	if (intent.t === 'RESOLVE_CHOICE')
+		return (
+			choice !== null &&
+			intent.choiceId === choice.id &&
+			validateChoice(state, intent.choiceId, intent.selection).ok
+		)
+	if (choice !== null) return false
+	const key = JSON.stringify(intent)
+	return legal.some((l) => JSON.stringify(l) === key)
+}
+
+/** Commit an intent to the live adapter and re-snapshot (the shared path of
+ *  human and bot intents). Throws when the adapter rejects it. */
+function commit(intent: Intent, decider: Seat): void {
+	const a = adapter!
+	const viewerSeat = useGameStore.getState().viewerSeat
+	const before = a.state
+	a.dispatch(intent)
+	deciders.length = Math.min(deciders.length, a.session.log.length - 1)
+	deciders.push(decider)
+	const snap = snapshot(viewerSeat)
+	useGameStore.setState({
+		...snap,
+		motion: motionOf(before, a.state, snap.projected),
+		...(intent.t === 'RESOLVE_CHOICE' || isBoundary(intent)
+			? { selected: [] }
+			: {}),
+	})
+}
+
+/** Ask the bot that must move (if any) for its intent and commit it after the
+ *  visible delay; then pump again. A no-op while a decision is in flight. */
+function pumpBot(): void {
+	if (botBusy) return
+	const botId = botToMove()
+	const st = useGameStore.getState()
+	if (adapter === null || botId === null || (st.botPaused && !botStep)) {
+		if (st.botThinking !== null) useGameStore.setState({ botThinking: null })
+		return
+	}
+	const stepping = botStep
+	botStep = false
+	const state = adapter.state
+	const seat = decisionSeat(state)!
+	const legal = adapter.legalIntents
+	if (legal.length === 0) {
+		useGameStore.setState({ botThinking: null })
+		return
+	}
+	const gen = botGen
+	const ctrl = new AbortController()
+	botAbort = ctrl
+	botBusy = true
+	const started = performance.now()
+	const forced = state.pendingChoice === null && legal.length === 1
+	const delay = stepping ? 0 : botDelay(st.botSpeed, forced)
+	useGameStore.setState({ botThinking: { seat, botId } })
+
+	const stale = () =>
+		gen !== botGen || ctrl.signal.aborted || adapter?.state !== state
+
+	let asked: Promise<Intent>
+	try {
+		asked = botRunner.decide(state, seat, legal, botId, ctrl.signal)
+	} catch (e) {
+		asked = Promise.reject(e)
+	}
+	void asked
+		.then(
+			(intent) => ({ intent, failed: false }),
+			(e: unknown) => ({ intent: undefined, failed: !isAbortError(e) }),
+		)
+		.then(({ intent, failed }) => {
+			if (stale()) {
+				// a superseded generation was already reset by cancelBot; a state
+				// that moved on without one is re-pumped from where it is now
+				if (gen === botGen) {
+					botBusy = false
+					botAbort = null
+					pumpBot()
+				}
+				return
+			}
+			let chosen =
+				intent !== undefined && acceptable(state, legal, intent)
+					? intent
+					: undefined
+			let warning: string | null = null
+			if (chosen === undefined) {
+				chosen = nextAutoIntent(state, legal, firstLegalPolicy)
+				warning = `${botLabel(botId)} ${failed || intent === undefined ? 'failed to decide' : 'chose an illegal move'} — it played the first legal option instead.`
+			}
+			const wait = Math.max(0, delay - (performance.now() - started))
+			botTimer = setTimeout(() => {
+				botTimer = null
+				if (stale()) return
+				botBusy = false
+				botAbort = null
+				if (warning !== null) useGameStore.setState({ warning })
+				if (!commitBot(chosen, seat, state, legal)) return
+				pumpBot()
+			}, wait)
+		})
+}
+
+/** Commit a bot's (validated) intent; on an engine rejection fall back to the
+ *  first legal option once, and stop the bots if even that fails. */
+function commitBot(
+	intent: Intent | undefined,
+	seat: Seat,
+	state: GameState,
+	legal: Intent[],
+): boolean {
+	const attempts: (Intent | undefined)[] = [
+		intent,
+		nextAutoIntent(state, legal, firstLegalPolicy),
+	]
+	for (const attempt of attempts) {
+		if (attempt === undefined) continue
+		try {
+			commit(attempt, seat)
+			return true
+		} catch {
+			// try the fallback
+		}
+	}
+	useGameStore.setState({
+		botThinking: null,
+		botPaused: true,
+		error: 'The House AI could not find a legal move — the bots are paused.',
+	})
+	return false
+}
 
 /**
  * Click vs double-click disambiguation for cards. A plain single click opens
@@ -177,6 +505,16 @@ export interface GameStore {
 	warning: string | null
 	/** Whether the undo button may act right now (undoPolicy). */
 	canUndo: boolean
+	/** The house-AI level the game waits on right now (local play), or null
+	 *  when a human (or nobody) must decide. While set, `legal` is empty: no
+	 *  human input is accepted. */
+	botToMove: BotId | null
+	/** A bot decision in flight (the "thinking" indicator), or null. */
+	botThinking: { seat: Seat; botId: BotId } | null
+	/** Spectator controls: the bots stop before their next intent. */
+	botPaused: boolean
+	/** How long a bot's move stays visible (BOT_SPEED_MS); per device. */
+	botSpeed: BotSpeed
 	/** Token movement of the last dispatch/settle, for the flight layer and
 	 *  delta badges (flow.ts). Null after anything that is not play — undo,
 	 *  passing the device, loading — so those never animate. */
@@ -198,12 +536,17 @@ export interface GameStore {
 	// actions
 	loadCatalog: () => void
 	newGame: () => void
-	startGame: (config: SetupConfig) => void
+	/** `opponents`: the house-AI seats (absent = hot-seat). */
+	startGame: (config: SetupConfig, opponents?: Opponents) => void
 	resumeGame: (session: Session) => void
 	dispatch: (intent: Intent) => void
 	settle: (selection: unknown) => void
 	undo: () => void
 	setViewer: (seat: Seat) => void
+	setBotPaused: (paused: boolean) => void
+	/** Paused spectator game: let exactly one bot intent run. */
+	stepBot: () => void
+	setBotSpeed: (speed: BotSpeed) => void
 	cardClicked: (iid: CardInstanceId) => void
 	setSelected: (iids: CardInstanceId[]) => void
 	clearSelection: () => void
@@ -238,6 +581,7 @@ type SnapshotFields = Pick<
 	| 'pendingChoice'
 	| 'canUndo'
 	| 'motion'
+	| 'botToMove'
 >
 
 /** Re-derive the projection + legality + undo gate from the adapter (cheap:
@@ -253,17 +597,20 @@ function snapshot(viewerSeat: Seat): SnapshotFields {
 			pendingChoice: null,
 			canUndo: false,
 			motion: null,
+			botToMove: null,
 		}
 	}
 	const revealAll = useGameStore.getState().revealAll
+	const bot = botToMove()
 	return {
 		state: adapter.state,
 		session: adapter.session,
 		projected: project(adapter.state, viewerSeat, revealAll),
-		legal: adapter.legalIntents,
+		legal: bot !== null ? [] : adapter.legalIntents,
 		pendingChoice: adapter.state.pendingChoice,
-		canUndo: undoPolicy(adapter.session).allowed,
+		canUndo: undoPolicy(adapter.session, deciders).allowed,
 		motion: null,
+		botToMove: bot,
 	}
 }
 
@@ -324,6 +671,16 @@ function makeAdapter(session: Session, catalog: CardCatalog): SessionAdapter {
 	})
 }
 
+/** Where the device's view sits at the start of a game: pinned to the one
+ *  human against the house AI, seat 0 for a spectator game, else `hotSeat`
+ *  (whoever moves, in hot-seat). */
+function initialViewer(opponents: Opponents | undefined, hotSeat: Seat): Seat {
+	const humans = humanSeats(opponents)
+	if (humans.length === 1) return humans[0]!
+	if (humans.length === 0) return 0
+	return hotSeat
+}
+
 export const useGameStore = create<GameStore>((set) => ({
 	catalog: null,
 	session: null,
@@ -345,6 +702,10 @@ export const useGameStore = create<GameStore>((set) => ({
 	warning: null,
 	canUndo: false,
 	motion: null,
+	botToMove: null,
+	botThinking: null,
+	botPaused: false,
+	botSpeed: loadBotSpeed(),
 	revealAll: false,
 	showCardDetails: false,
 	online: null,
@@ -362,10 +723,14 @@ export const useGameStore = create<GameStore>((set) => ({
 
 	newGame: () => {
 		cancelPendingDetail()
+		cancelBot()
 		onlineController.close()
 		adapter?.dispose()
 		adapter = null
+		deciders = []
 		set({
+			botToMove: null,
+			botPaused: false,
 			online: null,
 			session: null,
 			state: null,
@@ -385,8 +750,9 @@ export const useGameStore = create<GameStore>((set) => ({
 		})
 	},
 
-	startGame: (config) => {
+	startGame: (config, opponents) => {
 		cancelPendingDetail()
+		cancelBot()
 		onlineController.close()
 		set({ online: null })
 		try {
@@ -394,13 +760,19 @@ export const useGameStore = create<GameStore>((set) => ({
 			if (catalog === null) {
 				catalog = loadBrowserCatalog()
 			}
-			const session = createSession(config, catalog)
+			const session = createSession(config, catalog, { opponents })
 			adapter?.dispose()
 			adapter = makeAdapter(session, catalog)
+			deciders = []
 			// The device starts with whoever goes first (hot-seat "pass the device"
-			// flow; docs/ui-spec.md §1).
-			const viewerSeat: Seat = adapter.state.startingSeat
+			// flow; docs/ui-spec.md §1) — against the house AI it stays with the
+			// human for the whole game.
+			const viewerSeat: Seat = initialViewer(
+				session.opponents,
+				adapter.state.startingSeat,
+			)
 			set({
+				botPaused: false,
 				catalog,
 				viewerSeat,
 				selected: [],
@@ -414,6 +786,7 @@ export const useGameStore = create<GameStore>((set) => ({
 			// Persist right away so the session is on the load list even before the
 			// player's first intent (todo/17 §1 "the load screen is browsable").
 			saveQuiet(adapter.session)
+			pumpBot()
 		} catch (e) {
 			set({ error: (e as Error).message })
 		}
@@ -421,6 +794,7 @@ export const useGameStore = create<GameStore>((set) => ({
 
 	resumeGame: (session) => {
 		cancelPendingDetail()
+		cancelBot()
 		onlineController.close()
 		set({ online: null })
 		try {
@@ -430,9 +804,13 @@ export const useGameStore = create<GameStore>((set) => ({
 			}
 			adapter?.dispose()
 			adapter = makeAdapter(session, catalog)
+			deciders = decidersOf(session.setup, session.log, catalog)
 			// Continue wherever the save left off (hot-seat: the viewer follows the
-			// active seat; docs/ui-spec.md §1).
-			const viewerSeat: Seat = adapter.state.activeSeat
+			// active seat; docs/ui-spec.md §1; against the house AI: the human).
+			const viewerSeat: Seat = initialViewer(
+				session.opponents,
+				adapter.state.activeSeat,
+			)
 			let warning: string | null = null
 			const drift = checkCardData(session, catalog)
 			if (!drift.ok) {
@@ -442,6 +820,7 @@ export const useGameStore = create<GameStore>((set) => ({
 			set({
 				catalog,
 				viewerSeat,
+				botPaused: false,
 				selected: [],
 				detailIid: null,
 				hoverIid: null,
@@ -451,6 +830,7 @@ export const useGameStore = create<GameStore>((set) => ({
 				...snapshot(viewerSeat),
 			})
 			saveQuiet(adapter.session)
+			pumpBot()
 		} catch (e) {
 			set({ warning: null, error: (e as Error).message })
 		}
@@ -464,26 +844,16 @@ export const useGameStore = create<GameStore>((set) => ({
 			return
 		}
 		if (adapter === null) return
-		const viewerSeat = useGameStore.getState().viewerSeat
+		// the house AI is to move: no human input is taken (the UI is dark)
+		if (botToMove() !== null) return
 		try {
-			const before = adapter.state
-			adapter.dispatch(intent)
-			const snap = snapshot(viewerSeat)
-			set({
-				...snap,
-				motion: motionOf(before, adapter.state, snap.projected),
-			})
-			if (
-				intent.t === 'RESOLVE_CHOICE' ||
-				intent.t === 'START' ||
-				intent.t === 'PASS' ||
-				intent.t === 'END_TURN'
-			) {
-				set({ selected: [] })
-			}
+			const decider = decisionSeat(adapter.state) ?? adapter.state.activeSeat
+			commit(intent, decider)
 		} catch (e) {
 			set({ error: (e as Error).message })
+			return
 		}
+		pumpBot()
 	},
 
 	settle: (selection) => {
@@ -493,19 +863,22 @@ export const useGameStore = create<GameStore>((set) => ({
 			return
 		}
 		if (adapter === null) return
-		const viewerSeat = useGameStore.getState().viewerSeat
+		if (botToMove() !== null) return
+		const choice = adapter.state.pendingChoice
 		try {
-			const before = adapter.state
-			adapter.settle(selection)
-			const snap = snapshot(viewerSeat)
-			set({
-				...snap,
-				motion: motionOf(before, adapter.state, snap.projected),
-				selected: [],
-			})
+			if (choice === null)
+				throw new IllegalIntentError('nothing to settle — no PendingChoice')
+			const v = validateChoice(adapter.state, choice.id, selection)
+			if (!v.ok) throw new IllegalSelectionError(v.reason)
+			commit(
+				{ t: 'RESOLVE_CHOICE', choiceId: choice.id, selection },
+				choice.seat,
+			)
 		} catch (e) {
 			set({ error: (e as Error).message })
+			return
 		}
+		pumpBot()
 	},
 
 	undo: () => {
@@ -516,14 +889,17 @@ export const useGameStore = create<GameStore>((set) => ({
 		}
 		if (adapter === null) return
 		const viewerSeat = useGameStore.getState().viewerSeat
-		const policy = undoPolicy(adapter.session)
+		const policy = undoPolicy(adapter.session, deciders)
 		if (!policy.allowed) {
 			// The button is disabled when !canUndo, so this is a programmatic guard
 			// (keyboard / test) — reflect the refusal instead of silently no-op'ing.
 			set({ warning: policy.reason })
 			return
 		}
-		if (!adapter.undo()) return
+		// a bot decision in flight belongs to the state being taken back
+		cancelBot()
+		if (!adapter.undo(policy.count)) return
+		deciders = deciders.slice(0, adapter.session.log.length)
 		set({
 			...snapshot(viewerSeat),
 			selected: [],
@@ -531,18 +907,58 @@ export const useGameStore = create<GameStore>((set) => ({
 			error: null,
 			warning: null,
 		})
+		// Against the house AI the undo lands on the human's own decision, so
+		// this is a no-op there (the bot must not simply replay its move); it
+		// only runs a bot that is genuinely the one to decide.
+		pumpBot()
 	},
 
 	setViewer: (seat) => {
 		cancelPendingDetail()
 		// online, this device is its seat
 		if (adapter === null || onlineController.active()) return
+		// against the house AI the device belongs to the one human
+		if (humanSeats(adapter.session.opponents).length === 1) return
 		set({ viewerSeat: seat, selected: [], detailIid: null, ...snapshot(seat) })
 	},
 
+	setBotPaused: (paused) => {
+		if (paused) {
+			// the decision in flight is dropped; Resume asks again
+			cancelBot()
+			set({ botPaused: true, botThinking: null })
+			return
+		}
+		set({ botPaused: false })
+		pumpBot()
+	},
+
+	stepBot: () => {
+		if (!useGameStore.getState().botPaused || botBusy) return
+		botStep = true
+		pumpBot()
+		// nothing to step (a human or nobody must move)
+		if (!botBusy) botStep = false
+	},
+
+	setBotSpeed: (speed) => {
+		try {
+			globalThis.localStorage?.setItem(BOT_SPEED_KEY, speed)
+		} catch {
+			// per-device convenience only
+		}
+		set({ botSpeed: speed })
+	},
+
 	cardClicked: (iid) => {
-		const { selected, state, viewerSeat, pendingChoice } =
+		const { selected, state, viewerSeat, pendingChoice, botToMove } =
 			useGameStore.getState()
+		// the house AI is deciding: a click only inspects the card
+		if (botToMove !== null) {
+			cancelPendingDetail()
+			set({ detailIid: iid })
+			return
+		}
 		const choice: PendingChoice | null = pendingChoice
 		if (choice !== null) {
 			switch (choice.k) {
@@ -621,8 +1037,10 @@ export const useGameStore = create<GameStore>((set) => ({
 
 	openOnline: (creds) => {
 		cancelPendingDetail()
+		cancelBot()
 		adapter?.dispose()
 		adapter = null
+		deciders = []
 		// engine helpers (scoring, tile legality, describe) look cards up in the
 		// engine registry, which local play fills in setup(); online there is
 		// no local setup, so register the catalogue here (idempotent per id)

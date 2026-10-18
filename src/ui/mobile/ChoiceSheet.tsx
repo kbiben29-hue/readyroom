@@ -139,7 +139,9 @@ function Pill({
 export function ChoiceSheet({ splitView }: { splitView: boolean }) {
 	const choice = usePendingChoice()
 	const viewer = useViewerSeat()
-	if (choice === null || choice.seat !== viewer) return null
+	const botToMove = useGameStore((s) => s.botToMove)
+	if (choice === null || choice.seat !== viewer || botToMove !== null)
+		return null
 	return <ChoiceBody key={choice.id} choice={choice} splitView={splitView} />
 }
 

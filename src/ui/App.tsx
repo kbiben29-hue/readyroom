@@ -51,6 +51,16 @@ import { useDefIndex } from './defs'
 import { MobileShell } from './mobile/MobileShell'
 import { LayoutSwitch } from './mobile/LayoutSwitch'
 import { deckLabel } from '../data/cardNames'
+import type { BotId } from '../bot/types'
+import {
+	BOT_LEVELS,
+	BOT_LEVEL_LABEL,
+	hasBots,
+	isBotId,
+	isSpectator,
+	type Opponents,
+} from '../session/opponents'
+import { BotBar } from './BotBar'
 
 function useRuleAnchor(): [string | null, (a: string | null) => void] {
 	const [anchor, setAnchor] = useState<string | null>(null)
@@ -242,6 +252,44 @@ function Overlays({
 // Setup screen
 // ---------------------------------------------------------------------------
 
+/** Who sits in a seat on the setup screen: a human at the device or a
+ *  house-AI level. */
+type SeatController = 'human' | BotId
+
+const SEATS_KEY = 'ready-room:setup-seats'
+
+/** The last seat choice on this device (localStorage; two humans if none). */
+function loadSeats(): [SeatController, SeatController] {
+	const parse = (v: unknown): SeatController =>
+		isBotId(v) && BOT_LEVELS.includes(v) ? v : 'human'
+	try {
+		const raw = JSON.parse(
+			globalThis.localStorage?.getItem(SEATS_KEY) ?? 'null',
+		) as unknown
+		if (Array.isArray(raw)) return [parse(raw[0]), parse(raw[1])]
+	} catch {
+		// unreadable: fall back to hot-seat
+	}
+	return ['human', 'human']
+}
+
+function saveSeats(seats: [SeatController, SeatController]): void {
+	try {
+		globalThis.localStorage?.setItem(SEATS_KEY, JSON.stringify(seats))
+	} catch {
+		// per-device convenience only
+	}
+}
+
+function opponentsOf(
+	seats: readonly [SeatController, SeatController],
+): Opponents | undefined {
+	const out: Opponents = {}
+	if (seats[0] !== 'human') out[0] = seats[0]
+	if (seats[1] !== 'human') out[1] = seats[1]
+	return hasBots(out) ? out : undefined
+}
+
 function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 	const catalog = useCatalog()
 	const startGame = useGameStore((s) => s.startGame)
@@ -258,6 +306,14 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 	const [side0, setSide0] = useState<'BASIC' | 'ADVANCED'>('BASIC')
 	const [side1, setSide1] = useState<'BASIC' | 'ADVANCED'>('BASIC')
 	const [seed, setSeed] = useState(12345)
+	const [seats, setSeatsState] =
+		useState<[SeatController, SeatController]>(loadSeats)
+	const setSeat = (seat: Seat, c: SeatController) => {
+		const next: [SeatController, SeatController] =
+			seat === 0 ? [c, seats[1]] : [seats[0], c]
+		setSeatsState(next)
+		saveSeats(next)
+	}
 
 	useEffect(() => {
 		if (decks.length === 0) return
@@ -265,7 +321,9 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 		if (!decks.includes(seat1)) setSeat1(decks[Math.min(1, decks.length - 1)]!)
 	}, [decks, seat0, seat1])
 
-	const start = () => {
+	const start = (
+		controllers: readonly [SeatController, SeatController] = seats,
+	) => {
 		const config: SetupConfig = {
 			mode: 'TWO_PLAYER',
 			players: [
@@ -274,14 +332,23 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 			],
 			seed,
 		}
-		startGame(config)
+		startGame(config, opponentsOf(controllers))
+	}
+	// one click to a game against the house AI: you as Player 1, the level
+	// last picked for Player 2 (Normal by default)
+	const quickLevel: BotId = seats[1] !== 'human' ? seats[1] : 'normal'
+	const playVsAi = () => {
+		const next: [SeatController, SeatController] = ['human', quickLevel]
+		setSeatsState(next)
+		saveSeats(next)
+		start(next)
 	}
 
 	return (
 		<main className="setup-screen">
 			<h1>Ready Room</h1>
 			<p className="muted">
-				Hot-seat setup — pick the two captains and the seed (reproducible
+				Pick the two captains, who plays each seat and the seed (reproducible
 				games).
 			</p>
 			{!catalogReady ? (
@@ -302,6 +369,8 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 						onDeck={setSeat0}
 						side={side0}
 						onSide={setSide0}
+						controller={seats[0]}
+						onController={(c) => setSeat(0, c)}
 					/>
 					<DeckPicker
 						label="Player 2"
@@ -310,7 +379,14 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 						onDeck={setSeat1}
 						side={side1}
 						onSide={setSide1}
+						controller={seats[1]}
+						onController={(c) => setSeat(1, c)}
 					/>
+					<p className="muted small house-ai-hint">
+						House AI (not the official solo Bot): a computer opponent of our
+						own. The official solo Bot needs the solo rulebook and is not in
+						this app yet.
+					</p>
 					<label className="seed-field">
 						Seed
 						<input
@@ -323,11 +399,25 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 					<button
 						type="button"
 						className="btn btn-primary btn-lg"
-						onClick={start}
+						onClick={() => start()}
 						disabled={seat0 === seat1}
 					>
-						Start game
+						{seats[0] === 'human' && seats[1] === 'human'
+							? 'Start game'
+							: seats[0] !== 'human' && seats[1] !== 'human'
+								? 'Watch the House AI'
+								: 'Start game vs House AI'}
 					</button>
+					{seats[0] === 'human' && seats[1] === 'human' && (
+						<button
+							type="button"
+							className="btn btn-lg"
+							onClick={playVsAi}
+							disabled={seat0 === seat1}
+						>
+							Play vs House AI ({BOT_LEVEL_LABEL[quickLevel]})
+						</button>
+					)}
 					{seat0 === seat1 && (
 						<p className="muted small">The two captains must differ.</p>
 					)}
@@ -374,6 +464,8 @@ function DeckPicker({
 	onDeck,
 	side,
 	onSide,
+	controller,
+	onController,
 }: {
 	label: string
 	decks: DeckId[]
@@ -381,10 +473,24 @@ function DeckPicker({
 	onDeck: (d: DeckId) => void
 	side: 'BASIC' | 'ADVANCED'
 	onSide: (s: 'BASIC' | 'ADVANCED') => void
+	controller: SeatController
+	onController: (c: SeatController) => void
 }) {
 	return (
 		<div className="deck-picker">
 			<strong>{label}</strong>
+			<select
+				value={controller}
+				onChange={(e) => onController(e.target.value as SeatController)}
+				aria-label={`${label} played by`}
+			>
+				<option value="human">Human</option>
+				{BOT_LEVELS.map((id) => (
+					<option key={id} value={id}>
+						House AI — {BOT_LEVEL_LABEL[id]}
+					</option>
+				))}
+			</select>
 			<select
 				value={deck}
 				onChange={(e) => onDeck(e.target.value as DeckId)}
@@ -448,6 +554,7 @@ function GameFlow({ shell }: { shell: Shell }) {
 				<ConsoleNav />
 			</div>
 			<div className="frame-body">
+				<BotBar variant="console" />
 				<ErrorBanner />
 				<WarningBanner />
 				<RecoverableErrorBoundary title="while rendering the board">
@@ -472,9 +579,11 @@ function GameFlow({ shell }: { shell: Shell }) {
 function TopBar({ state }: { state: GameState }) {
 	const session = useSession()
 	const [confirmEnd, setConfirmEnd] = useState(false)
+	// the house AI is to move: no primary step for the device
+	const botToMove = useGameStore((s) => s.botToMove)
 	const active = state.players[state.activeSeat]
 	const phase = state.phase.k
-	const pending = state.pendingChoice !== null
+	const pending = state.pendingChoice !== null || botToMove !== null
 	const budget = session?.meta.scoreEstimate
 	// nothing left to spend: the one obvious next move is ending the step
 	const outOfActions =
@@ -584,7 +693,7 @@ function ConsoleNav() {
 	const setRevealAll = useGameStore((s) => s.setRevealAll)
 	const showCardDetails = useGameStore((s) => s.showCardDetails)
 	const setShowCardDetails = useGameStore((s) => s.setShowCardDetails)
-	const undoLabel = undoPolicyLabel(session?.setup.mode)
+	const undoLabel = undoPolicyLabel(session?.setup.mode, session?.opponents)
 	return (
 		<nav className="console-nav" aria-label="Console">
 			<span className="nav-label">Session</span>
@@ -597,7 +706,11 @@ function ConsoleNav() {
 			>
 				Undo
 				{session !== null && session.log.length > 0 && !canUndo ? (
-					<span className="undo-lock"> (turn boundary)</span>
+					<span className="undo-lock">
+						{isSpectator(session.opponents)
+							? ' (spectator)'
+							: ' (turn boundary)'}
+					</span>
 				) : null}
 			</button>
 			<button
@@ -647,7 +760,14 @@ function ConsoleNav() {
 			<LayoutSwitch />
 			<span className="nav-spacer" />
 			<span className="nav-num">
-				MODE · {session?.setup.mode === 'CADET' ? 'CADET' : 'HOT-SEAT'}
+				MODE ·{' '}
+				{session?.setup.mode === 'CADET'
+					? 'CADET'
+					: isSpectator(session?.opponents)
+						? 'SPECTATOR'
+						: hasBots(session?.opponents)
+							? 'VS HOUSE AI'
+							: 'HOT-SEAT'}
 			</span>
 			<button type="button" className="btn" onClick={newGame}>
 				New game
@@ -753,7 +873,9 @@ function BoardArea({ state }: { state: GameState }) {
 function PassDeviceBar({ state }: { state: GameState }) {
 	const viewer = useViewerSeat()
 	const setViewer = useGameStore((s) => s.setViewer)
-	if (state.result !== null) return null
+	// against the house AI the device never changes hands
+	const bots = useGameStore((s) => hasBots(s.session?.opponents))
+	if (state.result !== null || bots) return null
 	const needOpponent =
 		state.pendingChoice === null && state.activeSeat !== viewer
 	if (!needOpponent) return null

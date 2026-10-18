@@ -93,7 +93,9 @@ function ChoiceHeader({
 export function ChoicePanel() {
 	const choice = usePendingChoice()
 	const viewer = useViewerSeat()
-	if (choice === null) return null
+	// the house AI answers its own choices (the bot bar shows it thinking)
+	const botToMove = useGameStore((s) => s.botToMove)
+	if (choice === null || botToMove !== null) return null
 
 	// Hot-seat routing (todo/14 §4): a REACTION choice for the opponent shows a
 	// pass-the-device interstitial before the actual choices.

@@ -12,6 +12,7 @@ import type { Session } from '../session/log'
 import { cardDataDrift, getSessionStore, readSessionFile } from './persistence'
 import { seatLabel } from './format'
 import { shortUpdatedAt } from './format'
+import { opponentsLabel } from '../session/opponents'
 
 export function SavedGamesPanel({ catalog }: { catalog: CardCatalog | null }) {
 	const resume = useGameStore((s) => s.resumeGame)
@@ -136,6 +137,7 @@ function SaveRow({
 	const drift = catalog !== null ? cardDataDrift(session, catalog) : null
 	const sitsAt =
 		m.phase === 'SETUP' ? 'setup' : `turn ${m.turnNumber} · ${m.phase}`
+	const vs = opponentsLabel(session.opponents)
 	return (
 		<li
 			className={`save-row${drift !== null && !drift.ok ? ' save-drift' : ''}`}
@@ -144,6 +146,7 @@ function SaveRow({
 				<strong className="save-title">
 					{m.deckNames[0]} vs {m.deckNames[1]}
 				</strong>
+				{vs !== null && <span className="muted small save-vs">{vs}</span>}
 				<span className="muted small">
 					{m.boardSides[0]} / {m.boardSides[1]} · {sitsAt} · {m.intentCount}{' '}
 					intent{m.intentCount === 1 ? '' : 's'} · updated{' '}

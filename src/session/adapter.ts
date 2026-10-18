@@ -104,13 +104,15 @@ export class SessionAdapter {
 		})
 	}
 
-	/** Undo the latest player-visible intent by truncating the log and
-	 *  replaying — identical to those intents never having run (todo/17 §2;
+	/** Undo the latest `n` (default 1) player-visible intents by truncating
+	 *  the log and replaying once — identical to those intents never having
+	 *  run (todo/17 §2;
 	 *  in solo, undo freely; in hot-seat, the UI applies policy (a): only within
 	 *  your own turn before any reveal — see docs/notes/session-layer.md). */
-	undo(): boolean {
-		if (this._session.log.length === 0) return false
-		this._session = { ...this._session, log: this._session.log.slice(0, -1) }
+	undo(n = 1): boolean {
+		if (this._session.log.length === 0 || n <= 0) return false
+		const keep = Math.max(0, this._session.log.length - n)
+		this._session = { ...this._session, log: this._session.log.slice(0, keep) }
 		this._state = replay(this._session, this.catalog)
 		this._session = refreshMeta(
 			this._session,

@@ -2,4 +2,5 @@
 export * from './log'
 export * from './persistence'
 export * from './adapter'
+export * from './opponents'
 export type { Intent } from '../engine/intents'

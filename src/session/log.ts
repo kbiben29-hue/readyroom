@@ -28,6 +28,7 @@ import { hiddenCards } from '../engine/projection'
 import type { DeckId } from '../data/ids'
 import type { CardDef } from '../data/schema'
 import { cardName } from '../data/cardNames'
+import type { Opponents } from './opponents'
 
 export const SESSION_VERSION = 2 as const
 
@@ -68,11 +69,18 @@ export interface Session {
 	setup: SetupConfig
 	log: Intent[]
 	meta: SessionMeta
+	/** The house-AI bot per seat (src/session/opponents.ts); absent seats are
+	 *  humans, an absent field is a hot-seat game. Optional so saves from
+	 *  before the house AI load unchanged (no version bump). The engine never
+	 *  sees it: bots answer through ordinary intents in the log. */
+	opponents?: Opponents | undefined
 }
 
 export interface CreateSessionOptions {
 	id?: string | undefined
 	now?: () => Date
+	/** House-AI seats (see Session.opponents). */
+	opponents?: Opponents | undefined
 }
 
 /** A short, unique, storage-friendly game id (session layer only — the engine
@@ -111,7 +119,16 @@ export function createSession(
 		scoreEstimate: [estimateScore(state, 0), estimateScore(state, 1)],
 		cardDataHash: cardDataHashCached(catalog),
 	}
-	return { version: SESSION_VERSION, id, setup: config, log: [], meta }
+	const session: Session = {
+		version: SESSION_VERSION,
+		id,
+		setup: config,
+		log: [],
+		meta,
+	}
+	if (opts.opponents !== undefined && Object.keys(opts.opponents).length > 0)
+		session.opponents = { ...opts.opponents }
+	return session
 }
 
 export const sessionSeed = (session: Session): number => session.setup.seed

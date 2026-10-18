@@ -3187,3 +3187,90 @@ h3,
 	flex: 1;
 	accent-color: var(--accent);
 }
+
+/* ------------------------------------------------------------ house AI */
+/* src/ui/BotBar.tsx: thinking indicator, speed, spectator controls */
+.bot-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 12px;
+	padding: 6px 12px;
+	background: var(--panel);
+	border-left: 6px solid var(--periwinkle);
+	border-radius: 4px;
+	font-size: 13px;
+}
+.bot-bar-mobile {
+	flex: none;
+	margin: 6px 12px 0;
+	padding: 4px 10px;
+	font-size: 12px;
+}
+.bot-status {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-family: 'Antonio', sans-serif;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--dim);
+}
+.bot-status.bot-thinking {
+	color: var(--periwinkle);
+}
+.bot-pulse {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--periwinkle);
+	animation: bot-pulse 0.9s ease-in-out infinite alternate;
+}
+@keyframes bot-pulse {
+	from {
+		opacity: 0.25;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.bot-pulse {
+		animation: none;
+	}
+}
+.bot-controls,
+.bot-seg {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--gap);
+}
+.bot-speed {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-left: auto;
+	color: var(--dim);
+}
+.bot-speed select,
+.deck-picker select {
+	background: var(--panel-2);
+	color: var(--text);
+	border: 1px solid var(--hair);
+	border-radius: 4px;
+	font: inherit;
+}
+.bot-speed select {
+	min-height: 32px;
+	padding: 2px 6px;
+}
+.deck-picker {
+	flex-wrap: wrap;
+}
+.house-ai-hint {
+	margin: 0;
+}
+.save-vs {
+	color: var(--periwinkle);
+}

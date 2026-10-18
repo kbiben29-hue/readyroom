@@ -639,7 +639,7 @@ export function MenuSheet() {
 				<p className="pb-note">
 					{online !== null
 						? 'Undo works on your own turn until something new is revealed to you.'
-						: undoPolicyLabel(session?.setup.mode)}
+						: undoPolicyLabel(session?.setup.mode, session?.opponents)}
 				</p>
 				<div className="pb-lbl">Layout on this device</div>
 				<div className="pb-seg pb-seg-wide" role="group" aria-label="Layout">

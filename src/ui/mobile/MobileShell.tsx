@@ -48,6 +48,8 @@ import {
 } from './sheets'
 import { ChoiceSheet } from './ChoiceSheet'
 import { OnlineStrip } from '../online/OnlineStrip'
+import { BotBar } from '../BotBar'
+import { hasBots } from '../../session/opponents'
 import { OpponentView } from './Opponent'
 import type { Shell } from './shell'
 import './mobile.css'
@@ -357,6 +359,7 @@ export function MobileShell({ shell }: { shell: MobileShellKind }) {
 	const openSheet = useBridgeUi((s) => s.openSheet)
 	const reset = useBridgeUi((s) => s.reset)
 	const online = useGameStore((s) => s.online !== null)
+	const botToMove = useGameStore((s) => s.botToMove)
 
 	// a new game or another captain at the device: start from the Ship. A
 	// layout effect, so it lands before a choice sheet's own (passive) effect
@@ -365,7 +368,8 @@ export function MobileShell({ shell }: { shell: MobileShellKind }) {
 		reset()
 	}, [session?.id, viewer, reset])
 	// a new choice for this captain closes whatever sheet was up
-	const mineChoice = pending !== null && pending.seat === viewer
+	const mineChoice =
+		pending !== null && pending.seat === viewer && botToMove === null
 	useEffect(() => {
 		if (!mineChoice) return
 		openSheet(null)
@@ -375,9 +379,10 @@ export function MobileShell({ shell }: { shell: MobileShellKind }) {
 	if (projected === null) return null
 	const state = projected as unknown as GameState
 	const live = state.result === null
-	// online this device is its own seat: never ask to pass it
+	// online this device is its own seat, and against the house AI it stays
+	// with the human: never ask to pass it
 	const passTo: 0 | 1 | null =
-		!live || online
+		!live || online || hasBots(session?.opponents)
 			? null
 			: pending !== null
 				? pending.seat !== viewer
@@ -402,6 +407,7 @@ export function MobileShell({ shell }: { shell: MobileShellKind }) {
 				<>
 					<Header onMenu={menu} />
 					<OnlineStrip />
+					<BotBar variant="mobile" />
 					<div className="pb-split">
 						<div className="pb-scroll" aria-label="Sector station">
 							<Sector />
@@ -417,6 +423,7 @@ export function MobileShell({ shell }: { shell: MobileShellKind }) {
 					<aside className="pb-rail-col">
 						<Header onMenu={menu} />
 						<OnlineStrip />
+						<BotBar variant="mobile" />
 					</aside>
 					<main className="pb-main">
 						<Tabs />
@@ -430,6 +437,7 @@ export function MobileShell({ shell }: { shell: MobileShellKind }) {
 				<>
 					<Header onMenu={menu} />
 					<OnlineStrip />
+					<BotBar variant="mobile" />
 					<Tabs />
 					<div className="pb-scroll pb-content" key={tab}>
 						<StationView tab={tab} />

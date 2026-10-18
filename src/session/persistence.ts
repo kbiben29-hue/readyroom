@@ -12,6 +12,7 @@
 import { createStore, get, set, del, keys, type UseStore } from 'idb-keyval'
 import type { Session } from './log'
 import { SESSION_VERSION } from './log'
+import { parseOpponents } from './opponents'
 
 /** Versioned key namespace: `ready-room:session:v1:<gameId>`. Bumping the
  *  version isolates saves across incompatible formats. */
@@ -93,13 +94,18 @@ export function parseSession(raw: unknown): Session | null {
 		setup?: unknown
 		log?: unknown
 		meta?: unknown
+		opponents?: unknown
 	}
 	if (s.version !== SESSION_VERSION) return null
 	if (typeof s.id !== 'string') return null
 	if (typeof s.setup !== 'object' || s.setup === null) return null
 	if (!Array.isArray(s.log)) return null
 	if (s.meta === undefined) return null
-	return raw as Session
+	// optional house-AI seats: keep the valid entries, drop anything else
+	if (s.opponents === undefined) return raw as Session
+	const opponents = parseOpponents(s.opponents)
+	const { opponents: _dropped, ...rest } = raw as Session
+	return (opponents === undefined ? rest : { ...rest, opponents }) as Session
 }
 
 export async function saveSession(

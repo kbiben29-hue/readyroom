@@ -3203,9 +3203,69 @@ h3,
 }
 .bot-bar-mobile {
 	flex: none;
-	margin: 6px 12px 0;
-	padding: 4px 10px;
+	flex-wrap: nowrap;
+	gap: 4px;
+	margin: 6px 8px 0;
+	padding: 3px 6px 3px 8px;
+	border-left-width: 4px;
 	font-size: 12px;
+	min-width: 0;
+}
+.bot-bar-mobile .bot-status {
+	flex: 1 1 auto;
+	min-width: 0;
+	gap: 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.bot-bar-mobile .bot-status > span[aria-hidden='true'] {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.bot-bar-mobile .bot-pulse,
+.bot-bar-mobile .bot-status .bot-glyph {
+	flex: none;
+}
+.bot-bar-mobile .bot-status .bot-glyph {
+	width: 10px;
+	height: 10px;
+}
+.bot-bar-mobile .bot-controls,
+.bot-bar-mobile .bot-seg {
+	flex: none;
+	flex-wrap: nowrap;
+	gap: 3px;
+}
+/* the phone-landscape rail is narrow: status on its own line, controls below */
+.pb-rail-col .bot-bar-mobile {
+	flex-wrap: wrap;
+}
+.pb-rail-col .bot-bar-mobile .bot-status {
+	flex-basis: 100%;
+}
+.btn.micro.bot-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 32px;
+	min-height: 30px;
+	padding: 0 7px;
+	font-size: 12px;
+}
+.bot-glyph {
+	display: block;
+}
+.bot-speed-compact {
+	flex: none;
+	min-height: 30px;
+	max-width: 62px;
+	padding: 0 2px;
+	background: var(--panel-2);
+	color: var(--text);
+	border: 1px solid var(--hair);
+	border-radius: 4px;
+	font: inherit;
 }
 .bot-status {
 	display: inline-flex;

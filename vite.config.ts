@@ -25,6 +25,9 @@ function dropStcc(): Plugin {
 
 export default defineConfig(({ mode }) => ({
 	plugins: [react(), ...(mode === 'desktop' ? [dropStcc()] : [])],
+	// the house-AI worker (src/ui/botWorker.ts) is a module worker; ES output
+	// keeps it valid if it ever code-splits (iife can't)
+	worker: { format: 'es' },
 	resolve: {
 		alias: {
 			'@engine': fileURLToPath(new URL('./src/engine', import.meta.url)),

@@ -9,10 +9,11 @@ import type { Bot, BotId } from '../bot/types'
 /** The bot `botId` plays with inside the worker (cached per id by the
  *  worker, so this runs once per level per worker lifetime). */
 export function createBotForWorker(botId: BotId): Bot {
-	// TODO(house-ai ISMCTS): once the 'hard' factory accepts an injected clock,
-	// build it here with a wall-clock budget, e.g.
-	//   makeBot('hard', { clock: () => performance.now(), timeMs: 1500 })
-	// (performance.now is fine here: src/ui is outside the bot determinism
-	// lint, and the worker is the only caller.)
+	// Hard searches for a wall-clock budget (HARD_TIME_MS) rather than a fixed
+	// iteration count, so it plays as well as the device allows. Its moves then
+	// depend on device speed, which is fine: the session log records the
+	// intents, not the bot.
+	if (botId === 'hard')
+		return makeBot('hard', { clock: () => performance.now() })
 	return makeBot(botId)
 }

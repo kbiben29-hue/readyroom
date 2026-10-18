@@ -488,6 +488,19 @@ describe('finalizeGame (todo/10 result record)', () => {
 		return s
 	}
 
+	// Regression (house-AI work): a returned INCIDENT goes to the bottom of
+	// the Incident deck but keeps its owner field until it is taken again, so
+	// final scoring used to keep charging its −2 VP to the player who returned
+	// it. Cards in a shared deck score for nobody.
+	it('a returned INCIDENT in the Incident deck no longer scores for its old owner', () => {
+		register([def({ id: 'inc', suit: 'INCIDENT', operations: [], vp: -2 })])
+		let s = rawState()
+		s = place(s, 'inc', ID('i1'), { k: 'HAND', seat: 0 }, 0)
+		s = place(s, 'inc', ID('i2'), { k: 'INCIDENT_DECK' }, 0)
+		expect(score(s, 0).total).toBe(-2)
+		expect(score(s, 0).printedVp.map((e) => e.card)).toEqual([ID('i1')])
+	})
+
 	it('Burn: player A (4 incidents) vs B (3) → B wins; Reserve excluded', () => {
 		const s: GameState = { ...incidentState(), result: { kind: 'BURN' } }
 		const out = finalizeGame(s)

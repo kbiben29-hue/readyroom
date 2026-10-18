@@ -14,7 +14,7 @@
 
 import type { CardInstanceId } from './ids'
 import type { GameState, GameEvent } from './state'
-import { moveCard, zoneProps } from './state'
+import { forkState, moveCard, zoneProps } from './state'
 import { cardDef } from './cards'
 import { canPlay, canActivate, completableMissions } from './queries/legality'
 import type { AltPlayRef } from './altPlay'
@@ -366,8 +366,7 @@ export function firstLegalSelection(state: GameState): unknown {
 	const choice = state.pendingChoice
 	if (!choice) return null
 	try {
-		const clone = structuredClone(state) as GameState
-		const resolved = probeFirstChoice(clone)
+		const resolved = probeFirstChoice(forkState(state))
 		const top = resolved.stack[resolved.stack.length - 1]
 		if (top === undefined) return null
 		if (top.k === 'EFFECT') return top.ctx.bindings[choice.id]

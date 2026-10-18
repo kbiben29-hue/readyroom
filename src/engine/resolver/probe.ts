@@ -3,18 +3,21 @@
 // Any PendingChoice resolves to "is there at least one legal selection?" via
 // probeFirstChoice; events/reactions are suppressed (emit() no-ops under
 // `state.probe`); depth is capped. The real state is never touched —
-// structuredClone works precisely because the state is plain JSON.
+// forkState (a stack-only deep copy) is enough because the engine is
+// copy-on-write everywhere else.
 
 import type { Effect } from './nodes'
 import type { GameState, EffectCtx } from '../state'
+import { forkState } from '../state'
 import { pushEffect, executeOne } from './stack'
 import { probeFirstChoice } from './choices'
 
 const PROBE_MAX_STEPS = 2_000
 
 export function probe(state: GameState, node: Effect, ctx: EffectCtx): boolean {
-	const clone = structuredClone(state) as GameState
-	clone.probe = true
+	// forkState deep-copies only the stack, the one place the engine writes in
+	// place (ctx.bindings); everything else is copy-on-write (state.ts).
+	const clone: GameState = { ...forkState(state), probe: true }
 	// The probe must not touch the caller's ctx either: suspend() writes the
 	// `key → choiceId` binding in place on the ctx it is handed, so a caller
 	// that reuses one ctx object across probes (as the resolver unit tests do)

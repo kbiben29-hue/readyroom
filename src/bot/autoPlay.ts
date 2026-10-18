@@ -24,6 +24,8 @@ import type { Intent } from '../engine/intents'
 import { reduce, legalIntents, firstLegalSelection } from '../engine/intents'
 import type { PendingChoice } from '../engine/resolver/choices'
 import { checkSelection, validateChoice } from '../engine/resolver/choices'
+import type { Seat } from '../engine/resolver/queries'
+import type { Bot } from './types'
 
 /** The `(state, choice) => selection` contract (architecture §4, todo/07 §6):
  *  a deterministic answer to a published PendingChoice. */
@@ -234,6 +236,159 @@ export function autoPlay(
 		onStep?.(s, intent, steps)
 	}
 	return { state: s, intents, steps: cap, stopped: 'CAP' }
+}
+
+// ---------------------------------------------------------------------------
+// Bot-vs-bot driver
+// ---------------------------------------------------------------------------
+
+export interface PlayBotsOptions {
+	/** Iteration cap (default ITERATION_CAP). */
+	cap?: number | undefined
+	/** Called after every accepted intent, like autoPlay's onStep; `seat` is
+	 *  the seat that decided it, `fallback` whether its bot's answer was
+	 *  replaced. */
+	onStep?:
+		| ((
+				state: GameState,
+				intent: Intent,
+				step: number,
+				info: { seat: Seat; fallback: boolean },
+		  ) => void)
+		| undefined
+	/** Clock for the decision timing (ms). Defaults to performance.now();
+	 *  timing is reported only and never affects play. */
+	clock?: (() => number) | undefined
+}
+
+export interface PlayBotsResult extends AutoPlayResult {
+	/** Bot answers that were illegal (or threw) and were replaced by the
+	 *  first-legal fallback, in total and per seat. */
+	fallbacks: number
+	fallbacksBySeat: [number, number]
+	/** Decisions taken and total `decide` time (ms) per seat. */
+	timing: { decisions: [number, number]; ms: [number, number] }
+}
+
+/** Is `intent` one of `legal` (structurally; RESOLVE_CHOICE is checked with
+ *  validateChoice instead)? */
+function isAccepted(
+	state: GameState,
+	legal: Intent[],
+	intent: Intent,
+): boolean {
+	if (intent.t === 'RESOLVE_CHOICE') {
+		return (
+			state.pendingChoice !== null &&
+			validateChoice(state, intent.choiceId, intent.selection).ok
+		)
+	}
+	if (state.pendingChoice !== null) return false
+	const key = JSON.stringify(intent)
+	return legal.some((l) => JSON.stringify(l) === key)
+}
+
+/**
+ * Drive a game with one bot per seat. Each step the deciding seat is
+ * `state.pendingChoice?.seat ?? state.activeSeat` (a pending choice may
+ * belong to the non-active seat: an interrupt such as a REACTION window,
+ * src/session/interrupts.ts). `legalIntents` offers that choice whoever owns
+ * it. The seat's bot gets `(state, seat, legal)`; its answer is validated
+ * and, when illegal (or when `decide` or `reduce` throws), replaced by
+ * the first-legal answer exactly as `autoPlay` would pick it, and counted as
+ * a fallback. Same stop conditions as autoPlay (game over, cycle, cap,
+ * stall). Two first-legal bots replay `autoPlay` intent for intent.
+ */
+export function playBots(
+	state: GameState,
+	bots: readonly [Bot, Bot],
+	opts: PlayBotsOptions = {},
+): PlayBotsResult {
+	const cap = opts.cap ?? ITERATION_CAP
+	const clock = opts.clock ?? (() => performance.now())
+	let s = state
+	const intents: Intent[] = []
+	const windowPushes: string[] = []
+	const seenWindows = new Map<string, number>()
+	const fallbacksBySeat: [number, number] = [0, 0]
+	const decisions: [number, number] = [0, 0]
+	const ms: [number, number] = [0, 0]
+	const result = (
+		steps: number,
+		stopped: AutoPlayStop,
+		cycle?: AutoPlayResult['cycle'],
+	): PlayBotsResult => ({
+		state: s,
+		intents,
+		steps,
+		stopped,
+		...(cycle !== undefined ? { cycle } : {}),
+		fallbacks: fallbacksBySeat[0] + fallbacksBySeat[1],
+		fallbacksBySeat,
+		timing: { decisions, ms },
+	})
+	for (let steps = 0; steps < cap; steps++) {
+		if (s.result !== null) return result(steps, 'GAME_OVER')
+		const seat: Seat = s.pendingChoice?.seat ?? s.activeSeat
+		const legal = legalIntents(s)
+		if (legal.length === 0) return result(steps, 'STALL')
+		const t0 = clock()
+		let intent: Intent | undefined
+		try {
+			intent = bots[seat].decide(s, seat, legal)
+		} catch {
+			intent = undefined
+		}
+		ms[seat] += clock() - t0
+		decisions[seat]++
+		let fallback = intent === undefined || !isAccepted(s, legal, intent)
+		let next: GameState | undefined
+		if (!fallback) {
+			try {
+				next = reduce(s, intent!).state
+			} catch {
+				fallback = true
+			}
+		}
+		if (fallback) {
+			fallbacksBySeat[seat]++
+			intent = fallbackIntent(s, legal)
+			if (intent === undefined) return result(steps, 'STALL')
+			next = reduce(s, intent).state
+		}
+		s = next!
+		const cycleStart = noteIntent(
+			s,
+			intents,
+			intent!,
+			windowPushes,
+			seenWindows,
+		)
+		if (cycleStart !== undefined) {
+			const length = intents.length - cycleStart
+			return result(steps + 1, 'CYCLE', {
+				startStep: cycleStart,
+				length,
+				sample: intents.slice(Math.max(0, intents.length - length)),
+			})
+		}
+		opts.onStep?.(s, intent!, steps, { seat, fallback })
+	}
+	return result(cap, 'CAP')
+}
+
+/** The answer `autoPlay` would give: the first-legal policy's selection
+ *  (validated, else the engine's probed first legal selection), or the first
+ *  legal intent with PASS/END_TURN deferred. */
+function fallbackIntent(state: GameState, legal: Intent[]): Intent | undefined {
+	const choice = state.pendingChoice
+	if (choice === null) return selectIntent(legal)
+	let selection = firstLegalPolicy(state, choice)
+	if (!validateChoice(state, choice.id, selection).ok) {
+		selection = firstLegalSelection(state)
+		if (selection === null) return undefined
+	}
+	return { t: 'RESOLVE_CHOICE', choiceId: choice.id, selection }
 }
 
 /** Push an intent into the sliding cycle-detection window; returns the step at

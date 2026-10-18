@@ -866,3 +866,16 @@ BEAM, GAIN LAT 1])` (no COST_BEAM).
 - **Keyed on:** `src/data/stardate.ts`, `src/data/cards/common/stardate.json`; tests
   `src/data/catalog.test.ts` ("the 32 Stardate cards …"), `src/engine/endgame.test.ts`
   ("real 2-PLAYER Stardate track"), `src/engine/cadet-game.test.ts` (now on the real SD06/SD07).
+
+## 051 — A returned INCIDENT scores for nobody
+
+- **Question:** `return an INCIDENT` puts the card on the bottom of the Incident deck (rules/08),
+  but the engine keeps its `owner` field until the next player takes it (`setOwner`). Final
+  scoring's printed-VP step sums every owned card outside the Reserve deck and Development pile,
+  so the −2 VP stayed charged to the player who returned it.
+- **Interpretation:** a card back in a shared supply deck (Incident, Encounter, Market, Location
+  deck, or a Market offer) is no longer "your card" for final scoring (rules/07 §7.4 counts your
+  cards). The Burn count already only looks at hand, Discard, Draw deck and Log
+  (rules/03 §3.1). Ownership itself is unchanged, so nothing else moves.
+- **Keyed on:** `excludedFromScoring` in `src/engine/scoring.ts`; test "a returned INCIDENT in the
+  Incident deck no longer scores for its old owner" in `src/engine/scoring.test.ts`.

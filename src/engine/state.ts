@@ -480,7 +480,9 @@ export function zoneKey(ref: ZoneRef): string {
  *  as a serialisation hazard, and JSON round-trips should keep identity per
  *  card). */
 function cloneRef(ref: ZoneRef): ZoneRef {
-	return structuredClone(ref) as ZoneRef
+	// every ZoneRef variant is flat (k + one primitive field), so a spread is
+	// an exact copy, and much cheaper than structuredClone on this hot path
+	return { ...ref }
 }
 
 /**
@@ -646,6 +648,25 @@ export function player(state: GameState, seat: Seat): PlayerState {
 
 export function otherSeat(seat: Seat): Seat {
 	return seat === 0 ? 1 : 0
+}
+
+/**
+ * A copy of `state` that is safe to run the engine on while the original stays
+ * untouched — for probes, and for searches that branch several continuations
+ * off one state (src/bot/). Much cheaper than `structuredClone(state)`.
+ *
+ * The engine updates `cards`, `zones`, `players`, `log`, `fx`, `pending` and the
+ * rest by copy-on-write (spread), never in place. The one in-place write is to
+ * the `ctx.bindings` objects of stack frames: suspend() and the binding
+ * primitives write there so that sibling steps sharing a ctx see the result
+ * (resolver/runtime.ts). So deep-copying the stack is enough. `structuredClone`
+ * keeps the bindings objects that frames share shared inside the copy. Every
+ * other field is shared with the original, so neither copy may be mutated
+ * outside the engine.
+ */
+export function forkState(state: GameState): GameState {
+	if (state.stack.length === 0) return { ...state, stack: [] }
+	return { ...state, stack: structuredClone(state.stack) as Frame[] }
 }
 
 export function zonesOf(state: GameState, ref: ZoneRef): CardInstanceId[] {

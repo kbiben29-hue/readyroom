@@ -23,7 +23,10 @@ export default tseslint.config(
 		// Determinism guardrails (todo/01 §3): engine + data never use wall-clock time
 		// or Math.random; all randomness comes from state.rng. Tests may construct
 		// Dates/Map/Set to exercise the invariants, so the guardrails skip *.test.ts.
-		files: ['src/engine/**/*.ts', 'src/data/**/*.ts'],
+		// The bots (src/bot) are held to the same rule: their sampler is seeded
+		// from the seat's view (src/bot/determinize.ts). Decision timing uses
+		// performance.now(), which only reports and never steers play.
+		files: ['src/engine/**/*.ts', 'src/data/**/*.ts', 'src/bot/**/*.ts'],
 		ignores: ['src/**/*.test.ts'],
 		rules: {
 			'no-restricted-properties': [

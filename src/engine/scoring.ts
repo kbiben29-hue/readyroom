@@ -110,9 +110,25 @@ export function highestMultiplierReached(
 // ---------------------------------------------------------------------------
 
 /** Is this card excluded from scoring — in the Reserve deck or Development
- *  pile (rules/12 §12.29)? Everything else a player owns counts. */
+ *  pile (rules/12 §12.29), or back in a shared supply it left the player for?
+ *  A returned INCIDENT sits at the bottom of the Incident deck (rules/08 →
+ *  `return an INCIDENT`) but keeps its `owner` until someone takes it again
+ *  (setOwner), so without this its −VP would still count against the player
+ *  who returned it. The Burn count (endgame.countIncidents) already ignores
+ *  it. Everything else a player owns counts. */
 function excludedFromScoring(card: GameState['cards'][string]): boolean {
-	return card.zone.k === 'RESERVE' || card.zone.k === 'DEVELOPMENT'
+	switch (card.zone.k) {
+		case 'RESERVE':
+		case 'DEVELOPMENT':
+		case 'INCIDENT_DECK':
+		case 'ENCOUNTER_DECK':
+		case 'MARKET_DECK':
+		case 'MARKET_OFFER':
+		case 'LOCATION_DECK':
+			return true
+		default:
+			return false
+	}
 }
 
 /** Focus icons over the scoring-relevant owned cards (Reserve/Development

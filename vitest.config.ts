@@ -22,11 +22,13 @@ export default defineConfig({
 					name: 'engine-node',
 					environment: 'node',
 					// Session tests load the real card catalog (node:fs + file:// URLs),
-					// so they run headless in node too — todo/17 DoD.
+					// so they run headless in node too — todo/17 DoD. So do the bot
+					// tests, which play full games on it.
 					include: [
 						'src/engine/**/*.test.ts',
 						'src/data/**/*.test.ts',
 						'src/session/**/*.test.ts',
+						'src/bot/**/*.test.ts',
 						'server/**/*.test.ts',
 					],
 				},
@@ -40,6 +42,7 @@ export default defineConfig({
 						'!src/engine/**/*.test.ts',
 						'!src/data/**/*.test.ts',
 						'!src/session/**/*.test.ts',
+						'!src/bot/**/*.test.ts',
 					],
 				},
 			},

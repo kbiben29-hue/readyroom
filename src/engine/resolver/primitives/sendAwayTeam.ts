@@ -30,13 +30,18 @@ export const sendAwayTeam: Primitive<Extract<Effect, { k: 'SEND_AWAY_TEAM' }>> =
 			const targetKey = 'sendAwayTeam.target'
 			const sourceKey = 'sendAwayTeam.source'
 			// 3. source answered (pull): complete the placement, pulling from `source`
-			//    first, then any other of your locations in a fixed order.
+			//    first, then any other of your locations in a fixed order. The
+			//    destination is the answered target, or the single legal one that
+			//    was taken without asking (bound directly under AUTO_TARGET).
 			if (answered(ctx, sourceKey)) {
+				const target = answered(ctx, targetKey)
+					? answer<CardInstanceId>(ctx, targetKey)
+					: (ctx.bindings[AUTO_TARGET] as CardInstanceId)
 				return pullAndPlace(
 					state,
 					node,
 					ctx,
-					answer<CardInstanceId>(ctx, targetKey),
+					target,
 					answer<CardInstanceId>(ctx, sourceKey),
 				)
 			}
@@ -47,7 +52,11 @@ export const sendAwayTeam: Primitive<Extract<Effect, { k: 'SEND_AWAY_TEAM' }>> =
 			// 1. fresh: choose the destination Location.
 			const cands = targets(state, node, ctx)
 			if (cands.length === 0) return state
-			if (cands.length === 1) return send(state, node, ctx, cands[0]!)
+			if (cands.length === 1) {
+				// remembered for step 3, should `send` still have to ask for a source
+				ctx.bindings[AUTO_TARGET] = cands[0]!
+				return send(state, node, ctx, cands[0]!)
+			}
 			return suspend(state, node, ctx, targetKey, {
 				k: 'CHOOSE_LOCATION',
 				prompt: 'Send an Away Team to which Location?',
@@ -55,6 +64,9 @@ export const sendAwayTeam: Primitive<Extract<Effect, { k: 'SEND_AWAY_TEAM' }>> =
 			})
 		},
 	}
+
+/** Binding of a destination taken without a choice (the only legal one). */
+const AUTO_TARGET = 'sendAwayTeam.autoTarget'
 
 function countOf(
 	state: GameState,

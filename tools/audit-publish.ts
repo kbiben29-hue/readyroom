@@ -29,9 +29,16 @@ const ALLOWED_BINARIES = new Set<string>([
 	'docs/screenshots/board-desktop.png',
 	'docs/screenshots/board-phone.png',
 	'docs/screenshots/shorthand.png',
+	// desktop app icon, rendered from public/icon.svg (`npx tauri icon`)
+	'src-tauri/icons/32x32.png',
+	'src-tauri/icons/128x128.png',
+	'src-tauri/icons/128x128@2x.png',
+	'src-tauri/icons/icon.png',
+	'src-tauri/icons/icon.icns',
+	'src-tauri/icons/icon.ico',
 ])
 
-const BINARY = /\.(png|jpe?g|gif|webp|bmp|tiff?|pdf|psd)$/i
+const BINARY = /\.(png|jpe?g|gif|webp|bmp|tiff?|pdf|psd|icns|ico)$/i
 const LOCAL_ONLY = [
 	'vendor/stcc/',
 	'public/stcc/',
@@ -39,6 +46,7 @@ const LOCAL_ONLY = [
 	'tts/',
 	'tmp/',
 	'rules/pdf/',
+	'src-tauri/target/',
 ]
 const CARD_JSON =
 	/^(src\/data\/cards\/(?!boards\/).*|tools\/scratch\/.*)\.json$/
@@ -53,7 +61,14 @@ function normalise(s: string): string {
 }
 
 /** Where card names must not appear (code and data; docs are out of scope). */
-const NAME_SCOPE = ['src/', 'server/', 'tools/', 'public/', 'index.html']
+const NAME_SCOPE = [
+	'src/',
+	'server/',
+	'tools/',
+	'public/',
+	'src-tauri/',
+	'index.html',
+]
 
 /** STCC names that are plain English or game vocabulary, not Star Trek names —
  *  they may appear in code. Normalised (see `normalise`). Trait ids (VULCAN,

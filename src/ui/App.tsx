@@ -38,6 +38,7 @@ import {
 	ActionTray,
 } from './board'
 import { FlightLayer } from './flight'
+import { isDesktop, openCardDatabase } from '../desktop/bridge'
 import { seatLabel, phaseLabel, RESOURCE_LABEL } from './format'
 import { SavedGamesPanel } from './load'
 import { RecoverableErrorBoundary } from './errorScreen'
@@ -347,6 +348,11 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 					>
 						Learn the card glyphs
 					</button>
+					{isDesktop() && (
+						<button type="button" className="btn" onClick={openCardDatabase}>
+							Card database
+						</button>
+					)}
 					{error !== null && <p className="error-text">{error}</p>}
 				</div>
 			)}

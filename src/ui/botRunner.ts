@@ -15,7 +15,7 @@
 // state that is no longer current) is discarded.
 
 import type { BotId, Bot } from '../bot/types'
-import { makeBot } from '../bot/index'
+import { createBotInThread } from './workerBots'
 import type { GameState } from '../engine/state'
 import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
@@ -48,7 +48,7 @@ export function isAbortError(e: unknown): boolean {
  *  macrotask so the UI paints the previous move (and the "thinking"
  *  indicator) first. */
 export function createInThreadRunner(
-	factory: (id: BotId) => Bot = makeBot,
+	factory: (id: BotId) => Bot = createBotInThread,
 ): BotRunner {
 	const bots = new Map<BotId, Bot>()
 	const timers = new Set<ReturnType<typeof setTimeout>>()

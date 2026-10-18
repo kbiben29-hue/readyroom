@@ -16,6 +16,8 @@
 		"server:start": "npm run server",
 		"fetch-cards": "tsx tools/fetch-stcc.ts",
 		"audit:publish": "tsx tools/audit-publish.ts",
+		"bot:check": "tsx tools/bot-check.ts",
+		"bot:retrain": "tsx tools/retrain.ts",
 		"prepare": "husky",
 		"tauri": "tauri",
 		"desktop:dev": "tauri dev",

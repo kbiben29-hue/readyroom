@@ -76,17 +76,23 @@ When you obtain the solo rulebook:
   - [ ] `1DIR02/2` REINFORCE
   - [ ] `2DIR01` / `2DIR02` (box 2)
 
-## 4. A heuristic opponent (optional, later)
+## 4. A heuristic opponent (optional, later) — done as the house AI
 
 If you want a two-player game without a second human and without the Bot rules:
 
-- [ ] Implement a `ChoicePolicy` with simple heuristics: prefer gaining cards with Skill icons
+- [x] Implement a `ChoicePolicy` with simple heuristics: prefer gaining cards with Skill icons
       matching your best track; take control when secured; never spend Glory if any other payment
-      exists (it's 1 VP); complete any completable mission immediately.
-- [ ] **This is a house AI, not the game's Bot.** Label it clearly in the UI so you don't confuse
-      it with the official solo mode.
-- [ ] The `autoPlay` fuzz policy from `todo/07` §6 is the skeleton — a heuristic policy is the
-      same interface with better choices.
+      exists (it's 1 VP); complete any completable mission immediately. (`src/bot/heuristic.ts`,
+      the Easy and Normal levels.)
+- [x] **This is a house AI, not the game's Bot.** Label it clearly in the UI so you don't confuse
+      it with the official solo mode. (The UI says "House AI"; `docs/bot.md`.)
+- [x] The `autoPlay` fuzz policy from `todo/07` §6 is the skeleton — a heuristic policy is the
+      same interface with better choices. (`Bot` in `src/bot/types.ts`; first-legal is the fuzz
+      driver.)
+- [x] Beyond the plan: an ISMCTS search for Hard (`src/bot/ismcts.ts`), a bot-vs-bot arena
+      (`tools/arena.ts`), a learned value function trained by self-play with an arena gate
+      (`src/bot/learned.ts`, `npm run bot:retrain`) and a quick regression (`npm run bot:check`).
+      Still the house AI, not the official Bot: see `docs/bot.md`.
 
 ---
 

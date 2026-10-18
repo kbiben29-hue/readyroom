@@ -22,8 +22,7 @@ import { registerCards } from '../engine/cards'
 import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
 import type { GameState } from '../engine/state'
-import { loadBrowserCatalog } from './browserCatalog'
-import { createBotForWorker } from './workerBots'
+import { createBotForWorker, uiCatalog } from './workerBots'
 
 export interface BotRequest {
 	id: number
@@ -48,7 +47,7 @@ const bots = new Map<BotId, Bot>()
 /** Register the card catalogue with this thread's engine (once). */
 function ensureCatalog(): void {
 	if (catalogReady) return
-	const catalog = loadBrowserCatalog()
+	const catalog = uiCatalog()
 	registerCards([...catalog.defs, ...catalog.stardates.map((s) => s.def)])
 	catalogReady = true
 }

@@ -21,12 +21,21 @@
 //   --record-every K      keep every K-th decision (default 1)
 //   --jobs J              worker threads (default CPU cores − 1)
 //   --cap N               intent cap per game (default playBots' 5000)
+//   --weights n=FILE,…    learned value weights by name, for specs with
+//                         value=<n> (e.g. --weights cand=.bot-data/c.json
+//                         --a ismcts:value=cand); value=learned is the
+//                         bundled src/bot/weights/value.json
 //
 // Results do not depend on --jobs: each game is a pure function of its
 // (pairing, seed, swap) and the results are reported in schedule order.
 
 import { availableParallelism } from 'node:os'
-import { mkdirSync, writeFileSync, createWriteStream } from 'node:fs'
+import {
+	mkdirSync,
+	readFileSync,
+	writeFileSync,
+	createWriteStream,
+} from 'node:fs'
 import { join, dirname } from 'node:path'
 import {
 	Worker,
@@ -54,6 +63,8 @@ interface Job {
 	cap: number | undefined
 	recordEvery: number | undefined
 	session: boolean
+	/** learned weights by name (parsed JSON) */
+	weights: Record<string, unknown>
 }
 
 /** Workers run this .ts file too, so they need tsx's loader. */
@@ -72,8 +83,9 @@ const SESSION_TIME = '2026-01-01T00:00:00.000Z'
 async function workerMain(): Promise<void> {
 	const job = workerData as Job
 	const catalog = await loadCatalog()
-	const botA = botFromSpec(job.a)
-	const botB = botFromSpec(job.b)
+	const ctx = { catalog, weights: job.weights }
+	const botA = botFromSpec(job.a, ctx)
+	const botB = botFromSpec(job.b, ctx)
 	const pairings = parsePairings(job.pairings)
 	parentPort!.on('message', (index: number | null) => {
 		if (index === null) {
@@ -124,6 +136,7 @@ const KNOWN = [
 	'record-every',
 	'jobs',
 	'cap',
+	'weights',
 ]
 
 function intOpt(
@@ -189,9 +202,19 @@ async function main(): Promise<void> {
 		),
 	)
 	const cap = intOpt(args, 'cap', undefined)
+	const weights: Record<string, unknown> = {}
+	for (const part of (args['weights'] ?? '').split(',')) {
+		if (part.trim() === '') continue
+		const eq = part.indexOf('=')
+		if (eq <= 0) throw new Error(`--weights: '${part}' is not name=file`)
+		weights[part.slice(0, eq).trim()] = JSON.parse(
+			readFileSync(part.slice(eq + 1).trim(), 'utf8'),
+		)
+	}
 	// validate in the main thread before spawning
-	botFromSpec(a)
-	botFromSpec(b)
+	const ctx = { catalog: await loadCatalog(), weights }
+	botFromSpec(a, ctx)
+	botFromSpec(b, ctx)
 	const pairings = parsePairings(pairingSpec)
 
 	console.log(
@@ -205,6 +228,7 @@ async function main(): Promise<void> {
 		cap,
 		recordEvery,
 		session: out !== undefined,
+		weights,
 	}
 
 	if (out !== undefined) mkdirSync(out, { recursive: true })

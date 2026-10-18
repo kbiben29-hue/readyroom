@@ -112,7 +112,9 @@ selection against the published option set, writes it into the waiting frame's b
 `pendingChoice`, and resumes the loop.
 
 **Because the stack lives in the state, saving mid-effect Just Works.** So does undo. So does a
-bot: the bot is a function `(state, choice) => selection`.
+bot: the bot is a function `(state, choice) => selection`. (The house AI in `src/bot/` is exactly
+that: a pure `decide(state, seat, legal) → Intent`; see `docs/bot.md`. It is not the official solo
+Bot.)
 
 See `docs/state-machine.md` for the full frame spec.
 
@@ -178,9 +180,13 @@ src/
   session/
     log.ts              intent log, replay, undo
     persistence.ts      IndexedDB save/load
-  bot/
+  bot/                  the house AI, not the official solo Bot (docs/bot.md)
     cadet.ts            virtual-opponent interceptor (rules/10)
-    heuristic.ts        a real opponent (later)
+    heuristic.ts        Easy / Normal: one-decision lookahead over determinized worlds
+    ismcts.ts           Hard: ISMCTS search
+    evaluate.ts         feature vector + hand-tuned static evaluation
+    learned.ts          learned value (MLP over the features; weights/value.json)
+    arena.ts            bot-vs-bot schedule and statistics (tools/arena.ts)
   ui/
     App.tsx
     board/              Market, NeutralZone, StardateTrack, PlayerArea

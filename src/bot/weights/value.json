@@ -1,0 +1,4 @@
+{
+	"format": 0,
+	"note": "No learned value has passed the gate yet: the Hard level uses the hand-tuned evaluation. Run npm run bot:retrain."
+}

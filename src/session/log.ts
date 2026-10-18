@@ -28,7 +28,12 @@ import { hiddenCards } from '../engine/projection'
 import type { DeckId } from '../data/ids'
 import type { CardDef } from '../data/schema'
 import { cardName } from '../data/cardNames'
+import { cardDataHash, cardDataHashCached } from '../data/cardDataHash'
 import type { Opponents } from './opponents'
+
+/** Moved to src/data/cardDataHash.ts (the house AI's learned value checks it
+ *  too); re-exported so existing callers keep working. */
+export { cardDataHash }
 
 export const SESSION_VERSION = 2 as const
 
@@ -207,47 +212,6 @@ export function checkCardData(
 		stored: session.meta.cardDataHash,
 		current,
 	}
-}
-
-/** Deterministic drift-detector over the card data a session was played
- *  against: defs + stardates + crew boards, keyed canonically, hashed with two
- *  additive 32-bit passes. Not cryptographic — it exists to catch "I edited a
- *  card" between weeks, not adversarial collisions. */
-export function cardDataHash(catalog: CardCatalog): string {
-	const defs = [...catalog.defs]
-		.sort((a, b) => a.id.localeCompare(b.id))
-		.map((d) => JSON.stringify(d))
-	const stardates = [...catalog.stardates]
-		.sort((a, b) => a.id.localeCompare(b.id))
-		.map((sd) => JSON.stringify(sd))
-	const boards = Object.keys(catalog.boards)
-		.sort()
-		.map((deck) => `${deck}=${JSON.stringify(catalog.boards[deck as DeckId])}`)
-	const payload = `v1|${defs.join('\n')}|${stardates.join('\n')}|${boards.join('\n')}`
-
-	let h1 = 0x811c9dc5 // FNV-1a
-	let h2 = 5381 // djb2
-	for (let i = 0; i < payload.length; i++) {
-		const c = payload.charCodeAt(i)
-		h1 ^= c
-		h1 = Math.imul(h1, 0x01000193)
-		h2 = (Math.imul(h2, 33) + c) >>> 0
-	}
-	const a = (h1 >>> 0).toString(16).padStart(8, '0')
-	const b = (h2 >>> 0).toString(16).padStart(8, '0')
-	return `${a}${b}`
-}
-
-// refreshMeta recomputes the hash after every intent; the catalog is
-// identity-stable within a session, so memoise per catalog object (a full
-// catalog hash is a few hundred KB of JSON — not worth redoing per commit).
-const catalogHashCache = new WeakMap<CardCatalog, string>()
-const cardDataHashCached = (catalog: CardCatalog): string => {
-	const hit = catalogHashCache.get(catalog)
-	if (hit !== undefined) return hit
-	const hash = cardDataHash(catalog)
-	catalogHashCache.set(catalog, hash)
-	return hash
 }
 
 /** Public, cheap per-seat VP estimate described on ScoreEstimate. With a

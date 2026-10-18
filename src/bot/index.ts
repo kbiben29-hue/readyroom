@@ -8,11 +8,17 @@
 //   makeBot('normal')       the heuristic (src/bot/heuristic.ts)
 //   makeBot('hard')         the ISMCTS search (src/bot/ismcts.ts, docs/bot.md):
 //                           HARD_ITERATIONS iterations per decision, or
-//                           HARD_TIME_MS of wall clock when given a clock
+//                           HARD_TIME_MS of wall clock when given a clock;
+//                           its leaf is the learned value
+//                           (src/bot/weights/value.json) when the weights are
+//                           compatible with `cardData` and passed their gate,
+//                           else the hand-tuned evaluation
 import type { Bot, BotId } from './types'
 import { firstLegalPolicy, nextAutoIntent } from './autoPlay'
 import { makeHeuristicBot } from './heuristic'
 import { makeIsmctsBot, type IsmctsOptions } from './ismcts'
+import type { CardCatalog } from '../engine/setup'
+import { BUNDLED_VALUE, hardValue } from './bundledValue'
 
 export * from './cadet'
 export * from './types'
@@ -40,6 +46,15 @@ export {
 	type IsmctsOptions,
 	type IsmctsStats,
 } from './ismcts'
+export {
+	loadValue,
+	compatibleValue,
+	incompatibility,
+	featureHash,
+	type ValueWeights,
+	type ValueFn,
+} from './learned'
+export { BUNDLED_VALUE, hardValue, gatePassed } from './bundledValue'
 export {
 	features,
 	evaluate,
@@ -82,6 +97,13 @@ export interface MakeBotOptions {
 	clock?: (() => number) | undefined
 	/** The Hard level's time budget with a clock (default HARD_TIME_MS). */
 	timeMs?: number | undefined
+	/** The card data the bot plays on (the catalog, or its cardDataHash).
+	 *  Hard uses the learned value only when given this and the weights were
+	 *  trained on the same card data; without it, Hard is hand-tuned. */
+	cardData?: CardCatalog | string | undefined
+	/** Learned weights to use instead of the bundled value.json (tests);
+	 *  null forces the hand-tuned leaf. */
+	valueWeights?: unknown
 }
 
 /** The bot registry. */
@@ -93,17 +115,23 @@ export function makeBot(id: BotId, opts: MakeBotOptions = {}): Bot {
 			return makeHeuristicBot({ id: 'easy', noise: EASY_NOISE })
 		case 'normal':
 			return makeHeuristicBot({ id: 'normal' })
-		case 'hard':
+		case 'hard': {
+			const value =
+				opts.valueWeights === null
+					? undefined
+					: hardValue(opts.cardData, opts.valueWeights ?? BUNDLED_VALUE)
 			return makeIsmctsBot(
 				opts.clock === undefined
-					? { ...HARD_OPTIONS, id: 'hard', iterations: HARD_ITERATIONS }
+					? { ...HARD_OPTIONS, id: 'hard', iterations: HARD_ITERATIONS, value }
 					: {
 							...HARD_OPTIONS,
 							id: 'hard',
 							iterations: HARD_MAX_ITERATIONS,
 							timeMs: opts.timeMs ?? HARD_TIME_MS,
 							clock: opts.clock,
+							value,
 						},
 			)
+		}
 	}
 }

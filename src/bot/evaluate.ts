@@ -402,7 +402,7 @@ export function terminalOutcome(
 }
 
 /** The weighted, non-score part of the evaluation for one seat. */
-function weighted(f: readonly number[], w: readonly number[]): number {
+function weighted(f: ArrayLike<number>, w: readonly number[]): number {
 	let v = 0
 	for (let i = 0; i < f.length; i++) v += w[i]! * f[i]!
 	return v
@@ -431,10 +431,26 @@ export function evaluate(
 		return base + end.margin
 	}
 	const mine = features(state, seat)
-	const own = mine[FEATURE_INDEX['score.total']]! + weighted(mine, weights)
-	if (state.mode === 'CADET') return own
-	const theirs = features(state, otherSeat(seat))
-	return own - theirs[FEATURE_INDEX['score.total']]! - weighted(theirs, weights)
+	if (state.mode === 'CADET')
+		return mine[FEATURE_INDEX['score.total']]! + weighted(mine, weights)
+	return evaluateFeatures(mine, features(state, otherSeat(seat)), weights)
+}
+
+/** `evaluate` of a non-terminal two-player state from its two feature
+ *  vectors (`seat`'s and the opponent's). The learned value's trainer uses it
+ *  to score recorded positions with the hand-tuned evaluation (its baseline). */
+export function evaluateFeatures(
+	mine: ArrayLike<number>,
+	theirs: ArrayLike<number>,
+	weights: readonly number[] = WEIGHT_VECTOR,
+): number {
+	const total = FEATURE_INDEX['score.total']
+	return (
+		mine[total]! +
+		weighted(mine, weights) -
+		theirs[total]! -
+		weighted(theirs, weights)
+	)
 }
 
 /** `evaluate` squashed into [−1, 1]: tanh(margin / EVAL_SCALE). */

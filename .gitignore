@@ -31,3 +31,6 @@ coverage/
 
 # your own Fly.io app config (copy fly.example.toml)
 /fly.toml
+
+# house AI self-play records, candidate weights and arena runs (tools/selfplay.ts, tools/retrain.ts)
+.bot-data/

@@ -8,3 +8,5 @@
 /tools/bin
 /venv
 /tmp
+/src-tauri/target
+/src-tauri/gen

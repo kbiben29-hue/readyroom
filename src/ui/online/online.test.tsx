@@ -8,7 +8,15 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { act, type ReactElement } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import {
+	afterAll,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	it,
+	vi,
+} from 'vitest'
 
 import { GameService } from '../../../server/games'
 import type { CardDef } from '../../data/schema'
@@ -28,6 +36,7 @@ import { parseInvite } from '../../session/online'
 import { RecapView, humanize } from './Recap'
 import {
 	addSeat,
+	appUrl,
 	loadSeats,
 	removeSeat,
 	serverUrl,
@@ -274,6 +283,21 @@ describe('seats on this device', () => {
 		setServerUrl('https://bridge.example/')
 		expect(serverUrl()).toBe('https://bridge.example')
 		setServerUrl(null)
+	})
+
+	it("defaults to the build's hosted game (desktop) for server and invites", () => {
+		vi.stubEnv('VITE_PUBLIC_URL', 'https://hosted.example/')
+		try {
+			setServerUrl(null)
+			expect(serverUrl()).toBe('https://hosted.example')
+			expect(appUrl()).toBe('https://hosted.example/')
+			setServerUrl('https://bridge.example')
+			expect(serverUrl()).toBe('https://bridge.example')
+			expect(appUrl()).toBe('https://bridge.example/')
+		} finally {
+			setServerUrl(null)
+			vi.unstubAllEnvs()
+		}
 	})
 
 	it('reports the time left on a deadline', () => {

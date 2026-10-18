@@ -6,11 +6,13 @@
 //   makeBot('first-legal')  the deterministic fuzz driver's choices
 //   makeBot('easy')         the heuristic with softmax noise
 //   makeBot('normal')       the heuristic (src/bot/heuristic.ts)
-//   makeBot('hard')         the heuristic with 4 worlds per decision (~2× the
-//                           time of normal); reserved for ISMCTS
+//   makeBot('hard')         the ISMCTS search (src/bot/ismcts.ts, docs/bot.md):
+//                           HARD_ITERATIONS iterations per decision, or
+//                           HARD_TIME_MS of wall clock when given a clock
 import type { Bot, BotId } from './types'
 import { firstLegalPolicy, nextAutoIntent } from './autoPlay'
 import { makeHeuristicBot } from './heuristic'
+import { makeIsmctsBot, type IsmctsOptions } from './ismcts'
 
 export * from './cadet'
 export * from './types'
@@ -33,6 +35,12 @@ export {
 } from './determinize'
 export { candidates, cardValuePrior } from './candidates'
 export {
+	makeIsmctsBot,
+	search as ismctsSearch,
+	type IsmctsOptions,
+	type IsmctsStats,
+} from './ismcts'
+export {
 	features,
 	evaluate,
 	evaluateNormalized,
@@ -53,8 +61,31 @@ export const firstLegalBot: Bot = {
 /** Softmax temperature (VP) of the Easy level. */
 export const EASY_NOISE = 1.5
 
+/** The Hard level's deterministic budget: ISMCTS iterations per decision
+ *  (the arena budget; ~0.15–0.4 s per searched decision on one core). */
+export const HARD_ITERATIONS = 200
+
+/** The Hard level's wall-clock budget per decision (ms) when `makeBot` gets
+ *  a clock (the UI / a worker passes `performance.now`). */
+export const HARD_TIME_MS = 1500
+
+/** Iteration cap under the wall-clock budget (bounds memory on fast
+ *  machines and in exhausted single-turn trees). */
+export const HARD_MAX_ITERATIONS = 3000
+
+/** The Hard level's search settings (besides the budget). */
+export const HARD_OPTIONS: Readonly<IsmctsOptions> = {}
+
+export interface MakeBotOptions {
+	/** A wall clock in ms (e.g. `performance.now`). With it the Hard level
+	 *  searches for `timeMs` per decision instead of HARD_ITERATIONS. */
+	clock?: (() => number) | undefined
+	/** The Hard level's time budget with a clock (default HARD_TIME_MS). */
+	timeMs?: number | undefined
+}
+
 /** The bot registry. */
-export function makeBot(id: BotId): Bot {
+export function makeBot(id: BotId, opts: MakeBotOptions = {}): Bot {
 	switch (id) {
 		case 'first-legal':
 			return firstLegalBot
@@ -63,7 +94,16 @@ export function makeBot(id: BotId): Bot {
 		case 'normal':
 			return makeHeuristicBot({ id: 'normal' })
 		case 'hard':
-			// until the ISMCTS package lands: normal with less sampling noise
-			return makeHeuristicBot({ id: 'hard', samples: 4, maxSims: 80 })
+			return makeIsmctsBot(
+				opts.clock === undefined
+					? { ...HARD_OPTIONS, id: 'hard', iterations: HARD_ITERATIONS }
+					: {
+							...HARD_OPTIONS,
+							id: 'hard',
+							iterations: HARD_MAX_ITERATIONS,
+							timeMs: opts.timeMs ?? HARD_TIME_MS,
+							clock: opts.clock,
+						},
+			)
 	}
 }

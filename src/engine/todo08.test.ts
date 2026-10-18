@@ -791,6 +791,36 @@ describe('SEND_AWAY_TEAM (todo/08 §8, rules/12 §12.15)', () => {
 		assertSerialisable(out)
 	})
 
+	it('a single legal destination still completes a pull that has to ask for its source', () => {
+		register([mk('loc', 'LOCATION')])
+		let s = fresh()
+		s = place(s, 'loc', ID('target'), { k: 'NEUTRAL_ZONE', slot: 0 })
+		s = place(s, 'loc', ID('srcA'), { k: 'NEUTRAL_ZONE', slot: 1 })
+		s = place(s, 'loc', ID('srcB'), { k: 'NEUTRAL_ZONE', slot: 2 })
+		// pool empty, tokens on two other Locations: the destination is
+		// automatic, the source is a choice (found by the ISMCTS arena)
+		s = { ...s, awayTeamsAt: { srcA: [1, 0], srcB: [1, 0], target: [0, 0] } }
+		const asked: string[] = []
+		const frame: Frame = {
+			k: 'EFFECT',
+			node: {
+				k: 'SEND_AWAY_TEAM',
+				count: 2,
+				target: { zones: [{ k: 'NEUTRAL_ZONE', slot: 0 }] },
+			},
+			ctx: { actor: 0, source: ID('e'), bindings: {} },
+			ip: 0,
+		}
+		const { state: out } = drive({ ...s, stack: [frame] }, (c) => {
+			asked.push(c.prompt)
+			return firstPick(c)
+		})
+		expect(asked).toHaveLength(1) // only the source was asked for
+		expect(out.awayTeamsAt[ID('target')]).toEqual([2, 0])
+		expect(out.players[0]!.awayTeamsInPool).toBe(0)
+		assertSerialisable(out)
+	})
+
 	it('blocking: a neutral Location with more opponent ships is refused (rule §12.15)', () => {
 		register([mk('loc', 'LOCATION'), mk('ship', 'SHIP')])
 		let s = fresh()

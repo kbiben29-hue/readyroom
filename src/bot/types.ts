@@ -14,8 +14,7 @@ import type { Seat } from '../engine/resolver/queries'
  *  - `first-legal`: the deterministic fuzz driver (src/bot/autoPlay.ts).
  *  - `easy`: the heuristic with softmax noise over its candidate scores.
  *  - `normal`: the heuristic, argmax.
- *  - `hard`: for now `normal` with more sampled worlds; reserved for the
- *    ISMCTS search. */
+ *  - `hard`: the ISMCTS search (src/bot/ismcts.ts). */
 export type BotId = 'first-legal' | 'easy' | 'normal' | 'hard'
 
 /**

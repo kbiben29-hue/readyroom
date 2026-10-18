@@ -146,14 +146,39 @@ The layout follows what a turn needs, not the rulebook's table picture:
   Officer + Location Area, Captain + Fleet Area, then the Staging Area spanning the full width
   from column 1. Every cell steps on the same 94px + 6px rhythm, so Duty Officer, Captain and the
   first Staging card share a column and no card sits half a slot out of line. Zone labels go
-  _above_ their cards for the same reason — a label between two cards would break the rhythm. Reserve, Development and the Captain's Log are counts rather than
-  cards you act on, so they sit under the Crew board header as chips — which is also where the
-  rulebook draws them, and keeps them clear of the hand overlay.
+  _above_ their cards for the same reason — a label between two cards would break the rhythm.
+  Reserve, Development and the Captain's Log are counts rather than cards you act on, so they
+  are tiles on the crew console (§4.1) — which is also where the rulebook draws them.
 
 Breakpoints: ≤1240px the crew board drops under your area; ≤1080px the side column moves below the
 board; ≤900px the console stops being one screen and the page scrolls normally, the caps drop and
 the bars become full pills. Below 1080px the phone and tablet shells take over
 ([`ui-mobile.md`](ui-mobile.md)); this console stays the desktop layout.
+
+### 4.1 The crew console
+
+Your crew board is drawn as a console readout rather than a copy of the printed board: the
+board's state is three numbers and a handful of counts, and the printed layout spends most of
+its area on art.
+
+- **Each specialty is one capped bar.** The cap carries the printed skill icon and the name
+  (`RES` / `INF` / `MIL`, full name on the title and in the accessible label), then one segment per
+  step 0–15, lit in the specialty hue up to the marker, with the marker segment full-strength
+  and underlined in your seat colour. The side's multiplier glyphs print in their own
+  segments, so the Basic and Advanced sides look as different as they score. The end-cap reads
+  out the **position** and the **multiplier Focus icons score at right now** (×0 below an
+  Advanced side's first glyph) — the two numbers you actually check.
+- **Counts are tiles, four to a row.** Dilithium, Latinum and Glory are lit in their token
+  hues (Glory is lilac, §2), Away Teams in your seat colour (on your Captain / owned). The piles
+  — Reserve, Development, Log — and completed missions are dark tiles a rank lower; a pile you
+  may look through is a button that opens it.
+- **Your resources live here, not in your area header.** Every pool has exactly one counter on
+  screen, so a token flight (§1) has one place to land. The compact opponent area in the side
+  column keeps its pips.
+- Missions stay a list under the tiles, since completing one is a button, not a count.
+
+Printed icons on lit chrome sit in an `--ink` well, or a token would vanish into the tile of its
+own hue. The opponent's crew board in the side column stays compact.
 
 ## 5. Cards
 

@@ -944,6 +944,13 @@ function openPile(label: string, iids: readonly CardInstanceId[]) {
 	if (pileFn !== null) pileFn(label, iids)
 }
 
+/** Open a public pile in the browser (closing any card detail first) — for
+ *  pile counters that are not drawn as a CardStack, like the crew console's. */
+export function browsePile(label: string, iids: readonly CardInstanceId[]) {
+	useGameStore.getState().setDetail(null)
+	openPile(label, iids)
+}
+
 export function PileBrowserHost() {
 	const [pile, setPile] = usePileState()
 	if (pile === null) return null

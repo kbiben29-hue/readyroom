@@ -57,7 +57,6 @@ h3,
 .btn,
 .phase-chip,
 .stack-count,
-.track-label,
 .op-type,
 .log-kind,
 .card-name,
@@ -1028,30 +1027,6 @@ h3,
 	gap: var(--slot-gap);
 	justify-content: start;
 }
-/* Chips, not card backs: these three are counts you glance at, and at card
- * size they pushed the crew board down behind the hand overlay. */
-.crew-piles {
-	margin: 0 0 8px;
-	padding-bottom: 8px;
-	border-bottom: 1px solid #ffffff12;
-	gap: 12px;
-}
-.crew-piles .cardstack {
-	flex-direction: row;
-	align-items: center;
-	gap: 8px;
-}
-.crew-piles .stack-back {
-	width: 34px;
-	height: 26px;
-	min-height: 26px;
-	border-radius: 3px;
-	font-size: 13px;
-	flex: none;
-}
-.crew-piles .stack-count {
-	font-size: 12px;
-}
 .area-slot-label {
 	color: var(--dim);
 	font-size: 11px;
@@ -1091,23 +1066,201 @@ h3,
 	flex-wrap: wrap;
 	margin-bottom: 8px;
 }
-.tracks {
+/* The crew console (docs/ui-lcars.md §4.1): the board as an LCARS readout.
+ * Each specialty is a capped bar — printed icon + name, one segment per step
+ * lit up to the marker, the side's multiplier glyphs in their segments, and an
+ * end-cap with the position and the multiplier Focus icons score at now. */
+.console-tracks {
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
-	margin: 6px 0;
+	gap: var(--gap);
+	margin: 2px 0 var(--gap);
 }
-.track {
+.console-track {
+	--h: var(--hair-2);
 	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-.track-label {
-	width: 124px;
-	font-size: 13px;
-	letter-spacing: 0.07em;
+	align-items: stretch;
+	gap: var(--gap);
+	height: 30px;
+	font-family: 'Antonio', sans-serif;
 	text-transform: uppercase;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink);
 }
+.console-track.s-research {
+	--h: var(--research);
+}
+.console-track.s-influence {
+	--h: var(--influence);
+}
+.console-track.s-military {
+	--h: var(--military);
+}
+.console-track-cap {
+	flex: none;
+	width: 52px;
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+	padding-left: 8px;
+	border-radius: 15px 0 0 15px;
+	background: var(--h);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+}
+/* ink on the lit caps — set here, since the .s-* hue rules set `color` too */
+.console-track-cap,
+.console-readout {
+	color: var(--ink);
+}
+/* a printed icon on lit chrome sits in a dark well, or it vanishes into a
+ * tile of its own hue (the pink crystal on the Dilithium tile) */
+.console-track-cap .icon,
+.console-tile:not(.tile-pile) .tile-label .icon {
+	box-sizing: content-box;
+	height: 13px;
+	padding: 2px;
+	border-radius: 50%;
+	background: var(--ink);
+	filter: none;
+}
+.console-segs {
+	flex: 1;
+	min-width: 0;
+	display: grid;
+	grid-template-columns: repeat(16, minmax(0, 1fr));
+	gap: 2px;
+}
+.console-seg {
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	padding-bottom: 2px;
+	background: var(--panel-2);
+	color: var(--h);
+	font-size: 10px;
+	font-weight: 600;
+	line-height: 1;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.console-seg.seg-lit {
+	background: color-mix(in srgb, var(--h) 58%, var(--panel-2));
+	color: var(--ink);
+}
+.console-seg.seg-at {
+	background: var(--h);
+	color: var(--ink);
+	box-shadow: inset 0 -3px 0 var(--c, var(--ice));
+}
+.console-readout {
+	flex: none;
+	width: 58px;
+	display: inline-flex;
+	align-items: baseline;
+	justify-content: flex-end;
+	gap: 3px;
+	padding: 0 10px 0 4px;
+	border-radius: 0 15px 15px 0;
+	background: var(--h);
+	line-height: 30px;
+}
+.readout-pos {
+	font-size: 22px;
+	font-weight: 700;
+}
+.readout-mult {
+	font-size: 13px;
+	font-weight: 600;
+}
+
+/* Resources, Away Teams and the piles: one tile per count. Resources are lit
+ * in their token's hue; piles are dark tiles in the seat hue, a rank lower. */
+.console-tiles {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--gap);
+	margin-bottom: 8px;
+}
+.console-tile {
+	--t: var(--hair-2);
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: space-between;
+	min-height: 50px;
+	padding: 4px 8px 5px;
+	border: 0;
+	border-radius: 3px;
+	background: var(--t);
+	color: var(--ink);
+	font-family: 'Antonio', sans-serif;
+	text-transform: uppercase;
+	text-align: left;
+}
+/* the resource tiles are delta hosts too — keep the tile shape over the pill */
+.console-tile.delta-host {
+	display: flex;
+	align-items: stretch;
+	border-radius: 3px;
+}
+.console-tiles > .console-tile:nth-child(4n + 1) {
+	border-radius: 14px 3px 3px 14px;
+	padding-left: 12px;
+}
+.console-tile.tile-dil {
+	--t: var(--sh-dil);
+}
+.console-tile.tile-lat {
+	--t: var(--sh-lat);
+}
+.console-tile.tile-glo {
+	--t: var(--lilac);
+}
+.console-tile.tile-away {
+	--t: var(--c, var(--ice));
+}
+.tile-n {
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+.tile-n small {
+	font-size: 14px;
+	font-weight: 600;
+	opacity: 0.7;
+}
+.tile-label {
+	align-self: flex-end;
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+}
+.console-tile.tile-pile {
+	background: var(--pb-raise);
+	color: var(--c, var(--ice));
+	box-shadow: inset 0 0 0 1px var(--hair-2);
+}
+.console-tile.tile-pile .tile-label {
+	color: var(--dim);
+}
+.console-tile.tile-missions .tile-n {
+	color: var(--lilac);
+}
+.console-tile.tile-browse {
+	cursor: pointer;
+}
+.console-tile.tile-browse:hover,
+.console-tile.tile-browse:focus-visible {
+	box-shadow: inset 0 0 0 2px var(--c, var(--ice));
+}
+
 /* Specialty hue is never alone — the component pairs it with a glyph + label. */
 .s-research {
 	color: var(--research);
@@ -1118,39 +1271,6 @@ h3,
 .s-military {
 	color: var(--military);
 }
-.track-ruler {
-	position: relative;
-	flex: 1;
-	display: flex;
-	align-items: flex-end;
-	height: 30px;
-	border-bottom: 2px solid var(--hair);
-}
-.track-step {
-	width: 6.25%;
-	font-size: 9px;
-	color: var(--dim);
-	text-align: center;
-	overflow: hidden;
-	white-space: nowrap;
-	font-variant-numeric: tabular-nums;
-}
-.track-mult {
-	color: var(--lilac);
-	font-weight: 700;
-}
-.track-marker {
-	background: var(--orange);
-	border-radius: 2px;
-}
-.track-position {
-	position: absolute;
-	bottom: -7px;
-	transform: translateX(-50%);
-	color: var(--sunflower);
-	font-size: 14px;
-}
-
 .missions {
 	display: flex;
 	flex-direction: column;
@@ -3027,28 +3147,6 @@ h3,
 	display: inline-flex;
 	align-items: center;
 	gap: 3px;
-}
-.track-position {
-	width: 12px;
-	height: 12px;
-	bottom: -6px;
-	border-radius: 50%;
-	background: var(--sunflower);
-	box-shadow:
-		0 0 0 2px var(--ground),
-		0 0 8px var(--sunflower);
-}
-.track-position-seat-0 {
-	background: var(--ice);
-	box-shadow:
-		0 0 0 2px var(--ground),
-		0 0 8px var(--ice);
-}
-.track-position-seat-1 {
-	background: var(--salmon);
-	box-shadow:
-		0 0 0 2px var(--ground),
-		0 0 8px var(--salmon);
 }
 .mission-index {
 	display: inline-flex;

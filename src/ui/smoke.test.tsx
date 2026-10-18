@@ -90,7 +90,29 @@ describe('app smoke (jsdom)', () => {
 			(e) => e.textContent,
 		)
 		expect(glyphs).toContain('×7')
-		expect(board!.textContent).toContain('Influence ×1')
+		// each specialty bar ends in its position and current multiplier
+		const influence = board!.querySelector('.console-track.s-influence')
+		expect(influence?.getAttribute('aria-label')).toContain(
+			'Influence: step 0 of 15 · Focus icons score ×1',
+		)
+		expect(influence?.querySelector('.readout-mult')?.textContent).toBe('×1')
+		expect(influence?.querySelectorAll('.console-seg').length).toBe(16)
+	})
+
+	it('your resources sit on the crew console, the opponent keeps its pips', () => {
+		act(() => {
+			useGameStore.getState().loadCatalog()
+			useGameStore.getState().startGame(config())
+		})
+		const host = renderApp()
+		const board = host.querySelector('[aria-label="Player 1 crew board"]')
+		// one counter per pool, so a token flight has exactly one place to land
+		expect(host.querySelectorAll('[data-anchor="player:0:DIL"]').length).toBe(1)
+		expect(board!.querySelector('[data-anchor="player:0:DIL"]')).not.toBeNull()
+		expect(board!.querySelector('.tile-dil .tile-n')?.textContent).toBe(
+			String(useGameStore.getState().state!.players[0].resources.DIL),
+		)
+		expect(host.querySelector('[data-anchor="player:1:DIL"]')).not.toBeNull()
 	})
 
 	it('advances past the first boundary and the choice panel routes by seat', () => {

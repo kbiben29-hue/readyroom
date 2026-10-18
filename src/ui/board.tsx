@@ -22,9 +22,9 @@ import {
 	useLegal,
 	useRealState,
 } from './store'
-import { CardSprite, CardStack } from './cards'
-import { RESOURCE_LABEL, seatLabel } from './format'
-import { Icon, SpecialtyLabel, suitIconId } from './icons'
+import { CardSprite, CardStack, browsePile } from './cards'
+import { RESOURCE_LABEL, seatLabel, specialtyName } from './format'
+import { Icon, suitIconId } from './icons'
 import { DeltaCounter } from './delta'
 import { HIDDEN_DEF } from './projection'
 import { deckLabel, missionTitle } from '../data/cardNames'
@@ -352,18 +352,21 @@ export function PlayerArea({
 					{seatLabel(seat)} {isMine ? '(you)' : ''}
 				</strong>
 				<span className="area-resources">
-					{(['DIL', 'LAT', 'GLO'] as const).map((r) => (
-						<DeltaCounter
-							key={r}
-							pool={`player:${seat}:${r}`}
-							label={`${seatLabel(seat)} ${RESOURCE_LABEL[r]}`}
-							className={`res-pip pip-${r.toLowerCase()}`}
-							title={RESOURCE_LABEL[r]}
-						>
-							<Icon id={r} label={RESOURCE_LABEL[r]} size="md" />{' '}
-							<span className="res-n">{pl.resources[r]}</span>
-						</DeltaCounter>
-					))}
+					{/* your own resources live on the crew console beside this area;
+              the compact opponent area keeps its pips here */}
+					{compact === true &&
+						(['DIL', 'LAT', 'GLO'] as const).map((r) => (
+							<DeltaCounter
+								key={r}
+								pool={`player:${seat}:${r}`}
+								label={`${seatLabel(seat)} ${RESOURCE_LABEL[r]}`}
+								className={`res-pip pip-${r.toLowerCase()}`}
+								title={RESOURCE_LABEL[r]}
+							>
+								<Icon id={r} label={RESOURCE_LABEL[r]} size="md" />{' '}
+								<span className="res-n">{pl.resources[r]}</span>
+							</DeltaCounter>
+						))}
 					<ActionTray seat={seat} />
 				</span>
 			</div>
@@ -499,49 +502,83 @@ export function CrewBoard({
 	const log = useZones({ k: 'LOG', seat })
 	if (state === null) return null
 	const pl = player(state, seat)
+	const done = pl.missions.filter((m) => m.completed).length
 	return (
 		<section
-			className={`panel crew-board`}
+			className={`panel crew-board${compact ? '' : ' crew-console'}`}
 			aria-label={`Player ${seat + 1} crew board`}
 		>
 			<div className="crew-head">
 				<strong>Crew board — {deckLabel(pl.deckId)}</strong>
 				<span className="muted">
-					{pl.boardSide} side · missions{' '}
-					{pl.missions.filter((m) => m.completed).length}/{pl.missions.length}
+					{pl.boardSide === 'BASIC' ? 'Basic' : 'Advanced'} side
+					{compact ? ` · missions ${done}/${pl.missions.length}` : ''}
 				</span>
 			</div>
 			{!compact && (
-				<div className="crew-piles piles-row">
-					{/* Development pile + Reserve deck sit beside the Crew board, and the
-              Captain's Log is tucked under the Captain (rules/02 §2.3) — piles
-              you count rather than cards you act on. Your own Log is
-              browsable; an opponent's is a count only (rules/04 §4.5). */}
-					<CardStack label="Reserve" count={reserve.length} />
-					<CardStack
-						label="Development"
-						count={development.length}
-						browse={development}
-					/>
-					<CardStack
-						label="Log"
-						count={log.length}
-						browse={seat === viewer ? log : null}
-					/>
-				</div>
-			)}
-			{!compact && (
-				<div className="tracks">
-					{(['RESEARCH', 'INFLUENCE', 'MILITARY'] as const).map((s) => (
-						<MultiplierTrack
-							key={s}
-							seat={seat}
-							specialty={s}
-							position={pl.specialties[s]}
-							multipliers={pl.tracks[s]}
-						/>
-					))}
-				</div>
+				<>
+					{/* The console reads like the printed board: three specialty bars
+              lit up to the marker, each capped by its position and the
+              multiplier Focus icons score at right now (docs/ui-lcars.md §4.1). */}
+					<div className="console-tracks">
+						{SPECIALTIES.map((s) => (
+							<SpecialtyBar
+								key={s}
+								specialty={s}
+								position={pl.specialties[s]}
+								multipliers={pl.tracks[s]}
+							/>
+						))}
+					</div>
+					{/* Resources, Away Teams and the piles beside the board — counts
+              you glance at, so they are tiles, not card backs. Reserve,
+              Development and the Captain's Log sit beside the Crew board
+              (rules/02 §2.3); your own Log is browsable, an opponent's is a
+              count only (rules/04 §4.5). */}
+					<div className="console-tiles">
+						{(['DIL', 'LAT', 'GLO'] as const).map((r) => (
+							<DeltaCounter
+								key={r}
+								pool={`player:${seat}:${r}`}
+								label={`${seatLabel(seat)} ${RESOURCE_LABEL[r]}`}
+								className={`console-tile tile-${r.toLowerCase()}`}
+								title={RESOURCE_LABEL[r]}
+							>
+								<span className="tile-n">{pl.resources[r]}</span>
+								<span className="tile-label">
+									<Icon id={r} label={RESOURCE_LABEL[r]} />
+									{RESOURCE_LABEL[r]}
+								</span>
+							</DeltaCounter>
+						))}
+						<span
+							className="console-tile tile-away"
+							title={`${pl.awayTeamsInPool} Away Team${pl.awayTeamsInPool === 1 ? '' : 's'} on your Captain · ${pl.awayTeamsTotal} owned`}
+						>
+							<span className="tile-n">
+								{pl.awayTeamsInPool}
+								<small>/{pl.awayTeamsTotal}</small>
+							</span>
+							<span className="tile-label">
+								<Icon id="AWAY_TEAM" label="Away Teams" />
+								Away
+							</span>
+						</span>
+						<PileTile label="Reserve" iids={reserve} browse={false} />
+						<PileTile label="Development" iids={development} browse />
+						<PileTile label="Log" iids={log} browse={seat === viewer} />
+						<span
+							className="console-tile tile-pile tile-missions"
+							title={`${done} of ${pl.missions.length} missions completed`}
+						>
+							<span className="tile-n">
+								{done}
+								<small>/{pl.missions.length}</small>
+							</span>
+							<span className="tile-label">Missions</span>
+						</span>
+					</div>
+				</>
 			)}
 			<div className="missions">
 				{pl.missions.map((m, i) => {
@@ -596,72 +633,115 @@ export function CrewBoard({
 					)
 				})}
 			</div>
-			{!compact && (
-				<p className="muted small">
-					Positions R {pl.specialties.RESEARCH} / I {pl.specialties.INFLUENCE} /
-					M {pl.specialties.MILITARY}.
-				</p>
-			)}
 		</section>
 	)
 }
 
-function MultiplierTrack({
-	seat,
+const SPECIALTIES = ['RESEARCH', 'INFLUENCE', 'MILITARY'] as const
+const TRACK_MAX = 15 // rules/07 §7.1: every track runs 0 to 15
+const SPECIALTY_ABBR: Record<SpecialtyId, string> = {
+	RESEARCH: 'Res',
+	INFLUENCE: 'Inf',
+	MILITARY: 'Mil',
+}
+
+/**
+ * One specialty track as an LCARS bar: a cap (printed icon + name), one
+ * segment per step lit up to the marker, the board side's multiplier glyphs
+ * printed in their segments, and an end-cap reading out the position and the
+ * multiplier Focus icons score at right now.
+ */
+function SpecialtyBar({
 	specialty,
 	position,
 	multipliers,
 }: {
-	seat: Seat
 	specialty: SpecialtyId
 	position: number
 	multipliers: { step: number; value: number }[]
 }) {
-	const max = 15
-	// the multiplier Focus icons score at right now (highest glyph reached;
-	// ×0 below an Advanced side's first glyph — rules/07 §7.1.4)
+	// the highest glyph reached; ×0 below an Advanced side's first glyph
+	// (rules/07 §7.1.4)
 	const current = multipliers.reduce(
 		(v, m) => (position >= m.step && m.value > v ? m.value : v),
 		0,
 	)
+	const next = multipliers.find((m) => m.step > position)
+	const name = specialtyName(specialty)
+	const summary = `${name}: step ${position} of ${TRACK_MAX} · Focus icons score ×${current}${next !== undefined ? ` · ×${next.value} at step ${next.step}` : ''}`
 	return (
-		<div className="track">
-			<span
-				className={`track-label s-${specialty.toLowerCase()}`}
-				title={`Focus icons currently score ×${current}`}
-			>
-				<SpecialtyLabel specialty={specialty} /> ×{current}
+		<div
+			className={`console-track s-${specialty.toLowerCase()}`}
+			role="group"
+			aria-label={summary}
+			title={summary}
+		>
+			<span className="console-track-cap">
+				<Icon id={`SPECIALTY:${specialty}`} label={name} />
+				<span aria-hidden="true">{SPECIALTY_ABBR[specialty]}</span>
 			</span>
-			<div className="track-ruler">
-				{Array.from({ length: max + 1 }).map((_, step) => {
+			<span className="console-segs" aria-hidden="true">
+				{Array.from({ length: TRACK_MAX + 1 }).map((_, step) => {
 					const mult = multipliers.find((m) => m.step === step)
+					const cls =
+						step === position ? ' seg-at' : step < position ? ' seg-lit' : ''
 					return (
 						<span
 							key={step}
-							className={`track-step${step === position ? ' track-marker' : ''}${mult !== undefined ? ' track-mult' : ''}`}
-							title={
-								mult !== undefined
-									? `×${mult.value} at step ${step}`
-									: step === position
-										? `position ${step}`
-										: undefined
-							}
+							className={`console-seg${cls}${mult !== undefined ? ' track-mult' : ''}`}
 						>
-							{mult !== undefined
-								? `×${mult.value}`
-								: step % 4 === 0
-									? String(step)
-									: ''}
+							{mult !== undefined ? `×${mult.value}` : ''}
 						</span>
 					)
 				})}
-				<span
-					className={`track-position track-position-seat-${seat}`}
-					style={{ left: `${(position / max) * 100}%` }}
-					title={`position ${position}`}
-				/>
-			</div>
+			</span>
+			<span className="console-readout">
+				<span className="readout-pos">{position}</span>
+				<span className="readout-mult">×{current}</span>
+			</span>
 		</div>
+	)
+}
+
+/** A pile beside the Crew board as a console tile; a button when browsable. */
+function PileTile({
+	label,
+	iids,
+	browse,
+}: {
+	label: string
+	iids: readonly CardInstanceId[]
+	browse: boolean
+}) {
+	const body = (
+		<>
+			<span className="tile-n">{iids.length}</span>
+			<span className="tile-label">{label}</span>
+		</>
+	)
+	if (!browse || iids.length === 0)
+		return (
+			<span
+				className="console-tile tile-pile"
+				title={
+					browse
+						? `${label}: empty`
+						: `${label}: ${iids.length} · contents hidden`
+				}
+			>
+				{body}
+			</span>
+		)
+	return (
+		<button
+			type="button"
+			className="console-tile tile-pile tile-browse"
+			title={`browse ${label}`}
+			aria-label={`${label} (${iids.length}) — browse`}
+			onClick={() => browsePile(label, iids)}
+		>
+			{body}
+		</button>
 	)
 }
 

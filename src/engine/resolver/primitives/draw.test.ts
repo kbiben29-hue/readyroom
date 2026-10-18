@@ -85,6 +85,42 @@ describe('DRAW + deck cycling', () => {
 		expect(accepted.zones['DEVELOPMENT:0']).not.toContain(ID('dv'))
 	})
 
+	it('a second DRAW in the same sequence makes its own Development offer (no stale $draw bindings)', () => {
+		let s = fresh()
+		s = place(s, 'dev', ID('dv'), { k: 'DEVELOPMENT', seat: 0 }, 0)
+		s = place(s, 'dev', ID('dw'), { k: 'DEVELOPMENT', seat: 0 }, 0)
+		let cur = pushAndRun(
+			s,
+			{
+				k: 'SEQ',
+				steps: [
+					{ k: 'DRAW', count: 1 },
+					{ k: 'DRAW', count: 1 },
+				],
+			},
+			ID('src'),
+			0,
+		)
+		let offers = 0
+		for (let i = 0; i < 10 && cur.pendingChoice !== null; i++) {
+			const c = cur.pendingChoice
+			if (c.k === 'CONFIRM') offers++
+			const selection =
+				c.k === 'CONFIRM'
+					? true
+					: c.k === 'CHOOSE_CARDS'
+						? [c.candidates[0]]
+						: null
+			cur = run(
+				applyChoice(cur, { t: 'RESOLVE_CHOICE', choiceId: c.id, selection }),
+			)
+		}
+		expect(cur.pendingChoice).toBeNull()
+		expect(offers).toBe(2)
+		expect([...(cur.zones['HAND:0'] ?? [])].sort()).toEqual(['dv', 'dw'])
+		expect(cur.stack).toHaveLength(0)
+	})
+
 	it('draw without a refill source simply draws nothing further', () => {
 		const s = fresh() // empty deck, empty discard, empty reserve, no developments
 		const out = pushAndRun(s, { k: 'DRAW', count: 3 }, ID('src'), 0)

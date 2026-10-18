@@ -44,6 +44,13 @@ export const draw: Primitive<Extract<Effect, { k: 'DRAW' }>> = {
 		// Resume path after the Development offer was answered.
 		if (ctx.bindings['$draw.devPending'] === true) {
 			const accepted = answer<boolean>(ctx, '$draw.dev')
+			// `suspend` wrote the offer's bindings IN PLACE on the ctx it shares
+			// with the sibling steps. Clear them, or a later DRAW in the same
+			// sequence reads the stale offer and fails on `answer($draw.dev)`
+			// (found by tools/arena.ts). The resume frame below gets its own copy.
+			delete ctx.bindings['$draw.devPending']
+			delete ctx.bindings['$draw.remaining']
+			delete ctx.bindings['$draw.dev']
 			if (accepted === true) {
 				// rules/12 §12.23: if the Development's cost put cards in your hand and
 				// that brought you to hand size, the enlisted card stays on top of the

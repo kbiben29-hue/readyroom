@@ -82,6 +82,10 @@ export const PRIORS = {
 	glorySpent: 0.5,
 	/** per Skill icon of a gained card matching the seat's best track */
 	gainSkillMatch: 0.3,
+	/** per earlier resolution of the same operation this turn: a repeatable
+	 *  activation whose net value is ~0 (a zero-cost "warp, then refresh")
+	 *  must not ping-pong forever (tools/arena.ts found the BUR loop) */
+	repeatActivation: 1,
 } as const
 
 /** Salt mixed into the view seed so the sampler differs from other users of
@@ -254,6 +258,14 @@ export function priorBonus(
 	intent: Intent,
 ): number {
 	if (intent.t === 'COMPLETE_MISSION') return PRIORS.completeMission
+	if (intent.t === 'ACTIVATE') {
+		const done = state.resolvedOps
+		if (done === undefined || done.turn !== state.turnNumber) return 0
+		let n = 0
+		for (const ref of done.refs)
+			if (ref.card === intent.iid && ref.opIndex === intent.operationIndex) n++
+		return -PRIORS.repeatActivation * n
+	}
 	if (intent.t !== 'RESOLVE_CHOICE') return 0
 	const choice = state.pendingChoice
 	if (choice === null) return 0

@@ -49,6 +49,7 @@ import { ShorthandGuide } from './guide/ShorthandGuide'
 import { useDefIndex } from './defs'
 import { MobileShell } from './mobile/MobileShell'
 import { LayoutSwitch } from './mobile/LayoutSwitch'
+import { ThemeSwitch } from './ThemeSwitch'
 import { deckLabel } from '../data/cardNames'
 
 function useRuleAnchor(): [string | null, (a: string | null) => void] {
@@ -352,6 +353,9 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 			{catalogReady && catalog !== null ? (
 				<SavedGamesPanel catalog={catalog} />
 			) : null}
+			<div className="setup-theme">
+				<ThemeSwitch />
+			</div>
 			<p className="muted small setup-note">
 				Games autosave here as you play (intent log, ~1 s debounce) — refresh
 				mid-turn and Continue to resume.{' '}
@@ -639,6 +643,7 @@ function ConsoleNav() {
 			</button>
 			<DebugReveal revealAll={revealAll} setRevealAll={setRevealAll} />
 			<LayoutSwitch />
+			<ThemeSwitch compact />
 			<span className="nav-spacer" />
 			<span className="nav-num">
 				MODE · {session?.setup.mode === 'CADET' ? 'CADET' : 'HOT-SEAT'}

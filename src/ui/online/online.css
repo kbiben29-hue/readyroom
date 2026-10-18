@@ -228,7 +228,7 @@
 }
 .ol-pill.ol-primary {
 	background: var(--orange);
-	color: #1a0f00;
+	color: var(--ink);
 	border-color: transparent;
 }
 .ol-label {

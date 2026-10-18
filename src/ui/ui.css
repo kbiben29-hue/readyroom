@@ -115,7 +115,7 @@ h3,
 }
 .btn-primary {
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 	box-shadow: none;
 }
 .btn-primary:hover:not(:disabled) {
@@ -162,6 +162,13 @@ h3,
 	font-size: 34px;
 	color: var(--orange);
 	letter-spacing: 0.04em;
+}
+.setup-theme {
+	margin-top: 22px;
+}
+.setup-theme .layout-switch {
+	gap: 10px;
+	align-items: center;
 }
 .setup-form {
 	display: flex;
@@ -296,7 +303,7 @@ h3,
 }
 .console-nav .btn-active {
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 }
 .console-nav .btn.micro {
 	background: var(--lilac);
@@ -351,7 +358,7 @@ h3,
 	min-height: var(--bar-h);
 	padding: 3px 16px;
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
 }
 .topbar-left {
@@ -384,7 +391,7 @@ h3,
 .phase-chip {
 	padding: 1px 12px;
 	border-radius: 999px;
-	background: #1a1200;
+	background: var(--ink);
 	color: var(--sunflower);
 	font-size: 13px;
 	font-weight: 600;
@@ -396,7 +403,7 @@ h3,
 	color: var(--lilac);
 }
 .topbar .muted {
-	color: #5a3e00;
+	color: var(--ink-soft);
 }
 /* The active player's resources, always visible next to their actions. */
 .topbar-resources {
@@ -411,7 +418,7 @@ h3,
 }
 .score-est {
 	font-size: 12px;
-	color: #5a3e00;
+	color: var(--ink-soft);
 	white-space: nowrap;
 	font-variant-numeric: tabular-nums;
 }
@@ -426,7 +433,7 @@ h3,
 	min-height: var(--bar-h);
 	padding: 0 14px;
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
 	font-family: 'Antonio', sans-serif;
 	font-size: 13px;
@@ -435,13 +442,13 @@ h3,
 	flex-wrap: wrap;
 }
 .bottombar .seg {
-	background: #1a120080;
+	background: var(--ink-veil);
 	border-radius: 10px;
 	padding: 1px 14px;
 	font-variant-numeric: tabular-nums;
 }
 .bottombar .seg-alert {
-	background: #1a1200;
+	background: var(--ink);
 	color: var(--sunflower);
 }
 
@@ -1500,7 +1507,7 @@ h3,
  * unrelated hues: amber = you choose to spend, periwinkle = it fires itself. */
 .op-type-play {
 	background: var(--sunflower);
-	color: #1a1200;
+	color: var(--ink);
 }
 .op-type-activation {
 	background: #4a3a14;
@@ -1617,7 +1624,7 @@ h3,
 }
 .token-action {
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 }
 .token-attack {
 	background: var(--mars);
@@ -1682,7 +1689,7 @@ h3,
 }
 .action-chip {
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 	border-radius: 50%;
 	width: 15px;
 	height: 15px;
@@ -1745,7 +1752,7 @@ h3,
 	gap: 12px;
 	padding: 6px 14px;
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 	font-family: 'Antonio', sans-serif;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
@@ -2200,7 +2207,7 @@ h3,
 	gap: 12px;
 	padding: 6px 14px;
 	background: var(--orange);
-	color: #1a1200;
+	color: var(--ink);
 	font-family: 'Antonio', sans-serif;
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
@@ -2443,7 +2450,7 @@ h3,
 	padding: 1px 8px;
 	border-radius: 999px;
 	background: var(--sunflower);
-	color: #1a1200;
+	color: var(--ink);
 	font-family: 'Antonio', sans-serif;
 }
 .review-col-printed {
@@ -2934,7 +2941,7 @@ h3,
 .action-tray {
 	gap: 6px;
 	padding: 2px 8px 2px 4px;
-	background: #1a1200;
+	background: var(--ink);
 	border: 2px solid var(--orange);
 	color: var(--text);
 }
@@ -2998,7 +3005,7 @@ h3,
 @keyframes btn-nudge {
 	50% {
 		box-shadow:
-			0 0 0 4px #1a1200,
+			0 0 0 4px var(--ink),
 			0 0 0 7px var(--sunflower);
 	}
 }
@@ -3028,19 +3035,19 @@ h3,
 	border-radius: 50%;
 	background: var(--sunflower);
 	box-shadow:
-		0 0 0 2px #05050a,
+		0 0 0 2px var(--ground),
 		0 0 8px var(--sunflower);
 }
 .track-position-seat-0 {
 	background: var(--ice);
 	box-shadow:
-		0 0 0 2px #05050a,
+		0 0 0 2px var(--ground),
 		0 0 8px var(--ice);
 }
 .track-position-seat-1 {
 	background: var(--salmon);
 	box-shadow:
-		0 0 0 2px #05050a,
+		0 0 0 2px var(--ground),
 		0 0 8px var(--salmon);
 }
 .mission-index {

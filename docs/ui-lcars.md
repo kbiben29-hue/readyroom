@@ -61,6 +61,25 @@ Specialties keep the printed red/blue/yellow (`--research` / `--influence` / `--
 per `ui-spec` §8, **always** appear as hue + `.glyph` letter + text label. Colour never carries
 a specialty on its own.
 
+### 2.1 Palette themes
+
+The token names above are **roles** (`--orange` is "the frame", `--ice` is "you"); a theme moves
+only the hues. Themes are `:root[data-theme='…']` blocks at the end of `src/ui/lcars.css`, chosen
+per device from the console strip, the start screen or the phone menu (`src/ui/theme.ts`), and
+applied before first paint by an inline script in `index.html`.
+
+| Theme        | Frame            | Market | Neutral Zone | You  | Opponent |
+| ------------ | ---------------- | ------ | ------------ | ---- | -------- |
+| TNG classic  | orange (default) | amber  | blue-violet  | ice  | salmon   |
+| LCARS blue   | cornflower       | silver | violet       | aqua | salmon   |
+| Voyager      | lavender-blue    | peach  | blue         | sky  | salmon   |
+| Enterprise-E | steel blue       | ochre  | blue         | ice  | salmon   |
+
+TNG leans orange/gold; Voyager and the later films lean blue and lavender. Two rules every theme
+keeps: the seat pair stays distinct from the frame and from each other, and red stays reserved
+for alerts — so there is no red-frame theme. Text and wells painted _on_ the chrome use `--ink` /
+`--ink-soft` / `--ink-veil`, which each theme sets to match its frame.
+
 `--mars` is reserved. If red appears anywhere that isn't an alert, the alert stops working.
 
 ## 3. Type
@@ -222,8 +241,9 @@ warning, distinct from the frame-level alarm.
   value.
 - Fonts load from Google Fonts in `index.html`: `Antonio` 400/600/700 + `Barlow` 400/500/600,
   each with a real fallback stack (`Arial Narrow` for Antonio).
-- Single-theme by design. There is no light mode — LCARS is a dark console, and a light variant
-  would need a second, unrelated design. Every colour is painted explicitly.
+- Themable palette, always dark. There is no light mode — LCARS is a dark console, and a light
+  variant would need a second, unrelated design. Every colour is painted explicitly. See §2.1
+  for the palette themes.
 
 ## 11. Explicitly not in v1
 

@@ -9,10 +9,6 @@
  * ui.css never meets these rules. Card tiles live in ../tile/tile.css. */
 
 .pb {
-	--pb-raise: #1e2231;
-	--pb-hair-2: #3a4056;
-	--pb-faint: #6f6c80;
-	--pb-panel-2: #151823;
 	--pb-good: #8fe3b0;
 	position: fixed;
 	inset: 0;
@@ -300,7 +296,7 @@
 }
 .pb-tab[aria-selected='true'] {
 	background: var(--orange);
-	color: #1a0f00;
+	color: var(--ink);
 }
 .pb-dot {
 	position: absolute;
@@ -312,7 +308,7 @@
 	background: var(--ice);
 }
 .pb-tab[aria-selected='true'] .pb-dot {
-	background: #1a0f00;
+	background: var(--ink);
 }
 
 /* ------------------------------------------------------------ station */
@@ -749,10 +745,10 @@ button.pb-pile:not(:disabled) {
 .pb-primary {
 	border-color: transparent;
 	background: var(--orange);
-	color: #1a0f00;
+	color: var(--ink);
 }
 .pb-primary .pb-n {
-	color: #1a0f00;
+	color: var(--ink);
 }
 .pb-warn.pb-primary {
 	background: var(--sunflower);
@@ -1231,6 +1227,13 @@ ul.pb-order li {
 	background: var(--pb-raise);
 	color: var(--text);
 	box-shadow: inset 0 0 0 1px var(--orange);
+}
+/* the theme picker's frame-colour dot */
+.pb-swatch {
+	flex: none;
+	width: 9px;
+	height: 9px;
+	border-radius: 50%;
 }
 .pb-seg button:disabled {
 	opacity: 0.4;

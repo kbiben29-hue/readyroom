@@ -15,9 +15,6 @@
 .pb-slot {
 	container: pb-slot / inline-size;
 	min-width: 0;
-	--pb-raise: #1e2231;
-	--pb-hair-2: #3a4056;
-	--pb-faint: #6f6c80;
 }
 
 .pb-gl {

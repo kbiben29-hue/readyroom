@@ -84,7 +84,7 @@
 }
 .sg-tabs button[aria-current='page'] {
 	background: var(--orange);
-	color: #1a0f00;
+	color: var(--ink);
 }
 .sg-lead {
 	margin: 0;
@@ -129,7 +129,7 @@
 }
 .sg-pill.sg-primary {
 	background: var(--orange);
-	color: #1a0f00;
+	color: var(--ink);
 	border-color: transparent;
 }
 .sg-link {

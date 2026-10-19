@@ -29,7 +29,15 @@ import type { Bot } from './types'
 // ---------------------------------------------------------------------------
 
 /** The crew decks, in the order src/engine/fuzz.test.ts uses. */
-export const CREW_DECKS = ['PIC', 'SHR', 'KOL', 'SIS', 'SEL', 'BUR'] as const
+export const CREW_DECKS = [
+	'PIC',
+	'SHR',
+	'KOL',
+	'SIS',
+	'SEL',
+	'BUR',
+	'MAL',
+] as const
 
 export type BoardSide = 'BASIC' | 'ADVANCED'
 
@@ -46,7 +54,7 @@ export function pairingKey(p: Pairing): string {
 }
 
 /** Every ordered pairing of two different crew decks, Advanced sides (the
- *  fuzz grid: 30 pairings; a crew deck cannot play itself). */
+ *  fuzz grid: 42 pairings; a crew deck cannot play itself). */
 export function allPairings(): Pairing[] {
 	const out: Pairing[] = []
 	for (const a of CREW_DECKS)

@@ -70,11 +70,11 @@ describe('arena stats', () => {
 })
 
 describe('arena schedule', () => {
-	it('covers the 30 ordered fuzz pairings and parses lists', () => {
+	it('covers the 42 ordered fuzz pairings and parses lists', () => {
 		const all = allPairings()
-		expect(all).toHaveLength(30)
-		expect(new Set(all.map(pairingKey)).size).toBe(30)
-		expect(parsePairings('nobur')).toHaveLength(20)
+		expect(all).toHaveLength(42)
+		expect(new Set(all.map(pairingKey)).size).toBe(42)
+		expect(parsePairings('nobur')).toHaveLength(30)
 		const [p] = parsePairings('PIC.B-SHR')
 		expect(p).toEqual({ decks: ['PIC', 'SHR'], sides: ['BASIC', 'ADVANCED'] })
 		expect(pairingKey(p!)).toBe('PIC.B-SHR')

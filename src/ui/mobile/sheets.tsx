@@ -31,6 +31,7 @@ import { missionView, orderCount, orderGroups } from './facts'
 import { useBridgeUi } from './bridgeUi'
 import { useViewerLegal } from '../tile/legal'
 import { setShellChoice, useShell, type ShellChoice } from './shell'
+import { setTheme, THEMES, useTheme } from '../theme'
 import { CrewBoardView } from './stations'
 import { StandingOrders } from '../online/Orders'
 import { SeatLink } from '../online/SeatLink'
@@ -589,6 +590,7 @@ const LAYOUTS: { v: ShellChoice; label: string }[] = [
 export function MenuSheet() {
 	const close = useClose()
 	const { choice } = useShell()
+	const theme = useTheme()
 	const canUndo = useGameStore((s) => s.canUndo)
 	const undo = useGameStore((s) => s.undo)
 	const newGame = useGameStore((s) => s.newGame)
@@ -651,6 +653,25 @@ export function MenuSheet() {
 							onClick={() => setShellChoice(l.v)}
 						>
 							{l.label}
+						</button>
+					))}
+				</div>
+				<div className="pb-lbl">Colour theme</div>
+				<div className="pb-seg pb-seg-wide" role="group" aria-label="Theme">
+					{THEMES.map((t) => (
+						<button
+							key={t.v}
+							type="button"
+							aria-pressed={theme === t.v}
+							title={t.label}
+							onClick={() => setTheme(t.v)}
+						>
+							<span
+								className="pb-swatch"
+								style={{ background: t.frame }}
+								aria-hidden
+							/>
+							{t.short}
 						</button>
 					))}
 				</div>

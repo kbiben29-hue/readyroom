@@ -6,8 +6,8 @@
  * Rationale and the full component map: docs/ui-lcars.md.
  *
  * This file holds ONLY tokens and the bar geometry. Component dress lives in
- * ui.css, which imports this. Deliberately single-theme: LCARS is a dark
- * console, and every colour is painted explicitly so nothing is inherited.
+ * ui.css, which imports this. Always a dark console; the palette is themable
+ * (the [data-theme] blocks below) but every theme is dark.
  *
  * Fonts: Antonio (chrome, numerals) + Barlow (rules text), loaded in index.html.
  */
@@ -61,11 +61,110 @@
 	--sh-t-special: #b684ff;
 	--sh-t-dev: #8a8fa3;
 
+	/* ink: dark text and wells painted ON the chrome (topbar, pills) */
+	--ink: #1a1200;
+	--ink-soft: #5a3e00;
+	--ink-veil: #1a120080;
+
+	/* raised neutrals for the phone shells, tiles, guide and online screens */
+	--pb-raise: #1e2231;
+	--pb-hair-2: #3a4056;
+	--pb-faint: #6f6c80;
+	--pb-panel-2: #151823;
+	--raise: var(--pb-raise);
+	--hair-2: var(--pb-hair-2);
+
 	--bar-h: 34px; /* the one bar height, shared by every chrome bar */
 	--gap: 4px; /* LCARS blocks sit 4px apart. Always. */
 	--radius-pill: 18px;
 
 	color-scheme: dark;
+}
+
+/* Themes (src/ui/theme.ts). The token NAMES are roles from the TNG palette
+ * above — `--orange` is "the frame", `--ice` is "you" — and a theme only
+ * moves the hues. Two constraints every theme keeps: the seat pair (--ice /
+ * --salmon) stays distinct from the frame and from each other, and red
+ * (--mars) stays reserved for alerts, so no theme has a red frame. */
+
+/* LCARS blue — the cool console of the later films and Voyager's blue
+ * panels: cornflower frame, silver Market, aqua for you. */
+:root[data-theme='lcars-blue'] {
+	--ground: #04060f;
+	--panel: #0b1020;
+	--panel-2: #131a30;
+	--hair: #26304e;
+	--text: #e8eefb;
+	--dim: #8f9bbb;
+
+	--orange: #7fa6ea;
+	--sunflower: #c3cde6;
+	--periwinkle: #8a8cf2;
+	--lilac: #b99ade;
+	--ice: #5fe0d8;
+	--salmon: #e57d70;
+
+	--ink: #050b1f;
+	--ink-soft: #2b4272;
+	--ink-veil: #050b1f66;
+
+	--pb-raise: #182039;
+	--pb-hair-2: #33405f;
+	--pb-faint: #6b7795;
+	--pb-panel-2: #0f1529;
+}
+
+/* Voyager — lavender-blue frame with peach and lilac, the mixed palette of
+ * Voyager's bridge consoles. */
+:root[data-theme='voyager'] {
+	--ground: #07060f;
+	--panel: #100e1c;
+	--panel-2: #191629;
+	--hair: #2e2a44;
+	--text: #f1ecf8;
+	--dim: #9e97b5;
+
+	--orange: #9999ff;
+	--sunflower: #ffcc99;
+	--periwinkle: #6f8fd8;
+	--lilac: #cc99cc;
+	--ice: #7fe0f5;
+	--salmon: #e0766c;
+
+	--ink: #120a24;
+	--ink-soft: #463a78;
+	--ink-veil: #120a2466;
+
+	--pb-raise: #1f1b33;
+	--pb-hair-2: #3d3759;
+	--pb-faint: #736c8c;
+	--pb-panel-2: #15122a;
+}
+
+/* Enterprise-E — steel blue-grey with ochre, the First Contact console. */
+:root[data-theme='enterprise-e'] {
+	--ground: #05070a;
+	--panel: #0c1016;
+	--panel-2: #141a23;
+	--hair: #28313f;
+	--text: #e8edf3;
+	--dim: #8d98a8;
+
+	--orange: #7c9cc4;
+	--sunflower: #d6b07a;
+	--periwinkle: #7a8ee0;
+	--lilac: #a897c8;
+	--ice: #8fe3ff;
+	--salmon: #d4766a;
+
+	--ink: #060a10;
+	--ink-soft: #2c3b52;
+	--ink-veil: #060a1066;
+
+	--pb-raise: #1a212c;
+	--pb-hair-2: #343f4f;
+	--pb-faint: #6c7686;
+	--pb-panel-2: #10151d;
 }
 
 /* LCARS bar end-caps. With the console mounted across the head rather than

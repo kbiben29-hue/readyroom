@@ -22,6 +22,24 @@
 			rel="stylesheet"
 			href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;500;600;700&amp;family=Barlow:wght@400;500;600&amp;family=Barlow+Condensed:wght@400;500;600&amp;display=swap"
 		/>
+		<!-- the stored LCARS theme (src/ui/theme.ts), applied before first paint
+		     so a reload never flashes the default palette -->
+		<script>
+			try {
+				var t = localStorage.getItem('ready-room.theme')
+				var g = {
+					'lcars-blue': '#04060f',
+					voyager: '#07060f',
+					'enterprise-e': '#05070a',
+				}[t]
+				if (g) {
+					document.documentElement.dataset.theme = t
+					document
+						.querySelector('meta[name="theme-color"]')
+						.setAttribute('content', g)
+				}
+			} catch (e) {}
+		</script>
 		<!-- first-paint loader: the bundle can take seconds on a phone; React
 		     replaces #root's children on its first render -->
 		<style>
@@ -29,6 +47,18 @@
 			body {
 				margin: 0;
 				background: #05050a;
+			}
+			html[data-theme='lcars-blue'] body {
+				background: #04060f;
+			}
+			html[data-theme='voyager'] body {
+				background: #07060f;
+			}
+			html[data-theme='enterprise-e'] body {
+				background: #05070a;
+			}
+			html[data-theme] .boot-title {
+				color: #9db8ee;
 			}
 			.boot {
 				position: fixed;

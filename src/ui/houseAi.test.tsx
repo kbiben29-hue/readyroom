@@ -4,7 +4,7 @@
 // human's decision on undo, drops a stale in-flight decision, and runs a
 // spectator game (both seats bots) with Pause / Step / Resume.
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react'
 import type { SetupConfig } from '../engine/setup'
@@ -24,6 +24,10 @@ import { createInThreadRunner, type BotRunner } from './botRunner'
 import { setBotRunner, stopBots, undoPolicy, useGameStore } from './store'
 import { loadBrowserCatalog } from './browserCatalog'
 import { SHELL_KEY, resetShellChoiceCache } from './mobile/shell'
+
+// these render the full board and play real bot moves, so they outgrow the
+// 5 s default when the machine is busy
+vi.setConfig({ testTimeout: 20_000 })
 ;(
 	globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true

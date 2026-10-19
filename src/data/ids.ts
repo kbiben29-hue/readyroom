@@ -116,6 +116,9 @@ export const DECKS = [
 	'SHR',
 	'BUR',
 	'KOL',
+	// fan-made custom crew decks (not part of the published game; names, text
+	// and art come from a custom pack, src/data/custom/)
+	'MAL',
 ] as const
 export type DeckId = (typeof DECKS)[number]
 

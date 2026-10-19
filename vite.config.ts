@@ -22,6 +22,8 @@ function dropStcc(): Plugin {
 		},
 		async closeBundle() {
 			await rm(resolve(outDir, 'stcc'), { recursive: true, force: true })
+			// locally rendered art of the fan-made custom packs (public/custom/)
+			await rm(resolve(outDir, 'custom'), { recursive: true, force: true })
 		},
 	}
 }

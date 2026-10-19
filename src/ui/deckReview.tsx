@@ -25,7 +25,16 @@ import { cardName, deckLabel } from '../data/cardNames'
 
 /** Physical deck order for display: the six captain decks, then the shared
  *  COMMON pool. Decks not in this list appear afterwards alphabetically. */
-const DECK_ORDER = ['PIC', 'SIS', 'SEL', 'SHR', 'BUR', 'KOL', 'COMMON'] as const
+const DECK_ORDER = [
+	'PIC',
+	'SIS',
+	'SEL',
+	'SHR',
+	'BUR',
+	'KOL',
+	'MAL',
+	'COMMON',
+] as const
 
 /** Suit ("type") order within a deck — captain first, then the rest in a
  *  stable reading order; unknown suits sort alphabetically after the list. */

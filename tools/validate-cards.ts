@@ -48,9 +48,11 @@ const GROUPS: ReadonlyArray<{ file: string; label: string; expected: number }> =
 		{ file: 'crew/shr.json', label: 'SHR', expected: 24 },
 		{ file: 'crew/bur.json', label: 'BUR', expected: 26 },
 		{ file: 'crew/kol.json', label: 'KOL', expected: 24 },
+		// fan-made custom deck (src/data/custom/firefly.json)
+		{ file: 'crew/mal.json', label: 'MAL', expected: 25 },
 	]
 
-const OVERALL_EXPECTED = 300
+const OVERALL_EXPECTED = 325
 
 // ---------------------------------------------------------------------------
 // Helpers

@@ -1,0 +1,2052 @@
+[
+	{
+		"cardId": "1MAL01/25",
+		"id": "1MAL01-25",
+		"suit": "CAPTAIN",
+		"deck": "MAL",
+		"traits": ["HUMAN", "SHADY"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								},
+								"to": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								}
+							}
+						}
+					]
+				},
+				"trigger": {
+					"on": "INCIDENT_TAKEN"
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "COUNT",
+						"query": {
+							"zones": ["BEAMED_TO_SHIP"],
+							"seat": "SELF",
+							"filter": {
+								"suits": ["PERSON"]
+							}
+						}
+					}
+				}
+			}
+		],
+		"developmentCost": null,
+		"awayTeams": 5
+	},
+	{
+		"cardId": "1MAL02/25",
+		"id": "1MAL02-25",
+		"suit": "SHIP",
+		"deck": "MAL",
+		"traits": [],
+		"skills": ["SKILL_ANY"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Warp this ship",
+									"body": {
+										"k": "WARP",
+										"ship": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": ["SHIP"]
+											},
+											"thisCard": true
+										},
+										"to": {
+											"zones": ["LOCATIONS"],
+											"filter": {
+												"suits": ["LOCATION"]
+											}
+										}
+									}
+								},
+								{
+									"label": "Beam a card here",
+									"body": {
+										"k": "BEAM",
+										"count": 1,
+										"to": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Spend 1 DIL",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "WARP",
+									"ship": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": ["SHIP"]
+										},
+										"thisCard": true
+									},
+									"to": {
+										"zones": ["LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										}
+									}
+								}
+							}
+						},
+						{
+							"label": "Spend 1 LAT",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "LAT",
+									"amount": 1
+								},
+								"body": {
+									"k": "WARP",
+									"ship": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": ["SHIP"]
+										},
+										"thisCard": true
+									},
+									"to": {
+										"zones": ["LOCATIONS"],
+										"filter": {
+											"suits": ["LOCATION"]
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": ["PERSON"]
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL03/25",
+		"id": "1MAL03-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "TELEPATH", "AUGMENT", "ATTACK"],
+		"skills": ["SKILL_RESEARCH", "SKILL_MILITARY"],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2,
+							"bind": ["$1mal03.a", "$1mal03.b"]
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND",
+							"onlyBound": ["$1mal03.a", "$1mal03.b"]
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "REMOVE_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"seat": "ANY",
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"whose": "OPPONENT",
+								"bind": "$1mal03.removed"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$1mal03.removed"
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "MILITARY",
+											"amount": 1
+										},
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_TAKE_INCIDENT",
+					"count": 1
+				}
+			]
+		}
+	},
+	{
+		"cardId": "1MAL04/25",
+		"id": "1MAL04-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "DOCTOR"],
+		"skills": ["SKILL_RESEARCH"],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["INCIDENT"]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["INCIDENT"]
+							}
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_DISCARD",
+							"count": 1,
+							"filter": {
+								"not": {
+									"suits": ["INCIDENT"]
+								}
+							}
+						},
+						"body": {
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "RETURN_INCIDENT",
+									"target": {
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": ["INCIDENT"]
+										}
+									}
+								},
+								{
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							]
+						}
+					}
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		}
+	},
+	{
+		"cardId": "1MAL05/25",
+		"id": "1MAL05-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "SPY"],
+		"skills": ["SKILL_INFLUENCE"],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "RETURN_INCIDENT",
+							"target": {
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["INCIDENT"]
+								}
+							}
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "GLO",
+					"amount": 1
+				},
+				"trigger": {
+					"on": "INCIDENT_RETURNED"
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		}
+	},
+	{
+		"cardId": "1MAL06/25",
+		"id": "1MAL06-25",
+		"suit": "ALLY",
+		"deck": "MAL",
+		"traits": ["HUMAN", "COMMUNICATION"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 2
+				}
+			]
+		}
+	},
+	{
+		"cardId": "1MAL07/25",
+		"id": "1MAL07-25",
+		"suit": "LOCATION",
+		"deck": "MAL",
+		"traits": ["ANOMALY"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_TAKE_INCIDENT",
+							"count": 1
+						},
+						"body": {
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 2
+						}
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "COUNT",
+						"query": {
+							"zones": ["ALL_OWNED"],
+							"seat": "SELF",
+							"filter": {
+								"suits": ["INCIDENT"]
+							}
+						}
+					}
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_TAKE_INCIDENT",
+					"count": 1
+				}
+			]
+		}
+	},
+	{
+		"cardId": "1MAL08/25",
+		"id": "1MAL08-25",
+		"suit": "CARGO",
+		"deck": "MAL",
+		"traits": ["WEAPON", "ATTACK", "ONGOING"],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "REMOVE_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": ["LOCATIONS"],
+									"seat": "ANY",
+									"filter": {
+										"suits": ["LOCATION"]
+									},
+									"withAwayTeam": true
+								},
+								"whose": "OPPONENT",
+								"bind": "$1mal08.removed"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$1mal08.removed"
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		}
+	},
+	{
+		"cardId": "1MAL09/25",
+		"id": "1MAL09-25",
+		"suit": "CARGO",
+		"deck": "MAL",
+		"traits": ["WEAPON", "BUSINESS"],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 2
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Take an INCIDENT",
+									"body": {
+										"k": "TAKE",
+										"deck": "INCIDENT",
+										"count": 1
+									}
+								},
+								{
+									"label": "Discard a card",
+									"body": {
+										"k": "DISCARD",
+										"count": 1,
+										"from": "HAND"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		}
+	},
+	{
+		"cardId": "1MAL10/25",
+		"id": "1MAL10-25",
+		"suit": "LOCATION",
+		"deck": "MAL",
+		"traits": ["BUSINESS"],
+		"skills": ["SKILL_INFLUENCE"],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_TAKE_INCIDENT",
+							"count": 1
+						},
+						"body": {
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "GAIN_CARD",
+									"suits": ["CARGO"]
+								},
+								{
+									"k": "GAIN_RESOURCE",
+									"res": "LAT",
+									"amount": 1
+								}
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": ["CARGO"]
+						}
+					},
+					"body": {
+						"k": "GAIN_RESOURCE",
+						"res": "LAT",
+						"amount": 2
+					}
+				}
+			}
+		],
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		}
+	},
+	{
+		"cardId": "1MAL11/25",
+		"id": "1MAL11-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "AMBASSADOR", "COMMUNICATION"],
+		"skills": ["SKILL_INFLUENCE"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Gain 2 LAT",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "LAT",
+								"amount": 2
+							}
+						},
+						{
+							"label": "Gain 1 INFLUENCE",
+							"body": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "INFLUENCE",
+								"amount": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							},
+							{
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "INFLUENCE",
+								"amount": 1
+							}
+						]
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL12/25",
+		"id": "1MAL12-25",
+		"suit": "SHIP",
+		"deck": "MAL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": ["SHIP"]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"count": 1,
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"filter": {
+									"suits": ["PERSON"]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": ["SHIP"]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL13/25",
+		"id": "1MAL13-25",
+		"suit": "ALLY",
+		"deck": "MAL",
+		"traits": ["HUMAN", "BUSINESS", "SHADY"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": ["CARGO"]
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "LAT",
+								"amount": 2
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 2
+					},
+					"body": {
+						"k": "SCAN_N",
+						"n": 2,
+						"suits": ["CARGO"]
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL14/25",
+		"id": "1MAL14-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "SHADY", "SPY", "ATTACK"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "STEAL",
+							"res": "LAT",
+							"amount": 2
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND"
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "STEAL",
+						"res": "DIL",
+						"amount": 1
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL15/25",
+		"id": "1MAL15-25",
+		"suit": "INCIDENT",
+		"deck": "MAL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Discard a WEAPON",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_DISCARD",
+											"count": 1,
+											"filter": {
+												"traits": ["WEAPON"]
+											}
+										},
+										"body": {
+											"k": "RETURN_INCIDENT",
+											"target": "THIS"
+										}
+									}
+								},
+								{
+									"label": "Spend 2 DIL",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_RESOURCE",
+											"res": "DIL",
+											"amount": 2
+										},
+										"body": {
+											"k": "RETURN_INCIDENT",
+											"target": "THIS"
+										}
+									}
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								},
+								"to": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL16/25",
+		"id": "1MAL16-25",
+		"suit": "DIRECTIVE",
+		"deck": "MAL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							},
+							"bind": "loc",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "CHOICE",
+					"amount": {
+						"k": "SKILL_ICONS",
+						"specialty": "CHOSEN"
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL17/25",
+		"id": "1MAL17-25",
+		"suit": "DIRECTIVE",
+		"deck": "MAL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["PERSON"]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["ALLY"]
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL18/25",
+		"id": "1MAL18-25",
+		"suit": "DIRECTIVE",
+		"deck": "MAL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": ["CARGO"]
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "LAT",
+								"amount": 1
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 4
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": ["SHIP"]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL19/25",
+		"id": "1MAL19-25",
+		"suit": "DIRECTIVE",
+		"deck": "MAL",
+		"traits": ["ATTACK"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": ["LOCATIONS"],
+								"filter": {
+									"suits": ["LOCATION"]
+								},
+								"withShip": true
+							}
+						},
+						{
+							"k": "FORCE",
+							"body": {
+								"k": "DISCARD",
+								"count": 1,
+								"from": "HAND"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": ["WEAPON"]
+						}
+					},
+					"body": {
+						"k": "GAIN_RESOURCE",
+						"res": "GLO",
+						"amount": 1
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL20/25",
+		"id": "1MAL20-25",
+		"suit": "INCIDENT",
+		"deck": "MAL",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_PUT",
+								"count": 1,
+								"to": {
+									"k": "DRAW",
+									"seat": 0
+								}
+							},
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								},
+								"to": {
+									"zones": ["LOCATIONS"],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL21/25",
+		"id": "1MAL21-25",
+		"suit": "LOCATION",
+		"deck": "MAL",
+		"traits": ["BUSINESS"],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 1
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["LOCATION"]
+									}
+								},
+								"value": 3
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						}
+					]
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL22/25",
+		"id": "1MAL22-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "SECURITY"],
+		"skills": ["SKILL_MILITARY"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": ["LOCATIONS"],
+								"filter": {
+									"suits": ["LOCATION"]
+								},
+								"withShip": true
+							}
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": ["PERSON"]
+						}
+					},
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": ["LOCATIONS"],
+							"filter": {
+								"suits": ["LOCATION"]
+							}
+						}
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL23/25",
+		"id": "1MAL23-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "PILOT"],
+		"skills": ["SKILL_RESEARCH"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WARP",
+					"ship": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": ["SHIP"]
+						}
+					},
+					"to": {
+						"zones": ["LOCATIONS"],
+						"filter": {
+							"suits": ["LOCATION"]
+						}
+					},
+					"count": {
+						"k": "UP_TO",
+						"max": 2
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				},
+				"trigger": {
+					"on": "SHIP_WARPED"
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL24/25",
+		"id": "1MAL24-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "ENGINEER"],
+		"skills": ["SKILL_RESEARCH"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": ["SHIP"]
+									}
+								}
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							}
+						]
+					}
+				}
+			}
+		],
+		"developmentCost": null
+	},
+	{
+		"cardId": "1MAL25/25",
+		"id": "1MAL25-25",
+		"suit": "PERSON",
+		"deck": "MAL",
+		"traits": ["HUMAN", "SECURITY", "ATTACK"],
+		"skills": ["SKILL_MILITARY"],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "STEAL",
+							"res": "LAT",
+							"amount": 1
+						},
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": ["LOCATIONS"],
+								"filter": {
+									"suits": ["LOCATION"]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Discard a WEAPON",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": ["WEAPON"]
+									}
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										},
+										{
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "MILITARY",
+											"amount": 1
+										}
+									]
+								}
+							}
+						},
+						{
+							"label": "Discard a card with a MILITARY icon",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"exhibits": ["MILITARY"]
+									}
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										},
+										{
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "MILITARY",
+											"amount": 1
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"developmentCost": null
+	}
+]

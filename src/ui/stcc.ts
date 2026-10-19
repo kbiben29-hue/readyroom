@@ -6,11 +6,17 @@
 // it; the desktop app installs its own copy at startup with `loadStccFrom`
 // (src/desktop/). Tests start with
 // an empty index for determinism and inject one through `setStccIndex`.
+//
+// Custom packs (fan-made crew decks, src/data/custom/*.json) are our own data
+// and join the index in every build but tests. Their card art is rendered
+// locally (`npm run custom-cards`) into public/custom/, listed by the
+// gitignored vendor/custom/*.images.json, and never shipped by code-only builds.
 
 import { setCardNameIndex } from '../data/cardNames'
 import type { CardDef } from '../data/schema'
 import {
 	STCC_BOXES,
+	addCustomPacks,
 	buildStccIndex,
 	normalizeCardNumber,
 	type StccBox,
@@ -26,8 +32,40 @@ const modules: Record<string, unknown> = ['test', 'desktop', 'hosted'].includes(
 			import: 'default',
 		})
 
+const customPacks: unknown[] =
+	import.meta.env.MODE === 'test'
+		? []
+		: Object.values(
+				import.meta.glob('../data/custom/*.json', {
+					eager: true,
+					import: 'default',
+				}),
+			)
+
+const customImages: Record<string, string> = Object.assign(
+	{},
+	...Object.values(
+		['test', 'desktop', 'hosted'].includes(import.meta.env.MODE)
+			? {}
+			: import.meta.glob<Record<string, string>>(
+					'../../vendor/custom/*.images.json',
+					{ eager: true, import: 'default' },
+				),
+	),
+)
+
 /** Where scans and icons are served from: public/stcc/ for the web build. */
 let assetBase = `${import.meta.env.BASE_URL}stcc`
+
+/** The index plus every custom pack (custom cards never replace STCC ones). */
+function withCustomPacks(index: Map<string, StccCard>): Map<string, StccCard> {
+	return addCustomPacks(
+		index,
+		customPacks,
+		customImages,
+		`${import.meta.env.BASE_URL}custom`,
+	)
+}
 
 function fromModules(): Map<string, StccCard> {
 	const boxes: Partial<Record<StccBox, unknown>> = {}
@@ -35,7 +73,7 @@ function fromModules(): Map<string, StccCard> {
 		const key = `../../vendor/stcc/${box}.json`
 		if (key in modules) boxes[box] = modules[key]
 	}
-	return buildStccIndex(boxes, assetBase)
+	return withCustomPacks(buildStccIndex(boxes, assetBase))
 }
 
 let index: Map<string, StccCard> = fromModules()
@@ -61,7 +99,7 @@ export async function loadStccFrom(
 	const nextIcons = await readJson('icons.json')
 	assetBase = base
 	setStccIndex(
-		buildStccIndex(boxes, base),
+		withCustomPacks(buildStccIndex(boxes, base)),
 		(nextIcons as Record<string, string> | null) ?? {},
 	)
 }

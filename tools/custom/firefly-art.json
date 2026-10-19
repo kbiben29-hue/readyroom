@@ -1,0 +1,145 @@
+{
+	"$comment": "Card art for the Firefly custom pack (src/data/custom/firefly.json): one source per `art` key. `commons:` files are freely licensed (credit shown on the card); `enwiki:`, `tmdb:` and `file:` (saved under vendor/custom/firefly/) (TMDB image ids) are non-free stills from the series, used locally only. Nothing here is downloaded into git: `npm run custom-cards` fetches into vendor/custom/ and renders into public/custom/. Drop your own image as vendor/custom/firefly/override/<key>.<jpg|png|webp> to replace one.",
+	"universe": "the Firefly series",
+	"palette": "Firefly's space-western mood \u2014 dusty amber, rust and teal light instead of Star Trek purple",
+	"art": {
+		"mal": {
+			"source": "tmdb:4m0NUGqaa1T7ONnbCXk5wEI1qAu.jpg",
+			"position": "50% 30%",
+			"subject": "Captain Malcolm Reynolds, a rugged ex-soldier in his thirties: brown duster coat over a dark red shirt and suspenders, wry half-smile, the cargo bay of his ship softly blurred behind him"
+		},
+		"serenity": {
+			"source": "tmdb:jTPXD3MZo6Sb3bZzsDFmfNXXnCu.jpg",
+			"position": "45% 50%",
+			"subject": "the Firefly-class transport ship Serenity in flight: bulbous bird-like bow, long body, two rotating side engines glowing amber, a worn and patched hull, cruising past a dusty frontier planet"
+		},
+		"river": {
+			"source": "tmdb:y5xWDDZVdBo7VI8n6pLYSfE4EUB.jpg",
+			"position": "4% 30%",
+			"subject": "River Tam, a slight young woman with long dark wavy hair, eerie distant stare, face half in shadow, hints of psychic static crackling in the air around her"
+		},
+		"simon": {
+			"source": "tmdb:9qhmFY2C4xYeRQqdFRRQTtCJNSa.jpg",
+			"crop": [0.0, 0.0, 0.6, 1.0],
+			"position": "50% 25%",
+			"subject": "Dr. Simon Tam, a neat young surgeon in a waistcoat and pressed shirt, earnest and protective, a medical kit at hand in the ship's infirmary",
+			"notes": "Simon faces the viewer in a three-quarter view, looking at the viewer, his face large, well lit and in sharp focus (eyes at about 40 % from the top); calm and composed, no gun, no blood"
+		},
+		"book": {
+			"source": "tmdb:7lRxdy7Byr7Qro8GdkQB8snNCx8.jpg",
+			"crop": [0.86, 0.22, 1.0, 0.8],
+			"position": "50% 20%",
+			"subject": "Shepherd Book, an older preacher with a calm face and wild grey hair tied back, high-collared dark shepherd's clothes, a small bible in hand, a hint of a dangerous past"
+		},
+		"mr-universe": {
+			"source": "file:likeness/mr-universe.jpg",
+			"position": "50% 30%",
+			"subject": "Mr. Universe, an excitable tech genius surrounded by dozens of glowing screens and antennae in a cluttered broadcast lair on a lonely moon"
+		},
+		"miranda": {
+			"source": "commons:File:Venus-real color.jpg",
+			"position": "50% 50%",
+			"subject": "Miranda, a hazy, silent colony world: empty city towers under an amber-grey sky, an unsettling stillness, seen from orbit through a thin atmosphere"
+		},
+		"vera": {
+			"source": "commons:File:Winchester rifle.svg",
+			"position": "50% 46%",
+			"size": "92% auto",
+			"backdrop": "commons:File:Hubble ultra deep field.jpg",
+			"subject": "Vera, a huge customised long rifle (a full-bore auto-lock with a big scope) displayed like a prized possession, lying on a crate in a dim cargo bay"
+		},
+		"lassiter": {
+			"source": "commons:File:Flintlock pistol, 1790-1820 - Wisconsin Historical Museum - DSC03273.JPG",
+			"position": "5% 20%",
+			"size": "200% auto",
+			"subject": "the Lassiter, a priceless antique laser pistol with an ornate brass-and-wood grip, displayed on velvet in a rich collector's case"
+		},
+		"skyplex": {
+			"source": "commons:File:International Space Station after undocking of STS-132.jpg",
+			"search": "International Space Station after undocking STS-132",
+			"position": "50% 45%",
+			"subject": "Niska's skyplex: a huge, ugly orbital crime-lord fortress built from rusted industrial modules \u2014 a dark central tower with stacked ring platforms, girders and spikes, rows of red-lit windows, small freighters docked at its arms \u2014 hanging menacingly over a hazy amber planet",
+			"likeness": false
+		},
+		"inara": {
+			"source": "tmdb:82UCXtGZcNXFjrb2i8bHEq7hqnZ.jpg",
+			"position": "55% 30%",
+			"subject": "Inara Serra, an elegant Companion with long dark curls, silk robes in deep reds and gold, poised and composed in her lavishly draped shuttle"
+		},
+		"shuttle": {
+			"source": "commons:File:The SpaceX Crew Dragon Endeavour approaches the International Space Station (iss065e002708).jpg",
+			"position": "50% 35%",
+			"subject": "one of Serenity's short-range shuttles: a compact, rounded, slightly wedge-shaped craft in worn cream and rust plating, a wide curved front window glowing with warm lantern light and silk curtains, small thruster pods underneath, just undocking from the side of the larger Firefly-class transport whose battered hull fills the background",
+			"likeness": false
+		},
+		"badger": {
+			"source": "tmdb:hQ7bwnqGzfc8gaBEgjkcqBW3bYl.jpg",
+			"crop": [0.3, 0.0, 0.85, 1.0],
+			"position": "50% 25%",
+			"subject": "Badger, a small-time crime boss in a bowler hat and shabby suit, smug grin, sitting behind a desk in a dingy back-room office on a dock world",
+			"notes": "light Badger's face clearly and evenly with a warm key light from the front-left and a soft fill: no hard shadow from the bowler hat's brim over his eyes, eyes and smirk fully visible, face the brightest part of the image"
+		},
+		"saffron": {
+			"source": "file:likeness/saffron.jpg",
+			"position": "55% 30%",
+			"subject": "Saffron, a con artist with red hair, innocent smile and a hidden knife behind her back, framed in a doorway of a spaceship"
+		},
+		"reavers": {
+			"source": "enwiki:File:Fireflyreaver.jpg",
+			"position": "50% 40%",
+			"subject": "Reavers, savage scarred raiders whose ship has no engine core containment: a jagged, blood-red rust-streaked ship looming out of darkness"
+		},
+		"into-the-black": {
+			"source": "tmdb:y3pdr6czhN6aSRVwb9IbkoBQ7Qk.jpg",
+			"position": "50% 50%",
+			"subject": "a small battered transport ship flying through a glittering asteroid field toward a far nebula, vast deep space ahead"
+		},
+		"signing-on": {
+			"source": "tmdb:7NqgaEmy52UDAGabijbVZtq1Ukg.jpg",
+			"position": "50% 30%",
+			"subject": "a mismatched ship's crew of nine standing together in a cargo bay: captain in duster, soldier, pilot, mechanic in coveralls, mercenary, doctor, preacher, companion, and a girl"
+		},
+		"take-the-job": {
+			"source": "tmdb:gvkswUaa6u7C0Wx1hBoPsvtZAWB.jpg",
+			"position": "50% 30%",
+			"subject": "a burly mercenary in a wide hat herding cattle onto a ramp at a dusty frontier town, a spaceship parked behind"
+		},
+		"misbehave": {
+			"source": "tmdb:9IRGjStVuqXFQ2mCYKxhR8CwOPO.jpg",
+			"position": "45% 30%",
+			"subject": "a ship's captain and two crew drawing pistols and rifles in a smoky cargo bay, ready for a fight"
+		},
+		"alliance": {
+			"source": "commons:File:Flag of Alliance (Firefly).svg",
+			"position": "50% 40%",
+			"subject": "a vast gleaming grey Alliance cruiser with its searchlights sweeping, closing in from above on a tiny transport ship"
+		},
+		"persephone": {
+			"source": "commons:File:Two wharf boats at the St. Louis levee with a steamboat docked at the nearer one. - DPLA - 1d3d6e6c0b8b3a1e2b0b6d8e0b4c0b9f.jpg",
+			"search": "Two wharf boats at the St. Louis levee with a steamboat docked",
+			"position": "52% 34%",
+			"size": "250% auto",
+			"subject": "Eavesdown Docks on a dusty frontier world: crowded market stalls, cargo crates, ships landing, lanterns, a busy space-western port"
+		},
+		"zoe": {
+			"source": "tmdb:mJwbuvPRsLODdWhlEd80G9bGvjN.jpg",
+			"position": "62% 30%",
+			"subject": "Zoe Washburne, a tall, composed first mate and veteran soldier in a leather vest, holding a short lever-action carbine, steady and fearless"
+		},
+		"wash": {
+			"source": "tmdb:vomkvOhVGFziYfDhFu3hGOAmJsj.jpg",
+			"position": "45% 30%",
+			"subject": "Hoban 'Wash' Washburne, a cheerful pilot in a loud Hawaiian shirt with plastic dinosaur toys on the console, grinning at the controls"
+		},
+		"kaylee": {
+			"source": "tmdb:hZuahBXWZ9nvVt1Vy3E2kqWcjzx.jpg",
+			"position": "45% 30%",
+			"subject": "Kaylee Frye, a bubbly young ship's mechanic in grease-stained coveralls with a flower-print shirt, wrench in hand, beaming in the engine room"
+		},
+		"jayne": {
+			"source": "tmdb:hUzk96osCAtWLrx1McySsV56IF2.jpg",
+			"position": "45% 30%",
+			"subject": "Jayne Cobb, a hulking mercenary with a goatee in a grey t-shirt, cradling a huge revolver, scowling and dangerous"
+		}
+	}
+}

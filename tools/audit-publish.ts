@@ -42,6 +42,8 @@ const BINARY = /\.(png|jpe?g|gif|webp|bmp|tiff?|pdf|psd|icns|ico)$/i
 const LOCAL_ONLY = [
 	'vendor/stcc/',
 	'public/stcc/',
+	'vendor/custom/',
+	'public/custom/',
 	'cards/',
 	'tts/',
 	'tmp/',
@@ -108,7 +110,7 @@ async function nameMatcher(): Promise<RegExp | null> {
 	const add = (n: string) => {
 		if (n.length >= 3 && !GENERIC_NAMES.has(n)) names.add(n)
 	}
-	for (const card of (await loadStccNode()).values()) {
+	for (const card of (await loadStccNode({ custom: false })).values()) {
 		const n = normalise(card.name)
 		add(n)
 		// "Name (Deck)" — the bare name is a name on its own too

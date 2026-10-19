@@ -1,0 +1,686 @@
+{
+	"pack": "firefly",
+	"deck": "MAL",
+	"title": "Firefly (fan-made crew deck)",
+	"cards": [
+		{
+			"id": "firefly-malcolm-reynolds",
+			"name": "Malcolm Reynolds",
+			"suit": "Captain",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL01/25",
+			"glory": null,
+			"position_indicator": "Captain",
+			"species_traits": ["Human"],
+			"regular_traits": ["Shady"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Focus",
+					"specialty": "Military"
+				}
+			],
+			"text": {
+				"cost": "",
+				"hand": "",
+				"table": "Reaction: After taking an [[incident]], gain 1 [[dilithium]] and you may warp a [[ship]].",
+				"goal": "Endgame: Score [[1vp]] for each [[person]] beamed to your [[ship]].",
+				"reward": ""
+			},
+			"away_team": "5",
+			"flavor": "Lost a war. Kept a ship. Answers to nobody.",
+			"art": "mal"
+		},
+		{
+			"id": "firefly-serenity",
+			"name": "Serenity",
+			"suit": "Ship",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL02/25",
+			"glory": null,
+			"position_indicator": "Deployed",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Any"
+				}
+			],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Deploy this ship. Warp this ship OR beam a card here.",
+				"table": "Activation: Spend 1 [[dilithium]] or 1 [[latinum]] to warp this ship. Activation: Discard a card to beam a card here. Activation: Promote a [[person]] from your hand to Duty Officer.",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Patched, pursued, and still flying.",
+			"art": "serenity"
+		},
+		{
+			"id": "firefly-river-tam",
+			"name": "River Tam",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL03/25",
+			"glory": 3,
+			"position_indicator": "Development",
+			"species_traits": ["Human"],
+			"regular_traits": ["Telepath", "Augment"],
+			"other_traits": ["Attack"],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Research"
+				},
+				{
+					"type": "Skill",
+					"specialty": "Military"
+				}
+			],
+			"text": {
+				"cost": "[[dilithium]] x3, and take an [[incident]].",
+				"hand": "Play: Draw 2 cards and discard one of them. Gain 1 [[research]].",
+				"table": "Attack Activation: Discard a card to remove an opponent [[away team]] from a [[location]]. If you do, gain 1 [[military]] and 1 [[glory]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "She sees what's coming. So do the people hunting her.",
+			"art": "river"
+		},
+		{
+			"id": "firefly-simon-tam",
+			"name": "Simon Tam",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL04/25",
+			"glory": 2,
+			"position_indicator": "Development",
+			"species_traits": ["Human"],
+			"regular_traits": ["Doctor"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Research"
+				}
+			],
+			"text": {
+				"cost": "[[dilithium]] x2, [[latinum]] x1",
+				"hand": "[[action]] Play: Gain 1 [[research]]. You may return an [[incident]] from your hand or Discard pile.",
+				"table": "Activation: Discard a non-[[incident]] card to return an [[incident]] from your hand and gain 1 [[research]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Gave up a brilliant career to break his sister out.",
+			"art": "simon"
+		},
+		{
+			"id": "firefly-shepherd-book",
+			"name": "Shepherd Book",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL05/25",
+			"glory": 2,
+			"position_indicator": "Development",
+			"species_traits": ["Human"],
+			"regular_traits": ["Spy"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Influence"
+				}
+			],
+			"text": {
+				"cost": "[[dilithium]] x2",
+				"hand": "[[action]] Play: Return an [[incident]] from your hand or Discard pile. Gain 1 [[influence]].",
+				"table": "Reaction: After returning an [[incident]], gain 1 [[glory]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "A preacher who carries an Alliance ident card.",
+			"art": "book"
+		},
+		{
+			"id": "firefly-mr-universe",
+			"name": "Mr. Universe",
+			"suit": "Ally",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL06/25",
+			"glory": 3,
+			"position_indicator": "Development",
+			"species_traits": ["Human"],
+			"regular_traits": ["Communication"],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "[[dilithium]] x2, [[latinum]] x2",
+				"hand": "[[action]] Play: Gain 1 [[influence]] and 1 [[research]]. Draw a card. Log this card.",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Can't stop the signal.",
+			"art": "mr-universe"
+		},
+		{
+			"id": "firefly-miranda",
+			"name": "Miranda",
+			"suit": "Location",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL07/25",
+			"glory": null,
+			"position_indicator": "Development",
+			"species_traits": [],
+			"regular_traits": ["Anomaly"],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "[[dilithium]] x3, and take an [[incident]].",
+				"hand": "[[action]] Play: Take control of this location. Control: You may take an [[incident]] to gain 2 [[glory]].",
+				"table": "",
+				"goal": "Endgame: Score [[1vp]] for each [[incident]] you own.",
+				"reward": ""
+			},
+			"flavor": "The world that time forgot, and the Alliance wants forgotten.",
+			"art": "miranda"
+		},
+		{
+			"id": "firefly-vera",
+			"name": "Vera",
+			"suit": "Cargo",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL08/25",
+			"glory": null,
+			"position_indicator": "Development",
+			"species_traits": [],
+			"regular_traits": ["Weapon"],
+			"other_traits": ["Attack", "Ongoing"],
+			"icons": [
+				{
+					"type": "Focus",
+					"specialty": "Military"
+				}
+			],
+			"text": {
+				"cost": "[[dilithium]] x1, [[latinum]] x1",
+				"hand": "[[action]] Play: Deploy this card. Gain 1 [[military]].",
+				"table": "Attack Activation: Discard a card to remove an opponent [[away team]] from a [[location]] where you have an [[away team]]. If you do, gain 1 [[glory]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Every mercenary's favourite girl.",
+			"art": "vera"
+		},
+		{
+			"id": "firefly-lassiter",
+			"name": "Lassiter",
+			"suit": "Cargo",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL09/25",
+			"glory": 3,
+			"position_indicator": "Development",
+			"species_traits": [],
+			"regular_traits": ["Weapon", "Business"],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "[[dilithium]] x1, [[latinum]] x1",
+				"hand": "Play: Gain 2 [[latinum]]. Then either take an [[incident]] OR discard a card.",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Priceless, one of a kind, and somebody else's.",
+			"art": "lassiter"
+		},
+		{
+			"id": "firefly-niskas-skyplex",
+			"name": "Niska's Skyplex",
+			"suit": "Location",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL10/25",
+			"glory": 2,
+			"position_indicator": "Development",
+			"species_traits": [],
+			"regular_traits": ["Business"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Influence"
+				}
+			],
+			"text": {
+				"cost": "[[dilithium]] x2, [[latinum]] x1",
+				"hand": "[[action]] Play: Take control of this location. Control: You may take an [[incident]] to gain a [[cargo]] and 1 [[latinum]].",
+				"table": "Activation: Discard a [[cargo]] to gain 2 [[latinum]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Never take a job from a man who keeps a room like that.",
+			"art": "skyplex"
+		},
+		{
+			"id": "firefly-inara-serra",
+			"name": "Inara Serra",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL11/25",
+			"glory": null,
+			"position_indicator": "Reserve",
+			"species_traits": ["Human"],
+			"regular_traits": ["Ambassador", "Communication"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Influence"
+				}
+			],
+			"text": {
+				"cost": "",
+				"hand": "Play: Gain 2 [[latinum]] OR gain 1 [[influence]].",
+				"table": "Activation: Spend 2 [[latinum]] to gain 1 [[glory]] and 1 [[influence]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Companions choose their clients.",
+			"art": "inara"
+		},
+		{
+			"id": "firefly-inaras-shuttle",
+			"name": "Inara's Shuttle",
+			"suit": "Ship",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL12/25",
+			"glory": null,
+			"position_indicator": "Reserve",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Deploy this ship. You may beam a [[person]] here.",
+				"table": "Activation: Spend 1 [[dilithium]] to warp this ship. Activation: Discard a card to beam a card here.",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Rented, not owned. Mind the curtains.",
+			"art": "shuttle"
+		},
+		{
+			"id": "firefly-badger",
+			"name": "Badger",
+			"suit": "Ally",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL13/25",
+			"glory": null,
+			"position_indicator": "Reserve",
+			"species_traits": ["Human"],
+			"regular_traits": ["Business", "Shady"],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Take an [[incident]] to gain a [[cargo]] and 2 [[latinum]]. [[action]] Play: Spend 2 [[latinum]] to scan 2 of [[cargo]].",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Every job he offers comes with a catch.",
+			"art": "badger"
+		},
+		{
+			"id": "firefly-saffron",
+			"name": "Saffron",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL14/25",
+			"glory": null,
+			"position_indicator": "Reserve",
+			"species_traits": ["Human"],
+			"regular_traits": ["Shady", "Spy"],
+			"other_traits": ["Attack"],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Attack Play: Steal 2 [[latinum]], then discard a card.",
+				"table": "Activation: Discard a card to steal 1 [[dilithium]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Wife, thief, and never the same name twice.",
+			"art": "saffron"
+		},
+		{
+			"id": "firefly-reavers",
+			"name": "Reavers",
+			"suit": "Incident",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL15/25",
+			"glory": -2,
+			"position_indicator": "Reserve",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Discard a [[weapon]] OR spend 2 [[dilithium]] to return this card. You may warp a [[ship]].",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Ships without core containment. Crews without mercy.",
+			"art": "reavers"
+		},
+		{
+			"id": "firefly-into-the-black",
+			"name": "Into the Black",
+			"suit": "Directive",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL16/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Gain 1 [[dilithium]], and 2 [[dilithium]] for each controlled [[location]] you have in play. [[action]] Play: Gain on one Specialty track ([[research]]/[[influence]]/[[military]]) for each matching Skill icon you have in play (excluding beamed cards).",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Wherever there's black to fly through.",
+			"art": "into-the-black"
+		},
+		{
+			"id": "firefly-signing-on",
+			"name": "Signing On",
+			"suit": "Directive",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL17/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Put a card on the top of your deck to gain a [[person]]. [[action]] Play: Take an [[incident]] to gain an [[ally]].",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Room and board, and a share of the take.",
+			"art": "signing-on"
+		},
+		{
+			"id": "firefly-take-the-job",
+			"name": "Take the Job",
+			"suit": "Directive",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL18/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Take an [[incident]] to gain a [[cargo]] and 1 [[latinum]]. [[action]] Play: Spend 4 [[dilithium]] to gain a [[ship]]. Play: Gain 1 [[latinum]].",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Half up front. The rest if nobody shoots us.",
+			"art": "take-the-job"
+		},
+		{
+			"id": "firefly-aim-to-misbehave",
+			"name": "Aim to Misbehave",
+			"suit": "Directive",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL19/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": ["Attack"],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Attack Play: Send an [[away team]] to a [[location]] where you have a [[ship]]. Your opponent discards a card. Play: Discard a [[weapon]] to gain 1 [[glory]].",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Sometimes the job is a fight.",
+			"art": "misbehave"
+		},
+		{
+			"id": "firefly-alliance-patrol",
+			"name": "Alliance Patrol",
+			"suit": "Incident",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL20/25",
+			"glory": -2,
+			"position_indicator": "Available",
+			"species_traits": [],
+			"regular_traits": [],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Put a card on the top of your deck to return this card. You may warp a [[ship]].",
+				"table": "",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Cruiser on the scope, closing fast.",
+			"art": "alliance"
+		},
+		{
+			"id": "firefly-persephone",
+			"name": "Persephone",
+			"suit": "Location",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL21/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": [],
+			"regular_traits": ["Business"],
+			"other_traits": [],
+			"icons": [],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Take control of this location. Control: Gain 1 [[latinum]] and 1 [[influence]].",
+				"table": "Activation: If you have an [[away team]] here, draw a card. If you have 3+ total [[away team]] on 1 or more controlled [[location]], draw a card.",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Eavesdown Docks: work, if you don't ask questions.",
+			"art": "persephone"
+		},
+		{
+			"id": "firefly-zoe-washburne",
+			"name": "Zoe Washburne",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL22/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": ["Human"],
+			"regular_traits": ["Security"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Military"
+				}
+			],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Send an [[away team]] to a [[location]] where you have a [[ship]]. Gain 1 [[military]].",
+				"table": "Activation: Discard a [[person]] to send an [[away team]] to a [[location]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Fought beside him in Serenity Valley. Still does.",
+			"art": "zoe"
+		},
+		{
+			"id": "firefly-hoban-washburne",
+			"name": "Hoban Washburne",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL23/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": ["Human"],
+			"regular_traits": ["Pilot"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Research"
+				}
+			],
+			"text": {
+				"cost": "",
+				"hand": "Play: Warp up to 2 of your [[ship]].",
+				"table": "Reaction: After one of your [[ship]] warps, gain 1 [[dilithium]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Best pilot in the black, and he knows it.",
+			"art": "wash"
+		},
+		{
+			"id": "firefly-kaylee-frye",
+			"name": "Kaylee Frye",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL24/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": ["Human"],
+			"regular_traits": ["Engineer"],
+			"other_traits": [],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Research"
+				}
+			],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Play: Gain 1 [[research]]. You may refresh a [[ship]].",
+				"table": "Activation: Spend 1 [[latinum]] to refresh a [[ship]] and draw a card.",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Shiny!",
+			"art": "kaylee"
+		},
+		{
+			"id": "firefly-jayne-cobb",
+			"name": "Jayne Cobb",
+			"suit": "Person",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL25/25",
+			"glory": null,
+			"position_indicator": "Available",
+			"species_traits": ["Human"],
+			"regular_traits": ["Security"],
+			"other_traits": ["Attack"],
+			"icons": [
+				{
+					"type": "Skill",
+					"specialty": "Military"
+				}
+			],
+			"text": {
+				"cost": "",
+				"hand": "[[action]] Attack Play: Steal 1 [[latinum]]. Send an [[away team]] to a [[location]].",
+				"table": "Activation: Discard a card with at least one of [[weapon]]/[[mil-skill]]/[[mil-focus]] to gain 1 [[glory]] and 1 [[military]].",
+				"goal": "",
+				"reward": ""
+			},
+			"flavor": "Loyal to the highest bidder.",
+			"art": "jayne"
+		},
+		{
+			"id": "firefly-mission-1",
+			"name": "Crew and Cargo",
+			"suit": "Mission",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL/M1",
+			"vp": 4,
+			"text": {
+				"goal": "Goal: 3+ [[person]] beamed to the same [[ship]], and 2+ [[cargo]] in play.",
+				"reward": "Reward: Gain 2 [[latinum]] and 2 [[dilithium]]. Draw 2 cards. You may junk a card from the Market."
+			}
+		},
+		{
+			"id": "firefly-mission-2",
+			"name": "Can't Stop the Signal",
+			"suit": "Mission",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL/M2",
+			"vp": 3,
+			"text": {
+				"goal": "Goal: A [[telepath]], a [[doctor]] and a [[pilot]] beamed to the same [[ship]].",
+				"reward": "Reward: Gain 2 [[glory]] and 2 [[influence]]."
+			}
+		},
+		{
+			"id": "firefly-mission-3",
+			"name": "Big Damn Heroes",
+			"suit": "Mission",
+			"source": "Reynolds",
+			"game_box": "Firefly (fan-made)",
+			"card_number": "1MAL/M3",
+			"vp": 3,
+			"text": {
+				"goal": "Goal: 2+ deployed [[ship]] and [[mil6]].",
+				"reward": "Reward: Gain 1 [[glory]]. Send 2 [[away team]] to a [[location]]. Gain 1 [[action]]."
+			}
+		}
+	]
+}

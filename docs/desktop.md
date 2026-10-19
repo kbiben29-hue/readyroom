@@ -26,7 +26,9 @@ skip it and play with text cards.
 
 ## Online play
 
-Desktop builds point online play and invite links at the hosted game, which is set at build time
+The hosted game serves no card data (docs/deploy.md): browsers see text cards, while desktop
+players see the full cards from their own download. Desktop builds point online play and invite
+links at the hosted game, which is set at build time
 with `VITE_PUBLIC_URL`. In CI it comes from the repository variable `READY_ROOM_PUBLIC_URL`
 (Settings → Secrets and variables → Actions → Variables), for example
 `https://ready-room-game.fly.dev`. Invite links then open in any browser. Desktop players join a

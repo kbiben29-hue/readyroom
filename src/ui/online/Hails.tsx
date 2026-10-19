@@ -16,7 +16,7 @@ import { parseInvite } from '../../session/online'
 import { shortUpdatedAt } from '../format'
 import type { StoredSeat } from './seats'
 import './online.css'
-import { withCardNames } from '../../data/cardNames'
+import { deckLabel, withCardNames } from '../../data/cardNames'
 
 /** How often the inbox refreshes while it is open (it also refreshes when the
  *  tab becomes visible again). */
@@ -267,7 +267,7 @@ function GameRow({
 				<span className="ol-mono ol-mono-you">{mono(me.deck)}</span>
 				<span className="ol-mono ol-mono-them">{mono(them.deck)}</span>
 				<span className="ol-game-name">
-					{me.deckName} vs {them.deckName}
+					{deckLabel(me.deck)} vs {deckLabel(them.deck)}
 				</span>
 				{tone === 'owed' && s.pendingOnYou !== null ? (
 					<span className="ol-deadline">
@@ -326,8 +326,8 @@ function OpenRowView({
 				<span className="ol-mono">?</span>
 				<span className="ol-game-name">
 					{mine
-						? `${host.deckName} vs an open chair`
-						: `${host.name ?? 'A captain'} hails you as ${host.deckName}`}
+						? `${deckLabel(host.deck)} vs an open chair`
+						: `${host.name ?? 'A captain'} hails you as ${deckLabel(host.deck)}`}
 				</span>
 				<span className="ol-age">{shortUpdatedAt(lobby.createdAt)}</span>
 			</span>

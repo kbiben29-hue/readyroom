@@ -7,10 +7,11 @@ machine, 1 GB volume).
 ## What gets deployed
 
 - **`Dockerfile`** builds the app and runs `server/main.ts --public --static dist` on port 8080.
-- **Card data and scans** are not in this repo. The build runs `tools/fetch-stcc.ts`, which pulls
-  them from the STCC repo at the commit pinned in `tools/stcc-source.json` (a cached layer — it
-  downloads again only when the pin changes). `.dockerignore` keeps any local copy out, so every
-  deploy uses exactly the pinned data.
+- **No card data.** The image ships code only: it never fetches the STCC database,
+  `.dockerignore` keeps any local copy out, and `vite build --mode hosted` drops it from the
+  bundle. In a browser the hosted app shows text cards. The desktop apps (docs/desktop.md)
+  download their own copy of the card database and use this server for online play, so they show
+  full cards there too. The server's own texts name cards by id.
 - **`fly.example.toml`** (copied to your own, gitignored `fly.toml`) is one machine in Frankfurt with a volume `games` mounted at `/data`. The machine
   never auto-stops (deadline timers and the live stream need it up).
 - **`--public`** switches off the unauthenticated `/sessions` debug store and the debug page, and
@@ -47,7 +48,7 @@ the image builds on Fly's servers.
    fly volumes create games --region fra --size 1 --yes
    ```
 
-4. **Deploy.** The first build downloads about 340 MB of card scans and takes a few minutes.
+4. **Deploy.** The first build takes a few minutes.
 
    ```bash
    fly deploy --ha=false --remote-only
@@ -63,9 +64,9 @@ the image builds on Fly's servers.
 
 - **Update:** `fly deploy --ha=false --remote-only` after pulling or committing changes.
 - **Newer card data:** `npm run fetch-cards -- --latest` (bumps the pin), commit
-  `tools/stcc-source.json`, deploy again.
+  `tools/stcc-source.json`, and cut a new desktop release; the server doesn't need it.
 - **Logs:** `fly logs`. **Shell:** `fly ssh console` (games are JSON files in `/data/games`).
 - **Backups:** Fly snapshots the volume daily; `fly volumes snapshots list <volume-id>`.
-- **Try hosted mode locally:** `npx vite build`, then
+- **Try hosted mode locally:** `npx vite build --mode hosted`, then
   `npx tsx server/main.ts --public --port 8080 --static dist` (the `hosted` entry in
   `.claude/launch.json`).

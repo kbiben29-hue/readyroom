@@ -6,6 +6,7 @@ import { useState } from 'react'
 import type { DeckId } from '../../data/ids'
 import type { GameLobby, JoinGameRequest } from '../../session/online'
 import { SeatFields } from './NewOnlineGame'
+import { deckLabel } from '../../data/cardNames'
 import './online.css'
 
 export interface AnswerHailProps {
@@ -56,7 +57,7 @@ export function AnswerHail(props: AnswerHailProps) {
 				<h1 className="ol-title">Incoming hail</h1>
 				<p className="ol-sub">
 					<b className="ol-them">{host.name ?? 'A captain'}</b> hails you as{' '}
-					<b className="ol-them">{host.deckName}</b> (
+					<b className="ol-them">{deckLabel(host.deck)}</b> (
 					{host.boardSide === 'BASIC' ? 'basic' : 'advanced'} board)
 					{hostLive && <span className="ol-presence"> on the bridge</span>}.
 					Pick your captain — you take the first turn.

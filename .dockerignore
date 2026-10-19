@@ -7,6 +7,8 @@ dist
 server/data
 vendor/stcc
 public/stcc
+vendor/custom
+public/custom
 cards
 tts
 tmp

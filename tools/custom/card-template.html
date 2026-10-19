@@ -1,0 +1,751 @@
+<!doctype html>
+<!--
+  Card face template for fan-made custom crew decks (tools/custom/render-cards.ts).
+  Our own layout: it follows the information order of a printed card (name, suit,
+  skills, traits, play / table / goal text, development cost, footer) but none of
+  its artwork. Icons are the original game icons from the fetched STCC data.
+
+  The renderer injects `window.CARD` (one card) before the script runs; opened
+  without it, the page draws the empty template.
+-->
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,700;1,500&family=Roboto+Slab:wght@800&display=block"
+		/>
+		<style>
+			:root {
+				--w: 585px;
+				--h: 818px;
+				--frame: #17120e;
+				--ink: #1f1710;
+				--parchment: #efe5cf;
+				--steel: #34505f;
+				--steel-ink: #eef3f4;
+				--slate: #26221f;
+				--brass: #c99a4b;
+				--suit: #c99a4b;
+				--title: 'Rockwell', 'Roboto Slab', Georgia, serif;
+				--cond: 'DIN Condensed', 'Barlow Condensed', 'Arial Narrow', sans-serif;
+				--text:
+					'Avenir Next Condensed', 'Barlow Condensed', 'Arial Narrow',
+					sans-serif;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			html,
+			body {
+				margin: 0;
+				background: transparent;
+			}
+			.card {
+				position: relative;
+				width: var(--w);
+				height: var(--h);
+				overflow: hidden;
+				border-radius: 24px;
+				background: var(--frame);
+				font-family: var(--text);
+				color: var(--ink);
+			}
+
+			/* ---- art ---------------------------------------------------- */
+			.art {
+				position: absolute;
+				inset: 0 0 auto 0;
+				height: 590px;
+				background-color: #2a2420;
+				background-size: cover;
+				background-position: 50% 30%;
+			}
+			.art.empty {
+				background-image:
+					repeating-linear-gradient(
+						45deg,
+						rgba(255, 255, 255, 0.04) 0 14px,
+						transparent 14px 28px
+					),
+					radial-gradient(circle at 50% 40%, #3b332c, #1d1814);
+			}
+			.art.empty::after {
+				content: 'ART';
+				position: absolute;
+				left: 50%;
+				top: 42%;
+				transform: translate(-50%, -50%);
+				font: 700 64px var(--cond);
+				letter-spacing: 12px;
+				color: rgba(255, 255, 255, 0.12);
+			}
+			.art::before {
+				/* a warm grade so photos from different sources sit together */
+				content: '';
+				position: absolute;
+				inset: 0;
+				background:
+					linear-gradient(
+						180deg,
+						rgba(23, 18, 14, 0.55) 0%,
+						rgba(23, 18, 14, 0) 22%,
+						rgba(23, 18, 14, 0) 62%,
+						var(--frame) 100%
+					),
+					linear-gradient(
+						0deg,
+						rgba(120, 72, 28, 0.18),
+						rgba(120, 72, 28, 0.18)
+					);
+				mix-blend-mode: normal;
+			}
+
+			/* ---- header plates ------------------------------------------ */
+			.plates {
+				position: absolute;
+				top: 22px;
+				left: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+				align-items: flex-start;
+				max-width: 380px;
+			}
+			.plate {
+				background: linear-gradient(
+					180deg,
+					color-mix(in srgb, var(--suit) 82%, white),
+					var(--suit)
+				);
+				border-radius: 0 28px 28px 0;
+				padding: 6px 22px 4px 18px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+				color: var(--ink);
+			}
+			.name {
+				font: 800 29px/1.05 var(--title);
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				white-space: nowrap;
+			}
+			.name.empty,
+			.suitline.empty {
+				min-width: 230px;
+				color: rgba(0, 0, 0, 0.25);
+			}
+			.suitline {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font: 700 25px/1 var(--cond);
+				text-transform: uppercase;
+				padding-top: 7px;
+			}
+			.suitline img {
+				height: 21px;
+				filter: brightness(0.15);
+			}
+			.icons {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+				margin-top: 6px;
+			}
+			.icons img.skill {
+				width: 78px;
+				display: block;
+				filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+			}
+			.icons .focus {
+				width: 52px;
+				height: 52px;
+				margin: 6px 0 0 12px;
+				border-radius: 50%;
+				background: #f3ead7;
+				display: grid;
+				place-items: center;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+			}
+			.icons .focus img {
+				width: 38px;
+			}
+
+			/* ---- traits (top right) ------------------------------------- */
+			.traits {
+				position: absolute;
+				top: 18px;
+				right: 14px;
+				display: flex;
+				gap: 4px;
+			}
+			.trait {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: 58px;
+			}
+			.trait img {
+				width: 58px;
+				height: 58px;
+				position: relative;
+				z-index: 1;
+				filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+			}
+			.trait span {
+				margin-top: -10px;
+				padding: 16px 0 10px;
+				width: 38px;
+				border-radius: 0 0 19px 19px;
+				writing-mode: vertical-rl;
+				font: 700 24px/38px var(--cond);
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				text-align: left;
+				color: #fff;
+				background: #3f8f99;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+			}
+			.trait.species span {
+				background: #d8892f;
+			}
+			.trait.gameplay span {
+				background: #b93a32;
+			}
+
+			/* empty-template placeholders */
+			.slot-skill {
+				width: 78px;
+				height: 52px;
+				border-radius: 0 26px 26px 0;
+				border: 2px dashed rgba(255, 255, 255, 0.25);
+				border-left: 0;
+			}
+			.slot-focus {
+				width: 52px;
+				height: 52px;
+				margin: 8px 0 0 12px;
+				border-radius: 50%;
+				border: 2px dashed rgba(255, 255, 255, 0.25);
+			}
+			.trait.slot i {
+				display: block;
+				width: 58px;
+				height: 58px;
+				border-radius: 50%;
+				border: 2px dashed rgba(255, 255, 255, 0.3);
+				background: rgba(0, 0, 0, 0.25);
+				position: relative;
+				z-index: 1;
+			}
+			.trait.slot span {
+				background: rgba(255, 255, 255, 0.12);
+				color: rgba(255, 255, 255, 0.35);
+			}
+			.card::after {
+				/* a thin brass keyline inside the edge */
+				content: '';
+				position: absolute;
+				inset: 5px;
+				border-radius: 20px;
+				border: 1.5px solid rgba(201, 154, 75, 0.35);
+				pointer-events: none;
+			}
+
+			/* ---- flavor -------------------------------------------------- */
+			.flavor {
+				position: absolute;
+				left: 24px;
+				right: 24px;
+				font: italic 500 17px/1.2 var(--text);
+				color: #f4ead6;
+				text-shadow:
+					0 1px 3px #000,
+					0 0 8px #000;
+				text-align: right;
+			}
+
+			/* ---- rules text ---------------------------------------------- */
+			.panel {
+				position: absolute;
+				left: 12px;
+				right: 12px;
+				bottom: 54px;
+				display: flex;
+				flex-direction: column;
+				gap: 0;
+				font-size: 22px;
+				line-height: 1.2;
+			}
+			.box {
+				padding: 9px 14px 9px;
+				border-radius: 14px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+			}
+			.box + .box {
+				margin-top: -6px;
+				border-top-left-radius: 0;
+				border-top-right-radius: 0;
+			}
+			.box.hand {
+				background: linear-gradient(180deg, #f6eedc, var(--parchment));
+			}
+			.box.table {
+				background: linear-gradient(180deg, #3e5d6d, var(--steel));
+				color: var(--steel-ink);
+			}
+			.box.goal {
+				background: linear-gradient(180deg, #4a3b2c, #382c21);
+				color: #f3e6cc;
+			}
+			.box.cost {
+				background: var(--slate);
+				color: #f1e9db;
+				font-size: 0.95em;
+			}
+			.box.empty {
+				min-height: 74px;
+			}
+			.box.cost.empty {
+				min-height: 42px;
+			}
+			.op + .op {
+				margin-top: 5px;
+			}
+			.head {
+				font: 700 1.12em/1 var(--cond);
+				text-transform: uppercase;
+				letter-spacing: 0.3px;
+				margin-right: 4px;
+				vertical-align: -1px;
+			}
+			.box.hand .head {
+				color: #3a2817;
+			}
+			.box.table .head {
+				color: #bfe3ee;
+			}
+			.box.goal .head,
+			.box.cost .head {
+				color: var(--brass);
+			}
+			.ic {
+				height: 1.15em;
+				vertical-align: -0.24em;
+				margin: 0 1px;
+			}
+			.ic.action {
+				height: 1.25em;
+			}
+			.box.table .ic.res,
+			.box.goal .ic.res,
+			.box.cost .ic.res {
+				filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.7));
+			}
+			.chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 3px;
+				padding: 0 7px 0 3px;
+				border-radius: 999px;
+				font: 700 0.86em/1.35 var(--cond);
+				text-transform: uppercase;
+				vertical-align: 0.05em;
+				color: #fff;
+				background: #3f8f99;
+				white-space: nowrap;
+			}
+			.chip img {
+				height: 1.05em;
+			}
+			.chip.suit img {
+				filter: brightness(10);
+			}
+			.chip.species {
+				background: #d8892f;
+			}
+			.chip.gameplay {
+				background: #b93a32;
+			}
+			.chip.req {
+				background: #5e5146;
+			}
+			.chip.vpc {
+				background: var(--brass);
+				color: var(--ink);
+				padding: 0 7px;
+			}
+			b.or {
+				font-style: italic;
+				font-weight: 800;
+			}
+
+			/* ---- footer -------------------------------------------------- */
+			.footer {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				height: 48px;
+				display: flex;
+				align-items: center;
+				padding: 0 14px;
+				background:
+					repeating-linear-gradient(
+						90deg,
+						rgba(255, 255, 255, 0.035) 0 2px,
+						transparent 2px 9px
+					),
+					linear-gradient(180deg, #2b231c, #120e0b);
+				color: #e8dcc6;
+			}
+			.number {
+				font: 700 17px var(--cond);
+				letter-spacing: 0.5px;
+				padding: 4px 10px 2px;
+				border-radius: 999px;
+				background: rgba(0, 0, 0, 0.45);
+				min-width: 92px;
+				text-align: center;
+			}
+			.position {
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+				font: 700 21px var(--cond);
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				padding: 5px 26px 2px;
+				border-radius: 999px;
+				background: #0c0907;
+				border: 2px solid #5b4632;
+				min-width: 170px;
+				text-align: center;
+			}
+			.vp {
+				margin-left: auto;
+				width: 46px;
+				height: 46px;
+				margin-bottom: 26px;
+				display: grid;
+				place-items: center;
+				font: 800 26px var(--title);
+				color: var(--ink);
+				background: radial-gradient(
+					circle at 35% 30%,
+					#f5d58c,
+					var(--brass) 60%,
+					#8a6328
+				);
+				clip-path: polygon(50% 0, 100% 22%, 100% 70%, 50% 100%, 0 70%, 0 22%);
+			}
+			.vp.neg {
+				background: radial-gradient(
+					circle at 35% 30%,
+					#f08a7e,
+					#b93a32 60%,
+					#6e1f1a
+				);
+				color: #fff;
+				font-size: 22px;
+			}
+			.away {
+				margin-left: auto;
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				font: 700 22px var(--cond);
+			}
+			.away img {
+				height: 30px;
+				filter: brightness(10);
+			}
+			.credit {
+				position: absolute;
+				right: 3px;
+				bottom: 64px;
+				writing-mode: vertical-rl;
+				transform: rotate(180deg);
+				font: 500 9.5px var(--text);
+				color: rgba(255, 255, 255, 0.55);
+				max-height: 360px;
+				overflow: hidden;
+				white-space: nowrap;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="card" id="card"></div>
+		<script>
+			const C = window.CARD ?? null
+			const ICONS = window.ICON_BASE ?? '../../public/stcc/icons'
+			const SUIT_COLORS = {
+				person: '#d6a54e',
+				ship: '#9aa5ad',
+				cargo: '#5fae9f',
+				ally: '#86b35f',
+				location: '#6a94c4',
+				directive: '#d0753f',
+				incident: '#d24d43',
+				captain: '#b994d6',
+				mission: '#d8c27a',
+			}
+			const SUITS = Object.keys(SUIT_COLORS)
+			const SPEC = {
+				res: 'research',
+				inf: 'influence',
+				mil: 'military',
+				wild: 'any',
+			}
+			const RES = {
+				dilithium: 'token/dilithium.svg',
+				latinum: 'token/latinum.svg',
+				glory: 'token/glory-token.svg',
+			}
+			const SPECIES = new Set([
+				'human',
+				'alien',
+				'andorian',
+				'vulcan',
+				'klingon',
+				'romulan',
+			])
+			const GAMEPLAY = new Set(['attack', 'ongoing', 'wildcard', 'surprise'])
+
+			const el = (tag, cls, html) => {
+				const e = document.createElement(tag)
+				if (cls) e.className = cls
+				if (html !== undefined) e.innerHTML = html
+				return e
+			}
+			const img = (src, cls) =>
+				`<img class="${cls ?? 'ic'}" src="${ICONS}/${src}">`
+			const esc = (s) =>
+				s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+			/** One `[[token]]` → inline HTML (the same vocabulary as the STCC text). */
+			function token(name) {
+				name = name.trim().toLowerCase()
+				if (RES[name]) return img(RES[name], 'ic res')
+				if (name === 'action') return img('token/action.svg', 'ic action')
+				if (name === 'away team')
+					return `<span class="chip req">${img('token/away-team.svg', '')}AWAY TEAM</span>`
+				if (['research', 'influence', 'military'].includes(name))
+					return img(`skill/${name}.png`, 'ic')
+				if (SUITS.includes(name))
+					return `<span class="chip suit" style="background:${SUIT_COLORS[name]}">${img(`suit/${name}.svg`, '')}${name}</span>`
+				let m = /^(\d+)vp$/.exec(name)
+				if (m) return `<span class="chip vpc">${m[1]} VP</span>`
+				m = /^(res|inf|mil|wild)-(skill|focus)$/.exec(name)
+				if (m)
+					return m[2] === 'skill'
+						? img(`skill/${SPEC[m[1]]}.png`, 'ic')
+						: img(`focus/${SPEC[m[1]]}.svg`, 'ic')
+				m = /^(res|inf|mil)(\d+)$/.exec(name)
+				if (m)
+					return `<span class="chip req">${img(`skillChip/${SPEC[m[1]]}.png`, '')}${m[2]}+</span>`
+				const key = name.replace(/\s+/g, '-')
+				const cls = SPECIES.has(name)
+					? 'species'
+					: GAMEPLAY.has(name)
+						? 'gameplay'
+						: ''
+				return `<span class="chip ${cls}">${img(`traitChip/${key}.png`, '')}${esc(name)}</span>`
+			}
+
+			function rich(text) {
+				return esc(text)
+					.replace(/\[\[([^\]]+)\]\]/g, (_, t) => token(t))
+					.replace(/\bOR\b/g, '<b class="or">OR</b>')
+			}
+
+			const OP_HEAD =
+				/(\[\[action\]\]\s*)?(Attack\s+)?\b(Play|Activation|Passive|Reaction|Resupply|Clean-up|Cleanup|Control|Endgame|Special|Goal|Reward)(\s*\[\[[a-z]+\d\]\])?\s*:\s*/gi
+
+			/** A text section → one block per operation, the header in caps. */
+			function ops(section) {
+				const heads = [...section.matchAll(OP_HEAD)].filter(
+					(m) => (section.slice(0, m.index).match(/"/g) ?? []).length % 2 === 0,
+				)
+				if (heads.length === 0) return `<div class="op">${rich(section)}</div>`
+				let html = ''
+				const lead = section.slice(0, heads[0].index).trim()
+				if (lead) html += `<div class="op">${rich(lead)}</div>`
+				heads.forEach((m, i) => {
+					const start = m.index + m[0].length
+					const end = heads[i + 1]?.index ?? section.length
+					const head =
+						(m[1] ? token('action') + ' ' : '') +
+						`<span class="head">${m[2] ? 'Attack ' : ''}${m[3]}${m[4] ? ' ' + token(m[4].trim().slice(2, -2)) : ''}:</span>`
+					html += `<div class="op">${head}${rich(section.slice(start, end).trim())}</div>`
+				})
+				return html
+			}
+
+			function build() {
+				const card = document.getElementById('card')
+				const suit = C?.suit?.toLowerCase() ?? 'person'
+				card.style.setProperty('--suit', C ? SUIT_COLORS[suit] : '#7d6a55')
+
+				const art = el('div', 'art' + (C?.art ? '' : ' empty'))
+				if (C?.art && C.backdrop) {
+					// a cut-out object (a prop) over a scenic backdrop
+					art.style.backgroundImage = `url("${C.art}"), url("${C.backdrop}")`
+					art.style.backgroundSize = `${C.artSize ?? 'contain'}, cover`
+					art.style.backgroundPosition = `${C.artPosition ?? '50% 50%'}, 50% 50%`
+					art.style.backgroundRepeat = 'no-repeat'
+				} else if (C?.art) {
+					// painted art made for the card (override/): full bleed, like the print
+					if (C.artFull) art.style.height = '100%'
+					art.style.backgroundImage = `url("${C.art}")`
+					if (C.artPosition) art.style.backgroundPosition = C.artPosition
+					if (C.artSize) art.style.backgroundSize = C.artSize
+				}
+				card.append(art)
+
+				// header plates + skill / focus icons
+				const plates = el('div', 'plates')
+				plates.append(
+					el(
+						'div',
+						'plate name' + (C ? '' : ' empty'),
+						C ? esc(C.name) : 'Card name',
+					),
+				)
+				plates.append(
+					el(
+						'div',
+						'plate suitline' + (C ? '' : ' empty'),
+						C ? `${img(`suit/${suit}.svg`, '')}${esc(suit)}` : 'Suit',
+					),
+				)
+				const icons = el('div', 'icons')
+				if (!C)
+					icons.innerHTML +=
+						'<div class="slot-skill"></div><div class="slot-focus"></div>'
+				for (const s of C?.skills ?? [])
+					icons.innerHTML += img(`skill/${s}.png`, 'skill')
+				if (C?.focus)
+					icons.innerHTML += `<div class="focus">${img(`focus/${C.focus}.svg`, '')}</div>`
+				plates.append(icons)
+				card.append(plates)
+
+				// traits, right to left like the print
+				const traits = el('div', 'traits')
+				if (!C)
+					for (let i = 0; i < 3; i++)
+						traits.append(el('div', 'trait slot', '<i></i><span>Trait</span>'))
+				for (const t of C?.traits ?? []) {
+					const k = t.toLowerCase()
+					const cls = SPECIES.has(k)
+						? 'species'
+						: GAMEPLAY.has(k)
+							? 'gameplay'
+							: ''
+					traits.append(
+						el(
+							'div',
+							`trait ${cls}`,
+							`${img(`trait/${k.replace(/\s+/g, '-')}.png`, '')}<span>${esc(t)}</span>`,
+						),
+					)
+				}
+				card.append(traits)
+
+				// rules text
+				const panel = el('div', 'panel')
+				const t = C?.text ?? {}
+				if (!C) {
+					panel.append(
+						el('div', 'box hand empty', '<span class="head">Play:</span>'),
+					)
+					panel.append(
+						el(
+							'div',
+							'box table empty',
+							'<span class="head">Activation:</span>',
+						),
+					)
+					panel.append(
+						el('div', 'box cost empty', '<span class="head">Dev. cost:</span>'),
+					)
+				} else {
+					if (t.hand) panel.append(el('div', 'box hand', ops(t.hand)))
+					if (t.table) panel.append(el('div', 'box table', ops(t.table)))
+					if (t.reward && !t.goal.startsWith('Goal'))
+						panel.append(el('div', 'box table', ops(t.reward)))
+					if (t.goal) panel.append(el('div', 'box goal', ops(t.goal)))
+					if (t.goal.startsWith('Goal') && t.reward)
+						panel.append(el('div', 'box hand', ops(t.reward)))
+					if (t.cost)
+						panel.append(
+							el(
+								'div',
+								'box cost',
+								`<span class="head">Dev. cost:</span>${rich(t.cost)}`,
+							),
+						)
+				}
+				card.append(panel)
+
+				// footer
+				const footer = el('div', 'footer')
+				footer.append(el('div', 'number', C ? esc(C.number) : '1XXX00/00'))
+				footer.append(el('div', 'position', C ? esc(C.position) : 'Position'))
+				if (C?.awayTeams)
+					footer.append(
+						el(
+							'div',
+							'away',
+							`${img('token/away-team.svg', '')}× ${C.awayTeams}`,
+						),
+					)
+				else if (C?.vp)
+					footer.append(
+						el('div', 'vp' + (C.vp < 0 ? ' neg' : ''), String(C.vp)),
+					)
+				else if (!C) footer.append(el('div', 'vp', '0'))
+				card.append(footer)
+
+				if (C?.credit) card.append(el('div', 'credit', esc(C.credit)))
+
+				return panel
+			}
+
+			function finish(panel) {
+				fit(panel)
+				if (C?.flavor) {
+					const fl = el('div', 'flavor', esc(C.flavor))
+					document.getElementById('card').append(fl)
+					fl.style.bottom = `${panel.offsetHeight + 54 + 10}px`
+				}
+			}
+
+			/** Shrink the rules text until the panel leaves the top of the art free. */
+			function fit(panel) {
+				const max = 390
+				let size = 22
+				while (panel.offsetHeight > max && size > 12) {
+					size -= 0.5
+					panel.style.fontSize = `${size}px`
+				}
+				const name = document.querySelector('.name')
+				let ns = 29
+				while (name.offsetWidth > 390 && ns > 16) {
+					ns -= 1
+					name.style.fontSize = `${ns}px`
+				}
+			}
+
+			// measure only once fonts and every inline icon have loaded
+			document.fonts.ready.then(async () => {
+				const panel = build()
+				await Promise.all(
+					[...document.images].map((i) => i.decode().catch(() => {})),
+				)
+				finish(panel)
+				document.body.dataset.ready = '1'
+			})
+		</script>
+	</body>
+</html>

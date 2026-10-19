@@ -51,9 +51,51 @@ export const StccCardSchema = z.object({
 export type StccCardRecord = z.infer<typeof StccCardSchema>
 
 export interface StccCard extends StccCardRecord {
-	box: StccBox
+	/** The STCC box that prints it, or 'custom' for a fan-made pack card. */
+	box: StccBox | 'custom'
 	/** Public URL of the card scan (under public/stcc/), or null if none. */
 	image: string | null
+}
+
+// ---------------------------------------------------------------------------
+// Custom packs: fan-made crew decks (src/data/custom/*.json). Not STCC data:
+// the records are our own, written in the STCC record shape so names, printed
+// text and art join the same index. Card art is rendered locally
+// (tools/custom/) into public/custom/ and listed in a gitignored image map.
+// ---------------------------------------------------------------------------
+
+const CustomPackSchema = z.object({
+	pack: z.string(),
+	deck: z.string(),
+	title: z.string(),
+	cards: z.array(z.unknown()),
+})
+
+/** Add custom pack records to `index` (in place, never replacing an STCC
+ *  record). `images` maps a card number to its file under `base`. */
+export function addCustomPacks(
+	index: Map<string, StccCard>,
+	packs: readonly unknown[],
+	images: Readonly<Record<string, string>> = {},
+	base = '/custom',
+): Map<string, StccCard> {
+	for (const raw of packs) {
+		const pack = CustomPackSchema.safeParse(raw)
+		if (!pack.success) continue
+		for (const entry of pack.data.cards) {
+			const parsed = StccCardSchema.safeParse(entry)
+			if (!parsed.success) continue
+			const key = normalizeCardNumber(parsed.data.card_number)
+			if (index.has(key)) continue
+			const file = images[key]
+			index.set(key, {
+				...parsed.data,
+				box: 'custom',
+				image: file !== undefined ? `${base}/${file}` : null,
+			})
+		}
+	}
+	return index
 }
 
 /** Their card numbers carry print marks we don't: `2PER01/26●` → `2PER01/26`. */

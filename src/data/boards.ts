@@ -15,7 +15,7 @@ import { z } from 'zod'
 
 import type { Predicate } from '../engine/resolver/queries'
 import type { Effect } from '../engine/resolver/nodes'
-import type { DeckId, SpecialtyId } from './ids'
+import { DECKS, type DeckId, type SpecialtyId } from './ids'
 import { EffectSchema, PredicateSchema } from './schema'
 import type { BoardMissions } from '../engine/setup'
 import type { MissionState, TrackTable } from '../engine/state'
@@ -66,7 +66,7 @@ const MissionSchema = z
 export const BoardArraySchema: z.ZodType<CrewBoardSide[]> = z.array(
 	z
 		.object({
-			deck: z.enum(['COMMON', 'PIC', 'SIS', 'SEL', 'SHR', 'BUR', 'KOL']),
+			deck: z.enum(DECKS),
 			side: z.enum(['BASIC', 'ADVANCED']),
 			tracks: z.array(
 				z

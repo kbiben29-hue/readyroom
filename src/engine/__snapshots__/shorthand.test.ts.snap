@@ -477,6 +477,117 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
     "RESU | +1 DIL",
     "REAC | PLAY ·"1KOL18/24" / "1PIC19/24" / "1SEL22/24" / "1SHR22/24" / "1SIS17/25" : ({TOP_DECK ·<PERSON>} › DUPLICATE ·<DIRECTIVE>)?",
   ],
+  "1MAL01-25": [
+    "REAC | +<INCIDENT> : +1 DIL (WARP)?",
+    "ENDG | 1 VP / <PERSON>",
+  ],
+  "1MAL02-25": [
+    "PLAY ACT | DEPLOY ( WARP | BEAM )",
+    "ACTI | ( {−1 DIL} › WARP | {−1 LAT} › WARP )",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "1MAL03-25": [
+    "PLAY | +2 CARD −1 CARD +1 RESEARCH",
+    "ACTI ATTACK | {−1 CARD} › OPP[−1 AWAY] ✓⇒ +1 MILITARY +1 GLO",
+    "DEV | −3 DIL +1<INCIDENT>",
+  ],
+  "1MAL04-25": [
+    "PLAY ACT | +1 RESEARCH (−1<INCIDENT>)?",
+    "ACTI | IF ≥1 <INCIDENT> ⇒ {−1 CARD ·non-<INCIDENT>} › −1<INCIDENT> +1 RESEARCH",
+    "DEV | −2 DIL −1 LAT",
+  ],
+  "1MAL05-25": [
+    "PLAY ACT | −1<INCIDENT> +1 INFLUENCE",
+    "REAC | −<INCIDENT> : +1 GLO",
+    "DEV | −2 DIL",
+  ],
+  "1MAL06-25": [
+    "PLAY ACT | +1 INFLUENCE +1 RESEARCH +1 CARD LOG",
+    "DEV | −2 DIL −2 LAT",
+  ],
+  "1MAL07-25": [
+    "PLAY ACT | CONTROL",
+    "CONT | ({+1<INCIDENT>} › +2 GLO)?",
+    "ENDG | 1 VP / <INCIDENT>",
+    "DEV | −3 DIL +1<INCIDENT>",
+  ],
+  "1MAL08-25": [
+    "PLAY ACT | DEPLOY +1 MILITARY",
+    "ACTI ATTACK | {−1 CARD} › OPP[−1 AWAY] ✓⇒ +1 GLO",
+    "DEV | −1 DIL −1 LAT",
+  ],
+  "1MAL09-25": [
+    "PLAY | +2 LAT ( +1<INCIDENT> | −1 CARD )",
+    "DEV | −1 DIL −1 LAT",
+  ],
+  "1MAL10-25": [
+    "PLAY ACT | CONTROL",
+    "CONT | ({+1<INCIDENT>} › +CARGO +1 LAT)?",
+    "ACTI | {−1 CARD ·<CARGO>} › +2 LAT",
+    "DEV | −2 DIL −1 LAT",
+  ],
+  "1MAL11-25": [
+    "PLAY | ( +2 LAT | +1 INFLUENCE )",
+    "ACTI | {−2 LAT} › +1 GLO +1 INFLUENCE",
+  ],
+  "1MAL12-25": [
+    "PLAY ACT | DEPLOY (BEAM ·<PERSON>)?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+  ],
+  "1MAL13-25": [
+    "PLAY ACT | {+1<INCIDENT>} › +CARGO +2 LAT",
+    "PLAY ACT | {−2 LAT} › SCAN2 <CARGO>",
+  ],
+  "1MAL14-25": [
+    "PLAY ACT ATTACK | STEAL 2 LAT −1 CARD",
+    "ACTI | {−1 CARD} › STEAL 1 DIL",
+  ],
+  "1MAL15-25": [
+    "PLAY ACT | ( {−1 CARD ·#WEAPON} › −1<INCIDENT> | {−2 DIL} › −1<INCIDENT> ) (WARP)?",
+  ],
+  "1MAL16-25": [
+    "PLAY ACT | +1 DIL +2 DIL / <LOCATION>",
+    "PLAY ACT | +1 ANY_SPECIALTY / skill:ANY",
+  ],
+  "1MAL17-25": [
+    "PLAY ACT | {TOP_DECK} › +PERSON",
+    "PLAY ACT | {+1<INCIDENT>} › +ALLY",
+  ],
+  "1MAL18-25": [
+    "PLAY ACT | {+1<INCIDENT>} › +CARGO +1 LAT",
+    "PLAY ACT | {−4 DIL} › +SHIP",
+    "PLAY | +1 LAT",
+  ],
+  "1MAL19-25": [
+    "PLAY ACT ATTACK | 1 SEND OPP[−1 CARD]",
+    "PLAY | {−1 CARD ·#WEAPON} › +1 GLO",
+  ],
+  "1MAL20-25": [
+    "PLAY ACT | {TOP_DECK} › −1<INCIDENT> (WARP)?",
+  ],
+  "1MAL21-25": [
+    "PLAY ACT | CONTROL",
+    "CONT | +1 LAT +1 INFLUENCE",
+    "ACTI | IF AWAY ≥1 ⇒ +1 CARD IF AWAY ≥3 ⇒ +1 CARD",
+  ],
+  "1MAL22-25": [
+    "PLAY ACT | 1 SEND +1 MILITARY",
+    "ACTI | {−1 CARD ·<PERSON>} › 1 SEND",
+  ],
+  "1MAL23-25": [
+    "PLAY | ≤2 WARP",
+    "REAC | WARP : +1 DIL",
+  ],
+  "1MAL24-25": [
+    "PLAY ACT | +1 RESEARCH (REFRESH ·<SHIP>)?",
+    "ACTI | {−1 LAT} › REFRESH ·<SHIP> +1 CARD",
+  ],
+  "1MAL25-25": [
+    "PLAY ACT ATTACK | STEAL 1 LAT 1 SEND",
+    "ACTI | ( {−1 CARD ·#WEAPON} › +1 GLO +1 MILITARY | {−1 CARD ·skill:MILITARY} › +1 GLO +1 MILITARY )",
+  ],
   "1PER01-25": [
     "PLAY ACT REQ[MILITARY ≥3] | OPP[(+1 CARD)?] DEVELOP",
     "REAC | OPP[ATTACK] : +1 GLO (LOG)?",

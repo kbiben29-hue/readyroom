@@ -1,26 +1,48 @@
 // Node-side loader for the fetched STCC data (vendor/stcc/, see tools/fetch-stcc.ts).
 // Returns an empty index when nothing has been fetched. Also installs the
-// index as the card-name source (src/data/cardNames.ts).
+// index as the card-name source (src/data/cardNames.ts). Fan-made custom packs
+// (src/data/custom/, with their locally rendered art map) join it too.
 
-import { readFile } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import {
 	STCC_BOXES,
+	addCustomPacks,
 	buildStccIndex,
 	type StccBox,
 	type StccCard,
 } from '../src/data/stcc'
 import { setCardNameIndex } from '../src/data/cardNames'
 
-export const VENDOR_DIR = join(
-	resolve(fileURLToPath(new URL('.', import.meta.url)), '..'),
-	'vendor',
-	'stcc',
-)
+const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)), '..')
 
-export async function loadStccNode(): Promise<Map<string, StccCard>> {
+export const VENDOR_DIR = join(ROOT, 'vendor', 'stcc')
+
+/** Fan-made custom packs (src/data/custom/) and their local art map. */
+const CUSTOM_DIR = join(ROOT, 'src', 'data', 'custom')
+const CUSTOM_IMAGES_DIR = join(ROOT, 'vendor', 'custom')
+
+async function readJsonDir(dir: string, suffix: string): Promise<unknown[]> {
+	let names: string[]
+	try {
+		names = (await readdir(dir)).filter((n) => n.endsWith(suffix)).sort()
+	} catch {
+		return []
+	}
+	return Promise.all(
+		names.map(
+			async (n) => JSON.parse(await readFile(join(dir, n), 'utf8')) as unknown,
+		),
+	)
+}
+
+/** Load the fetched STCC data, plus the custom packs unless `custom: false`
+ *  (the publish audit checks against real STCC names only). */
+export async function loadStccNode({
+	custom = true,
+}: { custom?: boolean } = {}): Promise<Map<string, StccCard>> {
 	const boxes: Partial<Record<StccBox, unknown>> = {}
 	for (const box of STCC_BOXES) {
 		try {
@@ -32,6 +54,16 @@ export async function loadStccNode(): Promise<Map<string, StccCard>> {
 		}
 	}
 	const index = buildStccIndex(boxes)
+	if (custom) {
+		const images = Object.assign(
+			{},
+			...((await readJsonDir(CUSTOM_IMAGES_DIR, '.images.json')) as Record<
+				string,
+				string
+			>[]),
+		) as Record<string, string>
+		addCustomPacks(index, await readJsonDir(CUSTOM_DIR, '.json'), images)
+	}
 	setCardNameIndex(index)
 	return index
 }

@@ -18,6 +18,11 @@ server/data/
 vendor/stcc/
 public/stcc/
 
+# Fan-made custom decks: source images downloaded and card faces rendered
+# locally by `npm run custom-cards` (tools/custom/) — never committed
+vendor/custom/
+public/custom/
+
 # Copyrighted source material (WizKids/CBS) — kept locally, never published:
 # OCR card records and reports, rulebook/Cyclopedia PDFs, card image scratch.
 /cards/

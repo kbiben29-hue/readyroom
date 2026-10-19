@@ -114,24 +114,37 @@ interface ArtDirection {
 	notes?: string
 }
 
-function artPrompt(c: PackCard, subject: string, dir: ArtDirection): string {
+/** Pack-wide art direction from the manifest's top level. */
+interface PackStyle {
+	/** the source the deck comes from, for "true to the look of …" */
+	universe: string
+	/** the colour mood that sets the pack apart from the printed decks */
+	palette: string
+}
+
+function artPrompt(
+	c: PackCard,
+	subject: string,
+	dir: ArtDirection,
+	style: PackStyle,
+): string {
 	return [
 		`Paint the card illustration for a fan-made "${c.name}" card (${c.suit.toUpperCase()}) in the style of the attached Star Trek: Captain's Chair cards (style-*.jpg): polished painterly digital portrait, crisp detail, soft cinematic rim light, a luminous cosmic sky behind the subject.`,
 		`Subject: ${subject}.`,
 		dir.likeness === false
-			? `There is no likeness reference for this one: design it from the description, true to the look of the Firefly series — do not borrow real-world spacecraft or stations.`
+			? `There is no likeness reference for this one: design it from the description, true to the look of ${style.universe} — do not borrow real-world spacecraft or stations.`
 			: `Use likeness.jpg (a still from the series) for the face, hair, costume and props, but repaint it in the card style — do not copy the photo's background.`,
 		...(dir.notes !== undefined ? [`Also: ${dir.notes}`] : []),
-		`Palette: Firefly's space-western mood — dusty amber, rust and teal light instead of Star Trek purple.`,
+		`Palette: ${style.palette}.`,
 		framing(c),
 		`No text, letters, logos, frames, borders or card elements — art only.`,
 	].join('\n\n')
 }
 
-function cardPrompt(c: PackCard, subject: string): string {
+function cardPrompt(c: PackCard, subject: string, style: PackStyle): string {
 	return [
 		`Make a complete playing card for a fan-made Star Trek: Captain's Chair expansion, matching the printed cards attached as style-*.jpg in layout, typography, colours and finish. layout.jpg shows this card's exact content and arrangement; repaint the art in the game's painterly style (likeness.jpg is a still from the series for the likeness).`,
-		`Art subject: ${subject}. Palette: dusty amber, rust and teal (space western).`,
+		`Art subject: ${subject}. Palette: ${style.palette}.`,
 		`Use exactly this text and nothing else — spell it exactly; square brackets stand for the game's icons (as drawn in layout.jpg and the style cards):`,
 		cardText(c),
 		`Portrait 1170 × 1635 px. Small print in the right margin: "Fan-made card. Not affiliated with WizKids, CBS or 20th Television."`,
@@ -142,11 +155,14 @@ async function main(): Promise<void> {
 	const pack = JSON.parse(
 		await readFile(join(ROOT, 'src', 'data', 'custom', `${PACK}.json`), 'utf8'),
 	) as { title: string; cards: PackCard[] }
-	const arts = (
-		JSON.parse(
-			await readFile(join(ROOT, 'tools', 'custom', `${PACK}-art.json`), 'utf8'),
-		) as { art: Record<string, ArtDirection> }
-	).art
+	const manifest = JSON.parse(
+		await readFile(join(ROOT, 'tools', 'custom', `${PACK}-art.json`), 'utf8'),
+	) as { art: Record<string, ArtDirection> } & Partial<PackStyle>
+	const arts = manifest.art
+	const style: PackStyle = {
+		universe: manifest.universe ?? 'the source series',
+		palette: manifest.palette ?? 'cinematic, matching the style cards',
+	}
 	const credits: Record<string, { file: string }> = existsSync(
 		join(WORK, 'art', 'credits.json'),
 	)
@@ -192,8 +208,8 @@ async function main(): Promise<void> {
 				join(WORK, 'art', still),
 				join(dir, `likeness.${still.split('.').pop()}`),
 			)
-		const art = artPrompt(c, subject, direction)
-		const full = cardPrompt(c, subject)
+		const art = artPrompt(c, subject, direction, style)
+		const full = cardPrompt(c, subject, style)
 		await writeFile(
 			join(dir, 'prompt.md'),
 			`# ${c.name} (${c.card_number})\n\nAttach: style/*.jpg, likeness.*, layout.jpg (for the full card).\nSave the art as \`vendor/custom/${PACK}/override/${c.art}.png\`.\n\n## A. Art only (recommended)\n\n${art}\n\n## B. Whole card\n\n${full}\n`,

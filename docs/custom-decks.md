@@ -6,6 +6,9 @@ box-1 decks, so the engine and the UI play them without any new code.
 
 The first one is **MAL**, a Firefly crew captained by Malcolm Reynolds.
 
+To add another crew, follow `docs/adding-a-custom-crew.md`: the whole flow
+from research to painted art, with the lessons from MAL.
+
 ## Where the pieces live
 
 | What                                       | Where                               | In git?         |
@@ -42,7 +45,8 @@ Chromium (`CHROME_PATH` to override). Art sources in the manifest:
 `commons:File:…` (freely licensed, credited on the card), `enwiki:File:…` and
 `tmdb:<image id>` and `file:<path under vendor/custom/firefly/>` (stills from
 the series: local use only, never published). `crop` pre-crops a download to a
-face; `subject` and `notes` are the art direction the prompts use, and
+face; `subject` and `notes` are the art direction the prompts use (with the
+manifest's pack-wide `universe` and `palette`), and
 `likeness: false` paints a card from its description alone (when the only
 reference would mislead, like a real spacecraft for a fictional one).
 

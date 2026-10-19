@@ -1,5 +1,7 @@
 {
 	"$comment": "Card art for the Firefly custom pack (src/data/custom/firefly.json): one source per `art` key. `commons:` files are freely licensed (credit shown on the card); `enwiki:`, `tmdb:` and `file:` (saved under vendor/custom/firefly/) (TMDB image ids) are non-free stills from the series, used locally only. Nothing here is downloaded into git: `npm run custom-cards` fetches into vendor/custom/ and renders into public/custom/. Drop your own image as vendor/custom/firefly/override/<key>.<jpg|png|webp> to replace one.",
+	"universe": "the Firefly series",
+	"palette": "Firefly's space-western mood \u2014 dusty amber, rust and teal light instead of Star Trek purple",
 	"art": {
 		"mal": {
 			"source": "tmdb:4m0NUGqaa1T7ONnbCXk5wEI1qAu.jpg",

@@ -28,7 +28,7 @@ import {
 } from '../engine/queries/legality'
 import { cardDef } from '../engine/cards'
 import { altPlayOperation, type AltPlayRef } from '../engine/altPlay'
-import type { GameState } from '../engine/state'
+import { zoneKey, type GameState } from '../engine/state'
 import type { CardInstanceId } from '../engine/ids'
 import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
@@ -55,6 +55,7 @@ import { ShorthandOp } from './shorthand'
 import { GlyphLegend } from './guide/legend'
 import { linesOfDef } from './guide/glossary'
 import { cardName, withCardNames } from '../data/cardNames'
+import { BeamedChips, BeamedOnto } from './beamed'
 
 export type CardSize =
 	'micro' | 'board' | 'hand' | 'preview' | 'review' | 'zoom'
@@ -1086,6 +1087,8 @@ export function CardDetailHost() {
 		return null
 
 	const close = () => setDetail(null)
+	const beamedHere =
+		projected.zones[zoneKey({ k: 'BEAMED', host: detailIid })] ?? []
 	// ACTIVATION is an ACTION-phase action by the ACTIVE seat (rules/03 §3.5.5),
 	// so the gate mirrors reduceActivate: ACTION phase + your turn (the viewer
 	// is the active seat) + no pending choice + canActivate for that seat. When
@@ -1128,10 +1131,21 @@ export function CardDetailHost() {
 						) : (
 							<>
 								<p className="detail-line">
-									<strong>Zone:</strong> {describeZone(card.zone)} ·{' '}
-									<strong>Owner:</strong>{' '}
+									<strong>Zone:</strong>{' '}
+									{card.zone.k === 'BEAMED' ? (
+										<BeamedOnto host={card.zone.host as CardInstanceId} />
+									) : (
+										describeZone(card.zone)
+									)}{' '}
+									· <strong>Owner:</strong>{' '}
 									{card.owner === null ? '—' : `P${card.owner + 1}`}
 								</p>
+								{beamedHere.length > 0 && (
+									<div className="detail-line detail-beamed">
+										<strong>Beamed aboard:</strong>
+										<BeamedChips host={detailIid} placement="inline" />
+									</div>
+								)}
 								<p className="detail-line">
 									<strong>Traits:</strong> {def.traits.join(', ') || '—'} ·{' '}
 									<strong>VP:</strong> {def.vp}

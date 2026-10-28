@@ -24,6 +24,7 @@ import {
 } from './store'
 import { CardSprite, CardStack, browsePile } from './cards'
 import { ShipPosition, ShipStandees } from './standees'
+import { BeamedChips } from './beamed'
 import { RESOURCE_LABEL, seatLabel, specialtyName } from './format'
 import { Icon, suitIconId } from './icons'
 import { DeltaCounter } from './delta'
@@ -322,9 +323,12 @@ function ZoneRow({
 								<ShipStandees loc={iid} placement="overlay" />
 							</div>
 						) : k === 'FLEET' ? (
-							<div key={iid} className="fleet-ship">
-								{sprite}
-								<ShipPosition ship={iid} />
+							<div key={iid} className="fleet-col">
+								<div className="fleet-ship">
+									{sprite}
+									<ShipPosition ship={iid} />
+								</div>
+								<BeamedChips host={iid} placement="board" />
 							</div>
 						) : (
 							sprite

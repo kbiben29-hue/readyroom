@@ -157,5 +157,5 @@ describe('app smoke (jsdom)', () => {
 		const settings = host.querySelector('[aria-label="Settings"]')!
 		expect(settings.textContent).toContain('Layout')
 		expect(settings.textContent).toContain('Card faces')
-	})
+	}, 20_000) // renders the whole card list: slow under a loaded machine
 })

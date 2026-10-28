@@ -290,9 +290,22 @@ export function describeQuery(query: Query): string {
 	if (query.atBound !== undefined) return `the ${query.atBound} card's ${head}`
 	if (query.secured === true) return `${head} you have secured`
 	const zone = zonePhrase(query.zones, query.seat)
-	const tail = query.exceptThis === true ? ' (excluding this card)' : ''
+	const tail =
+		shipPhrase(query) +
+		(query.exceptThis === true ? ' (excluding this card)' : '')
 	if (zone === '') return `${head}${tail}`
 	return `${head} ${zone}${tail}`
+}
+
+/** " where you have a SHIP" for a `withShip` query (whose: `shipSeat`). */
+function shipPhrase(query: Query): string {
+	if (query.withShip === undefined || query.withShip === false) return ''
+	const ship = query.withShip === true ? 'SHIP' : describeFilter(query.withShip)
+	const a = /^[AEIOU]/i.test(ship) ? 'an' : 'a'
+	if (query.shipSeat === 'OPPONENT')
+		return ` where your opponent has ${a} ${ship}`
+	if (query.shipSeat === 'ANY') return ` where there is ${a} ${ship}`
+	return ` where you have ${a} ${ship}`
 }
 
 /** A CardQuery as a target noun: "a SHIP you have in play", "a card from your

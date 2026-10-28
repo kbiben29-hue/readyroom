@@ -1943,6 +1943,13 @@ h3,
 	border-left-color: var(--mars);
 	opacity: 0.85;
 }
+/* runnable now: the whole block is the control (OpBlock) */
+.op-detail-run {
+	cursor: pointer;
+}
+.op-detail-run:hover {
+	background: var(--panel-2);
+}
 .op-detail-head {
 	display: flex;
 	gap: 8px;
@@ -1954,6 +1961,11 @@ h3,
 	margin: 6px 0 0;
 	color: #ff9b9b;
 	font-size: 13.5px;
+}
+/* legal but useless right now (idleOperationReason): a caution, not a block */
+.op-reason.op-idle {
+	margin-bottom: 6px;
+	color: var(--orange);
 }
 
 /* The detail overlay exists to be READ — it is where "why can't I do this?"

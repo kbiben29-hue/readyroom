@@ -17,7 +17,7 @@
 // header opens the card detail. While the card is a candidate of the pending
 // choice, the whole tile is the button and toggles the selection.
 
-import { useMemo, type KeyboardEvent, type ReactNode } from 'react'
+import { useMemo, useState, type KeyboardEvent, type ReactNode } from 'react'
 import type { CardDef } from '../../data/schema'
 import type { SkillIcon } from '../../data/ids'
 import { isGameplayTrait, isSpecies } from '../../data/ids'
@@ -301,8 +301,15 @@ export function TileLineRow({
 }) {
 	const lit = l.state === 'lit' && l.intent !== undefined
 	const press = lit && interactive
+	// a line that would do nothing right now: the first tap only warns
+	const [armed, setArmed] = useState(false)
 	const run = () => {
 		if (l.intent === undefined) return
+		if (l.idle !== undefined && !armed) {
+			setArmed(true)
+			return
+		}
+		setArmed(false)
 		onRun?.()
 		runIntent(l.intent)
 	}
@@ -331,6 +338,13 @@ export function TileLineRow({
 		>
 			<ShorthandLineView line={l.line} label={spoken} size="md" />
 			{l.via !== undefined && <span className="pb-via">via {l.via}</span>}
+			{press && l.idle !== undefined && (
+				<div className="pb-why pb-idle">
+					{armed
+						? `Are you sure? “${l.idle}” can’t happen. Tap again to ${verb.toLowerCase()}.`
+						: 'Does nothing right now'}
+				</div>
+			)}
 			{l.state === 'dim' && l.reason !== undefined && l.turnGated !== true && (
 				<div className="pb-why">{l.reason}</div>
 			)}

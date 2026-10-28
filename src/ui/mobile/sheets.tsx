@@ -332,27 +332,91 @@ const TIMING_TONE: Record<TileLine['line']['timing'], string> = {
 	DEVELOPMENT: 'dev',
 }
 
-function LineState({ l, onDone }: { l: TileLine; onDone: () => void }) {
+/** One operation in the detail sheet. A lit one is a control as a whole —
+ *  keyword links and other buttons inside keep their own taps — and one that
+ *  would do nothing (idleOperationReason) asks "Are you sure?" first. */
+function DetailOp({
+	l,
+	onDone,
+	children,
+}: {
+	l: TileLine
+	onDone: () => void
+	children: ReactNode
+}) {
+	const [confirm, setConfirm] = useState(false)
+	const lit = l.state === 'lit' && l.intent !== undefined
+	const run = () => {
+		if (l.intent === undefined) return
+		if (l.idle !== undefined && !confirm) {
+			setConfirm(true)
+			return
+		}
+		setConfirm(false)
+		onDone()
+		runIntent(l.intent)
+	}
+	return (
+		<div
+			className={`pb-dt-op pb-tone-${TIMING_TONE[l.line.timing]}${lit ? ' pb-dt-run' : ''}`}
+			onClick={
+				lit
+					? (e) => {
+							const t = e.target as HTMLElement
+							if (t.closest('button, a, input, select, textarea') !== null)
+								return
+							run()
+						}
+					: undefined
+			}
+		>
+			{children}
+			<LineState l={l} confirm={confirm} onRun={run} />
+		</div>
+	)
+}
+
+function LineState({
+	l,
+	confirm,
+	onRun,
+}: {
+	l: TileLine
+	confirm: boolean
+	onRun: () => void
+}) {
 	switch (l.state) {
-		case 'lit':
+		case 'lit': {
+			const verb = l.line.timing === 'ACTIVATION' ? 'Activate' : 'Play'
+			const button = (
+				<button
+					type="button"
+					className="pb-pill pb-primary"
+					onClick={(e) => {
+						e.stopPropagation()
+						onRun()
+					}}
+				>
+					{confirm ? 'Are you sure?' : verb}
+				</button>
+			)
+			// legal, but every benefit would be skipped (idleOperationReason)
+			if (l.idle !== undefined)
+				return (
+					<div className="pb-state pb-idle">
+						Does nothing right now: “{l.idle}” can’t happen
+						{l.line.action ? ' · still spends 1 action' : ''}
+						{button}
+					</div>
+				)
 			return (
 				<div className="pb-state pb-ok">
 					<Gl g="CHECK" />
 					You can do this now{l.line.action ? ' · spends 1 action' : ''}
-					<button
-						type="button"
-						className="pb-pill pb-primary"
-						onClick={() => {
-							if (l.intent !== undefined) {
-								onDone()
-								runIntent(l.intent)
-							}
-						}}
-					>
-						{l.line.timing === 'ACTIVATION' ? 'Activate' : 'Play'}
-					</button>
+					{button}
 				</div>
 			)
+		}
 		case 'dim':
 			return (
 				<div className="pb-state pb-no">
@@ -543,10 +607,7 @@ export function DetailSheet() {
 				<div className="pb-empty">No operations.</div>
 			) : (
 				lines.map((l) => (
-					<div
-						key={l.key}
-						className={`pb-dt-op pb-tone-${TIMING_TONE[l.line.timing]}`}
-					>
+					<DetailOp key={l.key} l={l} onDone={close}>
 						<div className="pb-lblrow">
 							{TIMING_WORD[l.line.timing]}
 							{l.line.action && (
@@ -565,14 +626,14 @@ export function DetailSheet() {
 								<OpText text={l.english} onKeyword={openRulesFor} />
 							</p>
 						)}
-						<LineState l={l} onDone={close} />
-					</div>
+					</DetailOp>
 				))
 			)}
 			{!printed && lines.length > 0 && (
 				<GlyphLegend
 					lines={lines.map((l) => l.line)}
 					onLearn={() => useGameStore.getState().openGuide()}
+					collapsible
 				/>
 			)}
 		</SheetFrame>

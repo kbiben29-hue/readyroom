@@ -30,6 +30,7 @@ import type { CardInstanceId } from '../../engine/ids'
 import {
 	canActivate,
 	canPlay,
+	idleOperationReason,
 	type CanPlayResult,
 } from '../../engine/queries/legality'
 import { altPlayOperation } from '../../engine/altPlay'
@@ -69,6 +70,9 @@ export interface TileLine {
 	intent?: Intent | undefined
 	/** an ALT_PLAY grant: the name of the card that grants it */
 	via?: string | undefined
+	/** a lit line that would do nothing right now (idleOperationReason): the
+	 *  part it would skip. The tile asks for a second tap before running it. */
+	idle?: string | undefined
 }
 
 export interface TileLineInput {
@@ -251,6 +255,22 @@ function playReasons(def: CardDef, check: CanPlayResult): Map<number, string> {
 	return out
 }
 
+/** idleOperationReason on the real state (local play only; online there is
+ *  no engine state to probe, so no warning). */
+function idleOf(
+	real: GameState | null,
+	seat: Seat,
+	iid: CardInstanceId,
+	opIndex: number,
+): string | undefined {
+	if (real === null) return undefined
+	try {
+		return idleOperationReason(real, seat, iid, opIndex) ?? undefined
+	} catch {
+		return undefined
+	}
+}
+
 function resolvedThisTurn(
 	state: GameState,
 	iid: CardInstanceId,
@@ -346,6 +366,7 @@ export function tileLines(input: TileLineInput): TileLine[] {
 		let reason: string | undefined
 		let turnGated = false
 		let intent: Intent | undefined
+		let idle: string | undefined
 
 		switch (ctx) {
 			case 'hand':
@@ -358,6 +379,7 @@ export function tileLines(input: TileLineInput): TileLine[] {
 					intent = litIntent(legal, 'PLAY_CARD', iid, c.opIndex)
 					if (intent !== undefined) {
 						st = 'lit'
+						idle = idleOf(real, viewer, iid, c.opIndex)
 						break
 					}
 					st = 'dim'
@@ -391,6 +413,7 @@ export function tileLines(input: TileLineInput): TileLine[] {
 					intent = litIntent(legal, 'ACTIVATE', iid, c.opIndex)
 					if (intent !== undefined) {
 						st = 'lit'
+						idle = idleOf(real, viewer, iid, c.opIndex)
 						break
 					}
 					st = 'dim'
@@ -442,6 +465,7 @@ export function tileLines(input: TileLineInput): TileLine[] {
 			reason,
 			intent,
 			...(turnGated ? { turnGated } : {}),
+			...(idle !== undefined ? { idle } : {}),
 		})
 	}
 

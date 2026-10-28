@@ -16,7 +16,8 @@
 
 import { cardDef } from '../cards'
 import { moveCard, player, zoneProps, type GameState } from '../state'
-import { probe } from '../resolver/probe'
+import { probe, probeOutcome } from '../resolver/probe'
+import { describe } from '../describe'
 import { evalPredicate } from './resolveQuery'
 import type { CardInstanceId } from '../ids'
 import type { Seat } from '../resolver/queries'
@@ -158,6 +159,9 @@ export function singleLegalAction(
 	// An ALT_PLAY grant is a second way to play this card — never pick silently.
 	if (play.altPlays.length > 0) return null
 	for (const operationIndex of play.operations) {
+		// an operation that would do nothing is never run without a look
+		if (idleOperationReason(state, seat, iid, operationIndex) !== null)
+			return null
 		found.push({ kind: 'PLAY', operationIndex })
 		if (found.length > 1) return null
 	}
@@ -169,7 +173,46 @@ export function singleLegalAction(
 			found.push({ kind: 'ACTIVATION', operationIndex })
 		}
 	})
-	return found.length === 1 ? found[0]! : null
+	if (found.length !== 1) return null
+	const only = found[0]!
+	if (
+		only.kind === 'ACTIVATION' &&
+		idleOperationReason(state, seat, iid, only.operationIndex) !== null
+	)
+		return null
+	return only
+}
+
+/** Why a legal PLAY or ACTIVATION operation would do nothing right now, or
+ *  null when it does something. The rules let you resolve it — the costs are
+ *  payable and a useless benefit is simply dropped (rules/12 §12.1–12.2) — so
+ *  the engine allows it; the UI uses this to warn first and to keep the
+ *  double-click fast path off it. "Nothing" = it would skip at least one
+ *  benefit and run none (costs alone don't count). */
+export function idleOperationReason(
+	state: GameState,
+	seat: Seat,
+	iid: CardInstanceId,
+	opIndex: number,
+): string | null {
+	const card = state.cards[iid]
+	const op =
+		card === undefined ? undefined : cardDef(card.def).operations[opIndex]
+	if (op === undefined) return null
+	// a PLAY runs with the card already in the Staging Area (as canPlay probes)
+	const at =
+		op.type === 'PLAY' ? moveCard(state, iid, { k: 'STAGING', seat }) : state
+	const out = probeOutcome(at, op.effect, PLAIN_CTX(seat, iid))
+	if (!out.ok || out.benefits > 0 || out.skipped.length === 0) return null
+	return out.skipped.map(describeSafe).join(' ')
+}
+
+function describeSafe(node: Parameters<typeof describe>[0]): string {
+	try {
+		return describe(node)
+	} catch {
+		return node.k
+	}
 }
 
 /** May `seat` complete mission `index`? (goal met and not already completed). */

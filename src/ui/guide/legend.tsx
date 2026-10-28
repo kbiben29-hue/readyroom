@@ -41,13 +41,34 @@ export function GlyphLegend({
 	lines,
 	title = 'Glyphs on this card',
 	onLearn,
+	collapsible = false,
 }: {
 	lines: readonly ShorthandLine[]
 	title?: string | undefined
 	onLearn?: (() => void) | undefined
+	/** Closed by default behind its title (the card detail's footnote). */
+	collapsible?: boolean | undefined
 }) {
 	const entries = useMemo(() => glyphsOfLines(lines), [lines])
 	if (entries.length === 0) return null
+	if (collapsible)
+		return (
+			<details className="sg-legend sg-legend-collapsible" aria-label={title}>
+				<summary className="sg-legend-head">
+					<span>{title}</span>
+				</summary>
+				<ul>
+					{entries.map((e, i) => (
+						<LexItem key={i} entry={e} />
+					))}
+				</ul>
+				{onLearn !== undefined && (
+					<button type="button" className="sg-link" onClick={onLearn}>
+						Learn the glyphs ›
+					</button>
+				)}
+			</details>
+		)
 	return (
 		<section className="sg-legend" aria-label={title}>
 			<div className="sg-legend-head">

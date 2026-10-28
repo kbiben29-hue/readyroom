@@ -473,7 +473,7 @@ function ChooseSpecialtyChoice({
 	return (
 		<section className="panel choice-panel">
 			<ChoiceHeader choice={choice} />
-			<div className="choice-options choice-options-row">
+			<div className="choice-options">
 				{choice.specialties.map((s: SpecialtyId) => (
 					<button
 						key={s}

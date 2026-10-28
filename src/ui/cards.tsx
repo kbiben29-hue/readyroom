@@ -17,11 +17,15 @@
 //   - CardDetail — the hover/click overlay: op list with costs + canPlay reasons
 //   - OpText     — rich operation text (token chips + rules-keyword links)
 
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { CardDef } from '../data/schema'
 import type { ResourceId, SkillIcon } from '../data/ids'
 import { describeOperation } from '../engine/describe'
-import { canPlay, canActivate } from '../engine/queries/legality'
+import {
+	canPlay,
+	canActivate,
+	idleOperationReason,
+} from '../engine/queries/legality'
 import { cardDef } from '../engine/cards'
 import { altPlayOperation, type AltPlayRef } from '../engine/altPlay'
 import type { GameState } from '../engine/state'
@@ -44,6 +48,7 @@ import { HIDDEN_DEF } from './projection'
 import { RESOURCE_LABEL } from './format'
 import type { SpecialtyId } from '../data/ids'
 import { cardImageUrl, stccCard, stccIconUrl, tokenView } from './stcc'
+import { printedOpFor, printedOps } from '../data/stcc'
 import { Icon, SpecialtyLabel, suitIconId } from './icons'
 import { ShorthandOp } from './shorthand'
 import { GlyphLegend } from './guide/legend'
@@ -337,13 +342,18 @@ const PRINTED_SECTIONS = [
 export function PrintedText({
 	def,
 	onKeyword,
+	sections: only,
 }: {
 	def: CardDef
 	onKeyword?: ((anchor: string, word: string) => void) | undefined
+	/** Only these card areas (the detail shows operations per operation). */
+	sections?: readonly (typeof PRINTED_SECTIONS)[number][0][] | undefined
 }) {
 	const card = stccCard(def)
 	if (card === null) return null
-	const sections = PRINTED_SECTIONS.filter(([k]) => card.text[k] !== '')
+	const sections = PRINTED_SECTIONS.filter(
+		([k]) => card.text[k] !== '' && (only === undefined || only.includes(k)),
+	)
 	if (sections.length === 0) return null
 	return (
 		<div className="printed-text">
@@ -1059,6 +1069,13 @@ export function CardDetailHost() {
 	const def = useDefForIid(detailIid)
 	const viewer = useViewerSeat()
 	const pendingChoice = usePendingChoice()
+	// Glyphs belong to the full-text card; over the printed art they repeat
+	// what the English already says (Settings → Card faces).
+	const glyphs = useGameStore((s) => s.showCardDetails)
+	const printed = useMemo(() => {
+		const stcc = def === null ? null : stccCard(def)
+		return stcc === null ? [] : printedOps(stcc.text)
+	}, [def])
 	if (
 		detailIid === null ||
 		card === undefined ||
@@ -1119,24 +1136,56 @@ export function CardDetailHost() {
 									<strong>VP:</strong> {def.vp}
 									{def.vpAsterisk ? '*' : ''}
 								</p>
-								<p
-									className="detail-line detail-ids"
-									title="Card ids for debugging"
-								>
-									<strong>def:</strong> {def.id} · <strong>cardId:</strong>{' '}
-									{def.cardId ?? '—'} · <strong>iid:</strong> {detailIid}
-								</p>
-								<PrintedText def={def} onKeyword={openRulesFor} />
+								<PrintedText
+									def={def}
+									onKeyword={openRulesFor}
+									sections={['cost']}
+								/>
+								{printed
+									.filter((p) => p.type === null)
+									.map((p, i) => (
+										<p key={`lead-${i}`} className="op-text detail-lead">
+											<OpText text={p.text} onKeyword={openRulesFor} />
+										</p>
+									))}
 								{def.operations.map((op, i) => {
 									const usable = opUsable(realState, activeSeat, detailIid, i)
 									const activatable =
 										op.type === 'ACTIVATION' && turnOpen && usable.ok
 									const playable = op.type === 'PLAY' && turnOpen && usable.ok
+									const run =
+										activatable || playable
+											? {
+													label: activatable ? 'Activate' : 'Play',
+													idle: usable.idle,
+													onRun: () => {
+														useGameStore.getState().dispatch(
+															activatable
+																? {
+																		t: 'ACTIVATE',
+																		iid: detailIid,
+																		operationIndex: i,
+																	}
+																: {
+																		t: 'PLAY_CARD',
+																		iid: detailIid,
+																		operationIndex: i,
+																	},
+														)
+														if (playable) setDetail(null)
+													},
+												}
+											: null
+									const why =
+										op.type !== 'ACTIVATION' && op.type !== 'PLAY'
+											? usable.ok
+												? null
+												: usable.message
+											: !turnOpen
+												? turnBlockReason
+												: usable.message
 									return (
-										<div
-											key={i}
-											className={`op-detail${usable.ok ? '' : ' op-detail-blocked'}`}
-										>
+										<OpBlock key={i} blocked={!usable.ok} run={run}>
 											<div className="op-detail-head">
 												<span
 													className={`op-type op-type-${op.type.toLowerCase()}`}
@@ -1158,89 +1207,36 @@ export function CardDetailHost() {
 													</span>
 												) : null}
 											</div>
-											<ShorthandOp
-												op={op}
-												size="md"
-												className="op-shorthand"
-												live={
-													card.owner === null
-														? undefined
-														: {
-																state: realState,
-																seat: card.owner,
-																iid: detailIid,
-															}
-												}
-											/>
+											{glyphs && (
+												<ShorthandOp
+													op={op}
+													size="md"
+													className="op-shorthand"
+													live={
+														card.owner === null
+															? undefined
+															: {
+																	state: realState,
+																	seat: card.owner,
+																	iid: detailIid,
+																}
+													}
+												/>
+											)}
 											<p className="op-text">
 												<OpText
-													text={safeDescribe(op) ?? '<unreadable operation>'}
+													text={
+														printedOpFor(printed, def.operations, i)?.text ??
+														safeDescribe(op) ??
+														'<unreadable operation>'
+													}
 													onKeyword={openRulesFor}
 												/>
 											</p>
-											{op.type === 'ACTIVATION' ? (
-												activatable ? (
-													<button
-														type="button"
-														className="btn op-activate"
-														onClick={() =>
-															useGameStore.getState().dispatch({
-																t: 'ACTIVATE',
-																iid: detailIid,
-																operationIndex: i,
-															})
-														}
-													>
-														Activate
-													</button>
-												) : !turnOpen ? (
-													<p className="op-reason muted">
-														Why not: {turnBlockReason}
-													</p>
-												) : (
-													usable.message !== null && (
-														<p className="op-reason muted">
-															Why not: {usable.message}
-														</p>
-													)
-												)
-											) : op.type === 'PLAY' ? (
-												playable ? (
-													<button
-														type="button"
-														className="btn op-activate"
-														onClick={() => {
-															const s = useGameStore.getState()
-															s.dispatch({
-																t: 'PLAY_CARD',
-																iid: detailIid,
-																operationIndex: i,
-															})
-															setDetail(null)
-														}}
-													>
-														Play
-													</button>
-												) : !turnOpen ? (
-													<p className="op-reason muted">
-														Why not: {turnBlockReason}
-													</p>
-												) : (
-													usable.message !== null && (
-														<p className="op-reason muted">
-															Why not: {usable.message}
-														</p>
-													)
-												)
-											) : (
-												!usable.ok &&
-												usable.message !== null && (
-													<p className="op-reason muted">
-														Why not: {usable.message}
-													</p>
-												)
+											{run === null && why !== null && (
+												<p className="op-reason muted">Why not: {why}</p>
 											)}
-										</div>
+										</OpBlock>
 									)
 								})}
 								{turnOpen && (
@@ -1251,10 +1247,25 @@ export function CardDetailHost() {
 										onPlayed={close}
 									/>
 								)}
-								<GlyphLegend
-									lines={linesOfDef(def)}
-									onLearn={() => useGameStore.getState().openGuide()}
+								<PrintedText
+									def={def}
+									onKeyword={openRulesFor}
+									sections={['reward']}
 								/>
+								{glyphs && (
+									<GlyphLegend
+										lines={linesOfDef(def)}
+										onLearn={() => useGameStore.getState().openGuide()}
+										collapsible
+									/>
+								)}
+								<p
+									className="detail-line detail-ids"
+									title="Card ids for debugging"
+								>
+									<strong>def:</strong> {def.id} · <strong>cardId:</strong>{' '}
+									{def.cardId ?? '—'} · <strong>iid:</strong> {detailIid}
+								</p>
 							</>
 						)}
 					</div>
@@ -1336,6 +1347,23 @@ function opUsable(
 	seat: Seat,
 	iid: CardInstanceId,
 	opIndex: number,
+): { ok: boolean; message: string | null; idle: string | null } {
+	const usable = opUsableBase(state, seat, iid, opIndex)
+	if (!usable.ok) return { ...usable, idle: null }
+	let idle: string | null = null
+	try {
+		idle = idleOperationReason(state, seat, iid, opIndex)
+	} catch {
+		idle = null
+	}
+	return { ...usable, idle }
+}
+
+function opUsableBase(
+	state: GameState,
+	seat: Seat,
+	iid: CardInstanceId,
+	opIndex: number,
 ): { ok: boolean; message: string | null } {
 	try {
 		const card = state.cards[iid]
@@ -1361,6 +1389,68 @@ function opUsable(
 	} catch {
 		return { ok: false, message: 'this card def is unreadable' }
 	}
+}
+
+/** One operation in the detail. When it can run now, the whole block is the
+ *  control — keyword links and other buttons inside keep their own clicks.
+ *  An operation that would do nothing (idleOperationReason) says so and asks
+ *  "Are you sure?" before it runs. */
+function OpBlock({
+	blocked,
+	run,
+	children,
+}: {
+	blocked: boolean
+	run: { label: string; idle: string | null; onRun: () => void } | null
+	children: ReactNode
+}) {
+	const [confirm, setConfirm] = useState(false)
+	const trigger = () => {
+		if (run === null) return
+		if (run.idle !== null && !confirm) {
+			setConfirm(true)
+			return
+		}
+		setConfirm(false)
+		run.onRun()
+	}
+	return (
+		<div
+			className={`op-detail${blocked ? ' op-detail-blocked' : ''}${run !== null ? ' op-detail-run' : ''}`}
+			onClick={
+				run === null
+					? undefined
+					: (e) => {
+							const t = e.target as HTMLElement
+							if (t.closest('button, a, input, select, textarea') !== null)
+								return
+							trigger()
+						}
+			}
+		>
+			{children}
+			{run !== null && (
+				<>
+					<IdleWarning reason={run.idle} />
+					<button type="button" className="btn op-activate" onClick={trigger}>
+						{confirm ? 'Are you sure?' : run.label}
+					</button>
+				</>
+			)}
+		</div>
+	)
+}
+
+/** A legal operation that would do nothing right now: it still costs what it
+ *  costs, so say so before the button (rules/12 §12.1 — legal, but useless). */
+function IdleWarning({ reason }: { reason: string | null }) {
+	if (reason === null) return null
+	return (
+		<p className="op-reason op-idle" role="note">
+			Does nothing right now: “{reason}” can’t happen, so it would be skipped.
+			Any cost is still paid.
+		</p>
+	)
 }
 
 function openRulesFor(anchor: string, _word: string): void {

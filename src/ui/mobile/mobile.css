@@ -1327,6 +1327,10 @@ ul.pb-order li {
 	padding: 12px 2px;
 	border-top: 1px solid var(--hair);
 }
+/* lit: the whole operation is the control (DetailOp) */
+.pb-dt-run {
+	cursor: pointer;
+}
 .pb-tone-table {
 	--tc: var(--sh-t-table);
 }
@@ -1387,6 +1391,10 @@ ul.pb-order li {
 }
 .pb-no {
 	color: #d6a79f;
+}
+/* legal but useless right now (idleOperationReason) */
+.pb-idle {
+	color: var(--orange);
 }
 .pb-na {
 	color: var(--pb-faint);

@@ -105,7 +105,7 @@ describe('keyword links on card faces', () => {
 		window.addEventListener('codex:open-rule', onOpen)
 		act(() => {
 			host
-				.querySelector<HTMLButtonElement>('.printed-text .keyword-link')!
+				.querySelector<HTMLButtonElement>('.detail-lead .keyword-link')!
 				.click()
 		})
 		window.removeEventListener('codex:open-rule', onOpen)
@@ -113,5 +113,34 @@ describe('keyword links on card faces', () => {
 		expect(opened).toEqual(['DRAW'])
 		expect(useGameStore.getState().rulesOpen).toBe(true)
 		expect(useGameStore.getState().detailIid).toBe(iid)
+	})
+
+	it('the detail shows each operation once, in its printed wording; glyphs only on text faces', () => {
+		const store = useGameStore.getState()
+		const defs = new Map(loadBrowserCatalog().defs.map((d) => [d.id, d]))
+		const iid = store.state!.zones['HAND:0']!.find((i) => {
+			const d = defs.get(store.state!.cards[i]!.def)
+			return d?.cardId != null && d.operations[0]?.type === 'PLAY'
+		})!
+		const def = defs.get(store.state!.cards[iid]!.def)!
+		setStccIndex(fakeStccIndex([def], { hand: 'Play: Draw 2 cards.' }))
+		act(() => {
+			store.setDetail(iid)
+		})
+		const host = render(<CardDetailHost />)
+		const first = host.querySelector('.op-detail .op-text')!
+		expect(first.textContent?.trim()).toBe('Draw 2 cards.')
+		// no separate printed block repeating the operations
+		expect(host.querySelector('.printed-hand')).toBeNull()
+		// text faces: glyph lines, the legend closed, the ids last
+		expect(host.querySelector('.op-shorthand')).not.toBeNull()
+		const legend = host.querySelector('details.sg-legend')
+		if (legend !== null) expect(legend.hasAttribute('open')).toBe(false)
+		const text = host.querySelector('.detail-text')!
+		expect(text.lastElementChild!.classList.contains('detail-ids')).toBe(true)
+		// printed faces: no glyphs, no legend
+		act(() => useGameStore.getState().setShowCardDetails(false))
+		expect(host.querySelector('.op-shorthand')).toBeNull()
+		expect(host.querySelector('.sg-legend')).toBeNull()
 	})
 })

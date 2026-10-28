@@ -292,6 +292,25 @@
 	text-transform: uppercase;
 	color: var(--dim);
 }
+/* the card detail's footnote: closed until asked for */
+.sg-legend-collapsible > summary {
+	justify-content: flex-start;
+	cursor: pointer;
+	list-style: none;
+}
+.sg-legend-collapsible > summary::-webkit-details-marker {
+	display: none;
+}
+.sg-legend-collapsible > summary::before {
+	content: '▸';
+	transition: transform 0.15s;
+}
+.sg-legend-collapsible[open] > summary::before {
+	transform: rotate(90deg);
+}
+.sg-legend-collapsible > .sg-link {
+	justify-self: start;
+}
 .sg-legend .sg-lex-item {
 	min-height: 26px;
 	font-size: 13px;

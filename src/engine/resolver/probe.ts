@@ -11,10 +11,31 @@ import type { GameState, EffectCtx } from '../state'
 import { forkState } from '../state'
 import { pushEffect, executeOne } from './stack'
 import { probeFirstChoice } from './choices'
+import { isControl, primitiveOf } from './primitives'
 
 const PROBE_MAX_STEPS = 2_000
 
+/** What a dry run saw: whether it resolves (no unpayable cost), how many
+ *  benefit leaves (or player choices) would really happen, and the benefits it would skip
+ *  (rules/12 §12.1 — skipped silently in play, but worth a warning). */
+export interface ProbeOutcome {
+	ok: boolean
+	benefits: number
+	skipped: Effect[]
+}
+
 export function probe(state: GameState, node: Effect, ctx: EffectCtx): boolean {
+	return probeOutcome(state, node, ctx).ok
+}
+
+/** `probe`, also reporting which benefits would happen and which would be
+ *  skipped. Choices take their first legal answer; a choice offered at all
+ *  counts as a benefit, since another answer may do what the first skips. */
+export function probeOutcome(
+	state: GameState,
+	node: Effect,
+	ctx: EffectCtx,
+): ProbeOutcome {
 	// forkState deep-copies only the stack, the one place the engine writes in
 	// place (ctx.bindings); everything else is copy-on-write (state.ts).
 	const clone: GameState = { ...forkState(state), probe: true }
@@ -26,19 +47,39 @@ export function probe(state: GameState, node: Effect, ctx: EffectCtx): boolean {
 	const probeCtx: EffectCtx = { ...ctx, bindings: { ...ctx.bindings } }
 	let s = pushEffect(clone, node, probeCtx)
 	let steps = 0
+	let benefits = 0
+	const skipped: Effect[] = []
+	const failed: ProbeOutcome = { ok: false, benefits, skipped }
 	while (s.pendingChoice !== null || s.stack.length > 0) {
 		if (s.result !== null) break
-		if (++steps > PROBE_MAX_STEPS) return false
+		if (++steps > PROBE_MAX_STEPS) return failed
 		try {
 			if (s.pendingChoice !== null) {
+				// a real decision for the player ("you may…", "choose one") is
+				// something the operation offers, whatever the first answer skips
+				benefits++
 				s = probeFirstChoice(s)
 			} else {
+				// a benefit leaf on top: it either runs or logs SKIPPED (stack.ts)
+				const top = s.stack[s.stack.length - 1]
+				const leaf =
+					top?.k === 'EFFECT' &&
+					!isControl(top.node) &&
+					!primitiveOf(top.node).isCost
+						? top.node
+						: null
+				const logged = s.log.length
 				s = executeOne(s)
+				if (leaf !== null) {
+					if (s.log.slice(logged).some((e) => e.kind === 'SKIPPED'))
+						skipped.push(leaf)
+					else benefits++
+				}
 			}
 		} catch {
-			return false
+			return failed
 		}
 	}
 	// failOperation records a FAILED log entry under probe — that's the signal.
-	return !s.log.some((e) => e.kind === 'FAILED')
+	return { ok: !s.log.some((e) => e.kind === 'FAILED'), benefits, skipped }
 }

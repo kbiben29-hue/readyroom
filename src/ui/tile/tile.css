@@ -396,6 +396,13 @@
 	color: #d6a79f;
 	padding-left: 2px;
 }
+/* a lit line that would do nothing right now: caution, not a block */
+.pb-why.pb-idle {
+	color: var(--orange);
+}
+.pb-why.pb-idle::before {
+	content: none;
+}
 .pb-why::before {
 	content: 'Why not: ';
 	color: var(--pb-faint);

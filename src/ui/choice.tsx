@@ -335,6 +335,7 @@ function ChooseCardsChoice({
 												onClick={click}
 											/>
 										</div>
+										<ShipWhere iid={iid} />
 										{disabledReason !== undefined && (
 											<span className="muted small why-not">
 												why not: {disabledReason}
@@ -433,6 +434,26 @@ function ChooseLocationChoice({
 				)}
 			</div>
 		</section>
+	)
+}
+
+/** Under a Fleet SHIP candidate: where its token is right now, so a choice like
+ *  "beam to a SHIP … to send an Away Team where this ship is" shows the
+ *  destination. Same wording as the phone tile's chip (tile/CardTile.tsx). */
+function ShipWhere({ iid }: { iid: CardInstanceId }) {
+	const projected = useProjected()
+	const card = projected?.cards[iid]
+	const at = card?.shipTokenAt ?? null
+	const atDef = useDefForIid(at === 'SUPPLY' ? null : at)
+	if (card?.zone.k !== 'FLEET') return null
+	return (
+		<span className="small ship-where">
+			{at === null
+				? 'token on card'
+				: at === 'SUPPLY'
+					? 'token in supply'
+					: `at ${cardName(atDef) ?? at}`}
+		</span>
 	)
 }
 

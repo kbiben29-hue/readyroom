@@ -404,7 +404,7 @@ h3,
 .topbar .muted {
 	color: var(--ink-soft);
 }
-/* The active player's resources, always visible next to their actions. */
+/* Your resources and Away Teams (on your Captain / owned), always in view. */
 .topbar-resources {
 	display: inline-flex;
 	align-items: center;
@@ -1115,9 +1115,8 @@ h3,
 	color: var(--ink);
 }
 /* a printed icon on lit chrome sits in a dark well, or it vanishes into a
- * tile of its own hue (the pink crystal on the Dilithium tile) */
-.console-track-cap .icon,
-.console-tile:not(.tile-pile) .tile-label .icon {
+ * cap of its own hue */
+.console-track-cap .icon {
 	box-sizing: content-box;
 	height: 13px;
 	padding: 2px;
@@ -1175,8 +1174,7 @@ h3,
 	font-weight: 600;
 }
 
-/* Resources, Away Teams and the piles: one tile per count. Resources are lit
- * in their token's hue; piles are dark tiles in the seat hue, a rank lower. */
+/* The piles beside the board: one dark tile per count, in the seat hue. */
 .console-tiles {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1200,27 +1198,9 @@ h3,
 	text-transform: uppercase;
 	text-align: left;
 }
-/* the resource tiles are delta hosts too — keep the tile shape over the pill */
-.console-tile.delta-host {
-	display: flex;
-	align-items: stretch;
-	border-radius: 3px;
-}
 .console-tiles > .console-tile:nth-child(4n + 1) {
 	border-radius: 14px 3px 3px 14px;
 	padding-left: 12px;
-}
-.console-tile.tile-dil {
-	--t: var(--sh-dil);
-}
-.console-tile.tile-lat {
-	--t: var(--sh-lat);
-}
-.console-tile.tile-glo {
-	--t: var(--lilac);
-}
-.console-tile.tile-away {
-	--t: var(--c, var(--ice));
 }
 .tile-n {
 	font-size: 24px;
@@ -1768,6 +1748,9 @@ h3,
 .pip-glo,
 .token-glo {
 	color: var(--lilac);
+}
+.pip-away {
+	color: var(--ice);
 }
 
 .chip,
@@ -3131,13 +3114,18 @@ h3,
 }
 
 /* ---- counters, tracks, missions */
-.res-pip.delta-host {
+.res-pip.delta-host,
+.topbar-resources .res-pip {
 	padding: 1px 6px 1px 3px;
 	background: #ffffff0d;
 }
 .res-n {
 	font-variant-numeric: tabular-nums;
 	font-size: 15px;
+}
+.res-n small {
+	font-size: 11px;
+	opacity: 0.7;
 }
 .stardate-glory-n {
 	font-variant-numeric: tabular-nums;

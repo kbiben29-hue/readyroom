@@ -352,8 +352,8 @@ export function PlayerArea({
 					{seatLabel(seat)} {isMine ? '(you)' : ''}
 				</strong>
 				<span className="area-resources">
-					{/* your own resources live on the crew console beside this area;
-              the compact opponent area keeps its pips here */}
+					{/* your own resources live in the top bar; the compact opponent
+              area keeps its pips here */}
 					{compact === true &&
 						(['DIL', 'LAT', 'GLO'] as const).map((r) => (
 							<DeltaCounter
@@ -530,40 +530,12 @@ export function CrewBoard({
 							/>
 						))}
 					</div>
-					{/* Resources, Away Teams and the piles beside the board — counts
-              you glance at, so they are tiles, not card backs. Reserve,
-              Development and the Captain's Log sit beside the Crew board
-              (rules/02 §2.3); your own Log is browsable, an opponent's is a
-              count only (rules/04 §4.5). */}
+					{/* The piles beside the board — counts you glance at, so they are
+              tiles, not card backs. Reserve, Development and the Captain's
+              Log sit beside the Crew board (rules/02 §2.3); your own Log is
+              browsable, an opponent's is a count only (rules/04 §4.5). Your
+              resources and Away Teams are in the top bar. */}
 					<div className="console-tiles">
-						{(['DIL', 'LAT', 'GLO'] as const).map((r) => (
-							<DeltaCounter
-								key={r}
-								pool={`player:${seat}:${r}`}
-								label={`${seatLabel(seat)} ${RESOURCE_LABEL[r]}`}
-								className={`console-tile tile-${r.toLowerCase()}`}
-								title={RESOURCE_LABEL[r]}
-							>
-								<span className="tile-n">{pl.resources[r]}</span>
-								<span className="tile-label">
-									<Icon id={r} label={RESOURCE_LABEL[r]} />
-									{RESOURCE_LABEL[r]}
-								</span>
-							</DeltaCounter>
-						))}
-						<span
-							className="console-tile tile-away"
-							title={`${pl.awayTeamsInPool} Away Team${pl.awayTeamsInPool === 1 ? '' : 's'} on your Captain · ${pl.awayTeamsTotal} owned`}
-						>
-							<span className="tile-n">
-								{pl.awayTeamsInPool}
-								<small>/{pl.awayTeamsTotal}</small>
-							</span>
-							<span className="tile-label">
-								<Icon id="AWAY_TEAM" label="Away Teams" />
-								Away
-							</span>
-						</span>
 						<PileTile label="Reserve" iids={reserve} browse={false} />
 						<PileTile label="Development" iids={development} browse />
 						<PileTile label="Log" iids={log} browse={seat === viewer} />

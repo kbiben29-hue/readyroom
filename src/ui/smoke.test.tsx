@@ -99,19 +99,26 @@ describe('app smoke (jsdom)', () => {
 		expect(influence?.querySelectorAll('.console-seg').length).toBe(16)
 	})
 
-	it('your resources sit on the crew console, the opponent keeps its pips', () => {
+	it('your resources sit in the top bar, the opponent keeps its pips', () => {
 		act(() => {
 			useGameStore.getState().loadCatalog()
 			useGameStore.getState().startGame(config())
 		})
 		const host = renderApp()
+		const topbar = host.querySelector('.topbar')
 		const board = host.querySelector('[aria-label="Player 1 crew board"]')
+		const p0 = useGameStore.getState().state!.players[0]
 		// one counter per pool, so a token flight has exactly one place to land
 		expect(host.querySelectorAll('[data-anchor="player:0:DIL"]').length).toBe(1)
-		expect(board!.querySelector('[data-anchor="player:0:DIL"]')).not.toBeNull()
-		expect(board!.querySelector('.tile-dil .tile-n')?.textContent).toBe(
-			String(useGameStore.getState().state!.players[0].resources.DIL),
+		expect(
+			topbar!.querySelector('[data-anchor="player:0:DIL"] .res-n')?.textContent,
+		).toBe(String(p0.resources.DIL))
+		expect(topbar!.querySelector('.pip-away .res-n')?.textContent).toBe(
+			`${p0.awayTeamsInPool}/${p0.awayTeamsTotal}`,
 		)
+		// the crew console keeps only the piles
+		expect(board!.querySelector('[data-anchor^="player:0:"]')).toBeNull()
+		expect(board!.querySelector('.tile-away')).toBeNull()
 		expect(host.querySelector('[data-anchor="player:1:DIL"]')).not.toBeNull()
 	})
 

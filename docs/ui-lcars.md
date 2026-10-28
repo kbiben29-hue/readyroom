@@ -168,13 +168,12 @@ its area on art.
   segments, so the Basic and Advanced sides look as different as they score. The end-cap reads
   out the **position** and the **multiplier Focus icons score at right now** (×0 below an
   Advanced side's first glyph) — the two numbers you actually check.
-- **Counts are tiles, four to a row.** Dilithium, Latinum and Glory are lit in their token
-  hues (Glory is lilac, §2), Away Teams in your seat colour (on your Captain / owned). The piles
-  — Reserve, Development, Log — and completed missions are dark tiles a rank lower; a pile you
-  may look through is a button that opens it.
-- **Your resources live here, not in your area header.** Every pool has exactly one counter on
-  screen, so a token flight (§1) has one place to land. The compact opponent area in the side
-  column keeps its pips.
+- **Counts are tiles, four to a row.** The piles — Reserve, Development, Log — and completed
+  missions are dark tiles; a pile you may look through is a button that opens it.
+- **Your resources live in the top bar, not on the console or in your area header.**
+  Dilithium, Latinum, Glory and Away Teams (on your Captain / owned) sit next to the action
+  tray, always in view. Every pool has exactly one counter on screen, so a token flight (§1)
+  has one place to land. The compact opponent area in the side column keeps its pips.
 - Missions stay a list under the tiles, since completing one is a button, not a count.
 
 Printed icons on lit chrome sit in an `--ink` well, or a token would vanish into the tile of its

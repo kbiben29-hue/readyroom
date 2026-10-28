@@ -519,8 +519,12 @@ function ChooseDestinationChoice({
 	choice: Extract<PendingChoice, { k: 'CHOOSE_DESTINATION' }>
 }) {
 	const destinationDefault = useGameStore((s) => s.destinationDefault)
-	const hasDefault =
-		destinationDefault !== null && choice.options.includes(destinationDefault)
+	const [remember, setRemember] = useState(destinationDefault !== null)
+	const pick = (opt: 'DECK_TOP' | 'DISCARD') => {
+		if (remember) useGameStore.getState().setDestinationDefault(opt)
+		else useGameStore.setState({ destinationDefault: null })
+		confirmChoice(opt)
+	}
 	return (
 		<section className="panel choice-panel">
 			<ChoiceHeader choice={choice} />
@@ -528,46 +532,27 @@ function ChooseDestinationChoice({
 				<div className="dest-card">
 					<CardSprite iid={choice.card} size="board" detailOnHover={false} />
 				</div>
-				{choice.options.map((opt) => (
-					<button
-						key={opt}
-						type="button"
-						className={`btn btn-primary dest-btn${destinationDefault === opt ? ' dest-default' : ''}`}
-						onClick={() => confirmChoice(opt)}
-					>
-						{opt === 'DECK_TOP' ? 'Top of deck' : 'Discard pile'}
-					</button>
-				))}
-			</div>
-			{hasDefault && (
-				<div className="choice-actions">
-					<button
-						type="button"
-						className="btn"
-						onClick={() => confirmChoice(destinationDefault)}
-					>
-						Use default:{' '}
-						{destinationDefault === 'DECK_TOP' ? 'top of deck' : 'discard'}
-					</button>
+				<div className="dest-options">
+					{choice.options.map((opt) => (
+						<button
+							key={opt}
+							type="button"
+							className={`btn btn-primary dest-btn${destinationDefault === opt ? ' dest-default' : ''}`}
+							onClick={() => pick(opt)}
+						>
+							{opt === 'DECK_TOP' ? 'Top of deck' : 'Discard pile'}
+						</button>
+					))}
+					<label className="dest-remember">
+						<input
+							type="checkbox"
+							checked={remember}
+							onChange={(e) => setRemember(e.target.checked)}
+						/>
+						Remember decision
+					</label>
 				</div>
-			)}
-			<div className="choice-actions">
-				{choice.options.map((opt) => (
-					<button
-						key={opt}
-						type="button"
-						className="btn"
-						onClick={() => useGameStore.getState().setDestinationDefault(opt)}
-					>
-						Remember {opt === 'DECK_TOP' ? 'top of deck' : 'discard'} for
-						session
-					</button>
-				))}
 			</div>
-			<p className="muted small">
-				This prompt fires constantly when gaining/scanning — use the remember
-				toggle to make it one click.
-			</p>
 		</section>
 	)
 }

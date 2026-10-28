@@ -13,6 +13,7 @@
 		"validate:cards": "tsx tools/validate-cards.ts",
 		"authoring": "vite --config tools/authoring/vite.config.ts",
 		"server": "tsx server/main.ts",
+		"game": "tsx tools/game.ts",
 		"server:start": "npm run server",
 		"fetch-cards": "tsx tools/fetch-stcc.ts",
 		"custom-cards": "tsx tools/custom/render-cards.ts firefly",

@@ -50,6 +50,18 @@ export function cardDataDrift(
 	return checkCardData(session, catalog)
 }
 
+/** Dev server only: PUT the session to the Vite plugin in vite.config.ts,
+ *  which writes `.debug/games/<id>.json` for `npm run game`. Fire-and-forget;
+ *  a no-op in builds and tests. */
+export function mirrorToDevServer(session: Session): void {
+	if (!import.meta.env.DEV || import.meta.env.MODE === 'test') return
+	void fetch(`/__debug/games/${encodeURIComponent(session.id)}`, {
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(session),
+	}).catch(() => {})
+}
+
 /** Trigger a `<a download>` for the session JSON — the shareable bug-report
  *  format (todo/17 §3). */
 export function downloadSession(session: Session): void {

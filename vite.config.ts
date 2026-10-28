@@ -1,4 +1,4 @@
-import { rm } from 'node:fs/promises'
+import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 
@@ -28,8 +28,45 @@ function dropStcc(): Plugin {
 	}
 }
 
+/** Dev only: the app mirrors every autosave here (src/ui/persistence.ts
+ *  `mirrorToDevServer`), one file per game under `.debug/games/` (gitignored),
+ *  so `npm run game` can replay and summarise the game you are testing. */
+function debugGames(): Plugin {
+	return {
+		name: 'ready-room:debug-games',
+		apply: 'serve',
+		configureServer(server) {
+			const dir = resolve(server.config.root, '.debug', 'games')
+			server.middlewares.use('/__debug/games/', (req, res, next) => {
+				const id = (req.url ?? '').replace(/^\//, '')
+				if (req.method !== 'PUT' || !/^[\w-]+$/.test(id)) return next()
+				let body = ''
+				req.setEncoding('utf8')
+				req.on('data', (chunk: string) => (body += chunk))
+				req.on('end', () => {
+					void (async () => {
+						try {
+							await mkdir(dir, { recursive: true })
+							const pretty = JSON.stringify(JSON.parse(body), null, 2)
+							await writeFile(resolve(dir, `${id}.json`), pretty)
+							res.statusCode = 204
+						} catch {
+							res.statusCode = 400
+						}
+						res.end()
+					})()
+				})
+			})
+		},
+	}
+}
+
 export default defineConfig(({ mode }) => ({
-	plugins: [react(), ...(CODE_ONLY.has(mode) ? [dropStcc()] : [])],
+	plugins: [
+		react(),
+		debugGames(),
+		...(CODE_ONLY.has(mode) ? [dropStcc()] : []),
+	],
 	// the house-AI worker (src/ui/botWorker.ts) is a module worker; ES output
 	// keeps it valid if it ever code-splits (iife can't)
 	worker: { format: 'es' },

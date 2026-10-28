@@ -61,7 +61,7 @@ import { project, HIDDEN_DEF, type ProjectedState } from './projection'
 import { poolDiff } from '../engine/fx'
 import { residualChanges, type Motion } from './flow'
 import { loadBrowserCatalog } from './browserCatalog'
-import { getSessionStore } from './persistence'
+import { getSessionStore, mirrorToDevServer } from './persistence'
 import {
 	singleLegalAction,
 	type SingleLegalAction,
@@ -751,6 +751,7 @@ function motionOf(
 /** Autosave hook (todo/17 §1): a rejected save must never crash the game or
  *  leave an unhandled rejection — surface it as a dismissible notice instead. */
 function saveQuiet(session: Session): void {
+	mirrorToDevServer(session)
 	void getSessionStore()
 		.save(session)
 		.catch(() => {

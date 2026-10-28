@@ -41,3 +41,6 @@ coverage/
 .bot-data/
 # local screenshots from browser checks
 .screens/
+
+# games mirrored by the dev server for `npm run game` (vite.config.ts)
+.debug/

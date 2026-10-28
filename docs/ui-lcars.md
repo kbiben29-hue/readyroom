@@ -65,7 +65,7 @@ a specialty on its own.
 
 The token names above are **roles** (`--orange` is "the frame", `--ice` is "you"); a theme moves
 only the hues. Themes are `:root[data-theme='…']` blocks at the end of `src/ui/lcars.css`, chosen
-per device from the console strip, the start screen or the phone menu (`src/ui/theme.ts`), and
+per device from the console's Settings, the start screen or the phone menu (`src/ui/theme.ts`), and
 applied before first paint by an inline script in `index.html`.
 
 | Theme        | Frame            | Market | Neutral Zone | You  | Opponent |

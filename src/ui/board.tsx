@@ -220,6 +220,7 @@ export function JunkIncidentBar() {
 	const incidents = useZones({ k: 'INCIDENT_DECK' })
 	return (
 		<section className="panel piles-bar" aria-label="Shared piles">
+			<h3>Shared piles</h3>
 			<CardStack label="Junk" count={junk.length} browse={junk} />
 			<CardStack
 				label="Incident deck"
@@ -749,7 +750,17 @@ function PileTile({
 // Hand
 // ---------------------------------------------------------------------------
 
-export function Hand({ seat }: { seat: Seat }) {
+/** `onToggle` adds the fold control to the head (the console's floating hand,
+ *  BoardArea); `folded` says which way it points. */
+export function Hand({
+	seat,
+	folded = false,
+	onToggle,
+}: {
+	seat: Seat
+	folded?: boolean
+	onToggle?: () => void
+}) {
 	const state = useStateGame()
 	// Legality must be evaluated on the real engine state — the projected view
 	// hides facedown decks (HIDDEN_DEF), which starves the canPlay probe of the
@@ -771,6 +782,17 @@ export function Hand({ seat }: { seat: Seat }) {
 				<span className="muted">
 					{iids.length} card{iids.length === 1 ? '' : 's'}
 				</span>
+				{onToggle !== undefined && (
+					<button
+						type="button"
+						className="btn micro hand-toggle"
+						onClick={onToggle}
+						aria-expanded={!folded}
+						title="Show or hide your hand (H)"
+					>
+						{folded ? 'Show' : 'Hide'} <kbd>H</kbd>
+					</button>
+				)}
 			</div>
 			<div className="hand-row">
 				{iids.map((iid) => {

@@ -34,12 +34,9 @@ function renderApp(): HTMLElement {
 	return host
 }
 
-/** START, then the first legal PLAY/ACTIVATE that spends an action (undoing
- *  any that does not — the hot-seat undo policy allows it within the turn). */
+/** The first legal PLAY/ACTIVATE that spends an action (undoing any that
+ *  does not — the hot-seat undo policy allows it within the turn). */
 function playOneCard(): void {
-	act(() => {
-		useGameStore.getState().dispatch({ t: 'START' })
-	})
 	const tries = useGameStore
 		.getState()
 		.legal.filter((it) => it.t === 'PLAY_CARD' || it.t === 'ACTIVATE')

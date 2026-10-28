@@ -22,6 +22,7 @@ import { printedOpFor, printedOps } from '../data/stcc'
 import { stccCard } from './stcc'
 import { SpecialtyLabel } from './icons'
 import { cardName, deckLabel } from '../data/cardNames'
+import { ReferenceTabs } from './ReferenceTabs'
 
 /** Physical deck order for display: the six captain decks, then the shared
  *  COMMON pool. Decks not in this list appear afterwards alphabetically. */
@@ -143,7 +144,7 @@ export function DeckReview({ onClose }: { onClose: () => void }) {
 				aria-label="Deck review"
 			>
 				<div className="drawer-head">
-					<strong>Deck Review</strong>
+					<ReferenceTabs current="decks" />
 					<span className="muted small">
 						{total} card{total === 1 ? '' : 's'}
 					</span>

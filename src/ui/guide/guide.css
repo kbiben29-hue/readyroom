@@ -31,34 +31,6 @@
 	justify-content: space-between;
 	gap: 12px;
 }
-.sg-eyebrow {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	font:
-		600 12px/1 'Antonio',
-		sans-serif;
-	letter-spacing: 0.18em;
-	text-transform: uppercase;
-	color: var(--orange);
-	margin-bottom: 6px;
-}
-.sg-eyebrow::before {
-	content: '';
-	width: 28px;
-	height: 10px;
-	border-radius: 5px;
-	background: var(--orange);
-}
-.sg-title {
-	margin: 0;
-	font:
-		600 38px/1 'Antonio',
-		'Arial Narrow',
-		sans-serif;
-	letter-spacing: 0.02em;
-	text-transform: uppercase;
-}
 .sg-tabs {
 	position: sticky;
 	top: 0;

@@ -100,8 +100,7 @@ describe('phone shell', () => {
 		expect(header.textContent).toContain('to the Burn')
 		expect(header.textContent).toContain('SHR')
 		expect(host.querySelectorAll('[role="tab"]').length).toBe(3)
-		// SETUP: the dock's primary move starts the game
-		click(byText('.pb-dock button', 'Start game'))
+		// a new game opens on its first Action step, no Start click
 		expect(st().phase.k).toBe('ACTION')
 		// the Ship station shows the Enterprise with its lit activation lines
 		expect(
@@ -132,7 +131,6 @@ describe('phone shell', () => {
 	it('plays a card by tapping its lit line in the hand sheet', () => {
 		startGame(config())
 		renderApp()
-		click(byText('.pb-dock button', 'Start game'))
 		click(byText('.pb-dockbar .pb-pill', 'Hand'))
 		const sheet = host.querySelector('[role="dialog"][aria-label="Your hand"]')!
 		expect(sheet).not.toBeNull()
@@ -148,7 +146,6 @@ describe('phone shell', () => {
 	it('a choice round-trips: switch station, ring in place, confirm', () => {
 		startGame(config(25, 'ADVANCED'))
 		renderApp()
-		click(byText('.pb-dock button', 'Start game'))
 		const pic23 = st().zones['HAND:0']!.find(
 			(i) => st().cards[i]!.def === '1PIC23-24',
 		)!
@@ -183,7 +180,6 @@ describe('phone shell', () => {
 
 	it('resuming mid-choice opens on the station holding the candidates', () => {
 		startGame(config(25, 'ADVANCED'))
-		act(() => useGameStore.getState().dispatch({ t: 'START' }))
 		const pic23 = st().zones['HAND:0']!.find(
 			(i) => st().cards[i]!.def === '1PIC23-24',
 		)!
@@ -203,7 +199,6 @@ describe('phone shell', () => {
 
 	it('has a renderer for every PendingChoice kind', () => {
 		startGame(config())
-		act(() => useGameStore.getState().dispatch({ t: 'START' }))
 		const s = st()
 		const hand = s.zones['HAND:0']!
 		const offer = s.zones['MARKET_OFFER:PERSON']![0]!

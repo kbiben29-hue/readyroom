@@ -75,7 +75,7 @@ describe('autosave (todo/17 §1)', () => {
 		const saves = await getSessionStore().list()
 		expect(saves).toHaveLength(1)
 		const s = saves[0]!
-		expect(s.log).toHaveLength(0)
+		expect(s.log).toEqual([{ t: 'START' }])
 		expect(s.meta.deckNames).toHaveLength(2)
 		expect(s.meta.boardSides).toEqual(['ADVANCED', 'BASIC'])
 		expect(typeof s.meta.cardDataHash).toBe('string')
@@ -88,11 +88,11 @@ describe('autosave (todo/17 §1)', () => {
 				useGameStore.getState().loadCatalog()
 				useGameStore.getState().startGame(config())
 			})
-			act(() => useGameStore.getState().dispatch({ t: 'START' }))
+			act(() => useGameStore.getState().dispatch({ t: 'END_TURN' }))
 
 			// Debounce: immediately after the intent, the stored save is still the
-			// pre-intent one.
-			expect((await getSessionStore().list())[0]!.log).toHaveLength(0)
+			// pre-intent one (startGame's START only).
+			expect((await getSessionStore().list())[0]!.log).toHaveLength(1)
 
 			await act(async () => {
 				vi.advanceTimersByTime(1100)
@@ -102,8 +102,8 @@ describe('autosave (todo/17 §1)', () => {
 
 			const saves = await getSessionStore().list()
 			expect(saves).toHaveLength(1)
-			expect(saves[0]!.log).toEqual([{ t: 'START' }])
-			expect(saves[0]!.meta.intentCount).toBe(1)
+			expect(saves[0]!.log).toEqual([{ t: 'START' }, { t: 'END_TURN' }])
+			expect(saves[0]!.meta.intentCount).toBe(2)
 		} finally {
 			vi.useRealTimers()
 		}
@@ -118,7 +118,6 @@ describe('refresh mid-game (Definition of Done)', () => {
 				useGameStore.getState().loadCatalog()
 				useGameStore.getState().startGame(config())
 			})
-			act(() => useGameStore.getState().dispatch({ t: 'START' }))
 			const hand0 = useGameStore.getState().state!.zones['HAND:0'] ?? []
 			const pic23 = hand0.find(
 				(iid) => useGameStore.getState().state!.cards[iid]?.def === '1PIC23-24',

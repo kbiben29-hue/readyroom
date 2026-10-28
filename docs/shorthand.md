@@ -113,6 +113,7 @@ with, so it cannot drift:
 - **Cards** — the whole catalogue as tiles; any card opens its Rosetta view.
 - **Practice** — a real line and three English sentences of the same timing; pick the one it says.
 
-It opens from the console strip (**Shorthand**), the phone menu, the setup screen and Hails. Every
+It opens from the console's **Reference** menu (its Shorthand tab), the phone menu's Reference, the
+setup screen and Hails. Every
 card detail — the desktop modal and the phone sheet — ends with **Glyphs on this card**, the
 legend of the marks its lines use, with a link into the guide.

@@ -608,15 +608,15 @@ h3,
 .market-col .stack-count {
 	font-size: 12px;
 }
+/* Each counter panel is as wide as its content and they share what is left,
+ * so the Stardate track no longer takes half the strip and every panel keeps
+ * its label on the same line as its chips. */
 .ops-strip > .panel {
-	flex: 1 1 0;
+	flex: 1 1 auto;
 	min-width: 0;
 }
-.ops-strip > .stardate-track {
-	flex: 2 1 300px;
-}
 .ops-strip > .player-deck {
-	flex: 0 1 240px;
+	flex-wrap: nowrap;
 }
 
 /* All seven shared card slots in one row — Market's four and the Zone's three. */
@@ -1318,6 +1318,21 @@ h3,
 	align-items: center;
 	gap: 8px;
 	margin-bottom: 8px;
+}
+.hand-toggle kbd {
+	margin-left: 4px;
+	padding: 0 4px;
+	border: 1px solid currentColor;
+	border-radius: 3px;
+	font: inherit;
+	opacity: 0.7;
+}
+/* folded: only the head stays, so the board underneath is free */
+.hand-folded .hand-row {
+	display: none;
+}
+.hand-folded .hand-head {
+	margin-bottom: 0;
 }
 
 /* ----------------------------------------------------------------- icons */
@@ -2385,6 +2400,26 @@ h3,
 .cardlist-drawer {
 	width: min(94vw, 900px);
 }
+/* Settings: one preference per row, label left, control right. */
+.settings-drawer {
+	width: min(94vw, 420px);
+}
+.settings-body {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+}
+.settings-body .layout-switch {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+.settings-body select {
+	min-width: 170px;
+	min-height: 32px;
+}
 .cardlist-controls {
 	display: flex;
 	gap: 8px;
@@ -3361,17 +3396,6 @@ h3,
 .bot-glyph {
 	display: block;
 }
-.bot-speed-compact {
-	flex: none;
-	min-height: 30px;
-	max-width: 62px;
-	padding: 0 2px;
-	background: var(--panel-2);
-	color: var(--text);
-	border: 1px solid var(--hair);
-	border-radius: 4px;
-	font: inherit;
-}
 .bot-status {
 	display: inline-flex;
 	align-items: center;
@@ -3411,24 +3435,16 @@ h3,
 	align-items: center;
 	gap: var(--gap);
 }
-.bot-speed {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
+/* the Moves button sits at the bar's right end */
+.bot-bar > .btn:last-child {
 	margin-left: auto;
-	color: var(--dim);
 }
-.bot-speed select,
 .deck-picker select {
 	background: var(--panel-2);
 	color: var(--text);
 	border: 1px solid var(--hair);
 	border-radius: 4px;
 	font: inherit;
-}
-.bot-speed select {
-	min-height: 32px;
-	padding: 2px 6px;
 }
 .deck-picker {
 	flex-wrap: wrap;

@@ -102,9 +102,9 @@ describe('undo across a full turn boundary', () => {
 			useGameStore.getState().startGame(config('CADET'))
 		})
 
-		// Turn 1: START -> (auto-advance to ACTION) -> END_TURN -> resolve the
-		// cleanup refill -> turn 2 begins (CADET keeps seat 0 active).
-		act(() => useGameStore.getState().dispatch({ t: 'START' }))
+		// Turn 1: START (taken by startGame) -> (auto-advance to ACTION) ->
+		// END_TURN -> resolve the cleanup refill -> turn 2 begins (CADET keeps
+		// seat 0 active).
 		act(() => useGameStore.getState().dispatch({ t: 'END_TURN' }))
 		act(() => settleChain())
 
@@ -130,10 +130,9 @@ describe('undo across a full turn boundary', () => {
 			useGameStore.getState().loadCatalog()
 			useGameStore.getState().startGame(config('TWO_PLAYER'))
 		})
-		expect(useGameStore.getState().canUndo).toBe(false)
-
-		act(() => useGameStore.getState().dispatch({ t: 'START' }))
-		// START is a boundary intent — not undoable, even in the act of starting.
+		// startGame takes the START boundary — not undoable, even in the act of
+		// starting.
+		expect(useGameStore.getState().session?.log).toEqual([{ t: 'START' }])
 		expect(useGameStore.getState().canUndo).toBe(false)
 		const before = JSON.stringify(useGameStore.getState().state)
 		act(() => useGameStore.getState().undo())
@@ -150,7 +149,6 @@ describe('undo across a full turn boundary', () => {
 			useGameStore.getState().loadCatalog()
 			useGameStore.getState().startGame(config('TWO_PLAYER'))
 		})
-		act(() => useGameStore.getState().dispatch({ t: 'START' }))
 
 		const hand0 = useGameStore.getState().state!.zones['HAND:0'] ?? []
 		const pic23 = hand0.find(

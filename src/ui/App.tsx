@@ -49,7 +49,7 @@ import { RecapView } from './online/Recap'
 import { ShorthandGuide } from './guide/ShorthandGuide'
 import { useDefIndex } from './defs'
 import { MobileShell } from './mobile/MobileShell'
-import { LayoutSwitch } from './mobile/LayoutSwitch'
+import { SettingsPanel } from './SettingsPanel'
 import { ThemeSwitch } from './ThemeSwitch'
 import { deckLabel } from '../data/cardNames'
 import type { BotId } from '../bot/types'
@@ -219,6 +219,8 @@ function Overlays({
 	const guide = useGameStore((s) => s.guide)
 	const openGuide = useGameStore((s) => s.openGuide)
 	const closeGuide = useGameStore((s) => s.closeGuide)
+	const settingsOpen = useGameStore((s) => s.settingsOpen)
+	const setSettingsOpen = useGameStore((s) => s.setSettingsOpen)
 	return (
 		<>
 			{/* the phone shells draw the same detail as a Rosetta sheet */}
@@ -245,6 +247,7 @@ function Overlays({
 					onClose={closeGuide}
 				/>
 			)}
+			{settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
 		</>
 	)
 }
@@ -690,13 +693,8 @@ function ConsoleNav() {
 	const newGame = useGameStore((s) => s.newGame)
 	const canUndo = useGameStore((s) => s.canUndo)
 	const session = useSession()
-	const setRulesOpen = useGameStore((s) => s.setRulesOpen)
-	const setCardListOpen = useGameStore((s) => s.setCardListOpen)
-	const setDeckReviewOpen = useGameStore((s) => s.setDeckReviewOpen)
-	const revealAll = useGameStore((s) => s.revealAll)
-	const setRevealAll = useGameStore((s) => s.setRevealAll)
-	const showCardDetails = useGameStore((s) => s.showCardDetails)
-	const setShowCardDetails = useGameStore((s) => s.setShowCardDetails)
+	const openReference = useGameStore((s) => s.openReference)
+	const setSettingsOpen = useGameStore((s) => s.setSettingsOpen)
 	const undoLabel = undoPolicyLabel(session?.setup.mode, session?.opponents)
 	return (
 		<nav className="console-nav" aria-label="Console">
@@ -725,55 +723,17 @@ function ConsoleNav() {
 			>
 				Replay
 			</button>
-			<span className="nav-label">Reference</span>
-			<button type="button" className="btn" onClick={() => setRulesOpen(true)}>
-				Rules
+			<button type="button" className="btn" onClick={() => openReference()}>
+				Reference
 			</button>
 			<button
 				type="button"
 				className="btn"
-				onClick={() => setCardListOpen(true)}
+				onClick={() => setSettingsOpen(true)}
 			>
-				Card list
+				Settings
 			</button>
-			<button
-				type="button"
-				className="btn"
-				onClick={() => useGameStore.getState().openGuide()}
-				title="Learn the card glyphs"
-			>
-				Shorthand
-			</button>
-			<button
-				type="button"
-				className="btn"
-				onClick={() => setDeckReviewOpen(true)}
-			>
-				Deck review
-			</button>
-			<button
-				type="button"
-				className={`btn micro details-toggle${showCardDetails ? ' btn-active' : ''}`}
-				onClick={() => setShowCardDetails(!showCardDetails)}
-				aria-pressed={showCardDetails}
-				title="Phase B: switch between the printed card art (default) and the full text card"
-			>
-				Details
-			</button>
-			<DebugReveal revealAll={revealAll} setRevealAll={setRevealAll} />
-			<LayoutSwitch />
-			<ThemeSwitch compact />
 			<span className="nav-spacer" />
-			<span className="nav-num">
-				MODE ·{' '}
-				{session?.setup.mode === 'CADET'
-					? 'CADET'
-					: isSpectator(session?.opponents)
-						? 'SPECTATOR'
-						: hasBots(session?.opponents)
-							? 'VS HOUSE AI'
-							: 'HOT-SEAT'}
-			</span>
 			<button type="button" className="btn" onClick={newGame}>
 				New game
 			</button>
@@ -813,26 +773,6 @@ function StatusBar({
 /** todo/15 §2 residue: a "reveal everything" debug toggle behind a dev flag
  *  (the projection otherwise hides the opponent's hand / facedown decks).
  *  Deliberately a dev/authoring tool — off by default. */
-function DebugReveal({
-	revealAll,
-	setRevealAll,
-}: {
-	revealAll: boolean
-	setRevealAll: (b: boolean) => void
-}) {
-	if (!import.meta.env.DEV && !import.meta.env.VITE_REVEAL_ALL) return null
-	return (
-		<button
-			type="button"
-			className={`btn micro debug-reveal${revealAll ? ' btn-active' : ''}`}
-			onClick={() => setRevealAll(!revealAll)}
-			title="dev/debug: show every card (including hidden zones)"
-		>
-			Reveal all
-		</button>
-	)
-}
-
 function BoardArea({ state }: { state: GameState }) {
 	void state
 	const viewer = useViewerSeat()
@@ -868,10 +808,36 @@ function BoardArea({ state }: { state: GameState }) {
 				</div>
 				<LogPanel />
 			</aside>
-			<div className="hand-strip">
-				<Hand seat={viewer} />
-			</div>
+			<HandStrip seat={viewer} />
 		</main>
+	)
+}
+
+/** The floating hand covers the bottom of the board, so H (or the button in
+ *  its head) folds it down to the head and back. Typing in a field never
+ *  toggles it. */
+function HandStrip({ seat }: { seat: Seat }) {
+	const [folded, setFolded] = useState(false)
+	const toggle = useCallback(() => setFolded((f) => !f), [])
+	useEffect(() => {
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key !== 'h' && e.key !== 'H') return
+			if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
+			const t = e.target as HTMLElement | null
+			if (
+				t !== null &&
+				(t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
+			)
+				return
+			toggle()
+		}
+		window.addEventListener('keydown', onKey)
+		return () => window.removeEventListener('keydown', onKey)
+	}, [toggle])
+	return (
+		<div className={`hand-strip${folded ? ' hand-folded' : ''}`}>
+			<Hand seat={seat} folded={folded} onToggle={toggle} />
+		</div>
 	)
 }
 

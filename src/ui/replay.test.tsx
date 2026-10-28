@@ -27,7 +27,6 @@ async function renderInGame(): Promise<HTMLElement> {
 	act(() => {
 		useGameStore.getState().loadCatalog()
 		useGameStore.getState().startGame(config())
-		useGameStore.getState().dispatch({ t: 'START' })
 	})
 	await act(async () => {
 		root.render(<App />)

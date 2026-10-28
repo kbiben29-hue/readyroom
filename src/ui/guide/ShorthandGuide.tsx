@@ -30,6 +30,7 @@ import {
 	type QuizQuestion,
 } from './glossary'
 import { EnglishText, GlyphLegend, LexItem } from './legend'
+import { ReferenceTabs } from '../ReferenceTabs'
 import './guide.css'
 
 export type GuideSection = 'learn' | 'lexicon' | 'cards' | 'practice'
@@ -476,10 +477,7 @@ export function ShorthandGuide({
 		>
 			<div className="sg">
 				<header className="sg-head">
-					<div>
-						<div className="sg-eyebrow">Card glyphs</div>
-						<h1 className="sg-title">Shorthand</h1>
-					</div>
+					<ReferenceTabs current="shorthand" />
 					<button type="button" className="sg-pill" onClick={onClose}>
 						Close
 					</button>

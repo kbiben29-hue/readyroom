@@ -61,7 +61,6 @@ function start(seed: number, opponents: Opponents, startingSeat: Seat = 0) {
 /** Play the human's (seat 0) turn 1 to its end; returns the log index of the
  *  human's last decision. */
 function humanTurnOne(): number {
-	humanMove() // START
 	let last = 0
 	while (st().activeSeat === 0 && st().turnNumber === 1) {
 		humanMove()
@@ -287,28 +286,30 @@ describe('human vs House AI', () => {
 	it('drops a stale in-flight decision after a new game', async () => {
 		const { runner, calls } = manualRunner()
 		setBotRunner(runner)
-		// the bot goes first: it is asked for START right away
+		// the bot goes first: it is asked for its first move right away
 		start(7, { 1: 'normal' }, 1)
 		expect(calls).toHaveLength(1)
 		expect(calls[0]!.seat).toBe(1)
 		start(7, { 1: 'normal' }, 1)
 		expect(calls).toHaveLength(2)
 		expect(calls[0]!.signal?.aborted).toBe(true)
-		calls[0]!.resolve({ t: 'START' })
+		const answer = (c: (typeof calls)[number]) =>
+			nextAutoIntent(c.state, c.legal, firstLegalPolicy)!
+		calls[0]!.resolve(answer(calls[0]!))
 		await tick()
 		await tick()
-		expect(logLength()).toBe(0)
+		expect(logLength()).toBe(1) // startGame's START only
 		// the current game's answer still lands
-		calls[1]!.resolve({ t: 'START' })
+		calls[1]!.resolve(answer(calls[1]!))
 		await tick()
 		await tick()
-		expect(logLength()).toBe(1)
+		expect(logLength()).toBe(2)
 		expect(store().viewerSeat).toBe(0)
 	})
 
 	it('falls back to the first legal move when the bot answers illegally', async () => {
 		const runner: BotRunner = {
-			decide: async () => ({ t: 'END_TURN' }) as Intent, // not legal in SETUP
+			decide: async () => ({ t: 'START' }) as Intent, // not legal once started
 			dispose() {},
 		}
 		setBotRunner(runner)
@@ -355,20 +356,20 @@ describe('spectator (both seats House AI)', () => {
 		// pause before the first decision lands
 		act(() => store().setBotPaused(true))
 		await tick()
-		expect(logLength()).toBe(0)
+		expect(logLength()).toBe(1) // startGame's START only
 		expect(store().botThinking).toBeNull()
 		expect(store().viewerSeat).toBe(0)
 		expect(store().canUndo).toBe(false)
 
 		act(() => store().stepBot())
 		await waitForBots()
-		expect(logLength()).toBe(1)
+		expect(logLength()).toBe(2)
 		act(() => store().stepBot())
 		await waitForBots()
-		expect(logLength()).toBe(2)
+		expect(logLength()).toBe(3)
 		await tick()
 		await tick()
-		expect(logLength()).toBe(2) // still paused
+		expect(logLength()).toBe(3) // still paused
 
 		// the spectator may look from either side
 		act(() => store().setViewer(1))

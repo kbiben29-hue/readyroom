@@ -15,6 +15,7 @@ import { create } from 'zustand'
 import { registerCards } from '../engine/cards'
 import type { SeatCredentials, StandingPolicy } from '../session/online'
 import type { GuideSection } from './guide/ShorthandGuide'
+import type { ReferenceTab } from './ReferenceTabs'
 import { createOnlineController, type OnlineState } from './online/controller'
 
 import type { GameState } from '../engine/state'
@@ -580,6 +581,10 @@ export interface GameStore {
 	rulesOpen: boolean
 	cardListOpen: boolean
 	deckReviewOpen: boolean
+	/** The reference menu's last tab: its one button reopens it there. */
+	referenceTab: ReferenceTab
+	/** The settings drawer (layout, theme, House AI speed, card faces). */
+	settingsOpen: boolean
 	logFilter: LogFilter
 	error: string | null
 	/** Dismissible informational notice (resume card-data drift, undo refusal,
@@ -651,6 +656,10 @@ export interface GameStore {
 	setRulesOpen: (b: boolean) => void
 	setCardListOpen: (b: boolean) => void
 	setDeckReviewOpen: (b: boolean) => void
+	/** Open the reference menu on `tab` (default: the last one); its panels
+	 *  are exclusive, so this closes the others. */
+	openReference: (tab?: ReferenceTab) => void
+	setSettingsOpen: (b: boolean) => void
 	setLogFilter: (f: LogFilter) => void
 	setRevealAll: (b: boolean) => void
 	setShowCardDetails: (b: boolean) => void
@@ -791,6 +800,8 @@ export const useGameStore = create<GameStore>((set) => ({
 	rulesOpen: false,
 	cardListOpen: false,
 	deckReviewOpen: false,
+	referenceTab: 'rules',
+	settingsOpen: false,
 	logFilter: 'ALL',
 	error: null,
 	warning: null,
@@ -845,6 +856,7 @@ export const useGameStore = create<GameStore>((set) => ({
 			rulesOpen: false,
 			cardListOpen: false,
 			deckReviewOpen: false,
+			settingsOpen: false,
 			error: null,
 			warning: null,
 		})
@@ -864,6 +876,13 @@ export const useGameStore = create<GameStore>((set) => ({
 			adapter?.dispose()
 			adapter = makeAdapter(session, catalog)
 			deciders = []
+			// A new game opens on its first turn: SETUP → RESUPPLY has nothing to
+			// decide, so the device takes the START step instead of asking for a
+			// second "Start game" click.
+			if (adapter.state.phase.k === 'SETUP') {
+				deciders.push(decisionSeat(adapter.state) ?? adapter.state.activeSeat)
+				adapter.dispatch({ t: 'START' })
+			}
 			// The device starts with whoever goes first (hot-seat "pass the device"
 			// flow; docs/ui-spec.md §1) — against the house AI it stays with the
 			// human for the whole game.
@@ -1133,9 +1152,30 @@ export const useGameStore = create<GameStore>((set) => ({
 	setHoverIid: (iid) => set({ hoverIid: iid }),
 	setZoomHeld: (held) => set({ zoomHeld: held }),
 	setDestinationDefault: (d) => set({ destinationDefault: d }),
-	setRulesOpen: (b) => set({ rulesOpen: b, cardListOpen: false }),
-	setCardListOpen: (b) => set({ cardListOpen: b, rulesOpen: false }),
-	setDeckReviewOpen: (b) => set({ deckReviewOpen: b }),
+	setRulesOpen: (b) =>
+		b ? useGameStore.getState().openReference('rules') : set({ rulesOpen: b }),
+	setCardListOpen: (b) =>
+		b
+			? useGameStore.getState().openReference('cards')
+			: set({ cardListOpen: b }),
+	setDeckReviewOpen: (b) =>
+		b
+			? useGameStore.getState().openReference('decks')
+			: set({ deckReviewOpen: b }),
+	openReference: (tab) => {
+		const s = useGameStore.getState()
+		const t = tab ?? s.referenceTab
+		if (t !== 'rules') s.loadCatalog()
+		set({
+			referenceTab: t,
+			settingsOpen: false,
+			rulesOpen: t === 'rules',
+			cardListOpen: t === 'cards',
+			deckReviewOpen: t === 'decks',
+			guide: t === 'shorthand' ? (s.guide ?? 'learn') : null,
+		})
+	},
+	setSettingsOpen: (b) => set({ settingsOpen: b }),
 	setLogFilter: (f) => set({ logFilter: f }),
 	setRevealAll: (b) => {
 		const viewerSeat = useGameStore.getState().viewerSeat
@@ -1146,7 +1186,7 @@ export const useGameStore = create<GameStore>((set) => ({
 	clearWarning: () => set({ warning: null }),
 
 	openGuide: (section = 'learn') => {
-		useGameStore.getState().loadCatalog()
+		useGameStore.getState().openReference('shorthand')
 		set({ guide: section })
 	},
 	closeGuide: () => set({ guide: null }),

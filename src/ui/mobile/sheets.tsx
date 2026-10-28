@@ -10,6 +10,7 @@ import type { Intent } from '../../engine/intents'
 import type { GameState } from '../../engine/state'
 import { isGameplayTrait, isSpecies } from '../../data/ids'
 import {
+	BOT_SPEEDS,
 	setDetail,
 	undoPolicyLabel,
 	useDetailIid,
@@ -37,6 +38,8 @@ import { StandingOrders } from '../online/Orders'
 import { SeatLink } from '../online/SeatLink'
 import { GlyphLegend } from '../guide/legend'
 import { cardName, deckLabel } from '../../data/cardNames'
+import { hasBots } from '../../session/opponents'
+import { SPEED_LABEL } from '../BotBar'
 
 // ---------------------------------------------------------------------------
 // The frame
@@ -594,10 +597,13 @@ export function MenuSheet() {
 	const canUndo = useGameStore((s) => s.canUndo)
 	const undo = useGameStore((s) => s.undo)
 	const newGame = useGameStore((s) => s.newGame)
-	const setRulesOpen = useGameStore((s) => s.setRulesOpen)
+	const openReference = useGameStore((s) => s.openReference)
+	const botSpeed = useGameStore((s) => s.botSpeed)
+	const setBotSpeed = useGameStore((s) => s.setBotSpeed)
 	const session = useSession()
 	const [confirmNew, setConfirmNew] = useState(false)
 	const online = useGameStore((s) => s.online)
+	const botGame = online === null && hasBots(session?.opponents)
 	const setStandingOrder = useGameStore((s) => s.setStandingOrder)
 	const showRecap = useGameStore((s) => s.showRecap)
 	const defs = useDefIndex()
@@ -675,26 +681,38 @@ export function MenuSheet() {
 						</button>
 					))}
 				</div>
+				{botGame && (
+					<>
+						<div className="pb-lbl">House AI speed</div>
+						<div
+							className="pb-seg pb-seg-wide"
+							role="group"
+							aria-label="House AI speed"
+						>
+							{BOT_SPEEDS.map((sp) => (
+								<button
+									key={sp}
+									type="button"
+									aria-pressed={botSpeed === sp}
+									onClick={() => setBotSpeed(sp)}
+								>
+									{SPEED_LABEL[sp]}
+								</button>
+							))}
+						</div>
+					</>
+				)}
 				<button
 					type="button"
 					className="pb-pill"
 					onClick={() => {
 						close()
-						setRulesOpen(true)
+						openReference()
 					}}
 				>
-					Rules
+					Reference
 				</button>
-				<button
-					type="button"
-					className="pb-pill"
-					onClick={() => {
-						close()
-						useGameStore.getState().openGuide()
-					}}
-				>
-					Learn the glyphs
-				</button>
+				<p className="pb-note">Rules, card list, Shorthand and deck review.</p>
 				<button
 					type="button"
 					className={`pb-pill${confirmNew ? ' pb-danger' : ''}`}

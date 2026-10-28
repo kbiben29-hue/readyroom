@@ -15,6 +15,7 @@ import { useDefIndex } from './defs'
 import { HIDDEN_DEF } from './projection'
 import { zoneKey } from '../engine/state'
 import { cardName } from '../data/cardNames'
+import { ReferenceTabs } from './ReferenceTabs'
 
 const RAW_RULES = import.meta.glob('../../rules/*.md', {
 	eager: true,
@@ -203,7 +204,7 @@ export function RulesDrawer({
 				aria-label="Rules drawer"
 			>
 				<div className="drawer-head">
-					<strong>Rules</strong>
+					<ReferenceTabs current="rules" />
 					<button type="button" className="btn" onClick={onClose}>
 						Close
 					</button>
@@ -296,7 +297,7 @@ export function CardListPanel({ onClose }: { onClose: () => void }) {
 				aria-label="Card list"
 			>
 				<div className="drawer-head">
-					<strong>Card List</strong>
+					<ReferenceTabs current="cards" />
 					<button type="button" className="btn" onClick={onClose}>
 						Close
 					</button>

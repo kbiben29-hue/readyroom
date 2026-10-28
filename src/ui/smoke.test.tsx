@@ -115,20 +115,47 @@ describe('app smoke (jsdom)', () => {
 		expect(host.querySelector('[data-anchor="player:1:DIL"]')).not.toBeNull()
 	})
 
-	it('advances past the first boundary and the choice panel routes by seat', () => {
+	it('opens a new game past the START boundary, no extra click', () => {
 		act(() => {
 			useGameStore.getState().loadCatalog()
 			useGameStore.getState().startGame(config())
 		})
-		act(() => {
-			useGameStore.getState().dispatch({ t: 'START' })
-		})
 		const host = renderApp()
+		expect(useGameStore.getState().session?.log).toEqual([{ t: 'START' }])
+		expect(host.textContent).not.toContain('Start game')
 		// After START the stack machine auto-advances RESUPPLY -> CONTROL -> ACTION
 		// (no RESUPPLY ops in play at turn start, no secured Location turn 1) — the
 		// same post-START halt src/engine/intents.test.ts asserts.
 		expect(useGameStore.getState().state?.phase.k).toBe('ACTION')
 		expect(useGameStore.getState().error).toBeNull()
 		expect((host.textContent ?? '').length).toBeGreaterThan(0)
+	})
+
+	it('one Reference menu tabs between its panels; Settings holds the preferences', () => {
+		act(() => {
+			useGameStore.getState().loadCatalog()
+			useGameStore.getState().startGame(config())
+		})
+		const host = renderApp()
+		const button = (text: string, root: ParentNode = host) =>
+			[...root.querySelectorAll('button')].find(
+				(b) => b.textContent?.trim() === text,
+			)!
+		expect(host.textContent).not.toContain('MODE ·')
+		act(() => button('Reference').click())
+		expect(host.querySelector('[aria-label="Rules drawer"]')).not.toBeNull()
+		const tabs = host.querySelector('[role="tablist"][aria-label="Reference"]')!
+		act(() => button('Card list', tabs).click())
+		expect(host.querySelector('[aria-label="Rules drawer"]')).toBeNull()
+		expect(host.querySelector('[aria-label="Card list"]')).not.toBeNull()
+		act(() => useGameStore.getState().setCardListOpen(false))
+		// the button reopens the menu on the last tab
+		act(() => button('Reference').click())
+		expect(host.querySelector('[aria-label="Card list"]')).not.toBeNull()
+		act(() => useGameStore.getState().setCardListOpen(false))
+		act(() => button('Settings').click())
+		const settings = host.querySelector('[aria-label="Settings"]')!
+		expect(settings.textContent).toContain('Layout')
+		expect(settings.textContent).toContain('Card faces')
 	})
 })

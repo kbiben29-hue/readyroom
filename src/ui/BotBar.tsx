@@ -1,14 +1,17 @@
 // The house-AI strip (todo/15 §4) shown in a local game against the house AI,
 // on the LCARS console and the phone shells alike:
 //
-//   - the "thinking" indicator: which seat's bot is deciding, at what level;
-//   - the move speed (per device);
+//   - the "thinking" indicator: which seat's bot is deciding, at what level
+//     (nothing while it is your move — the top bar already says so);
 //   - spectator games (both seats bots): Pause / Resume, Step (one bot
 //     intent), whose side the view shows, and a reveal-both-hands toggle.
 //
 // The phone variant fits one row at 375 px: a short status ("P2 · Hard" with
-// a pulsing dot while it thinks; the full sentence stays for screen readers),
-// icon buttons with labels in aria-label/title, and a compact speed select.
+// a pulsing dot while it thinks; the full sentence stays for screen readers)
+// and icon buttons with labels in aria-label/title.
+//
+// The move speed (per device) lives in the settings (src/ui/SettingsPanel.tsx,
+// the phone menu).
 //
 // Below the strip sits the AI move ticker, and the strip's Moves button opens
 // the move history with its "Why?" panels (src/ui/BotTicker.tsx).
@@ -25,7 +28,7 @@ import {
 	isSpectator,
 } from '../session/opponents'
 import { seatLabel } from './format'
-import { BOT_SPEEDS, useGameStore, type BotSpeed } from './store'
+import { useGameStore, type BotSpeed } from './store'
 import {
 	BotHighlight,
 	BotHistory,
@@ -33,19 +36,11 @@ import {
 	BotTicker,
 } from './BotTicker'
 
-const SPEED_LABEL: Record<BotSpeed, string> = {
+export const SPEED_LABEL: Record<BotSpeed, string> = {
 	slow: 'Slow',
 	normal: 'Normal',
 	fast: 'Fast',
 	instant: 'Instant',
-}
-
-/** Short speed labels for the phone's compact select. */
-const SPEED_SHORT: Record<BotSpeed, string> = {
-	slow: 'Slow',
-	normal: 'Norm',
-	fast: 'Fast',
-	instant: 'Max',
 }
 
 const seatShort = (seat: Seat): string => (seat === 0 ? 'P1' : 'P2')
@@ -60,7 +55,7 @@ function shortStatus(
 	if (thinking !== null)
 		return `${seatShort(thinking.seat)} · ${BOT_LEVEL_LABEL[thinking.botId]}…`
 	if (botToMove !== null) return BOT_LEVEL_LABEL[botToMove]
-	return 'Your move'
+	return ''
 }
 
 /** Tiny inline glyphs for the phone's icon buttons (currentColor). */
@@ -102,7 +97,7 @@ function status(
 		return `${botLabel(thinking.botId)} · ${seatLabel(thinking.seat)} is thinking…`
 	if (botToMove !== null)
 		return `${botLabel(botToMove)} to move${paused ? ' · paused' : ''}`
-	return 'Your move'
+	return ''
 }
 
 export function BotBar({ variant }: { variant: 'console' | 'mobile' }) {
@@ -112,7 +107,6 @@ export function BotBar({ variant }: { variant: 'console' | 'mobile' }) {
 	const thinking = useGameStore((s) => s.botThinking)
 	const botToMove = useGameStore((s) => s.botToMove)
 	const paused = useGameStore((s) => s.botPaused)
-	const speed = useGameStore((s) => s.botSpeed)
 	const viewer = useGameStore((s) => s.viewerSeat)
 	const revealAll = useGameStore((s) => s.revealAll)
 	if (!local || !hasBots(opponents)) return null
@@ -191,19 +185,6 @@ export function BotBar({ variant }: { variant: 'console' | 'mobile' }) {
 						</span>
 					)}
 					<BotHistoryButton compact />
-					<select
-						className="bot-speed-compact"
-						value={speed}
-						onChange={(e) => store().setBotSpeed(e.target.value as BotSpeed)}
-						aria-label="House AI speed"
-						title="House AI speed"
-					>
-						{BOT_SPEEDS.map((sp) => (
-							<option key={sp} value={sp}>
-								{SPEED_SHORT[sp]}
-							</option>
-						))}
-					</select>
 				</div>
 				<BotTicker variant="mobile" />
 				<BotHistory />
@@ -270,20 +251,6 @@ export function BotBar({ variant }: { variant: 'console' | 'mobile' }) {
 						</button>
 					</span>
 				)}
-				<label className="bot-speed">
-					<span>Speed</span>
-					<select
-						value={speed}
-						onChange={(e) => store().setBotSpeed(e.target.value as BotSpeed)}
-						aria-label="House AI speed"
-					>
-						{BOT_SPEEDS.map((s) => (
-							<option key={s} value={s}>
-								{SPEED_LABEL[s]}
-							</option>
-						))}
-					</select>
-				</label>
 				<BotHistoryButton compact={false} />
 			</div>
 			<BotTicker variant="console" />

@@ -2117,6 +2117,15 @@ h3,
 	flex-direction: column;
 	gap: 4px;
 }
+.candidate-group-label {
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	font-size: 13px;
+	color: var(--dim);
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 2px;
+}
 .candidate-row {
 	display: flex;
 	flex-wrap: wrap;

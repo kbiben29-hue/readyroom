@@ -364,39 +364,54 @@ function ChooseLocationChoice({
 	choice: Extract<PendingChoice, { k: 'CHOOSE_LOCATION' }>
 }) {
 	const selected = useSelected()
+	const projected = useProjected()
+	const viewer = useViewerSeat()
 	const chosen = selected[0] ?? null
+	const skip = choice.candidates.includes(SKIP_CONTROL)
+
+	// group by where the Location sits: your area, the opponent's, the Neutral Zone
+	const groups = new Map<string, CardInstanceId[]>()
+	for (const iid of choice.candidates) {
+		if (iid === SKIP_CONTROL) continue
+		const z = projected?.cards[iid]?.zone
+		const label =
+			z?.k === 'LOCATION_AREA'
+				? z.seat === viewer
+					? 'Your Location Area'
+					: "Opponent's Location Area"
+				: z?.k === 'NEUTRAL_ZONE'
+					? 'Neutral Zone'
+					: 'Elsewhere'
+		const arr = groups.get(label) ?? []
+		arr.push(iid)
+		groups.set(label, arr)
+	}
+
 	return (
 		<section className="panel choice-panel">
 			<ChoiceHeader choice={choice} />
-			<div className="choice-options choice-options-row location-options">
-				{choice.candidates.map((iid) => {
-					if (iid === SKIP_CONTROL) {
-						return (
-							<button
-								key={iid}
-								type="button"
-								className="btn"
-								onClick={() => confirmChoice(SKIP_CONTROL)}
-							>
-								Skip (decline take-control)
-							</button>
-						)
-					}
-					return (
-						<div
-							key={iid}
-							className={`candidate-tile location-tile${chosen === iid ? ' candidate-selected' : ''}`}
-						>
-							<CardSprite
-								iid={iid}
-								size="board"
-								selected={chosen === iid}
-								onClick={() => useGameStore.getState().setSelected([iid])}
-							/>
-							<LocationLabel iid={iid} />
+			<div className="candidate-groups location-groups">
+				{[...groups.entries()].map(([label, iids]) => (
+					<div key={label} className="candidate-group">
+						<span className="candidate-group-label">{label}</span>
+						<div className="candidate-row">
+							{iids.map((iid) => (
+								<div
+									key={iid}
+									className={`candidate-tile location-tile${chosen === iid ? ' candidate-selected' : ''}`}
+								>
+									<CardSprite
+										iid={iid}
+										size="board"
+										selected={chosen === iid}
+										onClick={() => useGameStore.getState().setSelected([iid])}
+									/>
+									<LocationLabel iid={iid} />
+								</div>
+							))}
 						</div>
-					)
-				})}
+					</div>
+				))}
 			</div>
 			<div className="choice-actions">
 				<button
@@ -407,6 +422,15 @@ function ChooseLocationChoice({
 				>
 					Confirm
 				</button>
+				{skip && (
+					<button
+						type="button"
+						className="btn"
+						onClick={() => confirmChoice(SKIP_CONTROL)}
+					>
+						Skip (decline take-control)
+					</button>
+				)}
 			</div>
 		</section>
 	)

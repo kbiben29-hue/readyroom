@@ -2432,6 +2432,40 @@ h3,
 .settings-drawer {
 	width: min(94vw, 420px);
 }
+/* Orders: every legal move, grouped by where the card is (OrdersPanel) */
+.orders-drawer {
+	width: min(94vw, 560px);
+}
+.orders-body {
+	flex: 1;
+	overflow: auto;
+	padding: 10px 14px 16px;
+}
+.orders-body > p {
+	margin: 0 0 10px;
+}
+.orders-group h3 {
+	margin: 12px 0 6px;
+}
+.orders-empty {
+	color: var(--dim);
+}
+.order-name {
+	background: none;
+	border: 0;
+	padding: 0;
+	color: inherit;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+	text-decoration: underline dotted;
+	text-underline-offset: 3px;
+}
+.orders-n {
+	font-variant-numeric: tabular-nums;
+	opacity: 0.75;
+	margin-left: 4px;
+}
 .settings-body {
 	display: flex;
 	flex-direction: column;

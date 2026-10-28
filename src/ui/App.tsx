@@ -51,6 +51,9 @@ import { ShorthandGuide } from './guide/ShorthandGuide'
 import { useDefIndex } from './defs'
 import { MobileShell } from './mobile/MobileShell'
 import { SettingsPanel } from './SettingsPanel'
+import { OrdersPanel } from './OrdersPanel'
+import { orderCount } from './mobile/facts'
+import { useViewerLegal } from './tile/legal'
 import { ThemeSwitch } from './ThemeSwitch'
 import { deckLabel } from '../data/cardNames'
 import type { BotId } from '../bot/types'
@@ -598,6 +601,24 @@ function TopBar({ state }: { state: GameState }) {
 	// nothing left to spend: the one obvious next move is ending the step
 	const outOfActions =
 		phase === 'ACTION' && !pending && (active?.actions.available ?? 0) === 0
+	// every legal move in one list (O, or the button beside the primary step)
+	const [ordersOpen, setOrdersOpen] = useState(false)
+	const orders = orderCount(useViewerLegal())
+	useEffect(() => {
+		const onKey = (e: KeyboardEvent) => {
+			if (e.key !== 'o' && e.key !== 'O') return
+			if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
+			const t = e.target as HTMLElement | null
+			if (
+				t !== null &&
+				(t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
+			)
+				return
+			setOrdersOpen((o) => !o)
+		}
+		window.addEventListener('keydown', onKey)
+		return () => window.removeEventListener('keydown', onKey)
+	}, [])
 
 	const action = useMemo(() => {
 		if (pending) return null
@@ -673,6 +694,17 @@ function TopBar({ state }: { state: GameState }) {
 				)}
 			</div>
 			<div className="topbar-actions">
+				{phase !== 'SETUP' && (
+					<button
+						type="button"
+						className="btn orders-btn"
+						onClick={() => setOrdersOpen(true)}
+						title="Every legal move right now (O)"
+					>
+						Orders <span className="orders-n">{orders}</span>
+					</button>
+				)}
+				{ordersOpen && <OrdersPanel onClose={() => setOrdersOpen(false)} />}
 				{action !== null && (
 					<button
 						type="button"

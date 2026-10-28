@@ -30,6 +30,7 @@ import { cardDef } from '../engine/cards'
 import { altPlayOperation, type AltPlayRef } from '../engine/altPlay'
 import type { GameState } from '../engine/state'
 import type { CardInstanceId } from '../engine/ids'
+import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
 import {
 	useGameStore,
@@ -1338,6 +1339,96 @@ function AltPlays({
 	)
 }
 
+/** One legal PLAY_CARD / ACTIVATE intent as a runnable operation block, for
+ *  the Orders drawer: the card's name (opens its detail), the operation's
+ *  printed text and the same Play / Activate button and idle warning as the
+ *  card detail. `state` is the real state, as for the detail's probes. */
+export function OrderOp({
+	intent,
+	state,
+	where,
+	onDone,
+}: {
+	intent: Extract<Intent, { t: 'PLAY_CARD' } | { t: 'ACTIVATE' }>
+	state: GameState
+	where: string
+	onDone: () => void
+}) {
+	const card = state.cards[intent.iid]
+	if (card === undefined) return null
+	let def: CardDef
+	try {
+		def = cardDef(card.def)
+	} catch {
+		return null
+	}
+	const i = intent.operationIndex
+	const via = intent.t === 'PLAY_CARD' ? intent.via : undefined
+	const op =
+		via !== undefined ? altPlayOperation(state, via) : def.operations[i]
+	if (op === null || op === undefined) return null
+	const stcc = stccCard(def)
+	const printed =
+		via === undefined && stcc !== null
+			? printedOpFor(printedOps(stcc.text), def.operations, i)
+			: undefined
+	const usable =
+		via === undefined
+			? opUsable(state, state.activeSeat, intent.iid, i)
+			: { idle: null }
+	const name = cardName(def) ?? intent.iid
+	return (
+		<OpBlock
+			blocked={false}
+			run={{
+				label: intent.t === 'ACTIVATE' ? 'Activate' : 'Play',
+				idle: usable.idle,
+				onRun: () => {
+					onDone()
+					useGameStore.getState().dispatch(intent)
+				},
+			}}
+		>
+			<div className="op-detail-head">
+				<button
+					type="button"
+					className="order-name"
+					onClick={() => {
+						onDone()
+						setDetail(intent.iid)
+					}}
+					title="Open the card"
+				>
+					{name}
+				</button>
+				<span className="muted small">{where}</span>
+				<span className={`op-type op-type-${op.type.toLowerCase()}`}>
+					{op.type}
+				</span>
+				{via !== undefined && (
+					<span className="chip">
+						via {cardName(cardDef(state.cards[via.source]!.def))}
+					</span>
+				)}
+				{op.costsAction ? <span className="chip">costs an action</span> : null}
+				{op.isAttack ? <span className="chip">attack</span> : null}
+				{op.requires !== undefined ? (
+					<span className={`chip ${specialtyClasses(op.requires.specialty)}`}>
+						<SpecialtyLabel specialty={op.requires.specialty} />{' '}
+						{op.requires.min}
+					</span>
+				) : null}
+			</div>
+			<p className="op-text">
+				<OpText
+					text={printed?.text ?? safeDescribe(op) ?? '<unreadable operation>'}
+					onKeyword={openRulesFor}
+				/>
+			</p>
+		</OpBlock>
+	)
+}
+
 /** Detail-side usability probe: PLAY ops via canPlay, ACTIVATION via
  *  canActivate, everything else is automatic. `seat` is the acting seat the
  *  op would run as (the active seat) — restrictions such as "not your card"
@@ -1395,7 +1486,7 @@ function opUsableBase(
  *  control — keyword links and other buttons inside keep their own clicks.
  *  An operation that would do nothing (idleOperationReason) says so and asks
  *  "Are you sure?" before it runs. */
-function OpBlock({
+export function OpBlock({
 	blocked,
 	run,
 	children,

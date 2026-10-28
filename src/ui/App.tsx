@@ -38,6 +38,7 @@ import {
 	ActionTray,
 } from './board'
 import { FlightLayer } from './flight'
+import { DeltaCounter } from './delta'
 import { isDesktop, openCardDatabase } from '../desktop/bridge'
 import { seatLabel, phaseLabel, RESOURCE_LABEL } from './format'
 import { SavedGamesPanel } from './load'
@@ -581,14 +582,16 @@ function GameFlow({ shell }: { shell: Shell }) {
 }
 
 /** The top bar carries this turn and nothing else: who is acting, in what
- *  phase, with how many actions, and the one obvious next move. Everything
- *  else lives in the rail. */
+ *  phase, with how many actions, your resources and Away Teams, and the one
+ *  obvious next move. Everything else lives in the rail. */
 function TopBar({ state }: { state: GameState }) {
 	const session = useSession()
 	const [confirmEnd, setConfirmEnd] = useState(false)
 	// the house AI is to move: no primary step for the device
 	const botToMove = useGameStore((s) => s.botToMove)
+	const viewer = useViewerSeat()
 	const active = state.players[state.activeSeat]
+	const mine = state.players[viewer]
 	const phase = state.phase.k
 	const pending = state.pendingChoice !== null || botToMove !== null
 	const budget = session?.meta.scoreEstimate
@@ -637,20 +640,35 @@ function TopBar({ state }: { state: GameState }) {
 					Turn {state.turnNumber} · {seatLabel(state.activeSeat)}
 				</span>
 				<ActionTray seat={state.activeSeat} size="lg" />
-				{active !== undefined && (
+				{/* Your resources and Away Teams live here, not on the crew console:
+            the one counter per pool a token flight lands on (docs/ui-lcars.md §4.1). */}
+				{mine !== undefined && (
 					<span
 						className="topbar-resources"
-						aria-label={`${seatLabel(state.activeSeat)} resources`}
+						aria-label={`${seatLabel(viewer)} resources`}
 					>
 						{(['DIL', 'LAT', 'GLO'] as const).map((r) => (
-							<span
+							<DeltaCounter
 								key={r}
+								pool={`player:${viewer}:${r}`}
+								label={`${seatLabel(viewer)} ${RESOURCE_LABEL[r]}`}
 								className={`res-pip pip-${r.toLowerCase()}`}
 								title={RESOURCE_LABEL[r]}
 							>
-								<Icon id={r} label={RESOURCE_LABEL[r]} /> {active.resources[r]}
-							</span>
+								<Icon id={r} label={RESOURCE_LABEL[r]} />{' '}
+								<span className="res-n">{mine.resources[r]}</span>
+							</DeltaCounter>
 						))}
+						<span
+							className="res-pip pip-away"
+							title={`${mine.awayTeamsInPool} Away Team${mine.awayTeamsInPool === 1 ? '' : 's'} on your Captain · ${mine.awayTeamsTotal} owned`}
+						>
+							<Icon id="AWAY_TEAM" label="Away Teams" />{' '}
+							<span className="res-n">
+								{mine.awayTeamsInPool}
+								<small>/{mine.awayTeamsTotal}</small>
+							</span>
+						</span>
 					</span>
 				)}
 			</div>

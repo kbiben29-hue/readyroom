@@ -514,6 +514,29 @@ export function DetailSheet() {
 			</SheetFrame>
 		)
 	}
+	// lines that can never run from this zone (a deployed card's PLAY lines)
+	// fold away below the ones that can
+	const away = lines.filter((l) => l.state === 'na')
+	const opView = (l: TileLine) => (
+		<DetailOp key={l.key} l={l} onDone={close}>
+			<div className="pb-lblrow">
+				{TIMING_WORD[l.line.timing]}
+				{l.line.action && (
+					<span className="pb-cost-note">· costs an action</span>
+				)}
+				{l.line.attack && <span className="pb-cost-note pb-atk">· attack</span>}
+				{l.via !== undefined && (
+					<span className="pb-cost-note">· via {l.via}</span>
+				)}
+			</div>
+			<ShorthandLineView line={l.line} label={l.english} size="lg" />
+			{l.english !== undefined && (
+				<p className="pb-en">
+					<OpText text={l.english} onKeyword={openRulesFor} />
+				</p>
+			)}
+		</DetailOp>
+	)
 	const scan = cardImageUrl(def)
 	const oppDeck = projected.players[viewer === 0 ? 1 : 0]?.deckId
 	const oppName = oppDeck !== undefined ? deckLabel(oppDeck) : 'Opponent'
@@ -606,28 +629,15 @@ export function DetailSheet() {
 			) : lines.length === 0 ? (
 				<div className="pb-empty">No operations.</div>
 			) : (
-				lines.map((l) => (
-					<DetailOp key={l.key} l={l} onDone={close}>
-						<div className="pb-lblrow">
-							{TIMING_WORD[l.line.timing]}
-							{l.line.action && (
-								<span className="pb-cost-note">· costs an action</span>
-							)}
-							{l.line.attack && (
-								<span className="pb-cost-note pb-atk">· attack</span>
-							)}
-							{l.via !== undefined && (
-								<span className="pb-cost-note">· via {l.via}</span>
-							)}
-						</div>
-						<ShorthandLineView line={l.line} label={l.english} size="lg" />
-						{l.english !== undefined && (
-							<p className="pb-en">
-								<OpText text={l.english} onKeyword={openRulesFor} />
-							</p>
-						)}
-					</DetailOp>
-				))
+				<>
+					{lines.filter((l) => l.state !== 'na').map(opView)}
+					{away.length > 0 && (
+						<details className="pb-dt-away">
+							<summary>Not usable from here ({away.length})</summary>
+							{away.map(opView)}
+						</details>
+					)}
+				</>
 			)}
 			{!printed && lines.length > 0 && (
 				<GlyphLegend

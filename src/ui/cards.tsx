@@ -32,6 +32,7 @@ import { zoneKey, type GameState } from '../engine/state'
 import type { CardInstanceId } from '../engine/ids'
 import type { Intent } from '../engine/intents'
 import type { Seat } from '../engine/resolver/queries'
+import type { Operation } from '../engine/resolver/nodes'
 import {
 	useGameStore,
 	useProjected,
@@ -55,6 +56,7 @@ import { ShorthandOp } from './shorthand'
 import { GlyphLegend } from './guide/legend'
 import { linesOfDef } from './guide/glossary'
 import { cardName, withCardNames } from '../data/cardNames'
+import { contextOf, notHereReason } from './tile/lines'
 import { BeamedChips, BeamedOnto } from './beamed'
 
 export type CardSize =
@@ -1106,6 +1108,105 @@ export function CardDetailHost() {
 			: realState.phase.k !== 'ACTION'
 				? 'Activations only run in the ACTION phase'
 				: 'Not your turn'
+	// operations that can never run from this zone (a deployed card's PLAY
+	// lines) fold away below the ones that can
+	const ctx = contextOf(card.zone)
+	const defOps = def?.operations ?? []
+	const ops = defOps.map((op, i) => ({
+		op,
+		i,
+		notHere: notHereReason(ctx, op.type),
+	}))
+	const here = ops.filter((o) => o.notHere === undefined)
+	const away = ops.filter((o) => o.notHere !== undefined)
+	const opBlock = (op: Operation, i: number, notHere?: string) => {
+		const usable =
+			notHere !== undefined
+				? { ok: false, message: notHere, idle: null }
+				: opUsable(realState, activeSeat, detailIid, i)
+		const activatable = op.type === 'ACTIVATION' && turnOpen && usable.ok
+		const playable = op.type === 'PLAY' && turnOpen && usable.ok
+		const run =
+			activatable || playable
+				? {
+						label: activatable ? 'Activate' : 'Play',
+						idle: usable.idle,
+						onRun: () => {
+							useGameStore.getState().dispatch(
+								activatable
+									? {
+											t: 'ACTIVATE',
+											iid: detailIid,
+											operationIndex: i,
+										}
+									: {
+											t: 'PLAY_CARD',
+											iid: detailIid,
+											operationIndex: i,
+										},
+							)
+							if (playable) setDetail(null)
+						},
+					}
+				: null
+		const why =
+			notHere ??
+			(op.type !== 'ACTIVATION' && op.type !== 'PLAY'
+				? usable.ok
+					? null
+					: usable.message
+				: !turnOpen
+					? turnBlockReason
+					: usable.message)
+		return (
+			<OpBlock key={i} blocked={!usable.ok} run={run}>
+				<div className="op-detail-head">
+					<span className={`op-type op-type-${op.type.toLowerCase()}`}>
+						{op.type}
+					</span>
+					{op.costsAction ? (
+						<span className="chip">costs an action</span>
+					) : null}
+					{op.isAttack ? <span className="chip">attack</span> : null}
+					{op.requires !== undefined ? (
+						<span className={`chip ${specialtyClasses(op.requires.specialty)}`}>
+							<SpecialtyLabel specialty={op.requires.specialty} />{' '}
+							{op.requires.min}
+						</span>
+					) : null}
+				</div>
+				{glyphs && (
+					<ShorthandOp
+						op={op}
+						size="md"
+						className="op-shorthand"
+						live={
+							card.owner === null
+								? undefined
+								: {
+										state: realState,
+										seat: card.owner,
+										iid: detailIid,
+									}
+						}
+					/>
+				)}
+				<p className="op-text">
+					<OpText
+						text={
+							printedOpFor(printed, defOps, i)?.text ??
+							safeDescribe(op) ??
+							'<unreadable operation>'
+						}
+						onKeyword={openRulesFor}
+					/>
+				</p>
+				{run === null && why !== null && (
+					<p className="op-reason muted">Why not: {why}</p>
+				)}
+			</OpBlock>
+		)
+	}
 
 	return (
 		<div className="modal-backdrop" onClick={close}>
@@ -1163,97 +1264,7 @@ export function CardDetailHost() {
 											<OpText text={p.text} onKeyword={openRulesFor} />
 										</p>
 									))}
-								{def.operations.map((op, i) => {
-									const usable = opUsable(realState, activeSeat, detailIid, i)
-									const activatable =
-										op.type === 'ACTIVATION' && turnOpen && usable.ok
-									const playable = op.type === 'PLAY' && turnOpen && usable.ok
-									const run =
-										activatable || playable
-											? {
-													label: activatable ? 'Activate' : 'Play',
-													idle: usable.idle,
-													onRun: () => {
-														useGameStore.getState().dispatch(
-															activatable
-																? {
-																		t: 'ACTIVATE',
-																		iid: detailIid,
-																		operationIndex: i,
-																	}
-																: {
-																		t: 'PLAY_CARD',
-																		iid: detailIid,
-																		operationIndex: i,
-																	},
-														)
-														if (playable) setDetail(null)
-													},
-												}
-											: null
-									const why =
-										op.type !== 'ACTIVATION' && op.type !== 'PLAY'
-											? usable.ok
-												? null
-												: usable.message
-											: !turnOpen
-												? turnBlockReason
-												: usable.message
-									return (
-										<OpBlock key={i} blocked={!usable.ok} run={run}>
-											<div className="op-detail-head">
-												<span
-													className={`op-type op-type-${op.type.toLowerCase()}`}
-												>
-													{op.type}
-												</span>
-												{op.costsAction ? (
-													<span className="chip">costs an action</span>
-												) : null}
-												{op.isAttack ? (
-													<span className="chip">attack</span>
-												) : null}
-												{op.requires !== undefined ? (
-													<span
-														className={`chip ${specialtyClasses(op.requires.specialty)}`}
-													>
-														<SpecialtyLabel specialty={op.requires.specialty} />{' '}
-														{op.requires.min}
-													</span>
-												) : null}
-											</div>
-											{glyphs && (
-												<ShorthandOp
-													op={op}
-													size="md"
-													className="op-shorthand"
-													live={
-														card.owner === null
-															? undefined
-															: {
-																	state: realState,
-																	seat: card.owner,
-																	iid: detailIid,
-																}
-													}
-												/>
-											)}
-											<p className="op-text">
-												<OpText
-													text={
-														printedOpFor(printed, def.operations, i)?.text ??
-														safeDescribe(op) ??
-														'<unreadable operation>'
-													}
-													onKeyword={openRulesFor}
-												/>
-											</p>
-											{run === null && why !== null && (
-												<p className="op-reason muted">Why not: {why}</p>
-											)}
-										</OpBlock>
-									)
-								})}
+								{here.map(({ op, i }) => opBlock(op, i))}
 								{turnOpen && (
 									<AltPlays
 										state={realState}
@@ -1267,6 +1278,12 @@ export function CardDetailHost() {
 									onKeyword={openRulesFor}
 									sections={['reward']}
 								/>
+								{away.length > 0 && (
+									<details className="op-away">
+										<summary>Not usable from here ({away.length})</summary>
+										{away.map(({ op, i, notHere }) => opBlock(op, i, notHere))}
+									</details>
+								)}
 								{glyphs && (
 									<GlyphLegend
 										lines={linesOfDef(def)}

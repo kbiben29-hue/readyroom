@@ -285,11 +285,33 @@ function resolvedThisTurn(
 // The lines
 // ---------------------------------------------------------------------------
 
-const HIDDEN_IN_PLAY = new Set<ShorthandLine['timing']>([
-	'PLAY',
-	'CONTROL',
-	'DEVELOPMENT',
-])
+/** Why a line can never run from where the card is (state 'na'): in play,
+ *  PLAY / CONTROL / Development lines are spent; a Development cost is paid
+ *  only on enlisting. undefined: the line can matter here. The detail views
+ *  fold these lines away. */
+export function notHereReason(
+	ctx: TileContext,
+	timing: ShorthandLine['timing'],
+): string | undefined {
+	switch (ctx) {
+		case 'hand':
+			return timing === 'DEVELOPMENT'
+				? 'Paid only when enlisted from Development'
+				: undefined
+		case 'play':
+			return timing === 'PLAY'
+				? 'Already in play'
+				: timing === 'CONTROL'
+					? 'Resolved when control was taken'
+					: timing === 'DEVELOPMENT'
+						? 'Paid when it was enlisted'
+						: undefined
+		case 'staging':
+			return timing === 'DEVELOPMENT' ? 'Paid when it was enlisted' : undefined
+		default:
+			return undefined
+	}
+}
 
 function sameVia(
 	a: { source: string; opIndex: number } | undefined,
@@ -368,95 +390,86 @@ export function tileLines(input: TileLineInput): TileLine[] {
 		let intent: Intent | undefined
 		let idle: string | undefined
 
-		switch (ctx) {
-			case 'hand':
-				if (timing === 'DEVELOPMENT') {
-					st = 'na'
-					reason = 'Paid only when enlisted from Development'
-				} else if (timing === 'PLAY') {
-					if (!mine || view === null || iid === null || c.opIndex === null)
-						break
-					intent = litIntent(legal, 'PLAY_CARD', iid, c.opIndex)
-					if (intent !== undefined) {
-						st = 'lit'
-						idle = idleOf(real, viewer, iid, c.opIndex)
-						break
-					}
-					st = 'dim'
-					const block = turnBlock(view, viewer, 'PLAY')
-					if (block !== null) {
-						reason = block
-						turnGated = true
-					} else reason = playReason(c.opIndex)
-				} else {
-					st = 'later'
-					reason = 'Works once this card is in play'
-				}
-				break
-			case 'play':
-				if (HIDDEN_IN_PLAY.has(timing)) {
-					st = 'na'
-					reason =
-						timing === 'PLAY'
-							? 'Already in play'
-							: timing === 'CONTROL'
-								? 'Resolved when control was taken'
-								: 'Paid when it was enlisted'
-				} else if (timing === 'ACTIVATION' && card !== undefined) {
-					if (card.exhausted) {
+		const na = notHereReason(ctx, timing)
+		if (na !== undefined) {
+			st = 'na'
+			reason = na
+		} else
+			switch (ctx) {
+				case 'hand':
+					if (timing === 'PLAY') {
+						if (!mine || view === null || iid === null || c.opIndex === null)
+							break
+						intent = litIntent(legal, 'PLAY_CARD', iid, c.opIndex)
+						if (intent !== undefined) {
+							st = 'lit'
+							idle = idleOf(real, viewer, iid, c.opIndex)
+							break
+						}
 						st = 'dim'
-						reason = 'Exhausted until Clean-up'
-						break
+						const block = turnBlock(view, viewer, 'PLAY')
+						if (block !== null) {
+							reason = block
+							turnGated = true
+						} else reason = playReason(c.opIndex)
+					} else {
+						st = 'later'
+						reason = 'Works once this card is in play'
 					}
-					if (!mine || view === null || iid === null || c.opIndex === null)
-						break
-					intent = litIntent(legal, 'ACTIVATE', iid, c.opIndex)
-					if (intent !== undefined) {
-						st = 'lit'
-						idle = idleOf(real, viewer, iid, c.opIndex)
-						break
-					}
-					st = 'dim'
-					const block = turnBlock(view, viewer, 'ACTIVATION')
-					if (block !== null) {
-						reason = block
-						turnGated = true
-					} else if (real !== null) {
-						try {
-							reason = canActivate(real, viewer, iid, c.opIndex).reason
-						} catch {
-							reason = undefined
+					break
+				case 'play':
+					if (timing === 'ACTIVATION' && card !== undefined) {
+						if (card.exhausted) {
+							st = 'dim'
+							reason = 'Exhausted until Clean-up'
+							break
+						}
+						if (!mine || view === null || iid === null || c.opIndex === null)
+							break
+						intent = litIntent(legal, 'ACTIVATE', iid, c.opIndex)
+						if (intent !== undefined) {
+							st = 'lit'
+							idle = idleOf(real, viewer, iid, c.opIndex)
+							break
+						}
+						st = 'dim'
+						const block = turnBlock(view, viewer, 'ACTIVATION')
+						if (block !== null) {
+							reason = block
+							turnGated = true
+						} else if (real !== null) {
+							try {
+								reason = canActivate(real, viewer, iid, c.opIndex).reason
+							} catch {
+								reason = undefined
+							}
 						}
 					}
-				}
-				break
-			case 'staging':
-				if (timing === 'DEVELOPMENT') {
-					st = 'na'
-					reason = 'Paid when it was enlisted'
-				} else if (timing === 'PLAY') {
-					if (
-						view !== null &&
-						iid !== null &&
-						c.opIndex !== null &&
-						resolvedThisTurn(view, iid, c.opIndex)
-					)
-						st = 'done'
-				} else if (timing === 'ACTIVATION') {
-					st = 'later'
-					reason = 'No table operations in the Staging Area'
-				}
-				break
-			case 'development':
-				if (timing !== 'DEVELOPMENT') {
-					st = 'later'
-					reason = 'Works once enlisted and in play'
-				}
-				break
-			case 'market':
-			case 'other':
-				break
-		}
+					break
+				case 'staging':
+					if (timing === 'PLAY') {
+						if (
+							view !== null &&
+							iid !== null &&
+							c.opIndex !== null &&
+							resolvedThisTurn(view, iid, c.opIndex)
+						)
+							st = 'done'
+					} else if (timing === 'ACTIVATION') {
+						st = 'later'
+						reason = 'No table operations in the Staging Area'
+					}
+					break
+				case 'development':
+					if (timing !== 'DEVELOPMENT') {
+						st = 'later'
+						reason = 'Works once enlisted and in play'
+					}
+					break
+				case 'market':
+				case 'other':
+					break
+			}
 
 		if (show === 'zone' && st === 'na') continue
 		out.push({

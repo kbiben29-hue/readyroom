@@ -114,6 +114,38 @@ describe('deployed-card activation (ui wiring)', () => {
 		).toBe(false)
 	})
 
+	it('folds a deployed card’s PLAY operations into a closed section', () => {
+		const session = sessionWithActivatableDeployedCard()
+		act(() => {
+			useGameStore.getState().resumeGame(session)
+		})
+		const ent = findDef(useGameStore.getState().state!, 'FLEET:0', '1PIC02-24')
+		act(() => {
+			useGameStore.getState().cardClicked(ent)
+		})
+		const host = document.createElement('div')
+		document.body.appendChild(host)
+		const root = createRoot(host)
+		act(() => {
+			root.render(<CardDetailHost />)
+		})
+
+		const away = host.querySelector('details.op-away') as HTMLDetailsElement
+		expect(away).not.toBeNull()
+		expect(away.open).toBe(false)
+		expect(away.querySelector('summary')!.textContent).toContain('(1)')
+		expect(away.textContent).toContain('PLAY')
+		expect(away.textContent).toContain('Already in play')
+		// the activations stay out in the open, still runnable
+		const outside = [...host.querySelectorAll('.op-detail')].filter(
+			(el) => !away.contains(el),
+		)
+		expect(
+			outside.map((el) => el.querySelector('.op-type')!.textContent),
+		).toEqual(['ACTIVATION', 'ACTIVATION', 'ACTIVATION'])
+		expect(away.querySelector('.op-activate')).toBeNull()
+	})
+
 	it('an ACTIVATION outside your turn shows a reason instead of a dead row', () => {
 		const session = sessionWithActivatableDeployedCard()
 		act(() => {

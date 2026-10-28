@@ -1933,6 +1933,37 @@ h3,
 .op-detail-run:hover {
 	background: var(--panel-2);
 }
+/* operations that can never run from this zone: closed until asked for */
+.op-away {
+	margin: 4px 0 8px;
+}
+.op-away > summary {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 0;
+	cursor: pointer;
+	list-style: none;
+	font:
+		600 11.5px/1 'Antonio',
+		sans-serif;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--dim);
+}
+.op-away > summary::-webkit-details-marker {
+	display: none;
+}
+.op-away > summary::before {
+	content: '▸';
+	transition: transform 0.15s;
+}
+.op-away[open] > summary::before {
+	transform: rotate(90deg);
+}
+.op-away[open] > summary {
+	margin-bottom: 6px;
+}
 .op-detail-head {
 	display: flex;
 	gap: 8px;

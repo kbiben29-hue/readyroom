@@ -1346,6 +1346,34 @@ ul.pb-order li {
 .pb-tone-dev {
 	--tc: var(--sh-t-dev);
 }
+/* lines that can never run from this zone: closed until asked for */
+.pb-dt-away {
+	border-top: 1px solid var(--hair);
+}
+.pb-dt-away > summary {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 12px 2px;
+	cursor: pointer;
+	list-style: none;
+	font:
+		600 10.5px/1 'Antonio',
+		sans-serif;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--pb-faint);
+}
+.pb-dt-away > summary::-webkit-details-marker {
+	display: none;
+}
+.pb-dt-away > summary::before {
+	content: '▸';
+	transition: transform 0.15s;
+}
+.pb-dt-away[open] > summary::before {
+	transform: rotate(90deg);
+}
 .pb-lblrow {
 	display: flex;
 	flex-wrap: wrap;

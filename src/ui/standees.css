@@ -1,0 +1,169 @@
+/* Ship standees (standees.tsx). The owner's colour follows the Away Team
+   markers: P1 ice, P2 salmon on the desktop board; you ice, the opponent
+   salmon on the phone. */
+.standee-seat-0 {
+	--standee: var(--ice);
+}
+.standee-seat-1 {
+	--standee: var(--salmon);
+}
+.standees-inline .standee-me {
+	--standee: var(--ice);
+}
+.standees-inline .standee-them {
+	--standee: var(--salmon);
+}
+
+.standees {
+	display: flex;
+	gap: 4px;
+}
+.standee {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 0;
+	border: 0;
+	background: var(--ground);
+	color: var(--standee);
+	cursor: pointer;
+	font: inherit;
+}
+.standee:focus-visible,
+.ship-at:focus-visible {
+	outline: 2px solid var(--text);
+	outline-offset: 2px;
+}
+.standee-icon {
+	display: block;
+	width: 15px;
+	height: 15px;
+	flex: none;
+	background: currentColor;
+	mask: center / contain no-repeat;
+	-webkit-mask: center / contain no-repeat;
+}
+.standee-glyph {
+	font-size: 11px;
+	line-height: 1;
+}
+
+/* Desktop: plaques standing along the bottom edge of the Location card, half
+   over it, each on a small base like the physical standee. */
+.standees-overlay {
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	z-index: 3;
+	transform: translate(-50%, 55%);
+}
+.standees-overlay .standee {
+	justify-content: center;
+	width: 24px;
+	height: 28px;
+	border-radius: 11px 11px 3px 3px;
+	box-shadow:
+		0 0 0 2px var(--standee),
+		0 2px 6px #000a;
+	transition: transform 0.12s ease;
+}
+.standees-overlay .standee::after {
+	content: '';
+	position: absolute;
+	left: -4px;
+	right: -4px;
+	bottom: -5px;
+	height: 3px;
+	border-radius: 2px;
+	background: var(--standee);
+}
+.standees-overlay .standee:hover {
+	transform: translateY(-3px);
+}
+.standees-overlay.standees-dense {
+	gap: 0;
+}
+.standees-overlay.standees-dense .standee + .standee {
+	margin-left: -8px;
+}
+/* room for the standees' lower half before what follows the card */
+.location-with-teams:has(> .standees-overlay) {
+	margin-bottom: 18px;
+}
+
+/* Phone tiles: a wrapping row of named chips under the Location's header. */
+.standees-inline {
+	flex-wrap: wrap;
+	width: 100%;
+}
+.standees-inline .standee {
+	min-height: 28px;
+	padding: 3px 9px 3px 6px;
+	border-radius: 10px 10px 4px 4px;
+	box-shadow: inset 0 0 0 1.5px var(--standee);
+	background: color-mix(in srgb, var(--standee) 12%, transparent);
+	font:
+		600 10.5px/1 'Antonio',
+		sans-serif;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.standee-name {
+	max-width: 22ch;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Desktop Fleet: where this ship's standee stands, as a tab on the card's
+   bottom edge. */
+.fleet-ship {
+	position: relative;
+	display: inline-block;
+}
+.fleet-ship:has(> .ship-at) {
+	margin-bottom: 12px;
+}
+.ship-at {
+	position: absolute;
+	left: 4px;
+	right: 4px;
+	bottom: 0;
+	z-index: 3;
+	transform: translateY(55%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 3px;
+	padding: 3px 6px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--ground);
+	box-shadow: 0 0 0 1.5px var(--standee);
+	color: var(--standee);
+	cursor: pointer;
+	font:
+		600 10px/1 'Antonio',
+		sans-serif;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.ship-at .standee-icon {
+	width: 11px;
+	height: 11px;
+}
+.ship-at-name {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* The compact opponent area's Location strip (board.tsx CompactLocations). */
+.compact-locations {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	width: 100%;
+}

@@ -23,6 +23,7 @@ import {
 	useRealState,
 } from './store'
 import { CardSprite, CardStack, browsePile } from './cards'
+import { ShipPosition, ShipStandees } from './standees'
 import { RESOURCE_LABEL, seatLabel, specialtyName } from './format'
 import { Icon, suitIconId } from './icons'
 import { DeltaCounter } from './delta'
@@ -166,6 +167,7 @@ function LocationSlot({ slot }: { slot: 0 | 1 | 2 }) {
 							onClick={() => useGameStore.getState().cardClicked(loc)}
 						/>
 						<AwayTeamMarkers teams={at} />
+						<ShipStandees loc={loc} placement="overlay" />
 					</div>
 					<div className="location-tokens">
 						<span className="ship-count">
@@ -317,6 +319,12 @@ function ZoneRow({
 							<div key={iid} className="location-with-teams">
 								{sprite}
 								<AwayTeamMarkers teams={state?.awayTeamsAt[iid]} />
+								<ShipStandees loc={iid} placement="overlay" />
+							</div>
+						) : k === 'FLEET' ? (
+							<div key={iid} className="fleet-ship">
+								{sprite}
+								<ShipPosition ship={iid} />
 							</div>
 						) : (
 							sprite
@@ -324,6 +332,27 @@ function ZoneRow({
 					})
 				)}
 			</div>
+		</div>
+	)
+}
+
+/** The compact (opponent) area still draws its Locations, small, so the ships
+ *  standing on them have a card to stand on. */
+function CompactLocations({ seat }: { seat: Seat }) {
+	const iids = useZones({ k: 'LOCATION_AREA', seat })
+	if (iids.length === 0) return null
+	return (
+		<div className="compact-locations" aria-label="Locations">
+			{iids.map((iid) => (
+				<div key={iid} className="location-with-teams">
+					<CardSprite
+						iid={iid}
+						size="micro"
+						onClick={() => useGameStore.getState().cardClicked(iid)}
+					/>
+					<ShipStandees loc={iid} placement="overlay" />
+				</div>
+			))}
 		</div>
 	)
 }
@@ -392,6 +421,7 @@ export function PlayerArea({
 					<span>
 						dev <ZoneCount seat={seat} k="DEVELOPMENT" />
 					</span>
+					<CompactLocations seat={seat} />
 				</div>
 			) : (
 				<div

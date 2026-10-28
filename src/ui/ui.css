@@ -1990,7 +1990,11 @@ h3,
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	width: min(1180px, calc(100vw - 24px));
+	/* as wide as its content needs (a few buttons stay compact, a row of
+	   candidate cards may spread out), never past the viewport */
+	width: max-content;
+	min-width: min(420px, calc(100vw - 24px));
+	max-width: min(1180px, calc(100vw - 24px));
 	max-height: 70vh;
 	overflow: auto;
 	z-index: 60;
@@ -2009,6 +2013,8 @@ h3,
 	flex-direction: column;
 	gap: 3px;
 	min-width: 0;
+	/* a long prompt wraps instead of stretching the dialog */
+	max-width: 640px;
 }
 .choice-prompt strong {
 	font-family: 'Antonio', sans-serif;

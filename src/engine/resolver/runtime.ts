@@ -579,6 +579,23 @@ export function canPayResource(
 	return p.resources[res] >= amount
 }
 
+/** Glory that paying `amount` of `res` would spend in place of `res` (the
+ *  top-up `payResource` takes when the native pool falls short); 0 when the
+ *  native tokens cover it or `res` is Glory itself. Prompts use it to say
+ *  that an optional cost is really paid in Glory. */
+export function glorySubstitutedFor(
+	state: GameState,
+	seat: Seat,
+	res: ResourceId,
+	amount: number,
+): number {
+	if (res === 'GLO' || amount <= 0) return 0
+	const have = player(state, seat).resources[res]
+	if (have >= amount || !canSubstituteGlory(state, seat, res)) return 0
+	const rate = res === 'DIL' ? 2 : 1
+	return Math.ceil((amount - have) / rate)
+}
+
 /**
  * Pay `amount` of `res`, using native tokens first and topping up with Glory
  * when the native pool falls short (1 GLO = 1 LAT, 1 GLO = 2 DIL, no change
@@ -600,13 +617,10 @@ export function payResource(
 		throw new Error(`payResource: ${seat} cannot afford ${amount} ${res}`)
 	}
 	const resources = { ...p.resources }
+	const takeGlo = glorySubstitutedFor(state, seat, res, amount)
 	if (res === 'GLO') {
 		resources.GLO -= amount
-	} else if (canSubstituteGlory(state, seat, res) && resources[res] < amount) {
-		const rate = res === 'DIL' ? 2 : 1
-		const takeRes = resources[res]
-		const rem = amount - takeRes
-		const takeGlo = Math.ceil(rem / rate)
+	} else if (takeGlo > 0) {
 		resources[res] = 0
 		resources.GLO -= takeGlo
 	} else {

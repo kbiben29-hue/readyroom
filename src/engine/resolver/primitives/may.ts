@@ -1,10 +1,17 @@
 import type { Effect } from '../nodes'
 import type { Primitive } from './index'
 import { canPayAll, canResolveEffect, isControl, primitiveOf } from './index'
-import { suspend, answered, answer, skipBenefit } from '../runtime'
+import {
+	suspend,
+	answered,
+	answer,
+	skipBenefit,
+	glorySubstitutedFor,
+} from '../runtime'
 import { describe } from '../../describe'
-import { evalPredicate } from '../../queries/resolveQuery'
+import { evalAmount, evalPredicate } from '../../queries/resolveQuery'
 import type { GameState, EffectCtx } from '../../state'
+import type { ResourceId } from '../../../data/ids'
 
 /** MAY → CONFIRM choice; accept pushes the body, decline skips it. The
  *  prompt spells out the optional effect ("You may promote …?") so the
@@ -34,7 +41,7 @@ export const may: Primitive<Extract<Effect, { k: 'MAY' }>> = {
 			return skipBenefit(state, node.body, ctx, 'cannot fully resolve')
 		return suspend(state, node, ctx, key, {
 			k: 'CONFIRM',
-			prompt: mayPrompt(node),
+			prompt: mayPrompt(node) + gloryNote(state, node.body, ctx),
 		})
 	},
 }
@@ -90,4 +97,33 @@ function mayPrompt(node: Extract<Effect, { k: 'MAY' }>): string {
 	const text = describe(node).trim()
 	if (text === '') return 'Resolve this optional effect?'
 	return text.endsWith('.') ? `${text.slice(0, -1)}?` : `${text}?`
+}
+
+/** " (Paid with N {GLO}.)" when accepting would pay a resource cost partly
+ *  or wholly in Glory (rules/04 §4.3.2 substitution), else "". The printed
+ *  cost names only the resource, and Glory is also VP, so the player should
+ *  see what they are really spending. Looks at the costs paid up front: the
+ *  body's PAY_THEN cost, or the PAY_THEN / cost steps of a SEQ body. */
+export function gloryNote(
+	state: GameState,
+	node: Effect,
+	ctx: EffectCtx,
+): string {
+	const owed: Partial<Record<ResourceId, number>> = {}
+	const addCost = (cost: Effect): void => {
+		if (cost.k === 'SEQ') cost.steps.forEach(addCost)
+		else if (cost.k === 'COST_RESOURCE')
+			owed[cost.res] =
+				(owed[cost.res] ?? 0) + evalAmount(state, cost.amount, ctx)
+	}
+	if (node.k === 'PAY_THEN') addCost(node.cost)
+	else if (node.k === 'SEQ')
+		for (const step of node.steps)
+			if (step.k === 'PAY_THEN') addCost(step.cost)
+			else addCost(step)
+	else addCost(node)
+	let glory = 0
+	for (const [res, amount] of Object.entries(owed) as [ResourceId, number][])
+		glory += glorySubstitutedFor(state, ctx.actor, res, amount)
+	return glory > 0 ? ` (Paid with ${glory} {GLO}.)` : ''
 }

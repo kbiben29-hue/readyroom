@@ -2,7 +2,7 @@ import type { Effect } from '../nodes'
 import type { Primitive } from './index'
 import { evalAmount } from '../../queries/resolveQuery'
 import { suspend, answered, answer } from '../runtime'
-import { wouldDoNothing } from './may'
+import { gloryNote, wouldDoNothing } from './may'
 import { describe } from '../../describe'
 import type { EffectCtx } from '../../state'
 
@@ -89,9 +89,10 @@ export const repeat: Primitive<Extract<Effect, { k: 'REPEAT' }>> = {
 				{
 					k: 'CONFIRM',
 					prompt:
-						round === 0
+						(round === 0
 							? `${body}? (up to ${t} times)`
-							: `${body} again? (${round} of up to ${t} done)`,
+							: `${body} again? (${round} of up to ${t} done)`) +
+						gloryNote(state, node.body, ctx),
 				},
 				undefined,
 				round,

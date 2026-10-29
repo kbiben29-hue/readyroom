@@ -2084,6 +2084,25 @@ h3,
 	flex-wrap: wrap;
 	align-items: flex-start;
 }
+/* options that are operations of a card (opOptions.tsx): the card, and its
+   operations beside it, each one clickable as in the card detail */
+.op-options {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.op-options-card {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+}
+.op-options-sprite {
+	flex: none;
+}
+.op-options-list {
+	flex: 1 1 0;
+	min-width: 0;
+}
 .specialty-research {
 	--sp: var(--research);
 }

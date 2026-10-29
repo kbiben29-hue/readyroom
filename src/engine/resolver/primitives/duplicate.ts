@@ -81,6 +81,7 @@ function chooseOption(
 	}
 	if (ops.length === 0) return state // skip (benefit)
 	if (ops.length === 1) return pushDup(state, node, ctx, iid, ops[0]!)
+	const all = cardDef(state.cards[iid]!.def).operations
 	return suspend(state, node, ctx, opKey, {
 		k: 'CHOOSE_OPTION',
 		prompt: `Duplicate which ${node.opType} operation?`,
@@ -89,6 +90,7 @@ function chooseOption(
 			label: o.text ?? describeOperation(o),
 			enabled: true,
 			reason: undefined,
+			op: { card: iid, opIndex: all.indexOf(o) },
 		})),
 	})
 }

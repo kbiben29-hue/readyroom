@@ -74,6 +74,7 @@ export const freePlay: Primitive<Extract<Effect, { k: 'FREE_PLAY' }>> = {
 					key: String(i),
 					label: opLabel(def.operations[i]!),
 					enabled: true,
+					op: { card: iid, opIndex: i },
 				})),
 			},
 			extra,

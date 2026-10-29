@@ -33,6 +33,9 @@ export interface ChoiceOption {
 	label: string
 	enabled: boolean
 	reason?: string | undefined
+	/** The option is this card's operation (pick which PLAY to free play, which
+	 *  operation to duplicate): the UI shows the card and the printed text. */
+	op?: { card: CardInstanceId; opIndex: number } | undefined
 }
 
 /** A candidate that *looks* eligible but is not a legal target (shown greyed

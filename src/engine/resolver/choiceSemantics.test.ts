@@ -606,6 +606,11 @@ describe('FREE_PLAY: which PLAY operation', () => {
 		s = pushAndRun(s, fp, SRC, 0)
 		const ch = pending(s, 'CHOOSE_OPTION')
 		expect(ch.options.map((o) => o.key)).toEqual(['0', '1'])
+		// each option names its operation, so the UI can show the card
+		expect(ch.options.map((o) => o.op)).toEqual([
+			{ card: ID('two'), opIndex: 0 },
+			{ card: ID('two'), opIndex: 1 },
+		])
 		s = answer(s, { key: '1' })
 		expect(s.pendingChoice).toBeNull()
 		expect(res(s, 'LAT')).toBe(2)

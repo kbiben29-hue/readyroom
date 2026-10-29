@@ -31,6 +31,7 @@ import {
 } from '../store'
 import { useDefById, useDefForIid, useDefIndex } from '../defs'
 import { OpText } from '../cards'
+import { OperationOptions, operationOptions } from '../opOptions'
 import { ShorthandOp } from '../shorthand'
 import { useOrderState } from '../choice'
 import { CardTile } from '../tile/CardTile'
@@ -208,6 +209,13 @@ function ConfirmSheet({ choice }: { choice: Of<'CONFIRM'> }) {
 }
 
 function OptionSheet({ choice }: { choice: Of<'CHOOSE_OPTION'> }) {
+	const byCard = operationOptions(choice.options)
+	if (byCard !== null)
+		return (
+			<ChoiceFrame choice={choice} sub="Pick one.">
+				<OperationOptions byCard={byCard} seat={choice.seat} size="board" />
+			</ChoiceFrame>
+		)
 	return (
 		<ChoiceFrame choice={choice} sub="Pick one.">
 			<div className="pb-options">

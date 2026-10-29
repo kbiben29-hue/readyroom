@@ -30,6 +30,7 @@ import {
 	usePendingChoice,
 } from './store'
 import { CardSprite, OpText } from './cards'
+import { OperationOptions, operationOptions } from './opOptions'
 import { seatLabel } from './format'
 import { useDefForIid, useDefById } from './defs'
 import { cardName, withCardNames } from '../data/cardNames'
@@ -191,6 +192,14 @@ function ChooseOptionChoice({
 }: {
 	choice: Extract<PendingChoice, { k: 'CHOOSE_OPTION' }>
 }) {
+	const byCard = operationOptions(choice.options)
+	if (byCard !== null)
+		return (
+			<section className="panel choice-panel">
+				<ChoiceHeader choice={choice} />
+				<OperationOptions byCard={byCard} seat={choice.seat} size="hand" />
+			</section>
+		)
 	return (
 		<section className="panel choice-panel">
 			<ChoiceHeader choice={choice} />

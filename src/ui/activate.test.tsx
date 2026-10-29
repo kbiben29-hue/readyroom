@@ -114,6 +114,82 @@ describe('deployed-card activation (ui wiring)', () => {
 		).toBe(false)
 	})
 
+	it('keeps the detail open through the activation’s choices, then closes it', () => {
+		const session = sessionWithActivatableDeployedCard()
+		act(() => {
+			useGameStore.getState().resumeGame(session)
+		})
+		const ent = findDef(useGameStore.getState().state!, 'FLEET:0', '1PIC02-24')
+		act(() => {
+			useGameStore.getState().cardClicked(ent)
+		})
+		const host = document.createElement('div')
+		document.body.appendChild(host)
+		const root = createRoot(host)
+		act(() => {
+			root.render(<CardDetailHost />)
+		})
+
+		// the first runnable one, operation 1 (pay 1 DIL, then warp), asks
+		// before it resolves
+		act(() => {
+			host.querySelector<HTMLButtonElement>('.op-activate')!.click()
+		})
+		expect(useGameStore.getState().pendingChoice).not.toBeNull()
+		expect(useGameStore.getState().detailIid).toBe(ent)
+
+		let guard = 0
+		while (useGameStore.getState().pendingChoice !== null && ++guard < 10) {
+			const choice = useGameStore
+				.getState()
+				.legal.find((it) => it.t === 'RESOLVE_CHOICE')!
+			act(() => {
+				useGameStore.getState().settle(choice.selection)
+			})
+		}
+		expect(useGameStore.getState().error).toBeNull()
+		expect(useGameStore.getState().pendingChoice).toBeNull()
+		expect(useGameStore.getState().detailIid).toBeNull()
+	})
+
+	it('leaves another card’s detail open when the activation resolves', () => {
+		const session = sessionWithActivatableDeployedCard()
+		act(() => {
+			useGameStore.getState().resumeGame(session)
+		})
+		const state = useGameStore.getState().state!
+		const ent = findDef(state, 'FLEET:0', '1PIC02-24')
+		const other = zoneIids(state, 'NEUTRAL_ZONE:1')[0]!
+		act(() => {
+			useGameStore.getState().cardClicked(ent)
+		})
+		const host = document.createElement('div')
+		document.body.appendChild(host)
+		const root = createRoot(host)
+		act(() => {
+			root.render(<CardDetailHost />)
+		})
+		act(() => {
+			host.querySelector<HTMLButtonElement>('.op-activate')!.click()
+		})
+		expect(useGameStore.getState().pendingChoice).not.toBeNull()
+		// mid-choice, the player opens a Location to read it
+		act(() => {
+			useGameStore.getState().setDetail(other)
+		})
+		let guard = 0
+		while (useGameStore.getState().pendingChoice !== null && ++guard < 10) {
+			const choice = useGameStore
+				.getState()
+				.legal.find((it) => it.t === 'RESOLVE_CHOICE')!
+			act(() => {
+				useGameStore.getState().settle(choice.selection)
+			})
+		}
+		expect(useGameStore.getState().pendingChoice).toBeNull()
+		expect(useGameStore.getState().detailIid).toBe(other)
+	})
+
 	it('folds a deployed card’s PLAY operations into a closed section', () => {
 		const session = sessionWithActivatableDeployedCard()
 		act(() => {

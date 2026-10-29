@@ -1080,6 +1080,15 @@ export function CardDetailHost() {
 		const stcc = def === null ? null : stccCard(def)
 		return stcc === null ? [] : printedOps(stcc.text)
 	}, [def])
+	// After an Activate the card stays open behind the activation's choices
+	// (its text helps to answer them) and closes once the activation has
+	// resolved — unless another card's detail has been opened meanwhile.
+	const [closeAfter, setCloseAfter] = useState<CardInstanceId | null>(null)
+	useEffect(() => {
+		if (closeAfter === null || pendingChoice !== null) return
+		setCloseAfter(null)
+		if (useGameStore.getState().detailIid === closeAfter) setDetail(null)
+	}, [closeAfter, pendingChoice])
 	if (
 		detailIid === null ||
 		card === undefined ||
@@ -1146,6 +1155,7 @@ export function CardDetailHost() {
 										},
 							)
 							if (playable) setDetail(null)
+							else setCloseAfter(detailIid)
 						},
 					}
 				: null

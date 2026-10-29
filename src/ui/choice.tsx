@@ -30,7 +30,7 @@ import {
 	usePendingChoice,
 } from './store'
 import { CardSprite, OpText } from './cards'
-import { LocationCard } from './location'
+import { LocationCard, isLocationInPlay } from './location'
 import { OperationOptions, operationOptions } from './opOptions'
 import { seatLabel } from './format'
 import { useDefForIid, useDefById } from './defs'
@@ -329,14 +329,17 @@ function ChooseCardsChoice({
 									disabledReason === undefined
 										? () => useGameStore.getState().cardClicked(iid)
 										: undefined
+								// a Location in play brings its Away Teams and ships along
+								const isLocation = isLocationInPlay(projected.cards[iid]?.zone)
+								const Sprite = isLocation ? LocationCard : CardSprite
 								return (
 									<div
 										key={iid}
-										className={`candidate-tile${isSel ? ' candidate-selected' : ''}${disabledReason !== undefined ? ' candidate-disabled' : ''}`}
+										className={`candidate-tile${isLocation ? ' location-tile' : ''}${isSel ? ' candidate-selected' : ''}${disabledReason !== undefined ? ' candidate-disabled' : ''}`}
 										title={disabledReason}
 									>
 										<div className="candidate-card-wrap">
-											<CardSprite
+											<Sprite
 												iid={iid}
 												size="board"
 												selected={isSel}

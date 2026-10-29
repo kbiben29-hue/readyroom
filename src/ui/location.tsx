@@ -2,8 +2,9 @@
 // down the edges (P1 left, P2 right), the ships standing on it and, in the
 // Neutral Zone, whether the viewer has it secured. Every desktop surface that
 // shows a Location — the Neutral Zone, both Location Areas, the Location
-// choice — goes through <LocationCard>, so the teams and ships are never
-// missing. (The phone's CardTile does the same for its Location tiles.)
+// choice and Locations among a card choice's candidates — goes through
+// <LocationCard>, so the teams and ships are never missing. (The phone's
+// CardTile does the same for its Location tiles.)
 
 import type { GameState } from '../engine/state'
 import type { CardInstanceId } from '../engine/ids'
@@ -48,15 +49,24 @@ function AwayTeamMarkers({
 	)
 }
 
+/** True for a card in a zone where Locations hold Away Teams and ships. */
+export function isLocationInPlay(zone: { k: string } | undefined): boolean {
+	return zone?.k === 'LOCATION_AREA' || zone?.k === 'NEUTRAL_ZONE'
+}
+
 export function LocationCard({
 	iid,
 	size = 'board',
 	selected,
+	dimmed,
+	reason,
 	onClick,
 }: {
 	iid: CardInstanceId
 	size?: 'board' | 'micro' | undefined
 	selected?: boolean | undefined
+	dimmed?: boolean | undefined
+	reason?: string | undefined
 	onClick?: (() => void) | undefined
 }) {
 	const projected = useProjected()
@@ -74,6 +84,8 @@ export function LocationCard({
 				iid={iid}
 				size={size}
 				selected={selected}
+				dimmed={dimmed}
+				reason={reason}
 				badge={
 					secured && size === 'board' ? (
 						<span className="secured-badge">secured</span>

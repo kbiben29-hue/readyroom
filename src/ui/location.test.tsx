@@ -1,6 +1,6 @@
 // A Location in play always shows its Away Teams and the ships standing on it,
 // wherever it is drawn: the board, the Location choice ("Warp to which
-// Location?") and the phone's card tile.
+// Location?"), a card choice that offers Locations, and the phone's card tile.
 
 import { describe, expect, it, beforeEach } from 'vitest'
 import { createRoot } from 'react-dom/client'
@@ -98,6 +98,32 @@ describe('Location card', () => {
 					seat: 0,
 					prompt: 'Warp to which Location?',
 					candidates: [busy, quiet],
+					sourceCard: null,
+				},
+				botToMove: null,
+			})
+		})
+		const host = render(<ChoicePanel />)
+		const tiles = [...host.querySelectorAll('.location-tile')]
+		expect(tiles.map(teamsAndShips)).toEqual([
+			{ teams: ['P1: 1 Away Team', 'P2: 2 Away Teams'], ships: 2 },
+			{ teams: [], ships: 0 },
+		])
+	})
+
+	it('shows them on Locations picked through a card choice (SELECT)', () => {
+		const { busy, quiet } = busyLocation()
+		act(() => {
+			useGameStore.setState({
+				pendingChoice: {
+					k: 'CHOOSE_CARDS',
+					id: 'c-test',
+					seat: 0,
+					prompt: 'Choose a Location',
+					candidates: [busy, quiet],
+					min: 1,
+					max: 1,
+					from: 'x',
 					sourceCard: null,
 				},
 				botToMove: null,

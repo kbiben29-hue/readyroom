@@ -92,6 +92,9 @@ export interface LogEntry {
 	seat?: Seat | undefined
 	message: string
 	iid?: CardInstanceId | undefined
+	/** the player the entry happened to, when that is not necessarily `seat`
+	 *  (whose card was dismissed, whose Away Teams were removed) */
+	about?: Seat | undefined
 }
 
 // Provisional event vocabulary — the set primitives emit today plus the

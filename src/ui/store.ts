@@ -51,8 +51,10 @@ import {
 import { ruleInfo, type DecisionInfo } from '../bot/explain'
 import {
 	addBotIntent,
+	botTurns,
 	emptyBotLog,
 	humanDecided,
+	lastBotTurn,
 	trimBotLog,
 	type BotMoveLog,
 	type Viewer,
@@ -237,6 +239,26 @@ function loadBotSpeed(): BotSpeed {
 	}
 }
 
+/** When the AI's turn opens by itself once yours begins: when it did
+ *  something to you (default), after every AI turn, or only on request. */
+export type BotRecap = 'hit' | 'always' | 'never'
+
+export const BOT_RECAPS: readonly BotRecap[] = ['hit', 'always', 'never']
+
+const BOT_RECAP_KEY = 'ready-room:bot-recap'
+
+function loadBotRecap(): BotRecap {
+	try {
+		const v = globalThis.localStorage?.getItem(BOT_RECAP_KEY)
+		return BOT_RECAPS.includes(v as BotRecap) ? (v as BotRecap) : 'hit'
+	} catch {
+		return 'hit'
+	}
+}
+
+/** The turn whose recap last opened by itself (once per AI turn). */
+let recapShownTurn: number | null = null
+
 let botRunner: BotRunner = createInThreadRunner()
 let botGen = 0
 let botAbort: AbortController | null = null
@@ -334,6 +356,7 @@ function pumpBot(): void {
 	const st = useGameStore.getState()
 	if (adapter === null || botId === null || (st.botPaused && !botStep)) {
 		if (st.botThinking !== null) useGameStore.setState({ botThinking: null })
+		if (botId === null) showBotRecap()
 		return
 	}
 	const stepping = botStep
@@ -489,7 +512,29 @@ function recordBotMove(
 
 /** A fresh history (new game, resume, online), keeping ids increasing. */
 function resetBotLog(): BotMoveLog {
+	recapShownTurn = null
 	return { ...emptyBotLog(), nextId: useGameStore.getState().botLog.nextId }
+}
+
+/** Your turn has begun after an AI turn: open that turn's recap (the move
+ *  history) once, if the setting asks for it. */
+function showBotRecap(): void {
+	const st = useGameStore.getState()
+	const viewer = moveViewer().seat
+	if (
+		adapter === null ||
+		viewer === null ||
+		st.botRecap === 'never' ||
+		st.botHistoryOpen ||
+		adapter.state.activeSeat !== viewer ||
+		decisionSeat(adapter.state) !== viewer
+	)
+		return
+	const turn = lastBotTurn(botTurns(st.botLog.moves, viewer))
+	if (turn === undefined || turn.turn === recapShownTurn) return
+	if (st.botRecap === 'hit' && turn.hits.length === 0) return
+	recapShownTurn = turn.turn
+	useGameStore.setState({ botHistoryOpen: true, whyMove: null })
 }
 
 /** A human decided: the AI's running burst of moves is over. */
@@ -603,6 +648,8 @@ export interface GameStore {
 	botPaused: boolean
 	/** How long a bot's move stays visible (BOT_SPEED_MS); per device. */
 	botSpeed: BotSpeed
+	/** When the AI's turn opens by itself once yours begins; per device. */
+	botRecap: BotRecap
 	/** The house AI's recent moves (botMoves.ts): the ticker, the move
 	 *  history and the "Why?" panel read it. Cleared on a new game / resume,
 	 *  trimmed on undo. */
@@ -643,6 +690,7 @@ export interface GameStore {
 	/** Paused spectator game: let exactly one bot intent run. */
 	stepBot: () => void
 	setBotSpeed: (speed: BotSpeed) => void
+	setBotRecap: (recap: BotRecap) => void
 	/** Open / close the AI move history, optionally on one move's "Why?". */
 	openBotHistory: (whyMove?: number | null) => void
 	closeBotHistory: () => void
@@ -812,6 +860,7 @@ export const useGameStore = create<GameStore>((set) => ({
 	botThinking: null,
 	botPaused: false,
 	botSpeed: loadBotSpeed(),
+	botRecap: loadBotRecap(),
 	botLog: emptyBotLog(),
 	botHistoryOpen: false,
 	whyMove: null,
@@ -1081,6 +1130,15 @@ export const useGameStore = create<GameStore>((set) => ({
 			// per-device convenience only
 		}
 		set({ botSpeed: speed })
+	},
+
+	setBotRecap: (recap) => {
+		try {
+			globalThis.localStorage?.setItem(BOT_RECAP_KEY, recap)
+		} catch {
+			// per-device convenience only
+		}
+		set({ botRecap: recap })
 	},
 
 	openBotHistory: (whyMove = null) => set({ botHistoryOpen: true, whyMove }),

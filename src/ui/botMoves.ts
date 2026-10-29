@@ -34,11 +34,13 @@ import { hiddenCards } from '../engine/projection'
 import type { PendingChoice } from '../engine/resolver/choices'
 import type { Seat } from '../engine/resolver/queries'
 import { SKIP_CONTROL } from '../engine/phases'
-import type {
-	GameState,
-	LogEntry,
-	LogKind,
-	OperationRef,
+import { countIncidents } from '../engine/endgame'
+import {
+	zoneProps,
+	type GameState,
+	type LogEntry,
+	type LogKind,
+	type OperationRef,
 } from '../engine/state'
 import { poolDiff } from '../engine/fx'
 import { askingNode } from '../bot/heuristic'
@@ -84,9 +86,18 @@ export interface BotStep {
 	/** the choice prompt, for a RESOLVE_CHOICE */
 	prompt?: string | undefined
 	/** the LogEntries this intent produced, humanized (CHOICE entries left
-	 *  out) */
-	notes: { kind: LogKind; text: string }[]
+	 *  out); `hit` = the entry is about the viewer, so a BotHit covers it */
+	notes: { kind: LogKind; text: string; hit?: boolean | undefined }[]
 	why: DecisionView | null
+}
+
+/** Something a bot move did to the human: a card of theirs leaving play or
+ *  their hand, Away Teams removed, an Incident given. */
+export interface BotHit {
+	/** past tense with `[[card:…]]` tokens ("dismissed your [[card:…]]") */
+	text: string
+	/** the card it happened to */
+	iid?: CardInstanceId | undefined
 }
 
 export interface BotMove {
@@ -98,6 +109,9 @@ export interface BotMove {
 	logFrom: number
 	/** consecutive moves of one seat between human decisions share a burst */
 	burst: number
+	/** the turn number and active seat when the move began */
+	turn: number
+	active: Seat
 	intents: Intent[]
 	/** the bot's DecisionInfo per intent (null: none, e.g. a fake runner) */
 	infos: (DecisionInfo | null)[]
@@ -108,6 +122,8 @@ export interface BotMove {
 	logEntries: LogEntry[]
 	/** cards the move involved that the viewer may see (highlight targets) */
 	involvedIids: CardInstanceId[]
+	/** what the move did to the human viewer (none in a spectator game) */
+	hits: BotHit[]
 	/** net resource change per seat over the move */
 	deltas: [
 		Partial<Record<ResourceId, number>>,
@@ -162,7 +178,13 @@ interface Namer {
 	masked: boolean
 }
 
-function namer(state: GameState, visible: (iid: string) => boolean): Namer {
+/** `yours`: the human watching another seat move — their cards are named
+ *  "your …" so a note says whose card it hit. */
+function namer(
+	state: GameState,
+	visible: (iid: string) => boolean,
+	yours: Seat | null = null,
+): Namer {
 	const n: Namer = {
 		masked: false,
 		name(iid) {
@@ -172,7 +194,9 @@ function namer(state: GameState, visible: (iid: string) => boolean): Namer {
 				n.masked = true
 				return hiddenWhere(state, iid)
 			}
-			return cardToken(card.def)
+			return yours !== null && card.owner === yours
+				? `your ${cardToken(card.def)}`
+				: cardToken(card.def)
 		},
 	}
 	return n
@@ -356,6 +380,112 @@ function iidsIn(message: string): string[] {
 }
 
 // ---------------------------------------------------------------------------
+// hits: what a move did to the human
+// ---------------------------------------------------------------------------
+
+/** The seat whose table a card is on (a beamed card: its host's). */
+function controller(state: GameState, iid: string): Seat | null {
+	const z = state.cards[iid]?.zone
+	if (z === undefined) return null
+	if (z.k === 'BEAMED') return controller(state, z.host)
+	return 'seat' in z ? z.seat : null
+}
+
+function leftPlay(zone: string, name: string): string {
+	switch (zone) {
+		case 'DISCARD':
+			return `dismissed ${name}`
+		case 'BOX':
+			return `destroyed ${name}`
+		case 'LOG':
+			return `logged ${name}`
+		case 'HAND':
+			return `returned ${name} to your hand`
+		case 'DRAW':
+			return `put ${name} back into your deck`
+		case 'JUNK':
+			return `junked ${name}`
+		default:
+			return `took ${name} out of play`
+	}
+}
+
+function leftHand(zone: string, name: string): string {
+	switch (zone) {
+		case 'DISCARD':
+			return `discarded ${name} from your hand`
+		case 'LOG':
+			return `logged ${name} from your hand`
+		case 'DRAW':
+			return `put ${name} from your hand back into your deck`
+		default:
+			return `took ${name} from your hand`
+	}
+}
+
+/** What `before → after` did to `seat`: its cards leaving play (or its
+ *  control) or its hand, its Away Teams removed, Incidents it got. Compared
+ *  on the states, so it holds whatever primitive did it. Only the seat's own
+ *  cards and public Locations are named. */
+export function hitsOn(
+	before: GameState,
+	after: GameState,
+	seat: Seat,
+): BotHit[] {
+	const hits: BotHit[] = []
+	// a beamed card after its host: it went along with it
+	const cards = Object.entries(before.cards).sort(
+		([, a], [, b]) =>
+			Number(a.zone.k === 'BEAMED') - Number(b.zone.k === 'BEAMED'),
+	)
+	for (const [iid, was] of cards) {
+		const now = after.cards[iid]
+		if (was.owner !== seat || now === undefined) continue
+		const id = iid as CardInstanceId
+		if (zoneProps(was.zone).inPlay && controller(before, iid) === seat) {
+			const name = `your ${cardToken(was.def)}`
+			const host = was.zone.k === 'BEAMED' ? before.cards[was.zone.host] : null
+			const aboard =
+				host === null || host === undefined
+					? ''
+					: ` (beamed aboard ${host.owner === seat ? 'your ' : ''}${cardToken(host.def)})`
+			if (!zoneProps(now.zone).inPlay)
+				hits.push({ text: leftPlay(now.zone.k, name) + aboard, iid: id })
+			else if (controller(after, iid) !== seat)
+				hits.push({ text: `took control of ${name}`, iid: id })
+		} else if (
+			was.zone.k === 'HAND' &&
+			now.zone.k !== 'HAND' &&
+			!(zoneProps(now.zone).inPlay && controller(after, iid) === seat)
+		) {
+			hits.push({ text: leftHand(now.zone.k, cardToken(was.def)), iid: id })
+		}
+	}
+	for (const [loc, at] of Object.entries(before.awayTeamsAt)) {
+		const removed = (at[seat] ?? 0) - (after.awayTeamsAt[loc]?.[seat] ?? 0)
+		if (removed <= 0) continue
+		const card = before.cards[loc]
+		const from = card === undefined ? '' : ` from ${cardToken(card.def)}`
+		hits.push({
+			text:
+				removed === 1
+					? `removed your Away Team${from}`
+					: `removed ${removed} of your Away Teams${from}`,
+			...(card !== undefined ? { iid: loc as CardInstanceId } : {}),
+		})
+	}
+	const incidents = countIncidents(after, seat) - countIncidents(before, seat)
+	if (incidents > 0)
+		hits.push({
+			text:
+				incidents === 1
+					? 'gave you an Incident'
+					: `gave you ${incidents} Incidents`,
+		})
+	return hits
+}
+
+// ---------------------------------------------------------------------------
 // recording
 // ---------------------------------------------------------------------------
 
@@ -419,8 +549,13 @@ export function botStep(
 	logEntries: LogEntry[]
 	involved: CardInstanceId[]
 	deltas: BotMove['deltas']
+	hits: BotHit[]
 } {
 	const { intent, before, after } = rec
+	// the human watching the bot: their cards are "your …", and what the step
+	// did to them is collected as hits
+	const yours =
+		viewer.seat !== null && viewer.seat !== rec.seat ? viewer.seat : null
 	const hiddenBefore =
 		viewer.seat === null ? null : hiddenCards(before, viewer.seat)
 	const hiddenAfter =
@@ -432,13 +567,18 @@ export function botStep(
 		!hiddenBefore!.has(iid as CardInstanceId)
 	const shownAfter = (iid: string) =>
 		hiddenAfter === null || !hiddenAfter.has(iid as CardInstanceId)
-	const n = namer(before, revealed)
+	const n = namer(before, revealed, yours)
 	const { phrase, headline } = stepPhrase(intent, before, n)
 	const logEntries = after.log.slice(before.log.length)
-	const logNamer = namer(after, shownAfter)
+	const logNamer = namer(after, shownAfter, yours)
 	const notes = logEntries
 		.filter((e) => e.kind !== 'CHOICE')
-		.map((e) => ({ kind: e.kind, text: humanizeLog(e.message, logNamer) }))
+		.map((e) => ({
+			kind: e.kind,
+			text: humanizeLog(e.message, logNamer),
+			...(yours !== null && e.about === yours ? { hit: true } : {}),
+		}))
+	const hits = yours === null ? [] : hitsOn(before, after, yours)
 
 	// the cards worth a highlight: the card played / activated, the card or
 	// Location a choice picked, and any card a log entry names — if the
@@ -485,7 +625,7 @@ export function botStep(
 		notes,
 		why,
 	}
-	return { step, logEntries, involved: involvedIids, deltas }
+	return { step, logEntries, involved: involvedIids, deltas, hits }
 }
 
 /** A PASS / START that logged nothing: not worth a ticker line. */
@@ -526,7 +666,7 @@ export function addBotIntent(
 		open.seat === rec.seat
 	if (!extend && rec.intent.t !== 'RESOLVE_CHOICE' && quiet(rec))
 		return { ...log, openId: null }
-	const { step, logEntries, involved, deltas } = botStep(rec, viewer)
+	const { step, logEntries, involved, deltas, hits } = botStep(rec, viewer)
 	if (extend) {
 		const moved: BotMove = {
 			...open,
@@ -538,6 +678,7 @@ export function addBotIntent(
 				...open.involvedIids,
 				...involved.filter((i) => !open.involvedIids.includes(i)),
 			],
+			hits: [...open.hits, ...hits],
 			deltas: addDeltas(open.deltas, deltas),
 			rev: open.rev + 1,
 		}
@@ -555,12 +696,15 @@ export function addBotIntent(
 		botId: rec.botId,
 		logFrom: rec.logIndex,
 		burst,
+		turn: rec.before.turnNumber,
+		active: rec.before.activeSeat,
 		intents: [rec.intent],
 		infos: [rec.info],
 		info: rec.info,
 		steps: [step],
 		logEntries,
 		involvedIids: involved,
+		hits,
 		deltas,
 		masked: viewer.seat !== null,
 		rev: 0,
@@ -614,25 +758,77 @@ export function deltaPhrase(d: Partial<Record<ResourceId, number>>): string {
 }
 
 /** The ticker's sentence after the bot's name: the first step, then " → "
- *  and what came of it (the headline-worthy follow-ups, the resource
- *  changes, the logged events). `opponentName` names the other seat. */
+ *  and what came of it (what it did to the human first, then the
+ *  headline-worthy follow-ups, the resource changes, the logged events).
+ *  `opponentName` names the other seat. */
 export function moveHeadline(move: BotMove, opponentName: string): string {
 	const [first, ...rest] = move.steps
 	if (first === undefined) return ''
-	const effects: string[] = []
+	const effects: string[] = move.hits.map((h) => h.text)
 	for (const s of rest) if (s.headline) effects.push(s.phrase)
 	const own = deltaPhrase(move.deltas[move.seat])
 	if (own !== '') effects.push(own)
 	const other = deltaPhrase(move.deltas[move.seat === 0 ? 1 : 0])
 	if (other !== '') effects.push(`${opponentName} ${other}`)
 	for (const s of move.steps)
-		for (const n of s.notes) if (n.kind === 'EVENT') effects.push(n.text)
+		for (const n of s.notes)
+			if (n.kind === 'EVENT' && n.hit !== true) effects.push(n.text)
 	const shown = effects.slice(0, 4)
 	return (
 		first.phrase +
 		(shown.length > 0 ? ` → ${shown.join(' · ')}` : '') +
 		(effects.length > shown.length ? ' · …' : '')
 	)
+}
+
+/** One turn of the history, for the recap. */
+export interface BotTurn {
+	turn: number
+	/** whose turn it was */
+	active: Seat
+	/** oldest first */
+	moves: BotMove[]
+	/** what the turn's moves did to the human, net resource losses included */
+	hits: BotHit[]
+}
+
+/** The history grouped by turn, newest turn first. `viewer` is the human (null
+ *  in a spectator game); their net resource losses over a turn join its hits. */
+export function botTurns(
+	moves: readonly BotMove[],
+	viewer: Seat | null,
+): BotTurn[] {
+	const turns: BotTurn[] = []
+	for (const m of moves) {
+		let t = turns[turns.length - 1]
+		if (t === undefined || t.turn !== m.turn) {
+			t = { turn: m.turn, active: m.active, moves: [], hits: [] }
+			turns.push(t)
+		}
+		t.moves.push(m)
+		t.hits.push(...m.hits)
+	}
+	if (viewer !== null)
+		for (const t of turns) {
+			const net: Partial<Record<ResourceId, number>> = {}
+			for (const m of t.moves)
+				for (const [res, v] of Object.entries(m.deltas[viewer]) as [
+					ResourceId,
+					number,
+				][])
+					net[res] = (net[res] ?? 0) + v
+			const lost = (['DIL', 'LAT', 'GLO'] as const)
+				.filter((r) => (net[r] ?? 0) < 0)
+				.map((r) => `${-net[r]!} {${r}}`)
+			if (lost.length > 0) t.hits.push({ text: `you lost ${list(lost)}` })
+		}
+	return turns.reverse()
+}
+
+/** The newest turn a bot played as the active seat (not a bot's answer
+ *  during the human's turn). */
+export function lastBotTurn(turns: readonly BotTurn[]): BotTurn | undefined {
+	return turns.find((t) => t.moves.some((m) => m.seat === t.active))
 }
 
 /** A phrase as plain text (screen readers, titles): card names from the STCC

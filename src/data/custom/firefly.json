@@ -100,7 +100,7 @@
 			"game_box": "Firefly (fan-made)",
 			"card_number": "1MAL04/25",
 			"glory": 2,
-			"position_indicator": "Development",
+			"position_indicator": "Reserve",
 			"species_traits": ["Human"],
 			"regular_traits": ["Doctor"],
 			"other_traits": [],
@@ -111,7 +111,7 @@
 				}
 			],
 			"text": {
-				"cost": "[[dilithium]] x2, [[latinum]] x1",
+				"cost": "",
 				"hand": "[[action]] Play: Gain 1 [[research]]. You may return an [[incident]] from your hand or Discard pile.",
 				"table": "Activation: Discard a non-[[incident]] card to return an [[incident]] from your hand and gain 1 [[research]].",
 				"goal": "",
@@ -355,13 +355,13 @@
 			"game_box": "Firefly (fan-made)",
 			"card_number": "1MAL14/25",
 			"glory": null,
-			"position_indicator": "Reserve",
+			"position_indicator": "Development",
 			"species_traits": ["Human"],
 			"regular_traits": ["Shady", "Spy"],
 			"other_traits": ["Attack"],
 			"icons": [],
 			"text": {
-				"cost": "",
+				"cost": "[[dilithium]] x2",
 				"hand": "[[action]] Attack Play: Steal 2 [[latinum]], then discard a card.",
 				"table": "Activation: Discard a card to steal 1 [[dilithium]].",
 				"goal": "",

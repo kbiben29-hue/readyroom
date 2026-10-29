@@ -495,7 +495,6 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
   "1MAL04-25": [
     "PLAY ACT | +1 RESEARCH (−1<INCIDENT>)?",
     "ACTI | IF ≥1 <INCIDENT> ⇒ {−1 CARD ·non-<INCIDENT>} › −1<INCIDENT> +1 RESEARCH",
-    "DEV | −2 DIL −1 LAT",
   ],
   "1MAL05-25": [
     "PLAY ACT | −1<INCIDENT> +1 INFLUENCE",
@@ -543,6 +542,7 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
   "1MAL14-25": [
     "PLAY ACT ATTACK | STEAL 2 LAT −1 CARD",
     "ACTI | {−1 CARD} › STEAL 1 DIL",
+    "DEV | −2 DIL",
   ],
   "1MAL15-25": [
     "PLAY ACT | ( {−1 CARD ·#WEAPON} › −1<INCIDENT> | {−2 DIL} › −1<INCIDENT> ) (WARP)?",

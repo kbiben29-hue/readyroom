@@ -81,6 +81,12 @@ Design notes from MAL:
 - **Give the deck one engine and one risk.** MAL pays for jobs with INCIDENTs,
   and its crew turns them into tempo: Reynolds gains {DIL}, Book gains {GLO}
   on returns, Miranda scores them. The Burn is the risk.
+- **Don't park the engine's safety valve in Development.** A Development card
+  usually enters a game only after the Reserve has run out, around turn 15, if
+  at all. MAL's first version kept its INCIDENT-return crew there and won 37 %
+  in the arena; moving one of them to the Reserve brought it to 48 %
+  (`docs/custom-decks.md`, Balance). Balance-check a new deck with Normal vs
+  Normal over its pairings in both seat orders before calling it done.
 - **Keep the starting deck self-sufficient.** Don't make AVAILABLE cards
   discard CARGO or WEAPONs the starting deck doesn't contain.
 - **Watch loops.** ACTIVATIONs and REACTIONs exhaust the card, so a refund

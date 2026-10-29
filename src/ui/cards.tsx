@@ -1140,6 +1140,7 @@ export function CardDetailHost() {
 			activatable || playable
 				? {
 						label: activatable ? 'Activate' : 'Play',
+						costsAction: op.costsAction,
 						idle: usable.idle,
 						onRun: () => {
 							useGameStore.getState().dispatch(
@@ -1372,7 +1373,7 @@ function AltPlays({
 								onPlayed()
 							}}
 						>
-							Play
+							<RunLabel label="Play" costsAction={op.costsAction} />
 						</button>
 					</div>
 				)
@@ -1424,6 +1425,7 @@ export function OrderOp({
 			blocked={false}
 			run={{
 				label: intent.t === 'ACTIVATE' ? 'Activate' : 'Play',
+				costsAction: op.costsAction,
 				idle: usable.idle,
 				onRun: () => {
 					onDone()
@@ -1534,7 +1536,13 @@ export function OpBlock({
 	children,
 }: {
 	blocked: boolean
-	run: { label: string; idle: string | null; onRun: () => void } | null
+	run: {
+		label: string
+		/** running it spends an action: the button carries the action token */
+		costsAction?: boolean
+		idle: string | null
+		onRun: () => void
+	} | null
 	children: ReactNode
 }) {
 	const [confirm, setConfirm] = useState(false)
@@ -1566,11 +1574,31 @@ export function OpBlock({
 				<>
 					<IdleWarning reason={run.idle} />
 					<button type="button" className="btn op-activate" onClick={trigger}>
-						{confirm ? 'Are you sure?' : run.label}
+						<RunLabel
+							label={confirm ? 'Are you sure?' : run.label}
+							costsAction={run.costsAction === true}
+						/>
 					</button>
 				</>
 			)}
 		</div>
+	)
+}
+
+/** A Play / Activate button's label, led by the printed action token when
+ *  running the operation spends an action. */
+export function RunLabel({
+	label,
+	costsAction,
+}: {
+	label: string
+	costsAction: boolean
+}) {
+	return (
+		<>
+			{costsAction && <Icon id="ACTION" label="Spends an action" />}
+			{label}
+		</>
 	)
 }
 

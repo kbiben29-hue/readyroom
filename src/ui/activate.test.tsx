@@ -275,6 +275,66 @@ describe('deployed-card activation (ui wiring)', () => {
 		expect(sheetAway.textContent).toContain('Works once this card is in play')
 	})
 
+	it('a Play button carries the action token when it spends an action', () => {
+		const adapter = new SessionAdapter({
+			session: createSession(uiConfig(), catalog),
+			catalog,
+		})
+		adapter.dispatch({ t: 'START' })
+		act(() => {
+			useGameStore.getState().resumeGame(adapter.session)
+		})
+		// 1PIC23's PLAY costs an action
+		const inHand = findDef(
+			useGameStore.getState().state!,
+			'HAND:0',
+			'1PIC23-24',
+		)
+		act(() => {
+			useGameStore.getState().setDetail(inHand)
+		})
+		const host = document.createElement('div')
+		document.body.appendChild(host)
+		const root = createRoot(host)
+		act(() => {
+			root.render(<CardDetailHost />)
+		})
+		const token = '[title="Spends an action"]'
+		const play = host.querySelector('.op-activate')!
+		expect(play.textContent).toContain('Play')
+		expect(play.querySelector(token)).not.toBeNull()
+
+		act(() => {
+			root.render(<DetailSheet />)
+		})
+		const pill = host.querySelector('.pb-primary')!
+		expect(pill.textContent).toContain('Play')
+		expect(pill.querySelector(token)).not.toBeNull()
+	})
+
+	it('a free ACTIVATION’s button has no action token', () => {
+		const session = sessionWithActivatableDeployedCard()
+		act(() => {
+			useGameStore.getState().resumeGame(session)
+		})
+		// the Enterprise's activations cost no action
+		const ent = findDef(useGameStore.getState().state!, 'FLEET:0', '1PIC02-24')
+		act(() => {
+			useGameStore.getState().setDetail(ent)
+		})
+		const host = document.createElement('div')
+		document.body.appendChild(host)
+		const root = createRoot(host)
+		act(() => {
+			root.render(<CardDetailHost />)
+		})
+		const activate = [...host.querySelectorAll('.op-activate')]
+		expect(activate.length).toBeGreaterThan(0)
+		expect(
+			activate.filter((b) => b.querySelector('[title="Spends an action"]')),
+		).toEqual([])
+	})
+
 	it('an ACTIVATION outside your turn shows a reason instead of a dead row', () => {
 		const session = sessionWithActivatableDeployedCard()
 		act(() => {

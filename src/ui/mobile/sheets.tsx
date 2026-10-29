@@ -21,7 +21,7 @@ import {
 	useViewerSeat,
 } from '../store'
 import { useDefForIid, useDefIndex } from '../defs'
-import { OpText } from '../cards'
+import { OpText, RunLabel } from '../cards'
 import { cardImageUrl } from '../stcc'
 import { TIMING_WORD } from '../shorthandGlyphs'
 import { ShorthandLineView, ShorthandTokens } from '../shorthand'
@@ -397,7 +397,10 @@ function LineState({
 						onRun()
 					}}
 				>
-					{confirm ? 'Are you sure?' : verb}
+					<RunLabel
+						label={confirm ? 'Are you sure?' : verb}
+						costsAction={l.line.action}
+					/>
 				</button>
 			)
 			// legal, but every benefit would be skipped (idleOperationReason)

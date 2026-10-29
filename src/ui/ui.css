@@ -1685,6 +1685,9 @@ h3,
 	font-size: 10px;
 }
 .op-activate {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
 	margin-top: 6px;
 }
 .micro-truncate {

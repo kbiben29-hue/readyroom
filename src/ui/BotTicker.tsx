@@ -29,9 +29,11 @@ import {
 import { OpText } from './cards'
 import { seatLabel, shortSeat } from './format'
 import {
+	botTurns,
 	moveHeadline,
 	phraseText,
 	type BotMove,
+	type BotTurn,
 	type DecisionView,
 	type OptionView,
 } from './botMoves'
@@ -191,6 +193,7 @@ export function BotTicker({ variant }: { variant: 'console' | 'mobile' }) {
 /** The bot bar's button that opens the history (always reachable, also when
  *  the ticker is idle). */
 export function BotHistoryButton({ compact }: { compact: boolean }) {
+	const { spectator } = useTickerContext()
 	const count = useGameStore((s) => s.botLog.moves.length)
 	const open = useGameStore((s) => s.openBotHistory)
 	return (
@@ -218,8 +221,10 @@ export function BotHistoryButton({ compact }: { compact: boolean }) {
 						fill="none"
 					/>
 				</svg>
-			) : (
+			) : spectator ? (
 				'Moves'
+			) : (
+				'AI turn'
 			)}
 		</button>
 	)
@@ -351,6 +356,10 @@ export function BotHistory() {
 	const isOpen = useGameStore((s) => s.botHistoryOpen)
 	const whyMove = useGameStore((s) => s.whyMove)
 	const moves = useGameStore((s) => s.botLog.moves)
+	const turns = useMemo(
+		() => botTurns(moves, spectator ? null : viewer),
+		[moves, spectator, viewer],
+	)
 	const close = useGameStore((s) => s.closeBotHistory)
 	const openWhy = useGameStore((s) => s.openBotHistory)
 	const panel = useRef<HTMLDivElement>(null)
@@ -364,7 +373,7 @@ export function BotHistory() {
 		return () => window.removeEventListener('keydown', onKey)
 	}, [isOpen, close])
 	if (!enabled || !isOpen) return null
-	const list = [...moves].reverse()
+	const latest = moves[moves.length - 1]?.id
 	return (
 		<div className="bot-history-backdrop" onClick={close}>
 			<div
@@ -387,67 +396,131 @@ export function BotHistory() {
 						Close
 					</button>
 				</header>
-				{list.length === 0 && (
+				{turns.length === 0 && (
 					<p className="muted small">The House AI has not moved yet.</p>
 				)}
-				<ol className="bot-history-list">
-					{list.map((m, i) => (
-						<li key={m.id} className="bot-history-item" data-move={m.id}>
-							<details open={whyMove === m.id || (whyMove === null && i === 0)}>
-								<summary>
-									<span className="bot-ticker-who">{who(m, spectator)}</span>{' '}
-									<OpText
-										text={moveHeadline(m, otherName(m, viewer, spectator))}
-										plain
-									/>
-								</summary>
-								<ol className="bot-steps">
-									{m.steps.map((s, j) => (
-										<li key={j} className="bot-step">
-											{s.prompt !== undefined && (
-												<span className="bot-step-prompt">
-													<OpText text={s.prompt} plain />
-												</span>
-											)}
-											<span className="bot-step-phrase">
-												<OpText text={s.phrase} plain />
-											</span>
-											{s.notes.map((n, k) => (
-												<span key={k} className="bot-step-note">
-													<OpText text={n.text} plain />
-												</span>
-											))}
+				{turns.map((t) => (
+					<section
+						key={t.turn}
+						className="bot-turn"
+						aria-label={`Turn ${t.turn}`}
+						data-turn={t.turn}
+					>
+						<h4 className="bot-turn-head">
+							Turn {t.turn} · {turnOwner(t, viewer, spectator)}
+						</h4>
+						{t.hits.length > 0 && (
+							<div className="bot-hits">
+								<p className="bot-hits-title">What it did to you</p>
+								<ul>
+									{t.hits.map((h, i) => (
+										<li key={i}>
+											<OpText text={h.text} plain />
 										</li>
 									))}
-								</ol>
-								{whyMove === m.id ? (
-									<>
-										<MoveWhy move={m} />
-										<button
-											type="button"
-											className="btn micro"
-											onClick={() => openWhy(null)}
-										>
-											Hide why
-										</button>
-									</>
-								) : (
-									m.steps.some((s) => s.why !== null) && (
-										<button
-											type="button"
-											className="btn micro"
-											onClick={() => openWhy(m.id)}
-										>
-											Why?
-										</button>
-									)
-								)}
-							</details>
+								</ul>
+							</div>
+						)}
+						<ol className="bot-history-list">
+							{t.moves.map((m) => (
+								<MoveItem
+									key={m.id}
+									move={m}
+									open={
+										whyMove === m.id || (whyMove === null && m.id === latest)
+									}
+									why={whyMove === m.id}
+									headline={moveHeadline(m, otherName(m, viewer, spectator))}
+									name={who(m, spectator)}
+									onWhy={openWhy}
+								/>
+							))}
+						</ol>
+					</section>
+				))}
+			</div>
+		</div>
+	)
+}
+
+/** Whose turn a history section was: "your turn", or the bot's. */
+function turnOwner(t: BotTurn, viewer: Seat, spectator: boolean): string {
+	if (!spectator && t.active === viewer) return 'your turn'
+	const bot = t.moves.find((m) => m.seat === t.active)
+	if (bot === undefined) return `${seatLabel(t.active)}'s turn`
+	return spectator
+		? `${seatLabel(t.active)}'s turn · ${botLabel(bot.botId)}`
+		: `${botLabel(bot.botId)}'s turn`
+}
+
+function MoveItem({
+	move: m,
+	open,
+	why,
+	headline,
+	name,
+	onWhy,
+}: {
+	move: BotMove
+	open: boolean
+	why: boolean
+	headline: string
+	name: string
+	onWhy: (move: number | null) => void
+}) {
+	return (
+		<li className="bot-history-item" data-move={m.id}>
+			<details open={open}>
+				<summary>
+					<span className="bot-ticker-who">{name}</span>{' '}
+					<OpText text={headline} plain />
+				</summary>
+				<ol className="bot-steps">
+					{m.steps.map((s, j) => (
+						<li key={j} className="bot-step">
+							{s.prompt !== undefined && (
+								<span className="bot-step-prompt">
+									<OpText text={s.prompt} plain />
+								</span>
+							)}
+							<span className="bot-step-phrase">
+								<OpText text={s.phrase} plain />
+							</span>
+							{s.notes.map((n, k) => (
+								<span
+									key={k}
+									className={`bot-step-note${n.hit === true ? ' bot-step-hit' : ''}`}
+								>
+									<OpText text={n.text} plain />
+								</span>
+							))}
 						</li>
 					))}
 				</ol>
-			</div>
-		</div>
+				{why ? (
+					<>
+						<MoveWhy move={m} />
+						<button
+							type="button"
+							className="btn micro"
+							onClick={() => onWhy(null)}
+						>
+							Hide why
+						</button>
+					</>
+				) : (
+					m.steps.some((s) => s.why !== null) && (
+						<button
+							type="button"
+							className="btn micro"
+							onClick={() => onWhy(m.id)}
+						>
+							Why?
+						</button>
+					)
+				)}
+			</details>
+		</li>
 	)
 }
 

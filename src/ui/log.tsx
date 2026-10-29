@@ -11,6 +11,9 @@
 
 import { useEffect, useRef } from 'react'
 import type { LogEntry, LogKind } from '../engine/state'
+import { HIDDEN_DEF } from '../engine/projection'
+import { HIDDEN_IID } from '../engine/seatView'
+import { cardToken } from '../data/cardNames'
 import { OpText } from './cards'
 import type { Seat } from '../engine/resolver/queries'
 import {
@@ -86,6 +89,7 @@ export function LogPanel() {
 					<LogRow
 						key={i}
 						entry={e}
+						text={named(e.message, projected.cards)}
 						fresh={freshFrom !== null && i >= freshFrom}
 					/>
 				))}
@@ -98,7 +102,32 @@ export function LogPanel() {
 	)
 }
 
-function LogRow({ entry, fresh }: { entry: LogEntry; fresh: boolean }) {
+/** A card instance id, or the `hidden` stand-in of history masking. */
+const IID_TOKEN = /[A-Za-z][A-Za-z0-9]*#\d+|\bhidden\b/g
+
+/** Card ids in an engine message as `[[card:…]]` tokens OpText names; a card
+ *  the viewer cannot see as "a hidden card". */
+function named(
+	message: string,
+	cards: Readonly<Record<string, { def: string } | undefined>>,
+): string {
+	return message.replace(IID_TOKEN, (token) => {
+		const def = token === HIDDEN_IID ? undefined : cards[token]?.def
+		return def === undefined || def === HIDDEN_DEF
+			? 'a hidden card'
+			: cardToken(def)
+	})
+}
+
+function LogRow({
+	entry,
+	text,
+	fresh,
+}: {
+	entry: LogEntry
+	text: string
+	fresh: boolean
+}) {
 	const setDetail = useGameStore((s) => s.setDetail)
 	const ownerSeat: Seat | null = entry.seat ?? null
 	return (
@@ -117,7 +146,7 @@ function LogRow({ entry, fresh }: { entry: LogEntry; fresh: boolean }) {
 				{KIND_LABEL[entry.kind]}
 			</span>
 			<span className="log-message">
-				<OpText text={entry.message} plain />
+				<OpText text={text} plain />
 			</span>
 		</div>
 	)

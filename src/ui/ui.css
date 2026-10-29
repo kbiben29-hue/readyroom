@@ -3668,11 +3668,12 @@ h3,
 	-webkit-box-orient: vertical;
 }
 
-/* the move history (a modal list) */
+/* the move history (a modal list); above the choice panel (60): it opens by
+   itself when your turn begins, usually with a choice already waiting */
 .bot-history-backdrop {
 	position: fixed;
 	inset: 0;
-	z-index: 60;
+	z-index: 70;
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
@@ -3740,6 +3741,39 @@ h3,
 }
 .bot-step-note::before {
 	content: '· ';
+}
+.bot-step-hit {
+	color: var(--mars);
+}
+
+/* the history by turn: what the AI's turn did to you, then its moves */
+.bot-turn + .bot-turn {
+	margin-top: 10px;
+}
+.bot-turn-head {
+	margin: 4px 0;
+	font-family: 'Antonio', sans-serif;
+	font-size: 13px;
+	font-weight: 400;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--dim);
+}
+.bot-hits {
+	margin: 0 0 6px;
+	padding: 6px 10px;
+	border-left: 4px solid var(--mars);
+	border-radius: 4px;
+	background: var(--panel-2);
+}
+.bot-hits-title {
+	margin: 0 0 2px;
+	font-weight: 600;
+	color: var(--mars);
+}
+.bot-hits ul {
+	margin: 0;
+	padding-left: 18px;
 }
 
 /* Why? */

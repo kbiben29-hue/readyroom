@@ -44,6 +44,7 @@ import {
 } from './triggers'
 import type { OperationRef } from '../state'
 import type { CardInstanceId } from '../ids'
+import { chronicle, frameActor } from './chronicle'
 import {
 	ATTACK_BINDING,
 	PENDING_BINDING,
@@ -546,7 +547,8 @@ export function runCollecting(state: GameState): {
 				`run: exceeded ${MAX_STEPS} steps — runaway effect? stack:\n${dumpStack(s)}`,
 			)
 		}
-		s = executeOne(s)
+		const actor = frameActor(s, s.stack[s.stack.length - 1])
+		s = chronicle(executeOne(s), actor)
 		const awayAfter = awayTeamsTotal(s)
 		if (awayAfter < awayBefore) {
 			throw new Error(

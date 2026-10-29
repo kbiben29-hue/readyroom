@@ -5,12 +5,26 @@
 import { hasBots } from '../session/opponents'
 import { SPEED_LABEL } from './BotBar'
 import { LayoutSwitch } from './mobile/LayoutSwitch'
-import { BOT_SPEEDS, useGameStore, type BotSpeed } from './store'
+import {
+	BOT_RECAPS,
+	BOT_SPEEDS,
+	useGameStore,
+	type BotRecap,
+	type BotSpeed,
+} from './store'
 import { ThemeSwitch } from './ThemeSwitch'
+
+const RECAP_LABEL: Record<BotRecap, string> = {
+	hit: 'When it affects you',
+	always: 'After every AI turn',
+	never: 'Only from AI turn',
+}
 
 export function SettingsPanel({ onClose }: { onClose: () => void }) {
 	const speed = useGameStore((s) => s.botSpeed)
 	const setBotSpeed = useGameStore((s) => s.setBotSpeed)
+	const recap = useGameStore((s) => s.botRecap)
+	const setBotRecap = useGameStore((s) => s.setBotRecap)
 	const botGame = useGameStore(
 		(s) => s.online === null && hasBots(s.session?.opponents),
 	)
@@ -46,6 +60,25 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
 								{BOT_SPEEDS.map((s) => (
 									<option key={s} value={s}>
 										{SPEED_LABEL[s]}
+									</option>
+								))}
+							</select>
+						</label>
+					)}
+					{botGame && (
+						<label
+							className="layout-switch"
+							title="When the House AI's turn opens by itself once yours begins"
+						>
+							<span className="nav-label">Show the AI's turn</span>
+							<select
+								value={recap}
+								onChange={(e) => setBotRecap(e.target.value as BotRecap)}
+								aria-label="Show the AI's turn"
+							>
+								{BOT_RECAPS.map((r) => (
+									<option key={r} value={r}>
+										{RECAP_LABEL[r]}
 									</option>
 								))}
 							</select>

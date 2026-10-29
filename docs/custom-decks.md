@@ -81,7 +81,7 @@ need, so the two pull against each other.
 | 01  | Malcolm Reynolds | CAPTAIN   | —           | INCIDENT taken → {DIL} + warp; endgame VP per PERSON aboard |
 | 02  | Serenity         | SHIP      | Deployed    | flagship; warps for {DIL} or {LAT}                          |
 | 03  | River Tam        | PERSON    | Development | draw/filter; attack removes Away Teams                      |
-| 04  | Simon Tam        | PERSON    | Development | returns INCIDENTs, Research                                 |
+| 04  | Simon Tam        | PERSON    | Reserve     | returns INCIDENTs, Research                                 |
 | 05  | Shepherd Book    | PERSON    | Development | returns INCIDENTs; reaction: {GLO} per return               |
 | 06  | Mr. Universe     | ALLY      | Development | Influence + Research, logs itself (3 VP)                    |
 | 07  | Miranda          | LOCATION  | Development | take INCIDENT → 2 {GLO}; endgame VP per INCIDENT            |
@@ -91,7 +91,7 @@ need, so the two pull against each other.
 | 11  | Inara Serra      | PERSON    | Reserve     | {LAT} or Influence; buys {GLO}                              |
 | 12  | Inara's Shuttle  | SHIP      | Reserve     | second ship (mission 3), beams a PERSON                     |
 | 13  | Badger           | ALLY      | Reserve     | INCIDENT → CARGO + {LAT}; scan CARGO                        |
-| 14  | Saffron          | PERSON    | Reserve     | steals {LAT} / {DIL}                                        |
+| 14  | Saffron          | PERSON    | Development | steals {LAT} / {DIL} (2 {DIL} to develop)                   |
 | 15  | Reavers          | INCIDENT  | Reserve     | return with a WEAPON or 2 {DIL}, then flee                  |
 | 16  | Into the Black   | DIRECTIVE | Available   | the deck's Utilize                                          |
 | 17  | Signing On       | DIRECTIVE | Available   | the deck's Recruit                                          |
@@ -108,6 +108,27 @@ Missions (Advanced side; Basic uses the first, 0 VP): **Crew and Cargo** (3+
 PERSON on one SHIP and 2+ CARGO in play, 4 VP), **Can't Stop the Signal** (a
 TELEPATH, a DOCTOR and a PILOT on one SHIP, 3 VP), **Big Damn Heroes** (2+
 deployed SHIPs and Military 6, 3 VP).
+
+### Balance
+
+Measured with the House AI (Normal vs Normal, `tools/arena.ts`, MAL against the
+six box-1 decks in both seat orders, seeds 1 and 7). In a mirror match both
+halves of a seat-swapped pair are the same game, so each pair counts once:
+600 independent games per row.
+
+| Version                                 | MAL win rate | 95 % CI     | VP margin |
+| --------------------------------------- | ------------ | ----------- | --------- |
+| First version (Simon in Development)    | 36.6 %       | 32.8 – 40.5 | −3.3      |
+| Simon in the Reserve, Saffron developed | **47.8 %**   | 43.8 – 51.7 | −0.3      |
+
+For scale, the box-1 decks against each other under the same bot run from
+about 67 % (KOL) to 22 % (SHR), with SEL near 53 %. The first version's
+INCIDENT-return crew sat in Development, which a deck only reaches once its
+Reserve is empty (turn 15 or later for most decks), so its INCIDENTs stayed at
+−2 VP all game. Other tries: Book instead of Simon 44.9 %; Simon or Book in the
+starting deck (Zoe to the Reserve) 50.8 % / 46.5 %; Book and Simon both in the
+Reserve 55.6 % (too strong). Resource buffs alone (more {DIL}/{LAT} on Reynolds
+and Take the Job) plateaued near 40 %.
 
 Tests: `src/engine/mal-deck.test.ts` covers setup and the triggers no box-1 card
 uses (SHIP_WARPED, INCIDENT_RETURNED), the either-resource warp and both

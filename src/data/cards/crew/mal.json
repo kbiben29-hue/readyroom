@@ -386,7 +386,7 @@
 		"focus": null,
 		"vp": 2,
 		"vpAsterisk": false,
-		"startPosition": "DEVELOPMENT",
+		"startPosition": "RESERVE",
 		"operations": [
 			{
 				"type": "PLAY",
@@ -484,21 +484,7 @@
 				}
 			}
 		],
-		"developmentCost": {
-			"k": "SEQ",
-			"steps": [
-				{
-					"k": "COST_RESOURCE",
-					"res": "DIL",
-					"amount": 2
-				},
-				{
-					"k": "COST_RESOURCE",
-					"res": "LAT",
-					"amount": 1
-				}
-			]
-		}
+		"developmentCost": null
 	},
 	{
 		"cardId": "1MAL05/25",
@@ -1204,7 +1190,7 @@
 		"focus": null,
 		"vp": 0,
 		"vpAsterisk": false,
-		"startPosition": "RESERVE",
+		"startPosition": "DEVELOPMENT",
 		"operations": [
 			{
 				"type": "PLAY",
@@ -1244,7 +1230,11 @@
 				}
 			}
 		],
-		"developmentCost": null
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		}
 	},
 	{
 		"cardId": "1MAL15/25",

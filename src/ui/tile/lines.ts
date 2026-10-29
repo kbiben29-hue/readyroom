@@ -287,8 +287,7 @@ function resolvedThisTurn(
 
 /** Why a line can never run from where the card is (state 'na'): in play,
  *  PLAY / CONTROL / Development lines are spent; a Development cost is paid
- *  only on enlisting. undefined: the line can matter here. The detail views
- *  fold these lines away. */
+ *  only on enlisting. undefined: the line can matter here. */
 export function notHereReason(
 	ctx: TileContext,
 	timing: ShorthandLine['timing'],
@@ -311,6 +310,45 @@ export function notHereReason(
 		default:
 			return undefined
 	}
+}
+
+/** Why a line has to wait for the card to move on (state 'later'): table
+ *  lines on a card in hand or in Development, activations in the Staging
+ *  Area. undefined: the line is not waiting on where the card is. */
+export function laterReason(
+	ctx: TileContext,
+	timing: ShorthandLine['timing'],
+): string | undefined {
+	switch (ctx) {
+		case 'hand':
+			return timing === 'PLAY' || timing === 'DEVELOPMENT'
+				? undefined
+				: 'Works once this card is in play'
+		case 'staging':
+			return timing === 'ACTIVATION'
+				? 'No table operations in the Staging Area'
+				: undefined
+		case 'development':
+			return timing === 'DEVELOPMENT'
+				? undefined
+				: 'Works once enlisted and in play'
+		default:
+			return undefined
+	}
+}
+
+/** Why the detail views fold a line away below the ones usable here: it
+ *  never runs from this zone, or (in hand and the Staging Area) not before
+ *  the card moves on. A card in Development keeps its lines open, since they
+ *  are what you read before enlisting it. */
+export function foldReason(
+	ctx: TileContext,
+	timing: ShorthandLine['timing'],
+): string | undefined {
+	return (
+		notHereReason(ctx, timing) ??
+		(ctx === 'development' ? undefined : laterReason(ctx, timing))
+	)
 }
 
 function sameVia(
@@ -391,9 +429,13 @@ export function tileLines(input: TileLineInput): TileLine[] {
 		let idle: string | undefined
 
 		const na = notHereReason(ctx, timing)
+		const later = na === undefined ? laterReason(ctx, timing) : undefined
 		if (na !== undefined) {
 			st = 'na'
 			reason = na
+		} else if (later !== undefined) {
+			st = 'later'
+			reason = later
 		} else
 			switch (ctx) {
 				case 'hand':
@@ -412,9 +454,6 @@ export function tileLines(input: TileLineInput): TileLine[] {
 							reason = block
 							turnGated = true
 						} else reason = playReason(c.opIndex)
-					} else {
-						st = 'later'
-						reason = 'Works once this card is in play'
 					}
 					break
 				case 'play':
@@ -447,25 +486,16 @@ export function tileLines(input: TileLineInput): TileLine[] {
 					}
 					break
 				case 'staging':
-					if (timing === 'PLAY') {
-						if (
-							view !== null &&
-							iid !== null &&
-							c.opIndex !== null &&
-							resolvedThisTurn(view, iid, c.opIndex)
-						)
-							st = 'done'
-					} else if (timing === 'ACTIVATION') {
-						st = 'later'
-						reason = 'No table operations in the Staging Area'
-					}
+					if (
+						timing === 'PLAY' &&
+						view !== null &&
+						iid !== null &&
+						c.opIndex !== null &&
+						resolvedThisTurn(view, iid, c.opIndex)
+					)
+						st = 'done'
 					break
 				case 'development':
-					if (timing !== 'DEVELOPMENT') {
-						st = 'later'
-						reason = 'Works once enlisted and in play'
-					}
-					break
 				case 'market':
 				case 'other':
 					break

@@ -17,6 +17,7 @@ import { SessionAdapter } from '../session/adapter'
 import { loadBrowserCatalog } from './browserCatalog'
 import { useGameStore } from './store'
 import { CardDetailHost, CardZoom } from './cards'
+import { DetailSheet } from './mobile/sheets'
 import { Hand } from './board'
 import { canPlay } from '../engine/queries/legality'
 
@@ -220,6 +221,58 @@ describe('deployed-card activation (ui wiring)', () => {
 			outside.map((el) => el.querySelector('.op-type')!.textContent),
 		).toEqual(['ACTIVATION', 'ACTIVATION', 'ACTIVATION'])
 		expect(away.querySelector('.op-activate')).toBeNull()
+	})
+
+	it('folds the ACTIVATION of a card in hand, on desktop and phone', () => {
+		const adapter = new SessionAdapter({
+			session: createSession(uiConfig(), catalog),
+			catalog,
+		})
+		adapter.dispatch({ t: 'START' })
+		act(() => {
+			useGameStore.getState().resumeGame(adapter.session)
+		})
+		// 1PIC23: a PLAY and an ACTIVATION, in the opening hand
+		const inHand = findDef(
+			useGameStore.getState().state!,
+			'HAND:0',
+			'1PIC23-24',
+		)
+		act(() => {
+			useGameStore.getState().setDetail(inHand)
+		})
+		const host = document.createElement('div')
+		document.body.appendChild(host)
+		const root = createRoot(host)
+		act(() => {
+			root.render(<CardDetailHost />)
+		})
+
+		const away = host.querySelector('details.op-away') as HTMLDetailsElement
+		expect(away).not.toBeNull()
+		expect(away.open).toBe(false)
+		expect(away.querySelector('summary')!.textContent).toContain('(1)')
+		expect(away.querySelector('.op-type')!.textContent).toBe('ACTIVATION')
+		expect(away.textContent).toContain('Works once this card is in play')
+		// the PLAY stays out in the open, still playable
+		const outside = [...host.querySelectorAll('.op-detail')].filter(
+			(el) => !away.contains(el),
+		)
+		expect(
+			outside.map((el) => el.querySelector('.op-type')!.textContent),
+		).toEqual(['PLAY'])
+		expect(outside[0]!.querySelector('.op-activate')).not.toBeNull()
+
+		act(() => {
+			root.render(<DetailSheet />)
+		})
+		const sheetAway = host.querySelector(
+			'details.pb-dt-away',
+		) as HTMLDetailsElement
+		expect(sheetAway).not.toBeNull()
+		expect(sheetAway.open).toBe(false)
+		expect(sheetAway.querySelector('summary')!.textContent).toContain('(1)')
+		expect(sheetAway.textContent).toContain('Works once this card is in play')
 	})
 
 	it('an ACTIVATION outside your turn shows a reason instead of a dead row', () => {

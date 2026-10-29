@@ -27,7 +27,7 @@ import { TIMING_WORD } from '../shorthandGlyphs'
 import { ShorthandLineView, ShorthandTokens } from '../shorthand'
 import { CardTile, TileLineRow, runIntent } from '../tile/CardTile'
 import { Gl, SuitGl } from '../tile/glyph'
-import { tileLines, type TileLine } from '../tile/lines'
+import { contextOf, foldReason, tileLines, type TileLine } from '../tile/lines'
 import { missionView, orderCount, orderGroups } from './facts'
 import { useBridgeUi } from './bridgeUi'
 import { useViewerLegal } from '../tile/legal'
@@ -514,9 +514,11 @@ export function DetailSheet() {
 			</SheetFrame>
 		)
 	}
-	// lines that can never run from this zone (a deployed card's PLAY lines)
-	// fold away below the ones that can
-	const away = lines.filter((l) => l.state === 'na')
+	// lines that cannot run from this zone (a deployed card's PLAY lines, the
+	// activations of a card in hand) fold away below the ones that can
+	const ctx = contextOf(card.zone)
+	const folds = (l: TileLine) => foldReason(ctx, l.line.timing) !== undefined
+	const away = lines.filter(folds)
 	const opView = (l: TileLine) => (
 		<DetailOp key={l.key} l={l} onDone={close}>
 			<div className="pb-lblrow">
@@ -630,7 +632,7 @@ export function DetailSheet() {
 				<div className="pb-empty">No operations.</div>
 			) : (
 				<>
-					{lines.filter((l) => l.state !== 'na').map(opView)}
+					{lines.filter((l) => !folds(l)).map(opView)}
 					{away.length > 0 && (
 						<details className="pb-dt-away">
 							<summary>Not usable from here ({away.length})</summary>

@@ -56,7 +56,7 @@ import { ShorthandOp } from './shorthand'
 import { GlyphLegend } from './guide/legend'
 import { linesOfDef } from './guide/glossary'
 import { cardName, withCardNames } from '../data/cardNames'
-import { contextOf, notHereReason } from './tile/lines'
+import { contextOf, foldReason } from './tile/lines'
 import { BeamedChips, BeamedOnto } from './beamed'
 
 export type CardSize =
@@ -1117,14 +1117,15 @@ export function CardDetailHost() {
 			: realState.phase.k !== 'ACTION'
 				? 'Activations only run in the ACTION phase'
 				: 'Not your turn'
-	// operations that can never run from this zone (a deployed card's PLAY
-	// lines) fold away below the ones that can
+	// operations that cannot run from this zone (a deployed card's PLAY
+	// lines, the activations of a card in hand) fold away below the ones
+	// that can
 	const ctx = contextOf(card.zone)
 	const defOps = def?.operations ?? []
 	const ops = defOps.map((op, i) => ({
 		op,
 		i,
-		notHere: notHereReason(ctx, op.type),
+		notHere: foldReason(ctx, op.type),
 	}))
 	const here = ops.filter((o) => o.notHere === undefined)
 	const away = ops.filter((o) => o.notHere !== undefined)

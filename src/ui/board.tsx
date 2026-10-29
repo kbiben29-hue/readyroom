@@ -13,7 +13,7 @@ import type { CardInstanceId } from '../engine/ids'
 import type { Seat, ZoneRef } from '../engine/resolver/queries'
 import type { SpecialtyId, MarketSuit } from '../data/ids'
 import { MARKET_SUITS_FOUR } from '../engine/market'
-import { shipTokensAt, isSecured } from '../engine/queries/board'
+import { shipTokensAt } from '../engine/queries/board'
 import { canPlay } from '../engine/queries/legality'
 import {
 	useProjected,
@@ -23,7 +23,8 @@ import {
 	useRealState,
 } from './store'
 import { CardSprite, CardStack, browsePile } from './cards'
-import { ShipPosition, ShipStandees } from './standees'
+import { ShipPosition } from './standees'
+import { LocationCard } from './location'
 import { BeamedChips } from './beamed'
 import { RESOURCE_LABEL, seatLabel, specialtyName } from './format'
 import { Icon, suitIconId } from './icons'
@@ -144,32 +145,21 @@ export function NeutralZone() {
 
 function LocationSlot({ slot }: { slot: 0 | 1 | 2 }) {
 	const state = useStateGame()
-	const viewer = useViewerSeat()
 	const locs = useZones({ k: 'NEUTRAL_ZONE', slot })
 	if (state === null) return null
 	const loc = locs[0]
-	const secured = loc !== undefined && isSecured(state, loc, viewer)
-	const at = loc !== undefined ? state.awayTeamsAt[loc] : undefined
 	const ships0 = loc !== undefined ? shipTokensAt(state, loc, 0) : 0
 	const ships1 = loc !== undefined ? shipTokensAt(state, loc, 1) : 0
 	return (
-		<div className={`location-slot${secured ? ' location-secured' : ''}`}>
+		<div className="location-slot">
 			{loc === undefined ? (
 				<div className="empty-slot muted">no Location</div>
 			) : (
 				<>
-					<div className="location-with-teams">
-						<CardSprite
-							iid={loc}
-							size="board"
-							badge={
-								secured ? <span className="secured-badge">secured</span> : null
-							}
-							onClick={() => useGameStore.getState().cardClicked(loc)}
-						/>
-						<AwayTeamMarkers teams={at} />
-						<ShipStandees loc={loc} placement="overlay" />
-					</div>
+					<LocationCard
+						iid={loc}
+						onClick={() => useGameStore.getState().cardClicked(loc)}
+					/>
 					<div className="location-tokens">
 						<span className="ship-count">
 							ships P1 {ships0} / P2 {ships1}
@@ -178,39 +168,6 @@ function LocationSlot({ slot }: { slot: 0 | 1 | 2 }) {
 				</>
 			)}
 		</div>
-	)
-}
-
-/** Away Teams at a Location, drawn as token icons stacked down the card's
- *  edges — P1 on the left, P2 on the right — each icon half over the card. */
-function AwayTeamMarkers({
-	teams,
-}: {
-	teams: readonly [number, number] | undefined
-}) {
-	return (
-		<>
-			{([0, 1] as const).map((seat) => {
-				const n = teams?.[seat] ?? 0
-				if (n === 0) return null
-				const label = `P${seat + 1}: ${n} Away Team${n === 1 ? '' : 's'}`
-				return (
-					<div
-						key={seat}
-						className={`away-stack away-stack-${seat}${n > 5 ? ' away-stack-dense' : ''}`}
-						role="img"
-						aria-label={label}
-						title={label}
-					>
-						{Array.from({ length: n }, (_, i) => (
-							<span key={i} className="away-marker">
-								<Icon id="AWAY_TEAM" label={label} size="md" />
-							</span>
-						))}
-					</div>
-				)
-			})}
-		</>
 	)
 }
 
@@ -297,7 +254,6 @@ function ZoneRow({
 	full?: boolean | undefined
 }) {
 	const iids = useZones({ k, seat })
-	const state = useStateGame()
 	return (
 		<div
 			className={`area-row${slot === true ? ' area-slot' : ''}${full === true ? ' area-full' : ''}`}
@@ -317,11 +273,11 @@ function ZoneRow({
 							/>
 						)
 						return k === 'LOCATION_AREA' ? (
-							<div key={iid} className="location-with-teams">
-								{sprite}
-								<AwayTeamMarkers teams={state?.awayTeamsAt[iid]} />
-								<ShipStandees loc={iid} placement="overlay" />
-							</div>
+							<LocationCard
+								key={iid}
+								iid={iid}
+								onClick={() => useGameStore.getState().cardClicked(iid)}
+							/>
 						) : k === 'FLEET' ? (
 							<div key={iid} className="fleet-col">
 								<div className="fleet-ship">
@@ -341,21 +297,19 @@ function ZoneRow({
 }
 
 /** The compact (opponent) area still draws its Locations, small, so the ships
- *  standing on them have a card to stand on. */
+ *  and Away Teams on them have a card to stand on. */
 function CompactLocations({ seat }: { seat: Seat }) {
 	const iids = useZones({ k: 'LOCATION_AREA', seat })
 	if (iids.length === 0) return null
 	return (
 		<div className="compact-locations" aria-label="Locations">
 			{iids.map((iid) => (
-				<div key={iid} className="location-with-teams">
-					<CardSprite
-						iid={iid}
-						size="micro"
-						onClick={() => useGameStore.getState().cardClicked(iid)}
-					/>
-					<ShipStandees loc={iid} placement="overlay" />
-				</div>
+				<LocationCard
+					key={iid}
+					iid={iid}
+					size="micro"
+					onClick={() => useGameStore.getState().cardClicked(iid)}
+				/>
 			))}
 		</div>
 	)

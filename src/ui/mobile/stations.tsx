@@ -35,7 +35,6 @@ import { useBridgeUi } from './bridgeUi'
 import { useViewerLegal } from '../tile/legal'
 import { useDefIndex } from '../defs'
 import { cardName, deckLabel } from '../../data/cardNames'
-import { ShipStandees } from '../standees'
 
 // ---------------------------------------------------------------------------
 // shared bits
@@ -201,7 +200,6 @@ function NeutralLocation({ iid }: { iid: CardInstanceId }) {
 		<CardTile
 			iid={iid}
 			className="pb-loc"
-			meta={<ShipStandees loc={iid} placement="inline" />}
 			extra={
 				<>
 					<div
@@ -259,15 +257,7 @@ function ZoneTiles({
 	return (
 		<div className="pb-stack">
 			{iids.map((iid) => (
-				<CardTile
-					key={iid}
-					iid={iid}
-					meta={
-						k === 'LOCATION_AREA' ? (
-							<ShipStandees loc={iid} placement="inline" />
-						) : undefined
-					}
-				/>
+				<CardTile key={iid} iid={iid} />
 			))}
 		</div>
 	)

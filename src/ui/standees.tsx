@@ -75,14 +75,17 @@ function ShipIcon() {
 /**
  * The ships at a Location, one standee each. `placement` picks the desktop
  * overlay (along the card's bottom edge) or an inline row (phone tiles).
- * A click opens the ship's card detail and never reaches the Location card.
+ * A click opens the ship's card detail and never reaches the Location card;
+ * `interactive={false}` draws them without buttons (the tile sits in one).
  */
 export function ShipStandees({
 	loc,
 	placement,
+	interactive = true,
 }: {
 	loc: CardInstanceId
 	placement: 'overlay' | 'inline'
+	interactive?: boolean | undefined
 }) {
 	const projected = useProjected()
 	const viewer = useViewerSeat()
@@ -100,11 +103,20 @@ export function ShipStandees({
 				const name = nameOf(projected, index, iid)
 				const who = owner === viewer ? 'me' : 'them'
 				const label = `${name} · ${ownerLabel(owner, viewer)}`
-				return (
+				const body = (
+					<>
+						<ShipIcon />
+						{placement === 'inline' && (
+							<span className="standee-name">{name}</span>
+						)}
+					</>
+				)
+				const cls = `standee standee-seat-${owner} standee-${who}`
+				return interactive ? (
 					<button
 						key={iid}
 						type="button"
-						className={`standee standee-seat-${owner} standee-${who}`}
+						className={cls}
 						title={label}
 						aria-label={`Ship: ${label}`}
 						onClick={(e: MouseEvent) => {
@@ -112,11 +124,17 @@ export function ShipStandees({
 							setDetail(iid)
 						}}
 					>
-						<ShipIcon />
-						{placement === 'inline' && (
-							<span className="standee-name">{name}</span>
-						)}
+						{body}
 					</button>
+				) : (
+					<span
+						key={iid}
+						className={cls}
+						title={label}
+						aria-label={`Ship: ${label}`}
+					>
+						{body}
+					</span>
 				)
 			})}
 		</div>

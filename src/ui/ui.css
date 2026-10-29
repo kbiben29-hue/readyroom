@@ -845,7 +845,7 @@ h3,
 	gap: 6px;
 	align-items: center;
 }
-.location-slot.location-secured .card {
+.location-slot .location-secured > .card {
 	outline: 2px solid var(--ice);
 }
 .location-tokens {
@@ -910,6 +910,21 @@ h3,
 }
 .away-stack-dense .away-marker + .away-marker {
 	margin-top: -10px;
+}
+/* The opponent's small Location cards: smaller markers, higher up. */
+.location-micro .away-stack {
+	top: 22px;
+}
+.location-micro .away-marker {
+	width: 16px;
+	height: 16px;
+	box-shadow: 0 0 0 1.5px currentColor;
+}
+.location-micro .away-marker .icon {
+	height: 11px;
+}
+.location-micro .away-stack-dense .away-marker + .away-marker {
+	margin-top: -7px;
 }
 
 /* ----------------------------------------------------------- shared piles */
@@ -2125,9 +2140,12 @@ h3,
 	filter: brightness(1.12);
 	box-shadow: inset 0 0 0 2px #fff8;
 }
+/* room for the Away Team markers that stand half over the card's edges */
 .location-tile {
 	align-items: center;
 	text-align: center;
+	max-width: none;
+	padding-inline: 12px;
 }
 .option-row {
 	text-align: left;

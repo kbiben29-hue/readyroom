@@ -10,7 +10,8 @@
 // State is drawn over the card, never baked into it: Glory/resource tokens,
 // action tokens, exhausted (only ACTIVATION lines dim — that is all it
 // disables), beamed cards, the ship token, the Captain's Away Team pool, the
-// candidate ring of a pending choice, the selection.
+// Away Teams and ships at a Location, the candidate ring of a pending choice,
+// the selection.
 //
 // The line is the button: a lit line (legal right now for the viewer — see
 // lines.ts) dispatches its PLAY_CARD / ACTIVATE on tap or Enter/Space. The
@@ -39,6 +40,7 @@ import {
 import { useDefForIid, useDefIndex } from '../defs'
 import { HIDDEN_DEF, type ProjectedState } from '../projection'
 import { ShorthandLineView } from '../shorthand'
+import { ShipStandees } from '../standees'
 import { Gl, SuitGl } from './glyph'
 import { intentOffered, speakable, tileLines, type TileLine } from './lines'
 import { useViewerLegal } from './legal'
@@ -545,6 +547,15 @@ export function CardTile(props: CardTileProps) {
 							interactive={interactive && !pickable}
 						/>
 					)}
+					{iid !== undefined &&
+						(card?.zone.k === 'LOCATION_AREA' ||
+							card?.zone.k === 'NEUTRAL_ZONE') && (
+							<ShipStandees
+								loc={iid}
+								placement="inline"
+								interactive={interactive}
+							/>
+						)}
 					{meta}
 				</div>
 				{extra}

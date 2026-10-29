@@ -30,6 +30,7 @@ import {
 	usePendingChoice,
 } from './store'
 import { CardSprite, OpText } from './cards'
+import { LocationCard } from './location'
 import { OperationOptions, operationOptions } from './opOptions'
 import { seatLabel } from './format'
 import { useDefForIid, useDefById } from './defs'
@@ -410,9 +411,8 @@ function ChooseLocationChoice({
 									key={iid}
 									className={`candidate-tile location-tile${chosen === iid ? ' candidate-selected' : ''}`}
 								>
-									<CardSprite
+									<LocationCard
 										iid={iid}
-										size="board"
 										selected={chosen === iid}
 										onClick={() => useGameStore.getState().setSelected([iid])}
 									/>

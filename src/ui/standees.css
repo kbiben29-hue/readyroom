@@ -164,8 +164,9 @@
 .compact-locations {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 8px;
+	gap: 8px 16px;
 	width: 100%;
+	padding-inline: 8px; /* the Away Team markers stand half over the edges */
 }
 
 /* Beamed cards (beamed.tsx): a column per Fleet ship so the chips sit under

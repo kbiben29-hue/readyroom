@@ -1,0 +1,91 @@
+// A Location in play as the desktop draws it: the card, its Away Teams stacked
+// down the edges (P1 left, P2 right), the ships standing on it and, in the
+// Neutral Zone, whether the viewer has it secured. Every desktop surface that
+// shows a Location — the Neutral Zone, both Location Areas, the Location
+// choice — goes through <LocationCard>, so the teams and ships are never
+// missing. (The phone's CardTile does the same for its Location tiles.)
+
+import type { GameState } from '../engine/state'
+import type { CardInstanceId } from '../engine/ids'
+import { isSecured } from '../engine/queries/board'
+import { useProjected, useViewerSeat } from './store'
+import { CardSprite } from './cards'
+import { ShipStandees } from './standees'
+import { Icon } from './icons'
+
+/** Away Teams at a Location, drawn as token icons stacked down the card's
+ *  edges — P1 on the left, P2 on the right — each icon half over the card. */
+function AwayTeamMarkers({
+	teams,
+	small,
+}: {
+	teams: readonly [number, number] | undefined
+	small: boolean
+}) {
+	return (
+		<>
+			{([0, 1] as const).map((seat) => {
+				const n = teams?.[seat] ?? 0
+				if (n === 0) return null
+				const label = `P${seat + 1}: ${n} Away Team${n === 1 ? '' : 's'}`
+				return (
+					<div
+						key={seat}
+						className={`away-stack away-stack-${seat}${n > 5 ? ' away-stack-dense' : ''}`}
+						role="img"
+						aria-label={label}
+						title={label}
+					>
+						{Array.from({ length: n }, (_, i) => (
+							<span key={i} className="away-marker">
+								<Icon id="AWAY_TEAM" label={label} size={small ? 'sm' : 'md'} />
+							</span>
+						))}
+					</div>
+				)
+			})}
+		</>
+	)
+}
+
+export function LocationCard({
+	iid,
+	size = 'board',
+	selected,
+	onClick,
+}: {
+	iid: CardInstanceId
+	size?: 'board' | 'micro' | undefined
+	selected?: boolean | undefined
+	onClick?: (() => void) | undefined
+}) {
+	const projected = useProjected()
+	const viewer = useViewerSeat()
+	const state = projected as unknown as GameState | null
+	const secured =
+		state !== null &&
+		state.cards[iid]?.zone.k === 'NEUTRAL_ZONE' &&
+		isSecured(state, iid, viewer)
+	return (
+		<div
+			className={`location-with-teams location-${size}${secured ? ' location-secured' : ''}`}
+		>
+			<CardSprite
+				iid={iid}
+				size={size}
+				selected={selected}
+				badge={
+					secured && size === 'board' ? (
+						<span className="secured-badge">secured</span>
+					) : null
+				}
+				onClick={onClick}
+			/>
+			<AwayTeamMarkers
+				teams={state?.awayTeamsAt[iid]}
+				small={size === 'micro'}
+			/>
+			<ShipStandees loc={iid} placement="overlay" />
+		</div>
+	)
+}

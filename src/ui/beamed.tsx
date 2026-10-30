@@ -1,7 +1,7 @@
-// Beamed cards: a card beamed onto a ship leaves play into the ship's BEAMED
-// zone (`BEAMED:<host iid>`), which no board area draws. These chips list what
-// a ship carries — under the ship card on the board and in its card detail —
-// and each opens the beamed card's detail.
+// Beamed cards: a card beamed onto a ship or a Location goes into its host's
+// BEAMED zone (`BEAMED:<host iid>`), which no board area draws. These chips
+// list what a host carries — under the ship or Location on the board and in
+// its card detail — and each opens the beamed card's detail.
 
 import type { MouseEvent } from 'react'
 import type { CardInstanceId } from '../engine/ids'
@@ -16,6 +16,15 @@ import { Gl } from './tile/glyph'
 export function useBeamed(host: CardInstanceId): readonly CardInstanceId[] {
 	const projected = useProjected()
 	return projected?.zones[zoneKey({ k: 'BEAMED', host })] ?? []
+}
+
+/** How to head what is beamed to a host: a ship carries it aboard, a Location
+ *  holds it there. */
+export function beamedHeading(host: { zone: { k: string } } | undefined) {
+	const k = host?.zone.k
+	return k === 'LOCATION_AREA' || k === 'NEUTRAL_ZONE'
+		? 'Beamed here'
+		: 'Beamed aboard'
 }
 
 /** "Beamed onto <ship>" for a beamed card's detail; the ship's name opens it. */
@@ -54,6 +63,7 @@ export function BeamedChips({
 	const index = useDefIndex()
 	const beamed = useBeamed(host)
 	if (projected === null || beamed.length === 0) return null
+	const heading = beamedHeading(projected.cards[host])
 	return (
 		<div className={`beamed-chips beamed-${placement}`}>
 			{beamed.map((b) => {
@@ -67,8 +77,8 @@ export function BeamedChips({
 						key={b}
 						type="button"
 						className="beamed-chip"
-						title={`Beamed aboard: ${label}`}
-						aria-label={`Beamed aboard: ${label}`}
+						title={`${heading}: ${label}`}
+						aria-label={`${heading}: ${label}`}
 						onClick={(e: MouseEvent) => {
 							e.stopPropagation()
 							setDetail(b)

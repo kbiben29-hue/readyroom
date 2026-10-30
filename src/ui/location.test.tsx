@@ -249,6 +249,31 @@ describe('Location card', () => {
 		])
 	})
 
+	it('lists the cards beamed to it under the card, not on the compact strip', () => {
+		const { busy } = busyLocation()
+		const p = useGameStore.getState().projected!
+		const beamed = p.zones['HAND:0']!.slice(-2)
+		const cards = { ...p.cards }
+		for (const b of beamed)
+			cards[b] = { ...cards[b]!, zone: { k: 'BEAMED', host: busy } }
+		act(() => {
+			useGameStore.setState({
+				projected: {
+					...p,
+					cards,
+					zones: { ...p.zones, [`BEAMED:${busy}`]: beamed },
+				},
+			})
+		})
+		const chips = render(<LocationCard iid={busy} />).querySelectorAll(
+			'.beamed-chip',
+		)
+		expect(chips).toHaveLength(2)
+		expect(chips[0]!.getAttribute('aria-label')).toMatch(/^Beamed here: /)
+		const micro = render(<LocationCard iid={busy} size="micro" />)
+		expect(micro.querySelector('.beamed-chip')).toBeNull()
+	})
+
 	it('carries the ships on the phone tile, without buttons when inert', () => {
 		const { busy } = busyLocation()
 		const live = render(<CardTile iid={busy} />)

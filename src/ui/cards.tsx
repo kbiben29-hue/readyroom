@@ -57,7 +57,7 @@ import { GlyphLegend } from './guide/legend'
 import { linesOfDef } from './guide/glossary'
 import { cardName, withCardNames } from '../data/cardNames'
 import { contextOf, foldReason } from './tile/lines'
-import { BeamedChips, BeamedOnto } from './beamed'
+import { BeamedChips, BeamedOnto, beamedHeading } from './beamed'
 
 export type CardSize =
 	'micro' | 'board' | 'hand' | 'preview' | 'review' | 'zoom'
@@ -1255,7 +1255,7 @@ export function CardDetailHost() {
 								</p>
 								{beamedHere.length > 0 && (
 									<div className="detail-line detail-beamed">
-										<strong>Beamed aboard:</strong>
+										<strong>{beamedHeading(card)}:</strong>
 										<BeamedChips host={detailIid} placement="inline" />
 									</div>
 								)}

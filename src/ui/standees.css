@@ -169,9 +169,11 @@
 	padding-inline: 8px; /* the Away Team markers stand half over the edges */
 }
 
-/* Beamed cards (beamed.tsx): a column per Fleet ship so the chips sit under
-   the card without moving the ship's position marker. */
-.fleet-col {
+/* Beamed cards (beamed.tsx): a column per Fleet ship or Location so the chips
+   sit under the card without moving the ship's position marker or the
+   standees on the Location. */
+.fleet-col,
+.location-col {
 	display: inline-flex;
 	flex-direction: column;
 	gap: 4px;

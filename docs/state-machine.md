@@ -119,6 +119,12 @@ After each primitive:
 Because the window frame sits **above** the interrupted `EFFECT` frame, the interrupted
 operation resumes naturally when the window pops (`rules/12` §12.24).
 
+Before the queue is drained, `chronicle` (`resolver/chronicle.ts`) writes a log line for every
+event that takes something off the table — a card dismissed, destroyed or logged, an
+opponent's Away Teams removed — with `LogEntry.about` set to the player it happened to.
+Primitives and `moveCard`'s cascades (a beamed card following its host) only queue these
+events, so this one call in `runCollecting` covers every path.
+
 ### Token trail (`state.fx`)
 
 After each `EFFECT` step the stack diffs the token pools (both players' resources and

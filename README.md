@@ -3,7 +3,8 @@
 An unofficial, fan-made rules engine and web app for playing
 [_Star Trek: Captain's Chair_](https://boardgamegeek.com/boardgame/422541/star-trek-captains-chair)
 (WizKids, 2024 — designed by Dávid Turczi & Nigel Buckle) in the browser: hot-seat on one screen,
-or asynchronously online against a friend, on desktop or phone, with replay, undo and saved games.
+against our own House AI, or asynchronously online against a friend, on desktop or phone, with
+replay, undo and saved games.
 
 > [!WARNING]
 > **This is still being tested.** Every card is implemented and the engine has a
@@ -87,6 +88,11 @@ npm run fetch-cards   # only downloads again if the pinned commit changed
 
 - **Hot-seat:** both captains share one screen. Games autosave in the browser; **Continue a saved
   game** picks them up again, and a session can be exported and imported as a small file.
+  Finished games stay in the list with their result and open on the Final Score screen.
+- **Against the House AI:** **Play vs House AI** on the start screen, or set either seat to it
+  (Easy / Normal / Hard). It is our own computer opponent, not the official solo Bot, which
+  needs the solo rulebook ([`docs/bot.md`](docs/bot.md)). Its moves run in a ticker, and
+  **AI turn** shows what each of its turns did, starting with what it did to you.
 - **On a phone or tablet:** below 1080px wide the game switches to phone and tablet layouts, with
   every card's operations drawn as a short line of glyphs ([`docs/shorthand.md`](docs/shorthand.md)).
   **Learn the card glyphs** on the start screen teaches them.
@@ -134,7 +140,14 @@ npm test                          # vitest (runs without fetched data)
 npm run lint
 npm run build                     # validates cards, runs the publish audit, type-checks, builds
 npx tsx tools/crosscheck-stcc.ts  # compare our card defs against the STCC database
+npm run game                      # summarise the newest local game (while npm run dev runs)
 ```
+
+While `npm run dev` runs, every autosave of a local game is also written to
+`.debug/games/<id>.json` (gitignored). `npm run game` replays the newest one and prints the turn,
+phase, zones with card names, the pending choice and the end of the log. `-- --list`,
+`-- <id>`, `-- --at N`, `-- --log N`, `-- --intents` and `-- --state` pick another game, an
+earlier point, a longer log or the raw JSON.
 
 `npm run audit:publish` fails if the git index contains card images, PDFs, anything fetched,
 printed card text in the card definitions, or card names in code. Keep it green — pull requests

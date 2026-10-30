@@ -21,6 +21,11 @@ A save is the **Session**, never a `GameState`:
   a load-screen convenience, not final scoring) and a **card-data hash**. A hash
   mismatch when loading (`checkCardData`) warns that an old log may replay under
   different card data — it does not block the load.
+- Once the game is over, `meta.final` holds each seat's final total and the
+  winners, so the load screen can show the result without a replay. A finished
+  save from before `final` existed gets it from one replay when the list loads
+  (`backfillFinal`); `updatedAt` is kept, and a save whose card data drifted is
+  left without it.
 
 ## Adapter
 
@@ -36,6 +41,11 @@ A save is the **Session**, never a `GameState`:
   `dispose()` cancels a pending autosave.
 - `SessionStore` (`persistence.ts`) wraps the `Storage` (IndexedDB via
   idb-keyval in the browser, `InMemoryStorage` in tests) with save/load/list/remove.
+- Dev server only: each autosave is also PUT to the `debugGames` Vite plugin
+  (`vite.config.ts`, via `mirrorToDevServer` in `src/ui/persistence.ts`), which
+  writes `.debug/games/<id>.json` (gitignored). `npm run game` (`tools/game.ts`)
+  replays such a save and prints turn, phase, zones with card names, the
+  pending choice and the log tail.
 
 ## Undo policy (todo/17 §2, choice (a) — recommended)
 

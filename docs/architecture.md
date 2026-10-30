@@ -165,6 +165,7 @@ src/
       primitives/       one file per effect kind (beam.ts, gain.ts, scan.ts, ...)
       choices.ts        PendingChoice types + validation
       triggers.ts       event bus, REACTION/PASSIVE collection
+      chronicle.ts      log lines for cards and Away Teams taken off the table
     queries/
       inPlay.ts         zone membership (rules/08 -> "in play")
       traits.ts         trait matching incl. WILDCARD

@@ -20,15 +20,17 @@ theme would:
 > **The frame carries state. The table never moves.**
 
 - Everything coloured is **chrome**: the rail, the elbows, the top/bottom bars, section headers,
-  the context bar. Chrome may recolour, pulse, or switch label at any time.
+  the choice dialog's stripe. Chrome may recolour, pulse, or switch label at any time.
 - Everything playable sits on the **black ground** and never moves for a cosmetic reason. A card
   moves only when the rules move it. This is what makes a 5–7/10 complexity board readable after
   looking away mid-turn.
 
 Two consequences worth stating, because they're the ones that get eroded later:
 
-1. **No modal ever contains a copy of a card.** Selection happens in situ (`ui-spec` §4). The
-   context bar at the bottom of the frame is the prompt; the candidates ring where they live.
+1. **Selection happens in situ** (`ui-spec` §4): the candidates ring where they live. The
+   choice dialog repeats them so the decision stays readable while it covers the board, laid
+   out the way the board is (grouped by zone, Locations by area, with their tokens), never as a
+   loose pile of copies.
 2. **No animation moves a card between zones in v1.** The log is the record of movement.
 
 **The one deliberate exception: tokens fly.** Resources and action tokens travel from where
@@ -40,22 +42,23 @@ the delta badges and drops the flights.
 
 ## 2. Colour — one hue per system, not per mood
 
-| Token                    | Hue          | Owns                                                   |
-| ------------------------ | ------------ | ------------------------------------------------------ |
-| `--orange` `#ff9c00`     | LCARS orange | the frame itself, turn control, the active choice ring |
-| `--sunflower` `#ffcc66`  | amber        | Market and everything commercial                       |
-| `--periwinkle` `#9c9cff` | blue-violet  | Neutral Zone, contested space, reactions               |
-| `--lilac` `#cc99cc`      | lilac        | Stardate track, Glory, VP — the time/score axis        |
-| `--ice` `#99ccff`        | ice blue     | **you**, seat 0                                        |
-| `--salmon` `#cc6666`     | salmon       | **opponent**, seat 1                                   |
-| `--mars` `#ff4141`       | red          | alert only: the Burn, ATTACK, illegal                  |
+| Token                    | Hue          | Owns                                                          |
+| ------------------------ | ------------ | ------------------------------------------------------------- |
+| `--orange` `#ff9c00`     | LCARS orange | the frame itself, turn control, the active choice ring        |
+| `--sunflower` `#ffcc66`  | amber        | Market and everything commercial                              |
+| `--periwinkle` `#9c9cff` | blue-violet  | Neutral Zone, contested space, reactions                      |
+| `--lilac` `#cc99cc`      | lilac        | Stardate track, Glory, VP — the time/score axis               |
+| `--ice` `#99ccff`        | ice blue     | **you**, seat 0                                               |
+| `--salmon` `#cc6666`     | salmon       | **opponent**, seat 1                                          |
+| `--mars` `#ff4141`       | red          | alert only: the Burn, ATTACK, illegal, what the AI did to you |
 
 The ground is `#05050a` — near-black pulled slightly blue, so the chrome's warm hues read as lit
 rather than pasted on. Neutrals are `#0e0e16` / `#171722` / `#2a2a3a`.
 
 The seat colours are the load-bearing pair: once _ice = you, salmon = Shran_ holds everywhere —
 token pips at a Location, log entries, the crew board, the secured badge — the player stops
-reading labels to work out whose tokens those are. Never spend ice or salmon on anything else.
+reading labels to work out whose tokens those are. The ship standees on a Location and the
+winner's banner on the end screen take the same pair. Never spend ice or salmon on anything else.
 
 Specialties keep the printed red/blue/yellow (`--research` / `--influence` / `--military`) and,
 per `ui-spec` §8, **always** appear as hue + `.glyph` letter + text label. Colour never carries
@@ -219,23 +222,28 @@ stay hue + glyph + label, which `ui-spec` §8 requires anyway and which recolour
 Icons are decorative in the accessibility tree: the count or label beside them is the content, so
 each is `alt=""` with its name on `title`.
 
-## 7. The context bar
+## 7. The choice dialog
 
-Bottom of the frame, full width, left stripe in the colour of the system the choice concerns —
-so the eye is already pointed at the right zone before the prompt is read. It always carries:
-the choice kind, the prompt, **the source card**, min/max with a live count, and Decline when
-optional. One renderer per `PendingChoice` kind (`docs/state-machine.md` §4):
+Centre stage, vertically centred over the board and as wide as its content, with a left stripe
+in the colour of the system the choice concerns — so the eye is already pointed at the right
+zone before the prompt is read. A pending choice is the one thing the player must attend to, so
+it sits where the eye is. It always carries: the choice kind, the prompt, **the source card**,
+min/max with a live count, and Decline when optional. One renderer per `PendingChoice` kind
+(`docs/state-machine.md` §4):
 
 | Kind                 | Treatment                                                                                                 |
 | -------------------- | --------------------------------------------------------------------------------------------------------- |
 | `CHOOSE_CARDS`       | rings in situ; disabled candidates greyed **with their reason**; live `n selected · min–max`              |
-| `CHOOSE_DESTINATION` | the gained card large in the bar + two pill buttons; session default toggle, ⇧ to override                |
+| Locations            | `CHOOSE_LOCATION`, or `CHOOSE_CARDS` over Locations: one picker by area, tokens and ships shown           |
+| Operations           | which PLAY / which operation to duplicate: the card, each printed operation a block                       |
+| `CHOOSE_DESTINATION` | the gained card beside **Top of deck** stacked over **Discard pile**; one _Remember decision_ checkbox    |
 | `OPTIONAL_TRIGGERS`  | Use / Skip all, highlighting the source card where it sits in play                                        |
 | `ORDER_OPERATIONS`   | drag list + **Auto** when the engine proved independence                                                  |
 | Control Step         | the secured Location ringed, with the price (opponent's Glory, cleared tokens) stated _before_ the button |
 
-With no choice pending the same bar is the turn control: phase, one obvious primary action, and
-the unused-action warning (`todo/14` §5).
+With no choice pending the title bar is the turn control: phase, one obvious primary action, the
+unused-action warning (`todo/14` §5), and **Orders** with the number of legal moves (`ui-spec`
+§2).
 
 ## 8. Alert
 

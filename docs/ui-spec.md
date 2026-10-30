@@ -34,6 +34,11 @@ animation.** Every affordance should answer: _what can I do right now, and why n
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
+The top bar's **Orders** button (with the move count, or the `O` key) opens a drawer listing
+every legal PLAY / ACTIVATE / COMPLETE_MISSION move, grouped by where the card is. Each row is the
+card detail's operation block with its button, so a whole turn can be played from the list. It
+is the desktop twin of the phone's Orders sheet (`ui-mobile.md` §4).
+
 Below 1280px: collapse the log into a drawer. Below 900px: stack the opponent area into a
 summary strip. Phones and tablets get their own shells (the Pocket Bridge), specified in
 [`ui-mobile.md`](ui-mobile.md).
@@ -55,6 +60,17 @@ Cards come from the spritesheets (`todo/02-sprite-pipeline.md`).
   currently resolve it and why not**. This is where `canPlay(...).reasons` surfaces. Hover also
   shows a quick magnified preview; the full detail (with working action buttons) opens on click.
   A double click is the _fast path_: it runs the card's single legal action directly (see §4).
+- The detail lists the operations usable from the card's zone first and folds the rest into
+  **Not usable from here (n)**: lines that can never run from that zone, table lines on a card
+  in hand, activations in the Staging Area. A card in Development keeps its lines open, since
+  they are what you read before enlisting it.
+- A **Play** / **Activate** button whose operation costs an action leads with the printed action
+  token; a free operation gets a plain button. Play closes the detail; an activation started
+  from it closes it once nothing is left to answer (unless another card's detail was opened in
+  the meantime).
+- The printed text is paired with each operation by splitting the card text on its headers
+  (`Play:`, `Attack Play [[inf3]]:` with a requirement before the colon, …); an operation
+  without a match falls back to the generated English (`describe()`).
 
 ### Overlays drawn on top of the sprite
 
@@ -64,19 +80,26 @@ The sprite is the printed card; the _state_ is drawn over it:
 | ---------------------------- | --------------------------------------------------------- |
 | exhausted                    | rotate 90°, desaturate slightly                           |
 | action token(s) on card      | small chip badges, bottom-left                            |
-| beamed cards                 | fanned edge behind the host showing only the trait strip  |
+| beamed cards                 | chips under the host card; each opens the card it names   |
 | resource tokens (Market)     | token pips on the card's corner                           |
-| ship token at a Location     | the named standee chip at the Location                    |
+| ship token at a Location     | a standee on the Location: the SHIP icon in seat colour   |
+| Away Teams at a Location     | token icons down the card's edges, P1 left, P2 right      |
 | illegal to play              | 55% opacity + no pointer cursor + tooltip with the reason |
 | currently a choice candidate | animated accent ring                                      |
+
+Beamed chips are headed _Beamed aboard_ on a ship and _Beamed here_ on a Location. A standee
+names its ship in the tooltip and opens it on click; the ship's Fleet card carries an
+_at ‹Location›_ tab. Every surface that draws a Location at board size (both Location Areas, the
+Neutral Zone with its secured badge, the Location picker) draws all three.
 
 ## 4. The choice panel — the heart of the UI
 
 One component per `PendingChoice` variant (`docs/state-machine.md` §4). Contract:
 
-- **Placement:** while a choice is pending, the panel is a `position: fixed` overlay
-  centered at the top of the viewport and covers the board, top bar and pass bar. It
-  renders nothing (and disappears) as soon as the choice is resolved.
+- **Placement:** while a choice is pending, the panel is a `position: fixed` dialog centred
+  over the board. It is as wide as its content (420px floor, 1180px or the viewport as the
+  ceiling; long prompts wrap at 640px), so a two-button choice stays compact. It renders
+  nothing (and disappears) as soon as the choice is resolved.
 - **Legality is never silently guessed.** A single click always opens the full card detail — the
   "what can I do right now" view. A **double click** runs the card's _single_ legal action
   (PLAY from the hand, or ACTIVATION on a deployed card) and skips the detail. A card with more
@@ -86,11 +109,23 @@ One component per `PendingChoice` variant (`docs/state-machine.md` §4). Contrac
 - **Always show the prompt**, the **source card** that caused it, and a **Cancel/Decline** button
   when the choice is optional.
 - `CHOOSE_CARDS`: candidates get the accent ring **wherever they physically are** — in hand, in
-  the Market, at a Location. Do **not** pop a modal with copies of the cards; select in situ.
-  Show `min`/`max` and a live count.
-- `CHOOSE_DESTINATION` (gain/scan placement): a two-button inline prompt —
-  **[Top of deck] [Discard pile]** — with the gained card shown large. This one fires constantly;
-  make it one click and consider a "remember my default" toggle (per session, overridable).
+  the Market, at a Location — and can be selected there. The panel repeats them, grouped by zone,
+  so the decision stays readable while the dialog covers the board; disabled candidates stay
+  greyed with their reason, and a Fleet ship names where its token is (at ‹Location›, on card,
+  in supply). Show `min`/`max` and a live count.
+- **Locations:** `CHOOSE_LOCATION` and a `CHOOSE_CARDS` that offers only Locations in play (a
+  SELECT such as 1SIS11-25's "a controlled Location") share one **Location picker**, laid out like
+  the board: Your Location Area and the Neutral Zone always, the opponent's area when it holds a
+  Location on offer. Every Location shows its Away Teams, the ships standing on it and the
+  secured badge; those not on offer stay greyed (with the engine's reason) so the tokens around
+  the table remain readable.
+- **Operations:** a choice whose options are one card's operations ("resolve which play
+  operation?" on a free play, "duplicate which operation?") shows that card with each printed
+  operation as a clickable block, with the card detail's "does nothing right now" warning.
+- `CHOOSE_DESTINATION` (gain/scan placement): **[Top of deck]** stacked above
+  **[Discard pile]**, beside the gained card shown large. This one fires constantly, so it is one
+  click; a single **Remember decision** checkbox keeps the pick as the highlighted default for
+  the rest of the game.
 - `OPTIONAL_TRIGGERS`: a list of reaction cards with **[Use] / [Skip all]**. Highlight the card
   on the board as you hover.
 - `ORDER_OPERATIONS`: drag-to-order list, plus a **[Resolve in this order]** confirm. Offer
@@ -136,6 +171,22 @@ Every primitive emits a `LogEntry`. Render grouped by turn → phase → operati
 Clicking an entry highlights the cards involved. This is the single most valuable debugging tool
 you will build — and it doubles as the rules-teaching device for players.
 
+Entries name cards, never instance ids. A card that leaves the table — dismissed, destroyed or
+logged — and an opponent's Away Teams removed each get a line of their own
+(`src/engine/resolver/chronicle.ts`), so nothing vanishes from the board without a trace;
+`LogEntry.about` names the player it happened to when that is not the acting seat.
+
+### The House AI's turn
+
+In a game against the House AI (`docs/bot.md`), a ticker under the bot bar states its latest
+move in plain English, with the cards that hit you named "your …" first. **AI turn** opens the
+move history, grouped by turn: each turn starts with a **What it did to you** box (cards that
+left your play, control or hand, Away Teams removed, Incidents), and each move expands into the
+card it played or activated (drawn beside the steps, above them on a phone), its steps and log
+lines, and the "Why?" panel of the bot's decisions. When your turn begins the history opens by
+itself once; Settings → **Show the AI's turn** decides when: _When it affects you_ (default),
+_After every AI turn_ or _Only from AI turn_ (never by itself). It sits above a pending choice.
+
 ## 7. Rules help, inline
 
 Every keyword in a card's text is a link to the matching section in `rules/08`. Ship the rules
@@ -156,3 +207,15 @@ _duplicate_ do again?" must be one click, not a PDF search.
 
 Animations, sound, a table-felt theme, 3D card flips. None of these make the game playable.
 Get `todo/14-ui-shell.md` to "I can finish a Cadet Training game without opening the PDF" first.
+
+## 10. The end of a game
+
+The **Final Score** screen opens with a banner in the winner's seat colour ("You win",
+"House AI (Easy) wins", a tie, or the Cadet Training result) and the reason: the margin, or the
+Incident counts after the Burn. Both totals follow side by side, then one table comparing the
+breakdown in `rules/07` §7.4.1 order. The Focus row lists icons × multiplier for every
+specialty; with no mission completed it says "not counted" and strikes out the would-be VP
+(Focus then scores 0, `rules/12` §12.27).
+
+A finished game stays in the saved-games list as ended: "ended on turn 21", "Game over · You won
+· 43–20", and a **View result** button that opens the end screen.

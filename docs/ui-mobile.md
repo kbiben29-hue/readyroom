@@ -39,10 +39,14 @@ inline-size`), never the viewport:
 
 Long-press (or click on desktop) opens the full card: the **Rosetta view** — each Shorthand line
 over its English sentence, legality per line ("Why not: …"), keyword links, and the printed scan
-behind a toggle when STCC data is on the device.
+behind a toggle when STCC data is on the device. As on desktop (`ui-spec` §3), the lines usable
+from the card's zone come first and the rest fold under **Not usable from here (n)**, and a
+Play / Activate that costs an action leads with the action token.
 
 State is drawn on the tile, never baked into the face: Glory tokens, action tokens, exhausted
 (dims only the operations it disables), beamed cards (chips), ship location, candidate ring.
+Every Location in play carries a row of named standees for the ships at it, wherever the tile
+is drawn (stations, choice sheets).
 
 **Lines shown depend on where the card is.** In play: hide PLAY, CONTROL and Development lines
 (they cannot fire again). In hand: table lines fade ("works once in play"). In the Market and
@@ -73,8 +77,9 @@ detail: everything.
 - **Choice sheets:** one renderer per `PendingChoice` kind (14 kinds). A choice switches to the
   station holding its candidates and rings them in place; the sheet repeats candidates as tiles
   only when some cannot be ringed on screen (blind deck tops, hand + discard mixes). Source card,
-  prompt, min/max and Decline are always shown (ui-spec §4). Destination choices remember their
-  default for the game. The choice sheet takes the dock's place in the column rather than rising
+  prompt, min/max and Decline are always shown (ui-spec §4). An operation choice (which PLAY a
+  free play resolves, which operation to duplicate) shows the card with each printed operation
+  as a tappable block. Destination choices remember their default for the game. The choice sheet takes the dock's place in the column rather than rising
   over a scrim, so the ringed board above stays visible and tappable; it folds to its header.
   Confirm is enabled only when the engine's `checkSelection` accepts the selection.
 - **Read at the top, act at the bottom:** everything pressed to act lives in the bottom 40%.

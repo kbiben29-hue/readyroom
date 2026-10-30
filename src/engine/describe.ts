@@ -75,6 +75,166 @@ function phrase(sentence: string): string {
 	return stripped.charAt(0).toLowerCase() + stripped.slice(1)
 }
 
+function capitalise(text: string): string {
+	return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+// ---------------------------------------------------------------------------
+// The opponent's side (FORCE / OPPONENT)
+// ---------------------------------------------------------------------------
+//
+// A FORCE / OPPONENT body is resolved by the opponent, so render() words it as
+// they would read it: "discard a card from your hand", "you may draw a card".
+// Told to the reader that is "force your opponent to discard a card from their
+// hand", "your opponent may draw a card". While such a body renders,
+// `opponentActs` is set and SEQ / IF / FOR_EACH start each command the
+// opponent carries out with SUBJECT; forOpponent() then swaps the pronouns and
+// fills those marks. A FORCE / OPPONENT inside one hands the effect back to the
+// reader, so its text is already in the reader's words: it is fenced with
+// OWN_START / OWN_END and the swap leaves it alone.
+
+/** True while rendering a body the reader's opponent resolves. */
+let opponentActs = false
+/** bind name → written while the opponent acts ("If they do"). */
+const bindSide = new Map<string, boolean>()
+
+const SUBJECT = '\u0001'
+const OWN_START = '\u0002'
+const OWN_END = '\u0003'
+
+/** Does this node's English open with a bare command ("Discard …"), which
+ *  takes a subject when the opponent carries it out? */
+function isCommand(node: Effect): boolean {
+	switch (node.k) {
+		case 'SEQ':
+			return node.steps[0] !== undefined && isCommand(node.steps[0])
+		case 'MAY':
+		case 'IF':
+		case 'FOR_EACH':
+		case 'LET':
+		case 'FORCE':
+		case 'OPPONENT':
+			return false
+		default:
+			return true
+	}
+}
+
+/** Can this node's English follow "… to"? A command or a FORCE can. */
+function followsTo(node: Effect): boolean {
+	if (node.k === 'SEQ')
+		return node.steps[0] !== undefined && followsTo(node.steps[0])
+	return node.k === 'FORCE' || isCommand(node)
+}
+
+/** `text` (node's English), marked as a command the opponent carries out. */
+function theyDo(node: Effect, text: string): string {
+	return opponentActs && isCommand(node)
+		? SUBJECT + text.charAt(0).toLowerCase() + text.slice(1)
+		: text
+}
+
+/** Every name a step of `body` binds (DID only reads them). */
+function bindsIn(body: unknown, out: string[] = []): string[] {
+	if (Array.isArray(body)) for (const v of body) bindsIn(v, out)
+	else if (body !== null && typeof body === 'object') {
+		const node = body as Record<string, unknown>
+		if (node.k !== 'DID' && typeof node.bind === 'string') out.push(node.bind)
+		for (const v of Object.values(node)) bindsIn(v, out)
+	}
+	return out
+}
+
+/** "take" → "takes", for "your opponent takes …". */
+function thirdPerson(verb: string): string {
+	if (['may', 'must', 'can', 'cannot', 'either'].includes(verb)) return verb
+	if (verb === 'have') return 'has'
+	if (verb === 'do') return 'does'
+	if (/(s|sh|ch|x|z)$/.test(verb)) return `${verb}es`
+	if (/[^aeiou]y$/.test(verb)) return `${verb.slice(0, -1)}ies`
+	return `${verb}s`
+}
+
+/** The opponent's words → the reader's: "your" → "their", "you" → "they",
+ *  and "your opponent" (the reader) → "you". */
+const SWAP: Record<string, string> = {
+	"your opponent's": 'your',
+	'your opponent has': 'you have',
+	'your opponent does': 'you do',
+	'your opponent owns': 'you own',
+	'your opponent': 'you',
+	your: 'their',
+	you: 'they',
+}
+const SWAP_RE = new RegExp(
+	`${OWN_START}[^${OWN_END}]*${OWN_END}|\\b(${Object.keys(SWAP).join('|')})\\b`,
+	'gi',
+)
+const SUBJECT_RE = new RegExp(
+	`${OWN_START}[^${OWN_END}]*${OWN_END}|${SUBJECT}(\\w+)|\\b(they) (\\w+)`,
+	'gi',
+)
+
+/** A FORCE / OPPONENT body, rendered from the opponent's side, in the
+ *  reader's words. The first subject names them ("force your opponent to …",
+ *  "your opponent takes …", "if your opponent has …"); later commands read
+ *  "force them to …" (FORCE) or "they …" (OPPONENT). */
+function forOpponent(text: string, force: boolean): string {
+	const swapped = text.replace(SWAP_RE, (m, word: string | undefined) => {
+		if (word === undefined) return m
+		const to = SWAP[word.toLowerCase()]!
+		return word.charAt(0) === 'Y' ? capitalise(to) : to
+	})
+	let named = false
+	const filled = swapped.replace(
+		SUBJECT_RE,
+		(m, cmd: string | undefined, they: string | undefined, verb: string) => {
+			if (cmd === undefined && they === undefined) return m
+			if (cmd !== undefined) {
+				const lead = !named
+				named = true
+				if (force)
+					return `${lead ? 'force your opponent' : 'force them'} to ${cmd}`
+				return lead ? `your opponent ${thirdPerson(cmd)}` : `they ${cmd}`
+			}
+			if (named) return m
+			named = true
+			const subject = `your opponent ${thirdPerson(verb)}`
+			return they === 'They' ? capitalise(subject) : subject
+		},
+	)
+	// sentence starts (also one opening a fenced reader's sentence), then unfence
+	return filled
+		.replace(
+			new RegExp(`(^|[.!?] )(${OWN_START}?)([a-z])`, 'g'),
+			(_m, before: string, fence: string, c: string) =>
+				before + fence + c.toUpperCase(),
+		)
+		.replace(new RegExp(`[${OWN_START}${OWN_END}]`, 'g'), '')
+}
+
+/** FORCE / OPPONENT: `body` resolved by the other player. */
+function renderOtherSide(body: Effect, force: boolean): string {
+	const nested = opponentActs
+	for (const name of bindsIn(body)) bindSide.set(name, !nested)
+	opponentActs = !nested
+	let text: string
+	try {
+		text = render(body)
+	} finally {
+		opponentActs = nested
+	}
+	if (nested) {
+		// handed back to the reader inside the opponent's text: "you gain 1 {GLO}"
+		const own = isCommand(body) ? `you ${phrase(text)}` : phrase(text)
+		return `${OWN_START}${own}${OWN_END}.`
+	}
+	return forOpponent(
+		isCommand(body) ? `${SUBJECT}${phrase(text)}.` : text,
+		force,
+	)
+}
+
 // ---------------------------------------------------------------------------
 // Amounts
 // ---------------------------------------------------------------------------
@@ -194,8 +354,17 @@ function inPlayFrom(from: ZoneSpec | ZoneSpec[] | undefined): string {
 	if (from === undefined || from === 'IN_PLAY' || from === 'ALL_OWNED')
 		return ' from in play'
 	const zones = Array.isArray(from) ? from : [from]
-	const zp = zonePhrase(zones, 'SELF')
+	const zp = zones
+		.map((z) => (z === 'IN_PLAY' ? 'from play' : zonePhrase([z], 'SELF')))
+		.join(' or ')
 	return ` ${zp.startsWith('from ') ? zp : `from ${zp}`}`
+}
+
+/** Whose a per-player zone (`{ k: 'HAND', seat }`) is, relative to the actor;
+ *  undefined for the shared and whole-owner zones. */
+function zoneOwner(z: ZoneSpec): 'SELF' | 'OPPONENT' | undefined {
+	if (typeof z !== 'object' || !('seat' in z)) return undefined
+	return z.seat === 1 ? 'OPPONENT' : 'SELF'
 }
 
 /** Zone qualifier for a query: "you own", "you have in play", "in your hand". */
@@ -204,15 +373,18 @@ function zonePhrase(
 	seat: 'SELF' | 'OPPONENT' | 'ANY' | undefined,
 ): string {
 	if (zones.length === 0) return ''
-	const fromWord = (s: string): string =>
-		seat === 'OPPONENT'
-			? `from your opponent's ${s}`
-			: seat === 'ANY'
-				? `from any player's ${s}`
-				: `from your ${s}`
 
 	if (zones.length === 1) {
 		const z = zones[0]!
+		// a per-player zone is the actor's (seat 0) or their opponent's (seat 1),
+		// whatever the query's seat (resolveQuery.ts header)
+		const owner = zoneOwner(z) ?? seat
+		const fromWord = (s: string): string =>
+			owner === 'OPPONENT'
+				? `from your opponent's ${s}`
+				: owner === 'ANY'
+					? `from any player's ${s}`
+					: `from your ${s}`
 		if (z === 'ALL_OWNED')
 			return seat === 'OPPONENT' ? 'your opponent owns' : 'you own'
 		if (z === 'IN_PLAY')
@@ -330,8 +502,16 @@ export function describePredicate(pred: Predicate): string {
 	switch (pred.k) {
 		case 'SPECIALTY_AT_LEAST':
 			return `your ${specialtyWord(pred.specialty)} is at least ${pred.value}`
-		case 'COUNT_AT_LEAST':
+		case 'COUNT_AT_LEAST': {
+			const zones = pred.query.zones
+			if (
+				!opponentActs &&
+				zones.length > 0 &&
+				zones.every((z) => zoneOwner(z) === 'OPPONENT')
+			)
+				return `your opponent has at least ${pred.value} ${describeQuery(pred.query).replace(/your opponent's /g, 'their ')}`
 			return `you have at least ${pred.value} ${describeQuery(pred.query)}`
+		}
 		case 'HAS_TRAIT_IN_PLAY':
 			return pred.count !== undefined && pred.count > 1
 				? `you have ${pred.count} or more ${pred.trait} in play`
@@ -378,12 +558,22 @@ export function describePredicate(pred: Predicate): string {
 						: 'you have'
 			return `${who} ${pred.value} or more AWAY TEAMS at ${withArticle(describeQuery(pred.at))}`
 		}
-		case 'DID':
-			return Array.isArray(pred.bind) && pred.bind.length > 1
-				? pred.bind.length === 2
-					? 'you do both'
-					: 'you do all of them'
-				: 'you do'
+		case 'DID': {
+			// "if they do" when the bound step was the other player's
+			const binds = Array.isArray(pred.bind) ? pred.bind : [pred.bind]
+			const who = binds.every(
+				(b) => (bindSide.get(b) ?? false) === opponentActs,
+			)
+				? 'you do'
+				: opponentActs
+					? 'your opponent does'
+					: 'they do'
+			return binds.length > 1
+				? binds.length === 2
+					? `${who} both`
+					: `${who} all of them`
+				: who
+		}
 		case 'BOUND_IS':
 			return `the ${pred.bind} card is ${describeFilter(pred.filter)}`
 		case 'BOUND_SHARES_TRAIT':
@@ -431,33 +621,34 @@ export function describeZoneSpec(z: ZoneSpec): string {
 	if (z === 'LOCATIONS') return 'a LOCATION'
 	if (z === 'NEUTRAL_LOCATIONS') return 'the Neutral Zone'
 	if (typeof z === 'string') return z
+	const your = zoneOwner(z) === 'OPPONENT' ? "your opponent's" : 'your'
 	switch (z.k) {
 		case 'BEAMED_TO':
 			return 'host' in z ? 'beamed here' : `beamed to the ${z.bound} card`
 		case 'HAND':
-			return 'your hand'
+			return `${your} hand`
 		case 'DRAW':
-			return 'the top of your deck'
+			return `the top of ${your} deck`
 		case 'DISCARD':
-			return 'your Discard pile'
+			return `${your} Discard pile`
 		case 'RESERVE':
-			return 'your Reserve'
+			return `${your} Reserve`
 		case 'DEVELOPMENT':
-			return 'your Development pile'
+			return `${your} Development pile`
 		case 'LOG':
-			return 'your Log'
+			return `${your} Log`
 		case 'STAGING':
-			return 'your Staging Area'
+			return `${your} Staging Area`
 		case 'FLEET':
-			return 'your Fleet'
+			return `${your} Fleet`
 		case 'LOCATION_AREA':
-			return 'your Location area'
+			return `${your} Location area`
 		case 'DUTY_OFFICER':
-			return 'your Duty Officer'
+			return `${your} Duty Officer`
 		case 'CAPTAIN':
-			return 'your Captain'
+			return `${your} Captain`
 		case 'STATUS':
-			return 'your Status card'
+			return `${your} Status card`
 		case 'JUNK':
 			return 'the Junk'
 		case 'INCIDENT_DECK':
@@ -489,26 +680,30 @@ function render(node: Effect): string {
 	switch (node.k) {
 		// -------- control (10) --------
 		case 'SEQ':
-			return node.steps.map(render).join(' ')
+			return node.steps
+				.map((s, i) => (i === 0 ? render(s) : theyDo(s, render(s))))
+				.join(' ')
 		case 'MAY':
 			return `You may ${phrase(render(node.body))}.`
 		case 'CHOOSE_ONE':
 			if (node.count !== undefined && node.count > 1)
 				return `Choose ${node.count} of the following: ${node.options.map((o) => phrase(render(o.body))).join(' OR ')}.`
 			return `Either ${node.options.map((o) => phrase(render(o.body))).join(' or ')}.`
-		case 'PAY_THEN':
-			return `${render(node.cost).replace(/\.$/, '')} to ${phrase(render(node.body))}.`
+		case 'PAY_THEN': {
+			// "… to if …" doesn't read: a body that isn't a command gets a colon
+			const to = followsTo(node.body) ? 'to' : 'to do the following:'
+			return `${render(node.cost).replace(/\.$/, '')} ${to} ${phrase(render(node.body))}.`
+		}
 		case 'IF': {
+			const branch = (e: Effect): string => theyDo(e, phrase(render(e)))
 			const tail =
-				node.else !== undefined
-					? ` Otherwise, ${phrase(render(node.else))}.`
-					: ''
-			return `If ${describePredicate(node.cond)}, ${phrase(render(node.then))}.${tail}`
+				node.else !== undefined ? ` Otherwise, ${branch(node.else)}.` : ''
+			return `If ${describePredicate(node.cond)}, ${branch(node.then)}.${tail}`
 		}
 		case 'REPEAT':
 			return `Repeat ${describeAmount(node.times)} times: ${phrase(render(node.body))}.`
 		case 'FOR_EACH':
-			return `For each ${describeQuery(node.over)}, ${phrase(render(node.body))}.`
+			return `For each ${describeQuery(node.over)}, ${theyDo(node.body, phrase(render(node.body)))}.`
 		case 'LET':
 			return `Let ${node.bind} equal ${
 				node.value !== null &&
@@ -518,7 +713,7 @@ function render(node: Effect): string {
 					: describeAmount(node.value as Amount)
 			}. ${render(node.body)}`
 		case 'OPPONENT':
-			return `Affecting your opponent: ${phrase(render(node.body))}.`
+			return renderOtherSide(node.body, false)
 		case 'NOOP':
 			return 'Do nothing.'
 		case 'PUT_ON_DECK_TOP':
@@ -598,10 +793,7 @@ function render(node: Effect): string {
 			return `Recall ${withArticle(describeFilter(node.filter))}${inPlayFrom(node.from)}.`
 		case 'COST_LOG': {
 			if (node.target === 'THIS') return 'Log this card.'
-			const from = Array.isArray(node.from)
-				? ' from your hand or Discard pile'
-				: inPlayFrom(node.from)
-			return `Log ${withArticle(describeFilter(node.filter))}${from}.`
+			return `Log ${withArticle(describeFilter(node.filter))}${inPlayFrom(node.from)}.`
 		}
 		case 'COST_BEAM': {
 			if (node.target === 'THIS')
@@ -650,7 +842,7 @@ function render(node: Effect): string {
 					? describeFilter(node.filter)
 					: node.count === 1
 						? 'a card'
-						: `${node.count} cards`
+						: 'cards'
 			const fromZone =
 				node.from === 'HAND'
 					? node.whose === 'OPPONENT'
@@ -874,7 +1066,7 @@ function render(node: Effect): string {
 				)
 				.join(' or ')}.`
 		case 'FORCE':
-			return `Force your opponent to ${phrase(render(node.body))}.`
+			return renderOtherSide(node.body, true)
 		case 'COMPLETE_MISSION':
 			return 'Complete a mission.'
 		case 'MODIFIER_ATTACH': {
@@ -1023,6 +1215,7 @@ function actor(
 /** Render a full operation: {ACTION}/[ATTACK]/requires/trigger prefixes plus
  *  describe(effect). Used by the fidelity checker and the UI tooltips. */
 export function describeOperation(op: Operation): string {
+	bindSide.clear()
 	const atoms: string[] = []
 	if (op.costsAction) atoms.push('{ACTION}')
 	if (op.isAttack) atoms.push('[ATTACK]')
@@ -1039,5 +1232,6 @@ export function describeOperation(op: Operation): string {
 
 /** The public entry point: render an effect tree as a complete sentence. */
 export function describe(effect: Effect): string {
+	bindSide.clear()
 	return render(effect)
 }

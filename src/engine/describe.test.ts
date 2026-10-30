@@ -472,3 +472,111 @@ vitestDescribe('describe() record-vocabulary helpers', () => {
 		)
 	})
 })
+
+vitestDescribe("describe() on the opponent's side (FORCE / OPPONENT)", () => {
+	const persons = (seat: 0 | 1): Query => ({
+		zones: [
+			{ k: 'HAND', seat },
+			{ k: 'DISCARD', seat },
+		],
+		filter: { suits: ['PERSON'] },
+	})
+	const incident: Effect = { k: 'TAKE', deck: 'INCIDENT', count: 1 }
+
+	it('words a forced body from the reader: their hand, they do', () => {
+		expect(
+			describe({ k: 'FORCE', body: { k: 'DISCARD', from: 'HAND', count: 2 } }),
+		).toBe('Force your opponent to discard 2 cards from their hand.')
+		expect(
+			describe({
+				k: 'FORCE',
+				body: {
+					k: 'SEQ',
+					steps: [
+						{ k: 'LOG', target: persons(0), bind: '$t.logged' },
+						{
+							k: 'IF',
+							cond: { k: 'DID', bind: '$t.logged' },
+							then: { k: 'MAY', body: draw(1) },
+						},
+					],
+				},
+			}),
+		).toBe(
+			'Force your opponent to log a PERSON from their hand or from their Discard pile. If they do, they may draw a card.',
+		)
+	})
+
+	it('names the opponent first when a forced body opens with IF', () => {
+		expect(
+			describe({
+				k: 'FORCE',
+				body: {
+					k: 'IF',
+					cond: { k: 'COUNT_AT_LEAST', query: persons(0), value: 1 },
+					then: {
+						k: 'SEQ',
+						steps: [
+							{ k: 'LOG', target: persons(0) },
+							{ k: 'MAY', body: draw(1) },
+						],
+					},
+					else: incident,
+				},
+			}),
+		).toBe(
+			'If your opponent has at least 1 PERSON from their hand or from their Discard pile, force them to log a PERSON from their hand or from their Discard pile. They may draw a card. Otherwise, force them to take 1 Incident card.',
+		)
+	})
+
+	it('words OPPONENT as "your opponent …", handing a nested one back to you', () => {
+		expect(describe({ k: 'OPPONENT', body: incident })).toBe(
+			'Your opponent takes 1 Incident card.',
+		)
+		expect(describe({ k: 'OPPONENT', body: { k: 'MAY', body: draw(1) } })).toBe(
+			'Your opponent may draw a card.',
+		)
+		expect(
+			describe({
+				k: 'OPPONENT',
+				body: {
+					k: 'SEQ',
+					steps: [draw(1), { k: 'OPPONENT', body: gain('GLO', 1) }],
+				},
+			}),
+		).toBe('Your opponent draws a card. You gain 1 {GLO}.')
+	})
+
+	it('reads "if they do" after the step the opponent was forced to take', () => {
+		expect(
+			describe({
+				k: 'SEQ',
+				steps: [
+					{
+						k: 'FORCE',
+						body: { k: 'LOG', target: persons(0), bind: '$t.logged' },
+					},
+					{
+						k: 'IF',
+						cond: { k: 'DID', bind: '$t.logged' },
+						then: gain('GLO', 1),
+					},
+				],
+			}),
+		).toBe(
+			'Force your opponent to log a PERSON from their hand or from their Discard pile. If they do, gain 1 {GLO}.',
+		)
+	})
+
+	it("reads a seat-1 zone as the opponent's", () => {
+		expect(
+			describe({
+				k: 'IF',
+				cond: { k: 'COUNT_AT_LEAST', query: persons(1), value: 1 },
+				then: draw(1),
+			}),
+		).toBe(
+			'If your opponent has at least 1 PERSON from their hand or from their Discard pile, draw a card.',
+		)
+	})
+})

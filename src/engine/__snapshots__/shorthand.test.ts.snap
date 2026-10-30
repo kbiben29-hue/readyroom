@@ -1610,7 +1610,7 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
   "2LOC20-20": [
     "CONT | ",
     "RESU | +1 DIL",
-    "REAC | PLAY ·"1KOL18/24" / "1PIC19/24" / "1SEL22/24" / "1SHR22/24" / "1SIS17/25" : ({TOP_DECK ·<PERSON>} › DUPLICATE ·<DIRECTIVE>)?",
+    "REAC | PLAY ·"1KOL18/24" / "2GEO18/23" / "2SOV23/24" / "2KIRK19-25" / "1PIC19/24" / "1SEL22/24" / "1SHR22/24" / "1SIS17/25" : ({TOP_DECK ·<PERSON>} › DUPLICATE ·<DIRECTIVE>)?",
   ],
   "2PER01-26": [
     "PLAY ACT REQ[MILITARY ≥3] | OPP[(+1 CARD)?] DEVELOP",

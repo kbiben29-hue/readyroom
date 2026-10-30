@@ -1,12 +1,14 @@
 // A Location in play always shows its Away Teams and the ships standing on it,
-// wherever it is drawn: the board, the Location choice ("Warp to which
-// Location?"), a card choice that offers Locations, and the phone's card tile.
+// wherever it is drawn: the board, the Location picker (the Location choice
+// "Warp to which Location?" and a card choice that offers only Locations, both
+// laid out by area), and the phone's card tile.
 
 import { describe, expect, it, beforeEach } from 'vitest'
 import { createRoot } from 'react-dom/client'
 import { act } from 'react'
 import type { ReactNode } from 'react'
 import type { CardInstanceId } from '../engine/ids'
+import type { PendingChoice } from '../engine/resolver/choices'
 import { ChoicePanel } from './choice'
 import { LocationCard } from './location'
 import { CardTile } from './tile/CardTile'
@@ -73,6 +75,26 @@ function teamsAndShips(el: Element) {
 	}
 }
 
+/** The Location picker's areas: each label with its Locations in board order,
+ *  whether each can be picked, and the tokens drawn on it. */
+function pickerAreas(host: Element) {
+	return [...host.querySelectorAll('.location-groups .candidate-group')].map(
+		(g) => ({
+			label: g.querySelector('.candidate-group-label')?.textContent,
+			tiles: [...g.querySelectorAll('.location-tile')].map((t) => ({
+				pickable: t.querySelector('button.card-inner') !== null,
+				...teamsAndShips(t),
+			})),
+		}),
+	)
+}
+
+function pending(choice: PendingChoice) {
+	act(() => {
+		useGameStore.setState({ pendingChoice: choice, botToMove: null })
+	})
+}
+
 beforeEach(() => {
 	document.body.innerHTML = ''
 	useGameStore.getState().newGame()
@@ -88,52 +110,142 @@ describe('Location card', () => {
 		})
 	})
 
-	it('shows them on every candidate of the Location choice', () => {
+	it('lays the Location choice out by area, tokens on every Location', () => {
 		const { busy, quiet } = busyLocation()
-		act(() => {
-			useGameStore.setState({
-				pendingChoice: {
-					k: 'CHOOSE_LOCATION',
-					id: 'c-test',
-					seat: 0,
-					prompt: 'Warp to which Location?',
-					candidates: [busy, quiet],
-					sourceCard: null,
-				},
-				botToMove: null,
-			})
+		pending({
+			k: 'CHOOSE_LOCATION',
+			id: 'c-test',
+			seat: 0,
+			prompt: 'Warp to which Location?',
+			candidates: [busy, quiet],
+			sourceCard: null,
 		})
 		const host = render(<ChoicePanel />)
-		const tiles = [...host.querySelectorAll('.location-tile')]
-		expect(tiles.map(teamsAndShips)).toEqual([
-			{ teams: ['P1: 1 Away Team', 'P2: 2 Away Teams'], ships: 2 },
-			{ teams: [], ships: 0 },
+		expect(pickerAreas(host)).toEqual([
+			{
+				label: 'Neutral Zone',
+				tiles: [
+					{
+						pickable: true,
+						teams: ['P1: 1 Away Team', 'P2: 2 Away Teams'],
+						ships: 2,
+					},
+					{ pickable: true, teams: [], ships: 0 },
+					// not on offer, still shown for its tokens
+					{ pickable: false, teams: [], ships: 0 },
+				],
+			},
 		])
 	})
 
-	it('shows them on Locations picked through a card choice (SELECT)', () => {
-		const { busy, quiet } = busyLocation()
-		act(() => {
-			useGameStore.setState({
-				pendingChoice: {
-					k: 'CHOOSE_CARDS',
-					id: 'c-test',
-					seat: 0,
-					prompt: 'Choose a Location',
-					candidates: [busy, quiet],
-					min: 1,
-					max: 1,
-					from: 'x',
-					sourceCard: null,
-				},
-				botToMove: null,
-			})
+	it('gives a card choice of Locations (SELECT) the same picker', () => {
+		const { quiet } = busyLocation()
+		const third =
+			useGameStore.getState().projected!.zones['NEUTRAL_ZONE:2']![0]!
+		pending({
+			k: 'CHOOSE_CARDS',
+			id: 'c-test',
+			seat: 0,
+			prompt: 'Choose a Location',
+			candidates: [quiet],
+			disabled: [{ iid: third, reason: 'no ship there' }],
+			min: 1,
+			max: 1,
+			from: 'x',
+			sourceCard: null,
 		})
 		const host = render(<ChoicePanel />)
-		const tiles = [...host.querySelectorAll('.location-tile')]
-		expect(tiles.map(teamsAndShips)).toEqual([
-			{ teams: ['P1: 1 Away Team', 'P2: 2 Away Teams'], ships: 2 },
-			{ teams: [], ships: 0 },
+		expect(pickerAreas(host)).toEqual([
+			{
+				label: 'Neutral Zone',
+				tiles: [
+					{
+						pickable: false,
+						teams: ['P1: 1 Away Team', 'P2: 2 Away Teams'],
+						ships: 2,
+					},
+					{ pickable: true, teams: [], ships: 0 },
+					{ pickable: false, teams: [], ships: 0 },
+				],
+			},
+		])
+		expect(host.querySelector('.why-not')?.textContent).toBe(
+			'why not: no ship there',
+		)
+		// no raw zone keys as group labels
+		expect(host.textContent).not.toContain('NEUTRAL_ZONE')
+
+		act(() => {
+			host
+				.querySelectorAll<HTMLButtonElement>(
+					'.location-tile button.card-inner',
+				)[0]!
+				.click()
+		})
+		expect(useGameStore.getState().selected).toEqual([quiet])
+	})
+
+	it("adds both Location Areas, the opponent's only when it offers one", () => {
+		const { busy } = busyLocation()
+		const p = useGameStore.getState().projected!
+		const [mine, theirs] = [
+			p.zones['NEUTRAL_ZONE:1']![0]!,
+			p.zones['NEUTRAL_ZONE:2']![0]!,
+		]
+		act(() => {
+			useGameStore.setState({
+				projected: {
+					...p,
+					cards: {
+						...p.cards,
+						[mine]: {
+							...p.cards[mine]!,
+							zone: { k: 'LOCATION_AREA', seat: 0 },
+						},
+						[theirs]: {
+							...p.cards[theirs]!,
+							zone: { k: 'LOCATION_AREA', seat: 1 },
+						},
+					},
+					zones: {
+						...p.zones,
+						'NEUTRAL_ZONE:1': [],
+						'NEUTRAL_ZONE:2': [],
+						'LOCATION_AREA:0': [mine],
+						'LOCATION_AREA:1': [theirs],
+					},
+				},
+			})
+		})
+		const labels = () =>
+			pickerAreas(render(<ChoicePanel />)).map((a) => a.label)
+
+		pending({
+			k: 'CHOOSE_CARDS',
+			id: 'c-test',
+			seat: 0,
+			prompt: 'Select a controlled Location',
+			candidates: [mine],
+			min: 1,
+			max: 1,
+			from: 'x',
+			sourceCard: null,
+		})
+		expect(labels()).toEqual(['Your Location Area', 'Neutral Zone'])
+
+		document.body.innerHTML = ''
+		pending({
+			k: 'CHOOSE_LOCATION',
+			id: 'c-test',
+			seat: 0,
+			prompt: 'Choose a Location',
+			candidates: [busy, theirs],
+			sourceCard: null,
+		})
+		expect(labels()).toEqual([
+			'Your Location Area',
+			'Neutral Zone',
+			"Opponent's Location Area",
 		])
 	})
 

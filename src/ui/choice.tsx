@@ -18,7 +18,9 @@ import type {
 	ChoiceOption,
 } from '../engine/resolver/choices'
 import type { OperationRef } from '../engine/state'
+import { otherSeat, zoneKey } from '../engine/state'
 import type { CardInstanceId } from '../engine/ids'
+import type { ZoneRef } from '../engine/resolver/queries'
 import type { MarketSuit, SpecialtyId, TraitId } from '../data/ids'
 import { describeOperation } from '../engine/describe'
 import {
@@ -245,6 +247,11 @@ function ChooseCardsChoice({
 		...(choice.disabled ?? []).map((d) => d.iid),
 	]
 	const canConfirm = !(selected.length < min || selected.length > max)
+	// a SELECT over Locations in play (e.g. 1SIS11-25's "a controlled
+	// Location") gets the same Location picker as the Location choice
+	const locationsOnly = candidates.every((iid) =>
+		isLocationInPlay(projected.cards[iid]?.zone),
+	)
 
 	// Group candidates by zone so the panel keeps spatial context inline.
 	const groups = new Map<string, CardInstanceId[]>()
@@ -314,6 +321,41 @@ function ChooseCardsChoice({
 					Clear
 				</button>
 			</div>
+			{locationsOnly ? (
+				<LocationPicker
+					offered={choice.candidates}
+					disabled={disabledByIid}
+					selected={selected}
+				/>
+			) : (
+				<CardCandidates
+					groups={groups}
+					disabledByIid={disabledByIid}
+					hidden={hidden}
+					selected={selected}
+				/>
+			)}
+		</section>
+	)
+}
+
+/** The card choice's own candidate rows: the offered cards grouped by zone,
+ *  each with where its ship stands and why a greyed one can't be picked. */
+function CardCandidates({
+	groups,
+	disabledByIid,
+	hidden,
+	selected,
+}: {
+	groups: ReadonlyMap<string, readonly CardInstanceId[]>
+	disabledByIid: ReadonlyMap<CardInstanceId, string>
+	hidden: ReadonlySet<CardInstanceId>
+	selected: readonly CardInstanceId[]
+}) {
+	const projected = useProjected()
+	if (projected === null) return null
+	return (
+		<>
 			<div className="candidate-groups">
 				{[...groups.entries()].map(([group, iids]) => (
 					<div key={group} className="candidate-group">
@@ -368,9 +410,11 @@ function ChooseCardsChoice({
 				Tip: click the cards where they sit — selection rings appear in place,
 				e.g. in your Hand.
 			</p>
-		</section>
+		</>
 	)
 }
+
+const NO_REASONS: ReadonlyMap<CardInstanceId, string> = new Map()
 
 function ChooseLocationChoice({
 	choice,
@@ -378,54 +422,17 @@ function ChooseLocationChoice({
 	choice: Extract<PendingChoice, { k: 'CHOOSE_LOCATION' }>
 }) {
 	const selected = useSelected()
-	const projected = useProjected()
-	const viewer = useViewerSeat()
 	const chosen = selected[0] ?? null
 	const skip = choice.candidates.includes(SKIP_CONTROL)
-
-	// group by where the Location sits: your area, the opponent's, the Neutral Zone
-	const groups = new Map<string, CardInstanceId[]>()
-	for (const iid of choice.candidates) {
-		if (iid === SKIP_CONTROL) continue
-		const z = projected?.cards[iid]?.zone
-		const label =
-			z?.k === 'LOCATION_AREA'
-				? z.seat === viewer
-					? 'Your Location Area'
-					: "Opponent's Location Area"
-				: z?.k === 'NEUTRAL_ZONE'
-					? 'Neutral Zone'
-					: 'Elsewhere'
-		const arr = groups.get(label) ?? []
-		arr.push(iid)
-		groups.set(label, arr)
-	}
 
 	return (
 		<section className="panel choice-panel">
 			<ChoiceHeader choice={choice} />
-			<div className="candidate-groups location-groups">
-				{[...groups.entries()].map(([label, iids]) => (
-					<div key={label} className="candidate-group">
-						<span className="candidate-group-label">{label}</span>
-						<div className="candidate-row">
-							{iids.map((iid) => (
-								<div
-									key={iid}
-									className={`candidate-tile location-tile${chosen === iid ? ' candidate-selected' : ''}`}
-								>
-									<LocationCard
-										iid={iid}
-										selected={chosen === iid}
-										onClick={() => useGameStore.getState().setSelected([iid])}
-									/>
-									<LocationLabel iid={iid} />
-								</div>
-							))}
-						</div>
-					</div>
-				))}
-			</div>
+			<LocationPicker
+				offered={choice.candidates.filter((iid) => iid !== SKIP_CONTROL)}
+				disabled={NO_REASONS}
+				selected={selected}
+			/>
 			<div className="choice-actions">
 				<button
 					type="button"
@@ -446,6 +453,85 @@ function ChooseLocationChoice({
 				)}
 			</div>
 		</section>
+	)
+}
+
+/** The Location picker every choice of Locations goes through — the Location
+ *  choice and a card choice that offers only Locations in play. It lays them
+ *  out by area like the board: Your Location Area and the Neutral Zone always,
+ *  the opponent's area when it holds one on offer. Every Location carries its
+ *  Away Teams and ships; the ones not on offer stay, greyed, so the tokens
+ *  around the table can still be read. */
+function LocationPicker({
+	offered,
+	disabled,
+	selected,
+}: {
+	offered: readonly CardInstanceId[]
+	/** greyed with the engine's reason (CHOOSE_CARDS `disabled`) */
+	disabled: ReadonlyMap<CardInstanceId, string>
+	selected: readonly CardInstanceId[]
+}) {
+	const projected = useProjected()
+	const viewer = useViewerSeat()
+	if (projected === null) return null
+	const zone = (ref: ZoneRef) => projected.zones[zoneKey(ref)] ?? []
+	const theirs = zone({ k: 'LOCATION_AREA', seat: otherSeat(viewer) })
+	const groups: [string, readonly CardInstanceId[]][] = [
+		['Your Location Area', zone({ k: 'LOCATION_AREA', seat: viewer })],
+		[
+			'Neutral Zone',
+			([0, 1, 2] as const).flatMap((slot) => zone({ k: 'NEUTRAL_ZONE', slot })),
+		],
+	]
+	if (theirs.some((iid) => offered.includes(iid) || disabled.has(iid)))
+		groups.push(["Opponent's Location Area", theirs])
+	const shown = new Set(groups.flatMap(([, iids]) => iids))
+	const elsewhere = offered.filter((iid) => !shown.has(iid))
+	if (elsewhere.length > 0) groups.push(['Elsewhere', elsewhere])
+
+	return (
+		<div className="candidate-groups location-groups">
+			{groups
+				.filter(([, iids]) => iids.length > 0)
+				.map(([label, iids]) => (
+					<div key={label} className="candidate-group">
+						<span className="candidate-group-label">{label}</span>
+						<div className="candidate-row">
+							{iids.map((iid) => {
+								const isOffered = offered.includes(iid)
+								const reason = disabled.get(iid)
+								const isSel = selected.includes(iid)
+								return (
+									<div
+										key={iid}
+										className={`candidate-tile location-tile${isSel ? ' candidate-selected' : ''}`}
+										title={reason}
+									>
+										<LocationCard
+											iid={iid}
+											selected={isSel}
+											dimmed={!isOffered}
+											reason={reason}
+											onClick={
+												isOffered
+													? () => useGameStore.getState().cardClicked(iid)
+													: undefined
+											}
+										/>
+										<LocationLabel iid={iid} />
+										{reason !== undefined && (
+											<span className="muted small why-not">
+												why not: {reason}
+											</span>
+										)}
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				))}
+		</div>
 	)
 }
 

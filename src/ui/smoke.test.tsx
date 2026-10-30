@@ -149,6 +149,8 @@ describe('app smoke (jsdom)', () => {
 				(b) => b.textContent?.trim() === text,
 			)!
 		expect(host.textContent).not.toContain('MODE ·')
+		// Reference and Settings sit in the head bar's Menu
+		act(() => button('Menu').click())
 		act(() => button('Reference').click())
 		expect(host.querySelector('[aria-label="Rules drawer"]')).not.toBeNull()
 		const tabs = host.querySelector('[role="tablist"][aria-label="Reference"]')!
@@ -157,9 +159,11 @@ describe('app smoke (jsdom)', () => {
 		expect(host.querySelector('[aria-label="Card list"]')).not.toBeNull()
 		act(() => useGameStore.getState().setCardListOpen(false))
 		// the button reopens the menu on the last tab
+		act(() => button('Menu').click())
 		act(() => button('Reference').click())
 		expect(host.querySelector('[aria-label="Card list"]')).not.toBeNull()
 		act(() => useGameStore.getState().setCardListOpen(false))
+		act(() => button('Menu').click())
 		act(() => button('Settings').click())
 		const settings = host.querySelector('[aria-label="Settings"]')!
 		expect(settings.textContent).toContain('Layout')

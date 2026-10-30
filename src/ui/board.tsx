@@ -1,6 +1,6 @@
 // Shared board components (todo/14 §3, docs/ui-spec.md §2). All read the
-// projected state — the only game-viewing surface. `compact` variants keep the
-// opponent column small; the viewer's area + hand get the full treatment.
+// projected state — the only game-viewing surface. The console lays them out
+// across the table (src/ui/console/, docs/ui-lcars.md §4).
 //
 // Hook discipline: every component calls its hooks unconditionally at the top
 // (React rules even though the react-hooks linter plugin is not configured).
@@ -8,7 +8,6 @@
 import type { GameState } from '../engine/state'
 import { zoneKey, player } from '../engine/state'
 import { dutyOfficerSlots } from '../engine/dutyOfficers'
-import type { CSSProperties } from 'react'
 import type { CardInstanceId } from '../engine/ids'
 import type { Seat, ZoneRef } from '../engine/resolver/queries'
 import type { SpecialtyId, MarketSuit } from '../data/ids'
@@ -26,7 +25,7 @@ import { CardSprite, CardStack, browsePile } from './cards'
 import { ShipPosition } from './standees'
 import { LocationCard } from './location'
 import { BeamedChips } from './beamed'
-import { RESOURCE_LABEL, seatLabel, specialtyName } from './format'
+import { seatLabel, specialtyName } from './format'
 import { Icon, suitIconId } from './icons'
 import { DeltaCounter } from './delta'
 import { HIDDEN_DEF } from './projection'
@@ -48,43 +47,75 @@ function useZones(ref: ZoneRef): readonly CardInstanceId[] {
 }
 
 // ---------------------------------------------------------------------------
-// Stardate track
+// Centre piles — the decks between the two players
 // ---------------------------------------------------------------------------
 
-export function StardateTrack() {
+/**
+ * The shared piles as decks on the table (docs/ui-lcars.md §4): the Stardate
+ * pile with the Glory on its top card, the Incident deck (the Burn is lost by
+ * whoever holds more Incidents when it runs out, so it warns at ≤2 and the
+ * frame goes red at ≤1), and the Junk, which is public and browsable.
+ */
+export function CentrePiles() {
 	const projected = useProjected()
 	const state = useStateGame()
-	const top = state !== null ? state.stardates.pile[0] : undefined
-	const topDef = top !== undefined ? projected?.cards[top]?.def : undefined
+	const junk = useZones({ k: 'JUNK' })
+	const incidents = useZones({ k: 'INCIDENT_DECK' })
 	if (state === null) return null
+	const top = state.stardates.pile[0]
+	const topDef = top !== undefined ? projected?.cards[top]?.def : undefined
 	return (
-		<section className="panel stardate-track" aria-label="Stardate track">
-			<h3>Stardate</h3>
-			<div className="stardate-row">
-				<span className="stardate-name">
-					{top === undefined ? '—' : topDef === HIDDEN_DEF ? '??' : topDef}
-				</span>
-				<DeltaCounter
-					pool="stardate"
-					label="Stardate Glory"
-					className="stardate-glory"
-					title="Glory tokens on the current Stardate card"
-				>
-					{Array.from({ length: state.stardates.gloryOnTop }).map((_, i) => (
-						<Icon key={i} id="GLO" label="Glory" />
-					))}
-					<span className="stardate-glory-n">{state.stardates.gloryOnTop}</span>
-				</DeltaCounter>
-				<span className="stardate-count muted">
-					{state.stardates.pile.length} left
-				</span>
+		<section className="panel centre-piles" aria-label="Shared piles">
+			<h3>Piles</h3>
+			<div className="centre-stacks">
+				<div className="stardate-pile" aria-label="Stardate track">
+					<CardStack
+						label="Stardates"
+						count={state.stardates.pile.length}
+						deck
+					/>
+					<span className="stardate-name">
+						{top === undefined ? '—' : topDef === HIDDEN_DEF ? '??' : topDef}
+					</span>
+					<DeltaCounter
+						pool="stardate"
+						label="Stardate Glory"
+						className="stardate-glory"
+						title="Glory tokens on the current Stardate card"
+					>
+						<Icon id="GLO" label="Glory" />
+						<span className="stardate-glory-n">
+							{state.stardates.gloryOnTop}
+						</span>
+					</DeltaCounter>
+				</div>
+				<CardStack
+					label="Incidents"
+					count={incidents.length}
+					warn={incidents.length <= 2}
+					deck
+				/>
+				<CardStack label="Junk" count={junk.length} browse={junk} deck />
 			</div>
 			{state.resolutionTriggered && (
 				<div className="resolution-banner" role="status">
-					⚠ Resolution triggered — round finishes, then final scoring
+					⚠ Resolution — the round finishes, then final scoring
 				</div>
 			)}
 		</section>
+	)
+}
+
+/** A seat's Draw and Discard as two decks — on your side by the hand dock,
+ *  on theirs in the opponent band. The Discard is public, so both browse. */
+export function DeckPiles({ seat }: { seat: Seat }) {
+	const draw = useZones({ k: 'DRAW', seat })
+	const discard = useZones({ k: 'DISCARD', seat })
+	return (
+		<div className="deck-piles" aria-label={`${seatLabel(seat)} deck`}>
+			<CardStack label="Draw" count={draw.length} deck />
+			<CardStack label="Discard" count={discard.length} browse={discard} deck />
+		</div>
 	)
 }
 
@@ -110,11 +141,15 @@ function MarketSuitCol({ suit }: { suit: MarketSuit }) {
 	const offers = useZones({ k: 'MARKET_OFFER', suit })
 	return (
 		<div className="market-col">
-			<span className={`suit-pill suit-banner card-suit-${suit.toLowerCase()}`}>
-				<Icon id={suitIconId(suit)} label={suit} size="md" />
-				{suit}
-			</span>
-			<CardStack label={suit} count={deck.length} />
+			<div className="market-head">
+				<span
+					className={`suit-pill suit-banner card-suit-${suit.toLowerCase()}`}
+				>
+					<Icon id={suitIconId(suit)} label={suit} size="md" />
+					{suit}
+				</span>
+				<CardStack label={`${suit} deck`} count={deck.length} deck />
+			</div>
 			<div className="market-offer-slot">
 				{offers.length > 0 ? (
 					offers.map((iid) => <CardSprite key={iid} iid={iid} size="board" />)
@@ -150,113 +185,49 @@ function LocationSlot({ slot }: { slot: 0 | 1 | 2 }) {
 	const loc = locs[0]
 	const ships0 = loc !== undefined ? shipTokensAt(state, loc, 0) : 0
 	const ships1 = loc !== undefined ? shipTokensAt(state, loc, 1) : 0
+	// the standees on the card show the ships; the count is the tooltip
 	return (
-		<div className="location-slot">
+		<div
+			className="location-slot"
+			title={
+				loc === undefined ? undefined : `Ships: P1 ${ships0} · P2 ${ships1}`
+			}
+		>
 			{loc === undefined ? (
 				<div className="empty-slot muted">no Location</div>
 			) : (
-				<>
-					<LocationCard
-						iid={loc}
-						onClick={() => useGameStore.getState().cardClicked(loc)}
-					/>
-					<div className="location-tokens">
-						<span className="ship-count">
-							ships P1 {ships0} / P2 {ships1}
-						</span>
-					</div>
-				</>
+				<LocationCard
+					iid={loc}
+					onClick={() => useGameStore.getState().cardClicked(loc)}
+				/>
 			)}
 		</div>
 	)
 }
 
 // ---------------------------------------------------------------------------
-// Junk + Incident
+// PlayerArea — the in-play zones from rules/02 §2.3
 // ---------------------------------------------------------------------------
 
-export function JunkIncidentBar() {
-	const junk = useZones({ k: 'JUNK' })
-	const incidents = useZones({ k: 'INCIDENT_DECK' })
-	return (
-		<section className="panel piles-bar" aria-label="Shared piles">
-			<h3>Shared piles</h3>
-			<CardStack label="Junk" count={junk.length} browse={junk} />
-			<CardStack
-				label="Incident deck"
-				count={incidents.length}
-				warn={incidents.length <= 2}
-			/>
-			<div className="muted small">
-				The Burn wins for whoever holds fewer Incidents when the deck empties.
-			</div>
-		</section>
-	)
-}
-
-// ---------------------------------------------------------------------------
-// Viewer deck — the player's Draw pile + Discard (relocated out of PlayerArea)
-// ---------------------------------------------------------------------------
-
-export function PlayerDeckPiles() {
-	const viewer = useViewerSeat()
-	const draw = useZones({ k: 'DRAW', seat: viewer })
-	const discard = useZones({ k: 'DISCARD', seat: viewer })
-	return (
-		<section className="panel player-deck" aria-label="Your deck">
-			<h3>Your deck</h3>
-			<div className="piles-bar">
-				<CardStack label="Draw" count={draw.length} />
-				<CardStack label="Discard" count={discard.length} browse={discard} />
-			</div>
-		</section>
-	)
-}
-
-// ---------------------------------------------------------------------------
-// PlayerArea — the three rows from rules/02 §2.3
-// ---------------------------------------------------------------------------
-
-type PlayerZoneK =
-	| 'DUTY_OFFICER'
-	| 'LOCATION_AREA'
-	| 'CAPTAIN'
-	| 'FLEET'
-	| 'STAGING'
-	| 'DRAW'
-	| 'DISCARD'
-	| 'RESERVE'
-	| 'DEVELOPMENT'
-	| 'LOG'
-	| 'HAND'
-
-function ZoneCount({ seat, k }: { seat: Seat; k: PlayerZoneK }) {
-	const iids = useZones({ k, seat })
-	return <>{iids.length}</>
-}
+type AreaZoneK =
+	'DUTY_OFFICER' | 'LOCATION_AREA' | 'CAPTAIN' | 'FLEET' | 'STAGING'
 
 function ZoneRow({
 	seat,
 	k,
 	title,
-	size,
-	slot,
 	full,
 }: {
 	seat: Seat
-	k: 'DUTY_OFFICER' | 'LOCATION_AREA' | 'CAPTAIN' | 'FLEET' | 'STAGING'
+	k: AreaZoneK
 	title: string
-	size: 'board'
-	/** A single-card slot (Duty Officer, Captain) rather than an area that runs
-	 *  right — one column wide, and it holds column 1 of the area grid. */
-	slot?: boolean | undefined
-	/** Spans the whole row (the Staging Area), starting back at column 1. */
+	/** Takes a line of its own (the Staging Area). */
 	full?: boolean | undefined
 }) {
 	const iids = useZones({ k, seat })
 	return (
 		<div
-			className={`area-row${slot === true ? ' area-slot' : ''}${full === true ? ' area-full' : ''}`}
+			className={`area-zone zone-${k.toLowerCase().replace('_', '-')}${full === true ? ' area-full' : ''}`}
 		>
 			<div className="area-slot-label">{title}</div>
 			<div className="slot-group">
@@ -264,21 +235,13 @@ function ZoneRow({
 					<span className="empty-slot muted">empty</span>
 				) : (
 					iids.map((iid) => {
+						const onClick = () => useGameStore.getState().cardClicked(iid)
+						if (k === 'LOCATION_AREA')
+							return <LocationCard key={iid} iid={iid} onClick={onClick} />
 						const sprite = (
-							<CardSprite
-								key={iid}
-								iid={iid}
-								size={size}
-								onClick={() => useGameStore.getState().cardClicked(iid)}
-							/>
+							<CardSprite key={iid} iid={iid} size="board" onClick={onClick} />
 						)
-						return k === 'LOCATION_AREA' ? (
-							<LocationCard
-								key={iid}
-								iid={iid}
-								onClick={() => useGameStore.getState().cardClicked(iid)}
-							/>
-						) : k === 'FLEET' ? (
+						return k === 'FLEET' ? (
 							<div key={iid} className="fleet-col">
 								<div className="fleet-ship">
 									{sprite}
@@ -296,135 +259,57 @@ function ZoneRow({
 	)
 }
 
-/** The compact (opponent) area still draws its Locations, small, so the ships
- *  and Away Teams on them have a card to stand on. */
-function CompactLocations({ seat }: { seat: Seat }) {
-	const iids = useZones({ k: 'LOCATION_AREA', seat })
-	if (iids.length === 0) return null
-	return (
-		<div className="compact-locations" aria-label="Locations">
-			{iids.map((iid) => (
-				<LocationCard
-					key={iid}
-					iid={iid}
-					size="micro"
-					onClick={() => useGameStore.getState().cardClicked(iid)}
-				/>
-			))}
-		</div>
-	)
-}
-
+/**
+ * A seat's in-play zones. The printed board has three rows (Duty Officer +
+ * Location Area, Captain + Fleet, Staging); a laptop screen has room for two,
+ * so the zones flow in two lines — Captain, Fleet, Duty Officer and Location
+ * Area on the first, the Staging Area on its own — and wrap only when a late
+ * game runs out of width (docs/ui-lcars.md §4).
+ */
 export function PlayerArea({
 	seat,
-	compact,
+	head = true,
 }: {
 	seat: Seat
-	compact?: boolean
+	/** The seat heading and action tray; the console's own area drops it,
+	 *  since the head bar already carries both. */
+	head?: boolean
 }) {
 	const state = useStateGame()
 	const viewer = useViewerSeat()
-	const pl = state !== null ? player(state, seat) : null
-	if (state === null || pl === null) return null
+	if (state === null) return null
 	const isMine = seat === viewer
 	const doCount = (state.zones[zoneKey({ k: 'DUTY_OFFICER', seat })] ?? [])
 		.length
 	const doSlots = dutyOfficerSlots(state, seat).length
 	return (
 		<section
-			className={`panel player-area${compact ? '' : ' full'}`}
+			className={`panel player-area ${isMine ? 'area-mine' : 'area-theirs'}`}
 			aria-label={`Player ${seat + 1} area`}
 		>
-			<div className="area-head" data-anchor={`seat:${seat}`}>
-				<strong>
-					{seatLabel(seat)} {isMine ? '(you)' : ''}
-				</strong>
-				<span className="area-resources">
-					{/* your own resources live in the top bar; the compact opponent
-              area keeps its pips here */}
-					{compact === true &&
-						(['DIL', 'LAT', 'GLO'] as const).map((r) => (
-							<DeltaCounter
-								key={r}
-								pool={`player:${seat}:${r}`}
-								label={`${seatLabel(seat)} ${RESOURCE_LABEL[r]}`}
-								className={`res-pip pip-${r.toLowerCase()}`}
-								title={RESOURCE_LABEL[r]}
-							>
-								<Icon id={r} label={RESOURCE_LABEL[r]} size="md" />{' '}
-								<span className="res-n">{pl.resources[r]}</span>
-							</DeltaCounter>
-						))}
+			{head && (
+				<div className="area-head">
+					<strong>
+						{seatLabel(seat)} {isMine ? '(you)' : ''}
+					</strong>
 					<ActionTray seat={seat} />
-				</span>
-			</div>
-
-			{compact ? (
-				<div className="area-compact-grid">
-					<span>
-						hand <ZoneCount seat={seat} k="HAND" />
-					</span>
-					<span>
-						duty <ZoneCount seat={seat} k="DUTY_OFFICER" />
-					</span>
-					<span>
-						loc <ZoneCount seat={seat} k="LOCATION_AREA" />
-					</span>
-					<span>
-						fleet <ZoneCount seat={seat} k="FLEET" />
-					</span>
-					<span>
-						staging <ZoneCount seat={seat} k="STAGING" />
-					</span>
-					<span>
-						dev <ZoneCount seat={seat} k="DEVELOPMENT" />
-					</span>
-					<CompactLocations seat={seat} />
-				</div>
-			) : (
-				<div
-					className="area-grid"
-					// rules/08 `promote`: with more than one Duty Officer, the slot
-					// column widens and the Location Area shifts right to make room.
-					style={
-						{
-							'--do-slots': Math.max(1, doCount),
-						} as CSSProperties
-					}
-				>
-					{/* The three printed rows (rules/02 §2.3) laid on one column grid:
-              the single slot holds column 1, its area runs right from it, and
-              the Staging Area starts back at column 1 — so Duty Officer,
-              Captain and the first Staging card line up down the left edge and
-              every other card sits on the same rhythm. */}
-					<ZoneRow
-						seat={seat}
-						k="DUTY_OFFICER"
-						title={
-							doSlots > 1
-								? `Duty Officers (${doCount}/${doSlots})`
-								: 'Duty Officer'
-						}
-						size="board"
-						slot
-					/>
-					<ZoneRow
-						seat={seat}
-						k="LOCATION_AREA"
-						title="Location Area"
-						size="board"
-					/>
-					<ZoneRow seat={seat} k="CAPTAIN" title="Captain" size="board" slot />
-					<ZoneRow seat={seat} k="FLEET" title="Fleet Area" size="board" />
-					<ZoneRow
-						seat={seat}
-						k="STAGING"
-						title="Staging Area"
-						size="board"
-						full
-					/>
 				</div>
 			)}
+			<div className="area-flow">
+				<ZoneRow seat={seat} k="CAPTAIN" title="Captain" />
+				<ZoneRow seat={seat} k="FLEET" title="Fleet Area" />
+				<ZoneRow
+					seat={seat}
+					k="DUTY_OFFICER"
+					title={
+						doSlots > 1
+							? `Duty Officers (${doCount}/${doSlots})`
+							: 'Duty Officer'
+					}
+				/>
+				<ZoneRow seat={seat} k="LOCATION_AREA" title="Location Area" />
+				<ZoneRow seat={seat} k="STAGING" title="Staging Area" full />
+			</div>
 		</section>
 	)
 }
@@ -476,13 +361,7 @@ export function ActionTray({
 // Crew board — specialty tracks + missions
 // ---------------------------------------------------------------------------
 
-export function CrewBoard({
-	seat,
-	compact,
-}: {
-	seat: Seat
-	compact?: boolean
-}) {
+export function CrewBoard({ seat }: { seat: Seat }) {
 	const state = useStateGame()
 	const legal = useLegal()
 	const viewer = useViewerSeat()
@@ -494,56 +373,56 @@ export function CrewBoard({
 	const done = pl.missions.filter((m) => m.completed).length
 	return (
 		<section
-			className={`panel crew-board${compact ? '' : ' crew-console'}`}
+			className="panel crew-board crew-console"
 			aria-label={`Player ${seat + 1} crew board`}
 		>
 			<div className="crew-head">
 				<strong>Crew board — {deckLabel(pl.deckId)}</strong>
 				<span className="muted">
 					{pl.boardSide === 'BASIC' ? 'Basic' : 'Advanced'} side
-					{compact ? ` · missions ${done}/${pl.missions.length}` : ''}
 				</span>
 			</div>
-			{!compact && (
-				<>
-					{/* The console reads like the printed board: three specialty bars
+			<>
+				{/* The console reads like the printed board: three specialty bars
               lit up to the marker, each capped by its position and the
               multiplier Focus icons score at right now (docs/ui-lcars.md §4.1). */}
-					<div className="console-tracks">
-						{SPECIALTIES.map((s) => (
-							<SpecialtyBar
-								key={s}
-								specialty={s}
-								position={pl.specialties[s]}
-								multipliers={pl.tracks[s]}
-							/>
-						))}
-					</div>
-					{/* The piles beside the board — counts you glance at, so they are
+				<div className="console-tracks">
+					{SPECIALTIES.map((s) => (
+						<SpecialtyBar
+							key={s}
+							specialty={s}
+							position={pl.specialties[s]}
+							multipliers={pl.tracks[s]}
+						/>
+					))}
+				</div>
+				{/* The piles beside the board — counts you glance at, so they are
               tiles, not card backs. Reserve, Development and the Captain's
               Log sit beside the Crew board (rules/02 §2.3); your own Log is
               browsable, an opponent's is a count only (rules/04 §4.5). Your
               resources and Away Teams are in the top bar. */}
-					<div className="console-tiles">
-						<PileTile label="Reserve" iids={reserve} browse={false} />
-						<PileTile label="Development" iids={development} browse />
-						<PileTile label="Log" iids={log} browse={seat === viewer} />
-						<span
-							className="console-tile tile-pile tile-missions"
-							title={`${done} of ${pl.missions.length} missions completed`}
-						>
-							<span className="tile-n">
-								{done}
-								<small>/{pl.missions.length}</small>
-							</span>
-							<span className="tile-label">Missions</span>
+				<div className="console-tiles">
+					<PileTile label="Reserve" iids={reserve} browse={false} />
+					<PileTile label="Development" iids={development} browse />
+					<PileTile label="Log" iids={log} browse={seat === viewer} />
+					<span
+						className="console-tile tile-pile tile-missions"
+						title={`${done} of ${pl.missions.length} missions completed`}
+					>
+						<span className="tile-n">
+							{done}
+							<small>/{pl.missions.length}</small>
 						</span>
-					</div>
-				</>
-			)}
+						<span className="tile-label">Missions</span>
+					</span>
+				</div>
+			</>
 			<div className="missions">
 				{pl.missions.map((m, i) => {
+					// only your own missions take a Complete button — the opponent's
+					// crew board also shows on the viewscreen
 					const ready =
+						seat === viewer &&
 						state.activeSeat === seat &&
 						state.phase.k === 'ACTION' &&
 						legal.some((it) => it.t === 'COMPLETE_MISSION' && it.index === i)
@@ -585,11 +464,9 @@ export function CrewBoard({
 									Complete
 								</button>
 							)}
-							{!compact && (
-								<span className="mission-text" title={m.cardId}>
-									{missionTitle(m)} — {describePredicate(m.goal)}
-								</span>
-							)}
+							<span className="mission-text" title={m.cardId}>
+								{missionTitle(m)} — {describePredicate(m.goal)}
+							</span>
 						</div>
 					)
 				})}
@@ -612,7 +489,7 @@ const SPECIALTY_ABBR: Record<SpecialtyId, string> = {
  * printed in their segments, and an end-cap reading out the position and the
  * multiplier Focus icons score at right now.
  */
-function SpecialtyBar({
+export function SpecialtyBar({
 	specialty,
 	position,
 	multipliers,
@@ -710,17 +587,7 @@ function PileTile({
 // Hand
 // ---------------------------------------------------------------------------
 
-/** `onToggle` adds the fold control to the head (the console's floating hand,
- *  BoardArea); `folded` says which way it points. */
-export function Hand({
-	seat,
-	folded = false,
-	onToggle,
-}: {
-	seat: Seat
-	folded?: boolean
-	onToggle?: () => void
-}) {
+export function Hand({ seat }: { seat: Seat }) {
 	const state = useStateGame()
 	// Legality must be evaluated on the real engine state — the projected view
 	// hides facedown decks (HIDDEN_DEF), which starves the canPlay probe of the
@@ -742,17 +609,6 @@ export function Hand({
 				<span className="muted">
 					{iids.length} card{iids.length === 1 ? '' : 's'}
 				</span>
-				{onToggle !== undefined && (
-					<button
-						type="button"
-						className="btn micro hand-toggle"
-						onClick={onToggle}
-						aria-expanded={!folded}
-						title="Show or hide your hand (H)"
-					>
-						{folded ? 'Show' : 'Hide'} <kbd>H</kbd>
-					</button>
-				)}
 			</div>
 			<div className="hand-row">
 				{iids.map((iid) => {

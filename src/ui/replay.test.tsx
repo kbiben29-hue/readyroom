@@ -40,12 +40,21 @@ beforeEach(() => {
 	useGameStore.getState().newGame()
 })
 
+/** Replay sits in the head bar's Menu (docs/ui-lcars.md §4). */
+function menuItem(host: HTMLElement, label: string) {
+	const menu = [...host.querySelectorAll('button')].find(
+		(b) => b.textContent?.trim() === 'Menu',
+	)
+	act(() => menu?.click())
+	return [...host.querySelectorAll('button')].find(
+		(b) => b.textContent?.trim() === label,
+	)
+}
+
 describe('replay viewer', () => {
 	it('opens from the top bar and renders the latest state + intent log', async () => {
 		const host = await renderInGame()
-		const replayBtn = [...host.querySelectorAll('button')].find(
-			(b) => b.textContent?.trim() === 'Replay',
-		)
+		const replayBtn = menuItem(host, 'Replay')
 		expect(replayBtn).toBeDefined()
 
 		act(() => replayBtn!.click())
@@ -62,11 +71,8 @@ describe('replay viewer', () => {
 
 	it('steps back to SETUP then forward again without leaving the game', async () => {
 		const host = await renderInGame()
-		act(() =>
-			[...host.querySelectorAll('button')]
-				.find((b) => b.textContent?.trim() === 'Replay')!
-				.click(),
-		)
+		const replay = menuItem(host, 'Replay')!
+		act(() => replay.click())
 
 		const startBtn = [...host.querySelectorAll('button')].find((b) =>
 			b.textContent?.includes('⏮'),
@@ -106,11 +112,8 @@ describe('replay viewer', () => {
 		localStorage.removeItem('ready-room:sync-url')
 		try {
 			const host = await renderInGame()
-			act(() =>
-				[...host.querySelectorAll('button')]
-					.find((b) => b.textContent?.trim() === 'Replay')!
-					.click(),
-			)
+			const replay = menuItem(host, 'Replay')!
+			act(() => replay.click())
 
 			expect(host.textContent).toContain('Sync to server')
 			const btn = [...host.querySelectorAll('button')].find(
@@ -142,11 +145,8 @@ describe('replay viewer', () => {
 		globalThis.fetch = fetchImpl
 		try {
 			const host = await renderInGame()
-			act(() =>
-				[...host.querySelectorAll('button')]
-					.find((b) => b.textContent?.trim() === 'Replay')!
-					.click(),
-			)
+			const replay = menuItem(host, 'Replay')!
+			act(() => replay.click())
 			const btn = [...host.querySelectorAll('button')].find(
 				(b) => b.textContent?.trim() === 'Sync to server',
 			)

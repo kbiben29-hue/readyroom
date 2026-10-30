@@ -1,5 +1,7 @@
-// The house-AI strip (todo/15 §4) shown in a local game against the house AI,
-// on the LCARS console and the phone shells alike:
+// The house-AI strip (todo/15 §4) shown in a local game against the house AI.
+// On the phone shells it is one strip; the LCARS console splits it — the
+// status sits in the head bar (BotStatus), the ticker in the opponent band,
+// and the strip itself is only the spectator's controls:
 //
 //   - the "thinking" indicator: which seat's bot is deciding, at what level
 //     (nothing while it is your move — the top bar already says so);
@@ -191,71 +193,88 @@ export function BotBar({ variant }: { variant: 'console' | 'mobile' }) {
 				<BotHighlight />
 			</>
 		)
+	// The console carries the status in its head bar (BotStatus) and the
+	// ticker in the opponent band; this strip is only the spectator's controls.
+	if (!spectator) return null
 	return (
-		<>
-			<div
-				className="bot-bar bot-bar-console"
-				role="group"
-				aria-label="House AI"
-			>
-				<span
-					className={`bot-status${thinking !== null ? ' bot-thinking' : ''}`}
-					role="status"
-					aria-live="polite"
+		<div
+			className="bot-bar bot-bar-console"
+			role="group"
+			aria-label="House AI controls"
+		>
+			<span className="bot-controls">
+				<button
+					type="button"
+					className="btn micro"
+					onClick={() => store().setBotPaused(!paused)}
+					disabled={over}
 				>
-					{thinking !== null && (
-						<span className="bot-pulse" aria-hidden="true" />
-					)}
-					{status(thinking, botToMove, paused, over)}
+					{paused ? 'Resume' : 'Pause'}
+				</button>
+				<button
+					type="button"
+					className="btn micro"
+					onClick={() => store().stepBot()}
+					disabled={!paused || over || botToMove === null}
+					title="Play one House AI move"
+				>
+					Step
+				</button>
+				<span className="bot-seg" role="group" aria-label="View">
+					{([0, 1] as const).map((seat) => (
+						<button
+							key={seat}
+							type="button"
+							className={`btn micro${viewer === seat ? ' btn-active' : ''}`}
+							aria-pressed={viewer === seat}
+							onClick={() => store().setViewer(seat)}
+						>
+							{seatLabel(seat)}
+						</button>
+					))}
 				</span>
-				{spectator && (
-					<span className="bot-controls">
-						<button
-							type="button"
-							className="btn micro"
-							onClick={() => store().setBotPaused(!paused)}
-							disabled={over}
-						>
-							{paused ? 'Resume' : 'Pause'}
-						</button>
-						<button
-							type="button"
-							className="btn micro"
-							onClick={() => store().stepBot()}
-							disabled={!paused || over || botToMove === null}
-							title="Play one House AI move"
-						>
-							Step
-						</button>
-						<span className="bot-seg" role="group" aria-label="View">
-							{([0, 1] as const).map((seat) => (
-								<button
-									key={seat}
-									type="button"
-									className={`btn micro${viewer === seat ? ' btn-active' : ''}`}
-									aria-pressed={viewer === seat}
-									onClick={() => store().setViewer(seat)}
-								>
-									{seatLabel(seat)}
-								</button>
-							))}
-						</span>
-						<button
-							type="button"
-							className={`btn micro${revealAll ? ' btn-active' : ''}`}
-							aria-pressed={revealAll}
-							onClick={() => store().setRevealAll(!revealAll)}
-							title="Show both captains' hands"
-						>
-							Reveal hands
-						</button>
-					</span>
+				<button
+					type="button"
+					className={`btn micro${revealAll ? ' btn-active' : ''}`}
+					aria-pressed={revealAll}
+					onClick={() => store().setRevealAll(!revealAll)}
+					title="Show both captains' hands"
+				>
+					Reveal hands
+				</button>
+			</span>
+		</div>
+	)
+}
+
+/** The console head bar's House AI segment: a pulse and "P2 · Normal…" while
+ *  it thinks (the full sentence for screen readers), and the Moves button. */
+export function BotStatus() {
+	const opponents = useGameStore((s) => s.session?.opponents)
+	const local = useGameStore((s) => s.online === null)
+	const over = useGameStore((s) => s.state !== null && s.state.result !== null)
+	const thinking = useGameStore((s) => s.botThinking)
+	const botToMove = useGameStore((s) => s.botToMove)
+	const paused = useGameStore((s) => s.botPaused)
+	if (!local || !hasBots(opponents)) return null
+	const full = status(thinking, botToMove, paused, over)
+	return (
+		<span className="head-bot" role="group" aria-label="House AI">
+			<span
+				className={`bot-status${thinking !== null ? ' bot-thinking' : ''}`}
+				title={full}
+			>
+				{thinking !== null ? (
+					<span className="bot-pulse" aria-hidden="true" />
+				) : (
+					paused && botToMove !== null && !over && <Glyph k="pause" />
 				)}
-				<BotHistoryButton compact={false} />
-			</div>
-			<BotTicker variant="console" />
-			<BotHistory />
-			<BotHighlight />
-		</>
+				<span aria-hidden="true">{shortStatus(thinking, botToMove, over)}</span>
+				<span className="sr-only" role="status" aria-live="polite">
+					{full}
+				</span>
+			</span>
+			<BotHistoryButton compact />
+		</span>
 	)
 }

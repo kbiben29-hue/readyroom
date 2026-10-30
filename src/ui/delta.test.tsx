@@ -87,6 +87,10 @@ describe('token motion (jsdom)', () => {
 	it('the fresh log rows of the last step are highlighted', () => {
 		const host = renderApp()
 		playOneCard()
+		// the log is a drawer that opens on request (L)
+		act(() => {
+			window.dispatchEvent(new KeyboardEvent('keydown', { key: 'l' }))
+		})
 		// pin the log so the assertion does not depend on what the card logs
 		act(() => {
 			const p = useGameStore.getState().projected as unknown as GameState

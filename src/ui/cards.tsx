@@ -58,6 +58,7 @@ import { linesOfDef } from './guide/glossary'
 import { cardName, withCardNames } from '../data/cardNames'
 import { contextOf, foldReason } from './tile/lines'
 import { BeamedChips, BeamedOnto, beamedHeading } from './beamed'
+import { longPress, type LongPressHandlers } from './console/longPress'
 
 export type CardSize =
 	'micro' | 'board' | 'hand' | 'preview' | 'review' | 'zoom'
@@ -484,6 +485,8 @@ export interface CardFaceProps {
 	onMouseLeave?: (() => void) | undefined
 	/** `data-anchor` for token flights (flight.tsx) — live instances only. */
 	anchor?: string | undefined
+	/** Touch long-press handlers (console/longPress.ts). */
+	press?: LongPressHandlers | undefined
 }
 
 /** A single named "ship" chip used at Locations (docs/ui-spec.md §3). */
@@ -509,6 +512,7 @@ export function CardFace({
 	onMouseEnter,
 	onMouseLeave,
 	anchor,
+	press,
 }: CardFaceProps) {
 	const classes = [
 		'card',
@@ -573,6 +577,7 @@ export function CardFace({
 			data-anchor={anchor}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			{...press}
 		>
 			{body}
 		</div>
@@ -895,6 +900,7 @@ export function CardSprite({
 			onMouseEnter={hoverable ? () => setHoverIid(iid) : undefined}
 			onMouseLeave={hoverable ? () => setHoverIid(null) : undefined}
 			anchor={`card:${iid}`}
+			press={hoverable && !isHidden ? longPress(iid) : undefined}
 		/>
 	)
 }
@@ -910,6 +916,9 @@ export interface CardStackProps {
 	browse?: readonly CardInstanceId[] | null | undefined
 	warn?: boolean | undefined
 	extra?: ReactNode | undefined
+	/** Drawn as a deck on the table: a small stacked back with the count on
+	 *  it and the label under it (the console's piles, docs/ui-lcars.md §4). */
+	deck?: boolean | undefined
 }
 
 export function CardStack({
@@ -918,6 +927,7 @@ export function CardStack({
 	browse,
 	warn,
 	extra,
+	deck,
 }: CardStackProps) {
 	const browseable =
 		browse !== undefined && browse !== null && browse.length > 0
@@ -928,8 +938,8 @@ export function CardStack({
 	}
 	return (
 		<div
-			className={`cardstack${warn ? ' cardstack-warn' : ''}`}
-			title={browseable ? `browse ${label}` : undefined}
+			className={`cardstack${deck === true ? ' cardstack-deck' : ''}${warn ? ' cardstack-warn' : ''}${count === 0 ? ' cardstack-empty' : ''}`}
+			title={browseable ? `browse ${label}` : `${label}: ${count}`}
 		>
 			<button
 				type="button"
@@ -938,10 +948,14 @@ export function CardStack({
 				disabled={!browseable}
 				aria-label={`${label} (${count})`}
 			>
-				<span className="stack-glyph">✦</span>
+				{deck === true ? (
+					<span className="stack-n">{count}</span>
+				) : (
+					<span className="stack-glyph">✦</span>
+				)}
 			</button>
 			<div className="stack-count">
-				{label} · {count}
+				{deck === true ? label : `${label} · ${count}`}
 			</div>
 			{extra !== undefined && <div className="stack-extra">{extra}</div>}
 		</div>
@@ -1019,8 +1033,8 @@ function usePileState(): [
 // ---------------------------------------------------------------------------
 
 /**
- * Hold Option and hover: the card lifts to the middle of the screen at 3× the
- * board size. Hover alone does nothing — the board is dense enough that a
+ * Hold Option and hover (or long-press on a touch screen): the card lifts to
+ * the middle of the screen at 3× the board size. Hover alone does nothing — the board is dense enough that a
  * preview firing on every pointer move is noise, and it cost a permanent panel
  * in the side column for something wanted a few times a turn.
  *
@@ -1031,6 +1045,8 @@ function usePileState(): [
 export function CardZoom() {
 	const hoverIid = useHoverIid()
 	const zoomHeld = useZoomHeld()
+	// a card held under a finger (console/longPress.ts) — the touch twin
+	const pressedIid = useGameStore((s) => s.zoomIid)
 	const setZoomHeld = useGameStore((s) => s.setZoomHeld)
 
 	useEffect(() => {
@@ -1049,11 +1065,12 @@ export function CardZoom() {
 		}
 	}, [setZoomHeld])
 
-	if (!zoomHeld || hoverIid === null) return null
+	const iid = pressedIid ?? (zoomHeld ? hoverIid : null)
+	if (iid === null) return null
 	return (
 		<div className="zoom-layer" role="presentation">
 			<CardSprite
-				iid={hoverIid}
+				iid={iid}
 				size="zoom"
 				detailOnHover={false}
 				hoverable={false}

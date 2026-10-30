@@ -6,7 +6,7 @@
 //
 // Components never read the raw state — everything renders `useProjected()`.
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { GameState } from '../engine/state'
 import type { SetupConfig } from '../engine/setup'
 import type { DeckId } from '../data/ids'
@@ -16,44 +16,22 @@ import {
 	useProjected,
 	useGameStore,
 	useCatalog,
-	useViewerSeat,
-	useSession,
 	undoPolicyLabel,
 } from './store'
-import { CardDetailHost, PileBrowserHost, CardZoom } from './cards'
-import { Icon } from './icons'
+import { CardDetailHost, PileBrowserHost } from './cards'
 import { RulesDrawer, CardListPanel } from './rules'
 import { DeckReview } from './deckReview'
-import { LogPanel } from './log'
-import { ChoicePanel } from './choice'
-import {
-	Hand,
-	CrewBoard,
-	PlayerArea,
-	StardateTrack,
-	Market,
-	NeutralZone,
-	JunkIncidentBar,
-	PlayerDeckPiles,
-	ActionTray,
-} from './board'
-import { FlightLayer } from './flight'
-import { DeltaCounter } from './delta'
 import { isDesktop, openCardDatabase } from '../desktop/bridge'
-import { seatLabel, phaseLabel, RESOURCE_LABEL } from './format'
 import { SavedGamesPanel } from './load'
-import { RecoverableErrorBoundary } from './errorScreen'
-import { ReplayHost, openReplay } from './replay'
+import { ReplayHost } from './replay'
 import { useShell, type Shell } from './mobile/shell'
 import { OnlineLobby, useOnlineRoute } from './online/OnlineLobby'
 import { RecapView } from './online/Recap'
 import { ShorthandGuide } from './guide/ShorthandGuide'
 import { useDefIndex } from './defs'
 import { MobileShell } from './mobile/MobileShell'
+import { ConsoleShell } from './console/ConsoleShell'
 import { SettingsPanel } from './SettingsPanel'
-import { OrdersPanel } from './OrdersPanel'
-import { orderCount } from './mobile/facts'
-import { useViewerLegal } from './tile/legal'
 import { ThemeSwitch } from './ThemeSwitch'
 import { deckLabel } from '../data/cardNames'
 import type { BotId } from '../bot/types'
@@ -62,10 +40,8 @@ import {
 	BOT_LEVEL_LABEL,
 	hasBots,
 	isBotId,
-	isSpectator,
 	type Opponents,
 } from '../session/opponents'
-import { BotBar } from './BotBar'
 import { EndScreen } from './EndScreen'
 
 function useRuleAnchor(): [string | null, (a: string | null) => void] {
@@ -79,36 +55,6 @@ function useRuleAnchor(): [string | null, (a: string | null) => void] {
 		return () => window.removeEventListener('codex:open-rule', listener)
 	}, [])
 	return [anchor, setAnchor]
-}
-
-function ErrorBanner() {
-	const error = useGameStore((s) => s.error)
-	const clear = useGameStore((s) => s.clearError)
-	if (error === null) return null
-	return (
-		<div className="error-banner" role="alert">
-			<strong>⚠ {error}</strong>
-			<button type="button" className="btn micro" onClick={clear}>
-				dismiss
-			</button>
-		</div>
-	)
-}
-
-/** Informational (non-blocking) notice — resume warnings, undo refusals,
- *  autosave failures (todo/17 §1/§2). Dismissible like the error banner. */
-function WarningBanner() {
-	const warning = useGameStore((s) => s.warning)
-	const clear = useGameStore((s) => s.clearWarning)
-	if (warning === null) return null
-	return (
-		<div className="warning-banner" role="status">
-			<strong>ℹ {warning}</strong>
-			<button type="button" className="btn micro" onClick={clear}>
-				dismiss
-			</button>
-		</div>
-	)
 }
 
 // ---------------------------------------------------------------------------
@@ -552,367 +498,5 @@ function GameFlow({ shell }: { shell: Shell }) {
 		return <EndScreen onNewGame={() => useGameStore.getState().newGame()} />
 	}
 	if (shell !== 'console') return <MobileShell shell={shell} />
-	// The frame is the only thing allowed to change colour (docs/ui-lcars.md §7):
-	// red alert when the Burn is one Incident away.
-	const incidentsLeft = state.zones['INCIDENT_DECK']?.length ?? 0
-	const alert = incidentsLeft <= 1 && state.result === null
-	return (
-		<div className={`frame${alert ? ' frame-alert' : ''}`}>
-			<div className="frame-head">
-				<div className="head-row">
-					<span className="head-cap" aria-hidden="true" />
-					<TopBar state={state} />
-				</div>
-				<ConsoleNav />
-			</div>
-			<div className="frame-body">
-				<BotBar variant="console" />
-				<ErrorBanner />
-				<WarningBanner />
-				<RecoverableErrorBoundary title="while rendering the board">
-					<BoardArea state={state} />
-				</RecoverableErrorBoundary>
-			</div>
-			<div className="frame-foot">
-				<span className="foot-cap" aria-hidden="true" />
-				<StatusBar state={state} incidentsLeft={incidentsLeft} />
-			</div>
-			<PassDeviceBar state={state} />
-			<ChoicePanel />
-			<CardZoom />
-			<FlightLayer />
-		</div>
-	)
-}
-
-/** The top bar carries this turn and nothing else: who is acting, in what
- *  phase, with how many actions, your resources and Away Teams, and the one
- *  obvious next move. Everything else lives in the rail. */
-function TopBar({ state }: { state: GameState }) {
-	const session = useSession()
-	const [confirmEnd, setConfirmEnd] = useState(false)
-	// the house AI is to move: no primary step for the device
-	const botToMove = useGameStore((s) => s.botToMove)
-	const viewer = useViewerSeat()
-	const active = state.players[state.activeSeat]
-	const mine = state.players[viewer]
-	const phase = state.phase.k
-	const pending = state.pendingChoice !== null || botToMove !== null
-	const budget = session?.meta.scoreEstimate
-	// nothing left to spend: the one obvious next move is ending the step
-	const outOfActions =
-		phase === 'ACTION' && !pending && (active?.actions.available ?? 0) === 0
-	// every legal move in one list (O, or the button beside the primary step)
-	const [ordersOpen, setOrdersOpen] = useState(false)
-	const orders = orderCount(useViewerLegal())
-	useEffect(() => {
-		const onKey = (e: KeyboardEvent) => {
-			if (e.key !== 'o' && e.key !== 'O') return
-			if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
-			const t = e.target as HTMLElement | null
-			if (
-				t !== null &&
-				(t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
-			)
-				return
-			setOrdersOpen((o) => !o)
-		}
-		window.addEventListener('keydown', onKey)
-		return () => window.removeEventListener('keydown', onKey)
-	}, [])
-
-	const action = useMemo(() => {
-		if (pending) return null
-		switch (phase) {
-			case 'SETUP':
-				return { label: 'Start game', kind: 'start' as const }
-			case 'RESUPPLY':
-				return { label: 'Continue', kind: 'pass' as const }
-			case 'CONTROL':
-				return { label: 'Continue', kind: 'pass' as const }
-			case 'ACTION':
-				return { label: 'End Action Step', kind: 'endTurn' as const }
-			default:
-				return null
-		}
-	}, [pending, phase])
-
-	const onPrimary = useCallback(() => {
-		if (action === null) return
-		if (action.kind === 'endTurn' && !confirmEnd) {
-			setConfirmEnd(true)
-			window.setTimeout(() => setConfirmEnd(false), 4000)
-			return
-		}
-		setConfirmEnd(false)
-		const s = useGameStore.getState()
-		if (action.kind === 'start') s.dispatch({ t: 'START' })
-		else if (action.kind === 'pass') s.dispatch({ t: 'PASS' })
-		else s.dispatch({ t: 'END_TURN' })
-	}, [action, confirmEnd])
-
-	return (
-		<header className="topbar">
-			<div className="topbar-left">
-				<strong>Ready Room</strong>
-				<span className={`phase-chip phase-${phase.toLowerCase()}`}>
-					{phaseLabel(state.phase)}
-				</span>
-				<span className="muted">
-					Turn {state.turnNumber} · {seatLabel(state.activeSeat)}
-				</span>
-				<ActionTray seat={state.activeSeat} size="lg" />
-				{/* Your resources and Away Teams live here, not on the crew console:
-            the one counter per pool a token flight lands on (docs/ui-lcars.md §4.1). */}
-				{mine !== undefined && (
-					<span
-						className="topbar-resources"
-						aria-label={`${seatLabel(viewer)} resources`}
-					>
-						{(['DIL', 'LAT', 'GLO'] as const).map((r) => (
-							<DeltaCounter
-								key={r}
-								pool={`player:${viewer}:${r}`}
-								label={`${seatLabel(viewer)} ${RESOURCE_LABEL[r]}`}
-								className={`res-pip pip-${r.toLowerCase()}`}
-								title={RESOURCE_LABEL[r]}
-							>
-								<Icon id={r} label={RESOURCE_LABEL[r]} />{' '}
-								<span className="res-n">{mine.resources[r]}</span>
-							</DeltaCounter>
-						))}
-						<span
-							className="res-pip pip-away"
-							title={`${mine.awayTeamsInPool} Away Team${mine.awayTeamsInPool === 1 ? '' : 's'} on your Captain · ${mine.awayTeamsTotal} owned`}
-						>
-							<Icon id="AWAY_TEAM" label="Away Teams" />{' '}
-							<span className="res-n">
-								{mine.awayTeamsInPool}
-								<small>/{mine.awayTeamsTotal}</small>
-							</span>
-						</span>
-					</span>
-				)}
-			</div>
-			<div className="topbar-actions">
-				{phase !== 'SETUP' && (
-					<button
-						type="button"
-						className="btn orders-btn"
-						onClick={() => setOrdersOpen(true)}
-						title="Every legal move right now (O)"
-					>
-						Orders <span className="orders-n">{orders}</span>
-					</button>
-				)}
-				{ordersOpen && <OrdersPanel onClose={() => setOrdersOpen(false)} />}
-				{action !== null && (
-					<button
-						type="button"
-						className={`btn btn-primary${confirmEnd ? ' btn-warn' : ''}${outOfActions ? ' btn-nudge' : ''}`}
-						onClick={onPrimary}
-						title={
-							action.kind === 'endTurn'
-								? 'Unused actions are lost when the Action Step ends.'
-								: undefined
-						}
-					>
-						{confirmEnd
-							? 'Really end step? Unused actions are lost'
-							: action.label}
-					</button>
-				)}
-				{budget !== undefined && (
-					<span
-						className="score-est"
-						title="running score estimate (public info only)"
-					>
-						{seatLabel(0)} ~{budget[0]} · {seatLabel(1)} ~{budget[1]}
-					</span>
-				)}
-			</div>
-		</header>
-	)
-}
-
-/** The console strip: everything that is not this turn's decision. It runs
- *  across the head, directly under the title bar, so the board keeps the full
- *  width — at this complexity the screen is the scarce resource
- *  (docs/ui-lcars.md §4). */
-function ConsoleNav() {
-	const undo = useGameStore((s) => s.undo)
-	const newGame = useGameStore((s) => s.newGame)
-	const canUndo = useGameStore((s) => s.canUndo)
-	const session = useSession()
-	const openReference = useGameStore((s) => s.openReference)
-	const setSettingsOpen = useGameStore((s) => s.setSettingsOpen)
-	const undoLabel = undoPolicyLabel(session?.setup.mode, session?.opponents)
-	return (
-		<nav className="console-nav" aria-label="Console">
-			<span className="nav-label">Session</span>
-			<button
-				type="button"
-				className="btn"
-				onClick={undo}
-				disabled={!canUndo}
-				title={undoLabel}
-			>
-				Undo
-				{session !== null && session.log.length > 0 && !canUndo ? (
-					<span className="undo-lock">
-						{isSpectator(session.opponents)
-							? ' (spectator)'
-							: ' (turn boundary)'}
-					</span>
-				) : null}
-			</button>
-			<button
-				type="button"
-				className="btn"
-				onClick={openReplay}
-				disabled={session === null}
-			>
-				Replay
-			</button>
-			<button type="button" className="btn" onClick={() => openReference()}>
-				Reference
-			</button>
-			<button
-				type="button"
-				className="btn"
-				onClick={() => setSettingsOpen(true)}
-			>
-				Settings
-			</button>
-			<span className="nav-spacer" />
-			<button type="button" className="btn" onClick={newGame}>
-				New game
-			</button>
-		</nav>
-	)
-}
-
-/** Foot status bar — the two end conditions, always legible, never a modal. */
-function StatusBar({
-	state,
-	incidentsLeft,
-}: {
-	state: GameState
-	incidentsLeft: number
-}) {
-	const viewer = useViewerSeat()
-	const burnClose = incidentsLeft <= 2
-	return (
-		<div className="bottombar" role="status">
-			<span className="seg">Viewing · {seatLabel(viewer)}</span>
-			<span className="seg">⌥ hold + hover to zoom</span>
-			<span className="seg">Stardates {state.stardates.pile.length}</span>
-			<span className={`seg${burnClose ? ' seg-alert' : ''}`}>
-				{burnClose
-					? `⚠ The Burn — ${incidentsLeft} Incident${incidentsLeft === 1 ? '' : 's'} left`
-					: `Incidents ${incidentsLeft}`}
-			</span>
-			<span className={`seg${state.resolutionTriggered ? ' seg-alert' : ''}`}>
-				{state.resolutionTriggered
-					? '⚠ Resolution triggered'
-					: 'Resolution not triggered'}
-			</span>
-		</div>
-	)
-}
-
-/** todo/15 §2 residue: a "reveal everything" debug toggle behind a dev flag
- *  (the projection otherwise hides the opponent's hand / facedown decks).
- *  Deliberately a dev/authoring tool — off by default. */
-function BoardArea({ state }: { state: GameState }) {
-	void state
-	const viewer = useViewerSeat()
-	const opponent: Seat = viewer === 0 ? 1 : 0
-	// Layout follows what a turn actually needs (docs/ui-lcars.md §4):
-	//   · counters (Stardate, Junk, Incidents, your deck) are a thin strip — they
-	//     are numbers, not cards, and were wasting card-sized slots;
-	//   · Market and Neutral Zone share one row, so all seven shared card slots
-	//     are visible at once without scrolling;
-	//   · the opponent moves into the side column. They are reference, not your
-	//     decision, and a permanent 300px column for them cost the board width.
-	return (
-		<main className="board-grid">
-			<div className="main-col">
-				<div className="ops-strip">
-					<StardateTrack />
-					<JunkIncidentBar />
-					<PlayerDeckPiles />
-				</div>
-				<div className="shared-row">
-					<Market />
-					<NeutralZone />
-				</div>
-				<div className="own-row">
-					<PlayerArea seat={viewer} />
-					<CrewBoard seat={viewer} />
-				</div>
-			</div>
-			<aside className="side-col">
-				<div className="opp-block">
-					<PlayerArea seat={opponent} compact />
-					<CrewBoard seat={opponent} compact />
-				</div>
-				<LogPanel />
-			</aside>
-			<HandStrip seat={viewer} />
-		</main>
-	)
-}
-
-/** The floating hand covers the bottom of the board, so H (or the button in
- *  its head) folds it down to the head and back. Typing in a field never
- *  toggles it. */
-function HandStrip({ seat }: { seat: Seat }) {
-	const [folded, setFolded] = useState(false)
-	const toggle = useCallback(() => setFolded((f) => !f), [])
-	useEffect(() => {
-		const onKey = (e: KeyboardEvent) => {
-			if (e.key !== 'h' && e.key !== 'H') return
-			if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return
-			const t = e.target as HTMLElement | null
-			if (
-				t !== null &&
-				(t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))
-			)
-				return
-			toggle()
-		}
-		window.addEventListener('keydown', onKey)
-		return () => window.removeEventListener('keydown', onKey)
-	}, [toggle])
-	return (
-		<div className={`hand-strip${folded ? ' hand-folded' : ''}`}>
-			<Hand seat={seat} folded={folded} onToggle={toggle} />
-		</div>
-	)
-}
-
-function PassDeviceBar({ state }: { state: GameState }) {
-	const viewer = useViewerSeat()
-	const setViewer = useGameStore((s) => s.setViewer)
-	// against the house AI the device never changes hands
-	const bots = useGameStore((s) => hasBots(s.session?.opponents))
-	if (state.result !== null || bots) return null
-	const needOpponent =
-		state.pendingChoice === null && state.activeSeat !== viewer
-	if (!needOpponent) return null
-	return (
-		<div className="pass-bar" role="status">
-			<span>
-				It&apos;s {seatLabel(state.activeSeat)}&apos;s turn — pass the device.
-			</span>
-			<button
-				type="button"
-				className="btn btn-primary"
-				onClick={() => setViewer(state.activeSeat)}
-			>
-				I&apos;m {seatLabel(state.activeSeat)}
-			</button>
-		</div>
-	)
+	return <ConsoleShell state={state} />
 }

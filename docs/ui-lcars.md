@@ -96,64 +96,93 @@ The split is itself informational: **condensed caps = system chrome, normal-widt
 ## 4. Layout
 
 ```
-┌ cap ┬ TITLE BAR  turn · phase · actions · primary action ──────────────┐
-├─────┴───────────────────────────────────────────────────────────────────┤
-│ CONSOLE STRIP  undo · replay · rules · card list · details · new game   │
-├───────────────────────────────────────────────┬─────────────────────────┤
-│ ops strip   Stardate · Junk · Incidents · deck │  opponent (compact)    │
-│ shared row  Market ×4         Neutral Zone ×3  │  log                   │
-│ own row     your area         crew board       │                        │
-│                              ┌──────────────────────────────────────────┤
-│                              │ HAND — overlay, bottom-right             │
-├──────────────────────────────┴──────────────────────────────────────────┤
-│ cap │ STATUS BAR  viewing · stardates · incidents · resolution          │
+┌ cap ┬ HEAD BAR  phase · turn · actions · your pool · ~VP · alerts · AI · Undo · Orders · step · Log · ⛶ · Menu ┐
+├─────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ OPPONENT BAND  [hand, face down] [Draw][Discard]  pool · ~VP · tracks · missions · AI ticker · On screen (V)    │
+│                Captain · Fleet · Duty · Locations · Staging — every card they have in play, small             │
+├────────────────────────────────────────┬──────────────────────────────┬──────────────────────────────────────┤
+│ MARKET  [deck] ×4                       │ NEUTRAL ZONE ×3               │ PILES  [Stardates] [Incidents] [Junk]│
+├────────────────────────────────────────┴──────────────────────────────┼──────────────────────────────────────┤
+│ YOUR AREA  Captain · Fleet · Duty Officer · Location Area              │ CREW CONSOLE  tracks · piles ·       │
+│            Staging Area                                                 │               missions               │
+├──────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ [Draw][Discard] [Hand · H]  the hand, peeking up from the bottom edge                                         │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-There is no left rail. LCARS' vertical rail is its most recognisable shape, but at this
-complexity the board needs the width more than the chrome does: 150px down the full height of the
-screen bought nothing the head could not carry in 30px. What survives is the other half of the
-LCARS grammar — **capped bars**: a thick rounded block butted against a square-ended bar, every
-bar `--bar-h` tall, every block `--gap: 4px` from the next.
+The console is laid out like the table it stands for: the opponent across from you, the shared
+cards in the middle, you at the bottom with your hand in front of you. A laptop (≈1470×840 of
+usable browser) and an iPad on its side (1180×760–820) are the screens it is designed for; the
+code is `src/ui/console/` (`ConsoleShell` composes it) and `console.css`.
 
-The layout follows what a turn needs, not the rulebook's table picture:
+What the layout follows:
 
-- **Counters are not cards.** Stardate, Junk, Incidents and your deck are six numbers; they get
-  one 68px strip of chips, not four card-sized slots. They cost 160px before this.
-- **Market and Neutral Zone share one row**, so all seven shared card slots are visible at once.
-- **The opponent lives in the side column.** They are reference, not your decision, and a
-  permanent 300px column for them was the most expensive thing on the screen.
-- **The main column is three bands with one scroll**, so your own in-play area is always on
-  screen — the second-most-used zone after your hand should never be below the fold.
-- **Zoom is held, not hovered.** Hovering a card does nothing on its own;
-  hold **Option** and the hovered card lifts to the middle of the screen at 3× the board size
-  (360×504), over a dimmed board. A preview that fired on every pointer move was noise on a board
-  this dense, and it cost a permanent side-column panel for something wanted a few times a turn —
-  the log took that space. The overlay sits on top of everything — above the choice bar, the
-  drawers and the modals — because reading a card is usually exactly what you are doing while a
-  choice is pending, and a prompt covering the zoom defeats it. That is safe only because it is
-  `pointer-events: none`: it never intercepts a click, so whatever is underneath stays operable.
-  Releasing the key, leaving the window or hiding the tab all drop it, so Option-Tab cannot
-  strand it open.
-- **The hand floats over the bottom-right corner.** It shrink-wraps its cards rather than taking
-  a full-width row, so the board stays readable to its left and the bands above reclaim the
-  ~270px the strip used to reserve (your own area went from 190px of visible height to 485px).
-  Right-alignment falls out of the shrink-wrap — the panel is exactly as wide as the cards and
-  pinned to the right edge, which beats `justify-content: flex-end` on the row, since that clips
-  the first card once the hand overflows. Below 1080px it rejoins the flow instead of covering a
-  one-column board. Hand cards run 156px rather than 200: still read at a glance, and worth
-  ~70px of everybody else's space.
-- **The player area is one grid**, carrying the printed three rows (`rules/02` §2.3): Duty
-  Officer + Location Area, Captain + Fleet Area, then the Staging Area spanning the full width
-  from column 1. Every cell steps on the same 94px + 6px rhythm, so Duty Officer, Captain and the
-  first Staging card share a column and no card sits half a slot out of line. Zone labels go
-  _above_ their cards for the same reason — a label between two cards would break the rhythm.
-  Reserve, Development and the Captain's Log are counts rather than cards you act on, so they
-  are tiles on the crew console (§4.1) — which is also where the rulebook draws them.
+- **One head bar.** Turn, phase, the action tray, your pool and Away Teams, your ~VP (public
+  information only), Undo, Orders, the one primary step, and the doors to everything else: Log,
+  Fullscreen and a Menu (Replay, Reference, Settings, New game). The four bars it replaced (title,
+  session nav, counters, status) cost 210px of an 840px screen. The end conditions appear in it only
+  when they are close — the Burn at ≤2 Incidents, Resolution once triggered — and the House AI's
+  status sits in it as a short segment (the full sentence for screen readers).
+- **The opponent is across the table.** A band along the top in their seat colour: their hand as
+  face-down cards, one back per card (face up only with the spectator's Reveal hands), their Draw and
+  Discard, their pool, ~VP, the read-outs of their tracks, missions and Incidents, the House AI's
+  latest move, and every card they have in play at the small size, grouped by zone. Hold Option
+  (or long-press) to read one. It replaced a side column of counts — "hand 5, fleet 2" told you
+  nothing about what they could do.
+- **The decks are on the table.** Every deck and pile is drawn as a small stack of backs with its
+  count on top: each Market suit's deck beside its banner, the Stardate pile, Incident deck and
+  Junk in the centre column of the shared row, your Draw and Discard at the left end of the hand
+  dock, theirs in the band. Public piles (Discards, Junk) open on a click.
+- **Shared cards in one row.** Market ×4, Neutral Zone ×3 and the centre piles, one card high.
+  Each panel's name runs up its left edge as a tab, so the row spends its height on cards.
+- **Your area in two lines.** The printed board has three rows; a laptop has height for two, so
+  the zones flow Captain · Fleet · Duty Officer · Location Area on the first line and the Staging
+  Area on its own. A late game that runs out of width wraps. The line for Staging is reserved even
+  when it is empty, so the board does not jump when you play a card.
+- **The hand docks.** It rests along the bottom edge with only the top strip of each card showing —
+  the name band, enough to see what you hold, with unplayable cards dimmed as always — and lifts
+  to full size over your area when you point at it, focus it or tap it (the first tap on a lowered
+  hand only lifts it). **H** pins it up and lets it drop. It lifts straight up and never sideways,
+  so a double click lands on the same card. It used to float over the bottom-right of the board at
+  full size and covered most of your area.
+- **Three layers open only on request.** The hand (above), the opponent **on screen** (**V**, or a
+  click on the band: their full area and crew console at your card size, framed like the main
+  viewscreen) and the **log drawer** (**L** or the Log button; it never opens by itself, and the
+  button counts what the other side did since you last looked). **Esc** closes the topmost one.
+- **Cards fit the screen.** One number, `--card-w`, sizes every card on the table from the
+  board's height: the shared row is one card high and your area two, a card is 1.45× as high as
+  it is wide, so 4.35 card widths plus the measured fixed parts (346px) must fit. It runs from
+  84px (below that the table scrolls) to 132px — about 102px on a 1470×840 laptop and 84px on a
+  1180×760 iPad, where the old layout had 94px cards and still scrolled. The hand keeps its 156px.
+- **Zoom is held, not hovered.** Hovering a card does nothing on its own; hold **Option** and the
+  hovered card lifts to the middle of the screen at 360×504, over a dimmed board. On a touch
+  screen, hold a finger on the card for half a second; the tap that ends the press is swallowed,
+  so reading a card never also plays it. The overlay is `pointer-events: none` and sits above
+  everything, the choice bar included, because reading a card is usually what you are doing while a
+  choice is pending. Releasing the key, lifting the finger, leaving the window or hiding the tab
+  drop it.
+- **Fullscreen** (**F**, or the button) takes the whole document fullscreen, which wins back the
+  browser's ~90px on a laptop. It is offered only where it works and helps: not on an iPhone, not
+  in the desktop app, not when the app runs from the home screen (which has no browser chrome to
+  begin with — the way to play on an iPad).
 
-Breakpoints: ≤1240px the crew board drops under your area; ≤1080px the side column moves below the
-board; ≤900px the console stops being one screen and the page scrolls normally, the caps drop and
-the bars become full pills. Below 1080px the phone and tablet shells take over
-([`ui-mobile.md`](ui-mobile.md)); this console stays the desktop layout.
+| Key        | Does                                 |
+| ---------- | ------------------------------------ |
+| O          | Orders: every legal move in one list |
+| H          | pin the hand up / let it drop        |
+| V          | the opponent on screen               |
+| L          | the log drawer                       |
+| F          | fullscreen                           |
+| Option     | hold over a card to zoom it          |
+| Esc        | close the topmost layer              |
+| long press | (touch) zoom a card until you let go |
+
+Shortcuts are bare keys: none fires with Cmd, Ctrl or Option held, on auto-repeat, or while you
+type in a field (`console/useShortcut.ts`).
+
+Breakpoints: the console takes over at 1080px (`mobile/shell.ts`); below 900px — only reachable by
+forcing the console from the menu — cards stop fitting and the page scrolls normally. Below 1080px
+the phone and tablet shells take over ([`ui-mobile.md`](ui-mobile.md)).
 
 ### 4.1 The crew console
 
@@ -164,20 +193,22 @@ its area on art.
 - **Each specialty is one capped bar.** The cap carries the printed skill icon and the name
   (`RES` / `INF` / `MIL`, full name on the title and in the accessible label), then one segment per
   step 0–15, lit in the specialty hue up to the marker, with the marker segment full-strength
-  and underlined in your seat colour. The side's multiplier glyphs print in their own
+  (no seat-colour underline: on the yellow and red bars it read as a stray mark). The side's
+  multiplier glyphs print in their own
   segments, so the Basic and Advanced sides look as different as they score. The end-cap reads
   out the **position** and the **multiplier Focus icons score at right now** (×0 below an
   Advanced side's first glyph) — the two numbers you actually check.
 - **Counts are tiles, four to a row.** The piles — Reserve, Development, Log — and completed
   missions are dark tiles; a pile you may look through is a button that opens it.
-- **Your resources live in the top bar, not on the console or in your area header.**
+- **Your resources live in the head bar, not on the console or in your area header.**
   Dilithium, Latinum, Glory and Away Teams (on your Captain / owned) sit next to the action
   tray, always in view. Every pool has exactly one counter on screen, so a token flight (§1)
-  has one place to land. The compact opponent area in the side column keeps its pips.
+  has one place to land; the opponent's pips are in their band.
 - Missions stay a list under the tiles, since completing one is a button, not a count.
 
 Printed icons on lit chrome sit in an `--ink` well, or a token would vanish into the tile of its
-own hue. The opponent's crew board in the side column stays compact.
+own hue. The opponent's band shows only the read-outs of their tracks; their full crew console is
+on the viewscreen (V).
 
 ## 5. Cards
 
@@ -239,8 +270,8 @@ the unused-action warning (`todo/14` §5).
 
 ## 8. Alert
 
-The frame — title bar, cap, status bar — turns `--mars` in exactly two cases: the Burn is one
-Incident away (`GameFlow` sets `.frame-alert` at one Incident left), and you are the target of an ATTACK.
+The frame — the head bar and its cap — turns `--mars` in exactly two cases: the Burn is one
+Incident away (`ConsoleShell` sets `.frame-alert` at one Incident left), and you are the target of an ATTACK.
 It pulses at 1.6s unless `prefers-reduced-motion`. Nothing else in the UI is allowed to recolour the frame, which is what
 makes it mean something.
 
@@ -271,6 +302,6 @@ warning, distinct from the frame-level alarm.
 
 ## 11. Explicitly not in v1
 
-Card-movement animation (token flights are in — §1), sound, viewscreen chrome, the LCARS boot sequence, 3D flips, and the
+Card-movement animation (token flights are in — §1), sound, the LCARS boot sequence, 3D flips, and the
 vertical rail (§4 — it lost to the board on width). `todo/14`
 §9 already defers these; the design does not secretly depend on any of them.

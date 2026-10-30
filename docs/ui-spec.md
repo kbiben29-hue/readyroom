@@ -34,9 +34,10 @@ animation.** Every affordance should answer: _what can I do right now, and why n
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-Below 1280px: collapse the log into a drawer. Below 900px: stack the opponent area into a
-summary strip. Phones and tablets get their own shells (the Pocket Bridge), specified in
-[`ui-mobile.md`](ui-mobile.md).
+This was the first sketch. The console as built lays the board out across the table instead —
+the opponent in a band along the top, the decks on the table, the log in a drawer, the hand
+docked along the bottom edge — see [`ui-lcars.md`](ui-lcars.md) §4. Phones and tablets get their
+own shells (the Pocket Bridge), specified in [`ui-mobile.md`](ui-mobile.md).
 
 ## 3. Card rendering
 

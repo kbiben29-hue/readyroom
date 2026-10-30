@@ -60,7 +60,7 @@ export function OpponentView() {
 							</span>
 						))}
 					</span>
-					{vp !== null && <span className="pb-vpc">≈ {vp[opp]} VP</span>}
+					{vp !== null && <span className="pb-vpc">~{vp[opp]} VP</span>}
 					<span className="pb-chip pb-chip-opp pb-push">
 						<SuitGl suit="INCIDENT" />
 						{burn?.theirs ?? 0} Incident{burn?.theirs === 1 ? '' : 's'}

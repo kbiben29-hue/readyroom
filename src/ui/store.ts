@@ -621,6 +621,9 @@ export interface GameStore {
 	/** Option/Alt is down: hovering a card zooms it centre stage. Held-key
 	 *  state, not a toggle — released or blurred, it is false. */
 	zoomHeld: boolean
+	/** A card held under a finger (long press, console/longPress.ts): zoomed
+	 *  until the finger lifts — the touch twin of Option-hover. */
+	zoomIid: CardInstanceId | null
 	destinationDefault: 'DECK_TOP' | 'DISCARD' | null
 	// shell flags
 	rulesOpen: boolean
@@ -700,6 +703,7 @@ export interface GameStore {
 	setDetail: (iid: CardInstanceId | null) => void
 	setHoverIid: (iid: CardInstanceId | null) => void
 	setZoomHeld: (held: boolean) => void
+	setZoomIid: (iid: CardInstanceId | null) => void
 	setDestinationDefault: (d: 'DECK_TOP' | 'DISCARD') => void
 	setRulesOpen: (b: boolean) => void
 	setCardListOpen: (b: boolean) => void
@@ -845,6 +849,7 @@ export const useGameStore = create<GameStore>((set) => ({
 	detailIid: null,
 	hoverIid: null,
 	zoomHeld: false,
+	zoomIid: null,
 	destinationDefault: null,
 	rulesOpen: false,
 	cardListOpen: false,
@@ -1210,6 +1215,7 @@ export const useGameStore = create<GameStore>((set) => ({
 	setDetail: (iid) => set({ detailIid: iid }),
 	setHoverIid: (iid) => set({ hoverIid: iid }),
 	setZoomHeld: (held) => set({ zoomHeld: held }),
+	setZoomIid: (iid) => set({ zoomIid: iid }),
 	setDestinationDefault: (d) => set({ destinationDefault: d }),
 	setRulesOpen: (b) =>
 		b ? useGameStore.getState().openReference('rules') : set({ rulesOpen: b }),

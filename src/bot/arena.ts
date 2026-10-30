@@ -37,6 +37,7 @@ export const CREW_DECKS = [
 	'SEL',
 	'BUR',
 	'MAL',
+	'GEO',
 ] as const
 
 export type BoardSide = 'BASIC' | 'ADVANCED'

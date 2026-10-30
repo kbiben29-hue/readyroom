@@ -21,6 +21,8 @@ import type { Seat } from '../queries'
 import type { CardInstanceId } from '../../ids'
 import type { MarketSuit, ResourceId } from '../../../data/ids'
 import { gainGate } from '../replacement'
+import { matchFilter } from '../../queries/resolveQuery'
+import type { CardFilter } from '../queries'
 
 /** GAIN_CARD (rules/05 §5.4.1, rules/08 → gain): choose a suit (when several),
  *  then pick the faceup offer OR the unseen top of that suit's deck (OR any
@@ -42,13 +44,23 @@ export function candidatesForSuit(
 	includeJunk?: boolean,
 	seat?: Seat,
 	onlyJunk?: boolean,
+	filter?: CardFilter,
 ): GainCandidate[] {
 	const out: GainCandidate[] = []
+	// `filter` ("gain a SPY from the Market" — 2GEO22): only faceup cards that
+	// match; the unseen deck top can never be known to match, so it is out.
+	const ok = (iid: CardInstanceId) =>
+		filter === undefined ||
+		matchFilter(state, state.cards[iid]!, filter, {
+			allowWildcard: true,
+			actorMayOptIn: true,
+		})
 	if (onlyJunk !== true) {
 		for (const iid of zonesOf(state, { k: 'MARKET_OFFER', suit }))
-			out.push({ iid, hidden: false })
+			if (ok(iid)) out.push({ iid, hidden: false })
 		const deck = zonesOf(state, { k: 'MARKET_DECK', suit })
-		if (deck.length > 0) out.push({ iid: deck[0]!, hidden: true })
+		if (deck.length > 0 && filter === undefined)
+			out.push({ iid: deck[0]!, hidden: true })
 	}
 	if (
 		onlyJunk === true ||
@@ -56,7 +68,7 @@ export function candidatesForSuit(
 		(seat !== undefined && scanIncludesJunk(state, seat))
 	) {
 		for (const iid of zonesOf(state, { k: 'JUNK' })) {
-			if (cardDef(state.cards[iid]!.def).suit === suit)
+			if (cardDef(state.cards[iid]!.def).suit === suit && ok(iid))
 				out.push({ iid, hidden: false })
 		}
 	}
@@ -74,6 +86,7 @@ export const gainCard: Primitive<Extract<Effect, { k: 'GAIN_CARD' }>> = {
 					node.includeJunk,
 					ctx.actor,
 					node.onlyJunk,
+					node.filter,
 				).length > 0,
 		)
 	},
@@ -109,6 +122,7 @@ export const gainCard: Primitive<Extract<Effect, { k: 'GAIN_CARD' }>> = {
 						node.includeJunk,
 						ctx.actor,
 						node.onlyJunk,
+					node.filter,
 					).length > 0,
 			)
 			return suspend(state, node, ctx, suitKey, {
@@ -124,6 +138,7 @@ export const gainCard: Primitive<Extract<Effect, { k: 'GAIN_CARD' }>> = {
 			node.includeJunk,
 			ctx.actor,
 			node.onlyJunk,
+					node.filter,
 		)
 		if (cands.length === 0) {
 			// canResolve guards against this; kept for safety (rules/05 §5.4.1).
@@ -184,6 +199,7 @@ function derivePick(
 		node.includeJunk,
 		ctx.actor,
 		node.onlyJunk,
+					node.filter,
 	)
 	if (cands.length !== 1)
 		throw new Error(

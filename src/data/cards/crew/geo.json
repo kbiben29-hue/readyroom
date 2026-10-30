@@ -1,0 +1,2727 @@
+[
+	{
+		"id": "2GEO01-23",
+		"cardId": "2GEO01/23",
+		"suit": "CAPTAIN",
+		"deck": "GEO",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REMOVE_AWAY_TEAM",
+						"count": 1,
+						"from": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					},
+					"body": {
+						"k": "RETURN_INCIDENT",
+						"target": {
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"INCIDENT"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "PER",
+						"every": 3,
+						"of": {
+							"k": "COUNT",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"seat": "SELF"
+							}
+						}
+					}
+				}
+			}
+		],
+		"awayTeams": 5
+	},
+	{
+		"id": "2GEO02-23",
+		"cardId": "2GEO02/23",
+		"suit": "SHIP",
+		"deck": "GEO",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Warp this ship",
+									"body": {
+										"k": "WARP",
+										"ship": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											},
+											"thisCard": true
+										},
+										"to": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									}
+								},
+								{
+									"label": "Beam a card here",
+									"body": {
+										"k": "BEAM",
+										"count": 1,
+										"to": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO03-23",
+		"cardId": "2GEO03/23",
+		"suit": "LOCATION",
+		"deck": "GEO",
+		"traits": [
+			"KELPIEN"
+		],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 3
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {
+								"traits": [
+									"KELPIEN"
+								]
+							},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							],
+							"bind": "$2geo03.found"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "BOUND_IS",
+								"bind": "$2geo03.found",
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								}
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "PROMOTE",
+									"from": "HAND",
+									"filter": {
+										"suits": [
+											"PERSON"
+										],
+										"traits": [
+											"KELPIEN"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "FREE_PLAY",
+									"filter": {
+										"traits": [
+											"KELPIEN"
+										]
+									},
+									"from": {
+										"k": "HAND",
+										"seat": 0
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "RETURN_INCIDENT",
+					"target": {
+						"zones": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": [
+								"INCIDENT"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO04-23",
+		"cardId": "2GEO04/23",
+		"suit": "PERSON",
+		"deck": "GEO",
+		"traits": [
+			"VULCAN",
+			"TELEPATH",
+			"AMBASSADOR"
+		],
+		"skills": [
+			"SKILL_INFLUENCE"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"VULCAN"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "PROMOTE",
+										"from": "STAGING",
+										"target": "THIS"
+									},
+									{
+										"k": "MAY",
+										"body": {
+											"k": "PROMOTE",
+											"from": "STAGING",
+											"filter": {
+												"suits": [
+													"PERSON"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO04_DUTY_A"
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO04_DUTY_B"
+				}
+			}
+		],
+		"passives": [
+			"2GEO04_DUTY_A",
+			"2GEO04_DUTY_B"
+		]
+	},
+	{
+		"id": "2GEO05-23",
+		"cardId": "2GEO05/23",
+		"suit": "ENCOUNTER",
+		"deck": "GEO",
+		"traits": [
+			"ANOMALY",
+			"TIME_TRAVEL",
+			"ONGOING"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_TAKE_INCIDENT",
+					"count": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO05_JUNK"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_ACTION",
+								"amount": 1
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "RECALL",
+									"target": {
+										"zones": [
+											{
+												"k": "STAGING",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"PERSON",
+												"CARGO",
+												"SHIP",
+												"ALLY",
+												"DIRECTIVE",
+												"INCIDENT",
+												"LOCATION"
+											],
+											"not": {
+												"traits": [
+													"TIME_TRAVEL"
+												]
+											}
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "COUNT",
+						"query": {
+							"zones": [
+								"ALL_OWNED"
+							],
+							"filter": {
+								"traits": [
+									"ANOMALY"
+								]
+							},
+							"seat": "SELF"
+						}
+					}
+				}
+			}
+		],
+		"passives": [
+			"2GEO05_JUNK"
+		]
+	},
+	{
+		"id": "2GEO06-23",
+		"cardId": "2GEO06/23",
+		"suit": "LOCATION",
+		"deck": "GEO",
+		"traits": [
+			"KLINGON",
+			"STARFLEET",
+			"COMMUNICATION"
+		],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_DISMISS",
+					"count": 1,
+					"from": {
+						"k": "DUTY_OFFICER",
+						"seat": 0
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UP_TO",
+						"max": 3
+					},
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_LOG",
+							"filter": {
+								"traits": [
+									"STARFLEET"
+								]
+							},
+							"from": {
+								"k": "HAND",
+								"seat": 0
+							}
+						},
+						"body": {
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"KLINGON"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DEPLOYED",
+					"filter": {
+						"suits": [
+							"SHIP"
+						]
+					}
+				},
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "GLO",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO07-23",
+		"cardId": "2GEO07/23",
+		"suit": "CARGO",
+		"deck": "GEO",
+		"traits": [
+			"ANCIENT",
+			"SCIENTIST",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "LAT",
+			"amount": 3
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SPECIALTY_ADVANCED",
+					"specialty": "RESEARCH"
+				},
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "GLO",
+					"amount": 1
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"suits": [
+							"ENCOUNTER"
+						]
+					}
+				},
+				"effect": {
+					"k": "DRAW",
+					"count": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO08-23",
+		"cardId": "2GEO08/23",
+		"suit": "CARGO",
+		"deck": "GEO",
+		"traits": [
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 3
+							},
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											},
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										],
+										"bind": "$2geo08.found"
+									},
+									{
+										"k": "BEAM",
+										"bound": "$2geo08.found",
+										"to": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										},
+										"count": 1
+									}
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									]
+								},
+								"value": 2
+							},
+							"then": {
+								"k": "GAIN_ACTION",
+								"amount": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										]
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "DISMISS",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "RECALL",
+							"target": {
+								"zones": [
+									{
+										"k": "BEAMED_TO",
+										"host": "THIS"
+									}
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										]
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "DISMISS",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "BEAM",
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								},
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"count": 1
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									},
+									"body": {
+										"k": "REFRESH",
+										"target": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO09-23",
+		"cardId": "2GEO09/23",
+		"suit": "PERSON",
+		"deck": "GEO",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 4
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT"
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"STARFLEET"
+						]
+					}
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "DRAW",
+						"count": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO10-23",
+		"cardId": "2GEO10/23",
+		"suit": "DIRECTIVE",
+		"deck": "GEO",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SELECT",
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"bind": "$1pic22.loc"
+							},
+							{
+								"k": "REPEAT",
+								"times": {
+									"k": "UP_TO",
+									"max": 3
+								},
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_DISCARD",
+										"count": 1,
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									},
+									"body": {
+										"k": "SEND_AWAY_TEAM",
+										"count": 1,
+										"target": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											},
+											"bound": "$1pic22.loc"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND"
+						},
+						{
+							"k": "WARP",
+							"ship": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								}
+							},
+							"to": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"count": {
+								"k": "UP_TO",
+								"max": 2
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO11-23",
+		"cardId": "2GEO11/23",
+		"suit": "DIRECTIVE",
+		"deck": "GEO",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 2,
+							"suits": [
+								"ALLY"
+							]
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO12-23",
+		"cardId": "2GEO12/23",
+		"suit": "PERSON",
+		"deck": "GEO",
+		"traits": [
+			"KELPIEN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_TAKE_INCIDENT",
+									"count": 1
+								},
+								"body": {
+									"k": "SCAN_FOR_TRAIT",
+									"traits": [
+										"KELPIEN"
+									]
+								}
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Find a DIRECTIVE outside your Reserve deck",
+									"body": {
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"DIRECTIVE"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											}
+										],
+										"bind": "$2geo12.found"
+									}
+								},
+								{
+									"label": "Find a DIRECTIVE in your Reserve deck and take an INCIDENT",
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "FIND",
+												"filter": {
+													"suits": [
+														"DIRECTIVE"
+													]
+												},
+												"zones": [
+													{
+														"k": "RESERVE",
+														"seat": 0
+													}
+												],
+												"bind": "$2geo12.found"
+											},
+											{
+												"k": "TAKE",
+												"deck": "INCIDENT",
+												"count": 1
+											}
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"DIRECTIVE"
+									]
+								},
+								"bound": "$2geo12.found"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 3
+				},
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"PERSON"
+								]
+							}
+						},
+						"value": 2
+					},
+					"then": {
+						"k": "GAIN_ACTION",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO13-23",
+		"cardId": "2GEO13/23",
+		"suit": "PERSON",
+		"deck": "GEO",
+		"traits": [
+			"HUMAN",
+			"SCIENTIST",
+			"STARFLEET",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_REQUIRE",
+								"cond": {
+									"k": "COMPARE",
+									"a": {
+										"k": "SPECIALTY",
+										"specialty": "RESEARCH"
+									},
+									"op": "LT",
+									"b": {
+										"k": "SPECIALTY",
+										"specialty": "MILITARY"
+									}
+								}
+							},
+							{
+								"k": "COST_DISMISS",
+								"count": 1,
+								"from": {
+									"k": "DUTY_OFFICER",
+									"seat": 0
+								}
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FORCE",
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Log one of your Duty Officers",
+											"body": {
+												"k": "LOG",
+												"target": {
+													"zones": [
+														{
+															"k": "DUTY_OFFICER",
+															"seat": 0
+														}
+													]
+												}
+											}
+										},
+										{
+											"label": "Dismiss one of your Duty Officers (they gain 3 Glory)",
+											"body": {
+												"k": "DISMISS",
+												"target": {
+													"zones": [
+														{
+															"k": "DUTY_OFFICER",
+															"seat": 0
+														}
+													]
+												},
+												"bind": "$2geo13.dismissed"
+											}
+										}
+									]
+								}
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$2geo13.dismissed"
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 3
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_REQUIRE",
+								"cond": {
+									"k": "COMPARE",
+									"a": {
+										"k": "SPECIALTY",
+										"specialty": "MILITARY"
+									},
+									"op": "LT",
+									"b": {
+										"k": "SPECIALTY",
+										"specialty": "RESEARCH"
+									}
+								}
+							},
+							{
+								"k": "COST_DISCARD",
+								"count": 1,
+								"filter": {
+									"not": {
+										"traits": [
+											"STARFLEET"
+										]
+									}
+								},
+								"bind": "$2geo13.discarded"
+							}
+						]
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": [],
+						"speciesOf": "$2geo13.discarded"
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "INCIDENT",
+							"count": 1
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 1 RESEARCH",
+									"body": {
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "RESEARCH",
+										"amount": 1
+									}
+								},
+								{
+									"label": "Gain 1 MILITARY",
+									"body": {
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "MILITARY",
+										"amount": 1
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO14-23",
+		"cardId": "2GEO14/23",
+		"suit": "SHIP",
+		"deck": "GEO",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PUT_ON_DECK_TOP",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Beam a card to a SHIP",
+										"body": {
+											"k": "BEAM",
+											"count": 1,
+											"to": {
+												"zones": [
+													{
+														"k": "FLEET",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"suits": [
+														"SHIP"
+													]
+												}
+											}
+										}
+									},
+									{
+										"label": "Recall a card beamed to a SHIP",
+										"body": {
+											"k": "RECALL",
+											"target": {
+												"zones": [
+													"BEAMED_TO_SHIP"
+												],
+												"seat": "SELF"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO15-23",
+		"cardId": "2GEO15/23",
+		"suit": "DIRECTIVE",
+		"deck": "GEO",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"SHIP"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"CARGO"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO16-23",
+		"cardId": "2GEO16/23",
+		"suit": "DIRECTIVE",
+		"deck": "GEO",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"ALLY"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO17-23",
+		"cardId": "2GEO17/23",
+		"suit": "DIRECTIVE",
+		"deck": "GEO",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SELECT",
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$1pic18.loc"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"bound": "$1pic18.loc",
+											"withAwayTeam": true
+										},
+										"value": 1
+									},
+									{
+										"k": "OR",
+										"terms": [
+											{
+												"k": "COUNT_AT_LEAST",
+												"query": {
+													"zones": [
+														{
+															"k": "LOCATION_AREA",
+															"seat": 0
+														}
+													],
+													"bound": "$1pic18.loc",
+													"withShip": true
+												},
+												"value": 1
+											},
+											{
+												"k": "COUNT_AT_LEAST",
+												"query": {
+													"zones": [
+														{
+															"k": "BEAMED_TO",
+															"bound": "$1pic18.loc"
+														}
+													],
+													"filter": {
+														"suits": [
+															"SHIP"
+														]
+													}
+												},
+												"value": 1
+											}
+										]
+									}
+								]
+							},
+							"then": {
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"look": 2,
+								"returnUnpicked": true
+							}
+						},
+						{
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "LOG",
+									"target": {
+										"zones": [
+											{
+												"k": "LOCATION_AREA",
+												"seat": 0
+											}
+										],
+										"bound": "$1pic18.loc"
+									}
+								},
+								{
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							]
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO18-23",
+		"cardId": "2GEO18/23",
+		"suit": "DIRECTIVE",
+		"deck": "GEO",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "loc",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "CHOICE",
+					"amount": {
+						"k": "SKILL_ICONS",
+						"specialty": "CHOSEN"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO19-23",
+		"cardId": "2GEO19/23",
+		"suit": "LOCATION",
+		"deck": "GEO",
+		"traits": [
+			"VULCAN",
+			"SCIENTIST"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": [
+									"PERSON"
+								],
+								"bind": "$2geo19.gained"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$2geo19.gained",
+									"filter": {
+										"traits": [
+											"VULCAN"
+										]
+									}
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 2
+								}
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$2geo19.gained",
+									"filter": {
+										"traits": [
+											"SCIENTIST"
+										]
+									}
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"value": 3
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO20-23",
+		"cardId": "2GEO20/23",
+		"suit": "PERSON",
+		"deck": "GEO",
+		"traits": [
+			"HUMAN",
+			"OPS",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"suits": [
+											"PERSON"
+										],
+										"traits": [
+											"STARFLEET"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"suits": [
+											"PERSON"
+										],
+										"traits": [
+											"STARFLEET"
+										]
+									},
+									"seat": "SELF"
+								},
+								"value": 3
+							},
+							"then": {
+								"k": "LOG",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"from": {
+							"k": "HAND",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Draw a card",
+								"body": {
+									"k": "DRAW",
+									"count": 1
+								}
+							},
+							{
+								"label": "Gain 2 Dilithium",
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 2
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO21-23",
+		"cardId": "2GEO21/23",
+		"suit": "PERSON",
+		"deck": "GEO",
+		"traits": [
+			"HUMAN",
+			"PILOT",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_ANY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "DECK_TOP"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "WARP",
+											"ship": {
+												"zones": [
+													{
+														"k": "FLEET",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"suits": [
+														"SHIP"
+													]
+												}
+											},
+											"to": {
+												"zones": [
+													"LOCATIONS"
+												],
+												"filter": {
+													"suits": [
+														"LOCATION"
+													]
+												}
+											},
+											"bind": "$1bur20.loc"
+										},
+										{
+											"k": "SEND_AWAY_TEAM",
+											"count": 1,
+											"target": {
+												"zones": [
+													"LOCATIONS"
+												],
+												"filter": {
+													"suits": [
+														"LOCATION"
+													]
+												},
+												"bound": "$1bur20.loc"
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SHIP_WARPED"
+				},
+				"effect": {
+					"k": "DRAW",
+					"count": 1
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO21_WILD_SKILL"
+				}
+			}
+		],
+		"passives": [
+			"2GEO21_WILD_SKILL"
+		]
+	},
+	{
+		"id": "2GEO22-23",
+		"cardId": "2GEO22/23",
+		"suit": "PERSON",
+		"deck": "GEO",
+		"traits": [
+			"HUMAN",
+			"SECURITY",
+			"STARFLEET",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$2geo22.loc"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"bound": "$2geo22.loc"
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"DIRECTIVE"
+									]
+								},
+								"seat": "SELF"
+							},
+							"bind": "$2geo22.dir",
+							"body": {
+								"k": "MAY",
+								"body": {
+									"k": "REMOVE_AWAY_TEAM",
+									"count": 1,
+									"whose": "OPPONENT",
+									"target": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"seat": "ANY",
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"withShip": true
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "MARKET_OFFER",
+									"suit": "PERSON"
+								},
+								{
+									"k": "MARKET_OFFER",
+									"suit": "CARGO"
+								},
+								{
+									"k": "MARKET_OFFER",
+									"suit": "SHIP"
+								},
+								{
+									"k": "MARKET_OFFER",
+									"suit": "ALLY"
+								}
+							],
+							"filter": {
+								"traits": [
+									"SPY"
+								]
+							}
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": [
+									"PERSON",
+									"CARGO",
+									"SHIP",
+									"ALLY"
+								],
+								"filter": {
+									"traits": [
+										"SPY"
+									]
+								},
+								"to": [
+									"DECK_TOP"
+								]
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2GEO23-23",
+		"cardId": "2GEO23/23",
+		"suit": "INCIDENT",
+		"deck": "GEO",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"bind": "discarded"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "discarded",
+									"filter": {
+										"exhibits": [
+											"MILITARY"
+										]
+									}
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 2
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "HAS_TRAIT_IN_PLAY",
+						"trait": "COMMUNICATION"
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							}
+						]
+					}
+				}
+			}
+		]
+	}
+]

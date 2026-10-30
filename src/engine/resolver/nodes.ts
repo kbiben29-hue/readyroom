@@ -202,6 +202,9 @@ export type EffectNode =
 			/** "gain a X from the Junk" (rules/08 → gain): only matching Junk
 			 *  cards, never the Market offer or deck (1PER05, 1SHI07, 1BUR17) */
 			onlyJunk?: boolean | undefined
+			/** only faceup Market / Junk cards matching this ("If there is a SPY in
+			 *  the Market, gain it" — 2GEO22); never the unseen deck top */
+			filter?: CardFilter | undefined
 			bind?: string | undefined
 			/** legal placements, as SCAN_FOR_TRAIT.to: one entry = no
 			 *  CHOOSE_DESTINATION ("gain … to your Discard pile" — 1BUR07) */
@@ -217,6 +220,10 @@ export type EffectNode =
 	| {
 			k: 'SCAN_FOR_TRAIT'
 			traits: TraitId[]
+			/** scan for a species of the card bound under this name instead of
+			 *  `traits` ("scan for any species matching the discarded card" —
+			 *  2GEO13); a card with no species trait makes the scan do nothing */
+			speciesOf?: string | undefined
 			includeJunk?: boolean | undefined
 			bind?: string | undefined
 			/** Legal placements for the gained card (rules/05 §5.4.3): omitted /

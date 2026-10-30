@@ -56,6 +56,7 @@ export type SpeciesTrait = (typeof SPECIES_TRAITS)[number]
 
 export const REGULAR_TRAITS = [
 	'AMBASSADOR',
+	'ANCIENT', // To Boldly Go (2GEO07)
 	'ANOMALY',
 	'AUGMENT',
 	'BEVERAGE',
@@ -119,6 +120,8 @@ export const DECKS = [
 	// fan-made custom crew decks (not part of the published game; names, text
 	// and art come from a custom pack, src/data/custom/)
 	'MAL',
+	// To Boldly Go (box 2) crew decks, by their card-number code (2GEO01/23 …)
+	'GEO',
 ] as const
 export type DeckId = (typeof DECKS)[number]
 

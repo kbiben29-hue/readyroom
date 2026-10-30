@@ -591,6 +591,7 @@ export const EffectSchema: z.ZodType<Effect> = z.lazy(() =>
 				suits: z.array(MarketSuitSchema),
 				includeJunk: z.boolean().optional(),
 				onlyJunk: z.boolean().optional(),
+				filter: CardFilterSchema.optional(),
 				bind: z.string().min(1).optional(),
 				to: z
 					.array(z.enum(['DECK_TOP', 'DISCARD']))
@@ -611,6 +612,7 @@ export const EffectSchema: z.ZodType<Effect> = z.lazy(() =>
 			.object({
 				k: z.literal('SCAN_FOR_TRAIT'),
 				traits: z.array(TraitSchema),
+				speciesOf: z.string().min(1).optional(),
 				includeJunk: z.boolean().optional(),
 				bind: z.string().min(1).optional(),
 				to: z.array(z.enum(['DECK_TOP', 'DISCARD'])).optional(),

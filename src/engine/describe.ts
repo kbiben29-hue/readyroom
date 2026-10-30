@@ -907,7 +907,11 @@ function render(node: Effect): string {
 				node.includeJunk === true ? ', including from the Junk' : ''
 			}.`
 		case 'SCAN_FOR_TRAIT':
-			return `Scan for ${withArticle(node.traits.join(' or '))}${
+			return `Scan for ${
+				node.speciesOf !== undefined
+					? 'a species of that card'
+					: withArticle(node.traits.join(' or '))
+			}${
 				node.includeJunk === true ? ', including from the Junk' : ''
 			}${
 				node.to !== undefined && node.to.length > 1

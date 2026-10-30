@@ -879,3 +879,39 @@ BEAM, GAIN LAT 1])` (no COST_BEAM).
   (rules/03 §3.1). Ownership itself is unchanged, so nothing else moves.
 - **Keyed on:** `excludedFromScoring` in `src/engine/scoring.ts`; test "a returned INCIDENT in the
   Incident deck no longer scores for its old owner" in `src/engine/scoring.test.ts`.
+
+## 052 — The 2GEO crew deck (To Boldly Go): first implementation
+
+The 2GEO crew deck plays on the box-1 Market for now (To Boldly Go's own common cards are
+not implemented yet), so games with it use the box-1 common cards rather than the official
+combined pool. Rulings made while encoding its cards:
+
+- **Reprints:** 2GEO02, 10, 11, 14, 15, 16, 17, 18 and 23 print the same text as 1PIC02, 1PIC22,
+  1PIC11, 1PIC14, 1PIC15, 1PIC17, 1PIC18, 1PIC19 and 1INC02 and copy their operations. 2GEO19's
+  ACTIVATION is 1PIC21's; 2GEO21's PLAY is 1BUR20's.
+- **"*Requires* {MIL} > {RES}" (2GEO13):** a `COST_REQUIRE` with `COMPARE` of the two tracks
+  (`RES LT MIL`), so the operation is unavailable while the condition fails, like a restriction
+  icon. Its "Dismiss a Duty Officer" is part of that cost: the attack needs a Duty Officer of
+  your own to dismiss.
+- **"Scan for any species matching the discarded card" (2GEO13):** `SCAN_FOR_TRAIT { speciesOf }`
+  scans for one of the discarded card's species (the player picks when it has several). A card
+  with no species trait gives nothing to scan for.
+- **"If there is a SPY in the Market, gain it to your hand" (2GEO22):** `GAIN_CARD { filter }`
+  offers only faceup Market cards matching the filter (never the unseen deck top). "To your
+  hand" is a gain onto the deck top followed by a draw of that card.
+- **"Find a KELPIEN. If the found card is a PERSON, you may promote them" (2GEO03):** PROMOTE has
+  no `bound`, so the optional promote is of a KELPIEN PERSON from hand (the found card is there).
+- **"Find a DIRECTIVE. If the card was found in your Reserve deck, take an INCIDENT" (2GEO12):**
+  a choice between finding outside the Reserve deck and finding in it (then taking an INCIDENT).
+- **"Passive: If no cards are beamed here, dismiss this card" (2GEO08):** checked
+  after the card's own play and its recall activation (the ways it empties itself). A card beamed
+  here that leaves by another effect leaves the card in play until its next activation.
+- **"Up to two additional PERSON on duty" (2GEO04):** two open Duty Officer slots
+  (`2GEO04_DUTY_A`, `2GEO04_DUTY_B`).
+- **"1+ KLINGON in play (excluding beamed cards)" (2GEO/M1):** counted over the Fleet, Location
+  area, Duty Officers and Staging area.
+- **Crew board glyphs:** the published maxima are ×6 RESEARCH, ×7 INFLUENCE, ×5 MILITARY on the
+  Basic side (Advanced one lower). The steps use the standard box-1 layouts for those maxima
+  (RES 0/2/7/10/13/15, INF 0/3/8/11/15, MIL 0/5/10/14). To be checked against the printed board.
+- **Keyed on:** `src/data/cards/crew/geo.json`, `src/data/cards/boards/geo.json`; tests
+  `src/engine/geo-deck.test.ts`.

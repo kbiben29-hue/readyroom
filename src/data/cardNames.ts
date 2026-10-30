@@ -53,9 +53,10 @@ export function cardNameById(defId: string): string {
 /** A deck's display label: its captain's name (crew decks print the captain
  *  as card 01: `1PIC01/24`) → the deck code. */
 export function deckLabel(deck: string): string {
-	const prefix = `1${deck}01/`
+	// the captain card: 1PIC01/24 (box 1), 2GEO01/23 (To Boldly Go) …
+	const captain = new RegExp(`^\\d${deck}01/`)
 	for (const [number, card] of index)
-		if (number.startsWith(prefix)) return card.name
+		if (captain.test(number)) return card.name
 	return deck
 }
 

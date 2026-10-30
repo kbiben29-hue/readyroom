@@ -210,6 +210,22 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 		describe: 'You cannot spend {GLO} as {DIL}.',
 	},
 	'1BUR20_WILD_SKILLS': { describe: 'This card has 2 wild Skills.' },
+	// --- To Boldly Go: the 2GEO crew deck ---
+	// 2GEO04 "up to two additional PERSON on duty": two open slots, one layer each.
+	'2GEO04_DUTY_A': {
+		describe: 'You may have an additional PERSON on duty.',
+		dutyOfficerSlot: {},
+	},
+	'2GEO04_DUTY_B': {
+		describe: 'You may have an additional PERSON on duty.',
+		dutyOfficerSlot: {},
+	},
+	'2GEO05_JUNK': {
+		describe: 'Whenever you scan, include cards in the Junk too.',
+		scanIncludesJunk: true,
+	},
+	// describe-only: the wild Skill is the card's SKILL_ANY icon (as 1BUR20)
+	'2GEO21_WILD_SKILL': { describe: 'This card has 1 wild Skill.' },
 	// 1ENC07: describe-only — the rule is the CardDef flag
 	// `treatedAsLocation` (src/engine/cards.ts isLocationDef, DEPLOY).
 	'1ENC07_LOCATION': {

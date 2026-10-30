@@ -1,7 +1,8 @@
 import type { Effect } from '../nodes'
 import type { Primitive } from './index'
 import { suspend, answered, answer, gainResource } from '../runtime'
-import { matchTrait } from '../../queries/traits'
+import { effectiveTraits, matchTrait } from '../../queries/traits'
+import { isSpecies } from '../../../data/ids'
 import { zonesOf, moveCard } from '../../state'
 import { shuffle } from '../../rng'
 import type { GameState, EffectCtx } from '../../state'
@@ -54,8 +55,16 @@ export const scanForTrait: Primitive<Extract<Effect, { k: 'SCAN_FOR_TRAIT' }>> =
 				)
 			}
 
-			// (a) pick the trait once, up front.
-			const traits = [...new Set(node.traits)]
+			// (a) pick the trait once, up front. `speciesOf`: the species of a
+			//     bound card (2GEO13) — none means there is nothing to scan for.
+			const traits = [
+				...new Set(
+					node.speciesOf === undefined
+						? node.traits
+						: speciesOfBound(state, ctx, node.speciesOf),
+				),
+			]
+			if (traits.length === 0) return state
 			if (traits.length > 1 && !answered(ctx, traitKey)) {
 				return suspend(state, node, ctx, traitKey, {
 					k: 'CHOOSE_TRAIT',
@@ -266,4 +275,15 @@ function scanDeck(
 		found: matchedIndex !== -1,
 		picked: matchedIndex === -1 ? undefined : deck[matchedIndex],
 	}
+}
+
+/** The species traits of the card bound under `bind` (wherever it is now). */
+function speciesOfBound(
+	state: GameState,
+	ctx: EffectCtx,
+	bind: string,
+): TraitId[] {
+	const iid = ctx.bindings[bind]
+	if (typeof iid !== 'string' || state.cards[iid] === undefined) return []
+	return effectiveTraits(state, iid as CardInstanceId).filter(isSpecies)
 }

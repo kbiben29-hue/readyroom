@@ -1,0 +1,566 @@
+[
+	{
+		"deck": "GEO",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 11,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 7
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2GEO/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "MILITARY",
+							"value": 6
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"2GEO13-23"
+									]
+								}
+							},
+							"value": 1
+						},
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"filter": {
+										"ids": [
+											"2GEO02-23"
+										]
+									}
+								},
+								{
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 1,
+							"suits": [
+								"SHIP"
+							],
+							"bind": "$2geo-m1.ship"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"bound": "$2geo-m1.ship"
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 3
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										},
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										},
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 0
+										},
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"traits": [
+											"KLINGON"
+										]
+									}
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "DISMISS",
+										"target": {
+											"zones": [
+												{
+													"k": "DUTY_OFFICER",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"ids": [
+													"2GEO13-23"
+												]
+											}
+										}
+									},
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 2
+									}
+								]
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "GEO",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 2
+					},
+					{
+						"step": 11,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2GEO/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "MILITARY",
+							"value": 6
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"2GEO13-23"
+									]
+								}
+							},
+							"value": 1
+						},
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"filter": {
+										"ids": [
+											"2GEO02-23"
+										]
+									}
+								},
+								{
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 1,
+							"suits": [
+								"SHIP"
+							],
+							"bind": "$2geo-m1.ship"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"bound": "$2geo-m1.ship"
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 3
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										},
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										},
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 0
+										},
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"traits": [
+											"KLINGON"
+										]
+									}
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "DISMISS",
+										"target": {
+											"zones": [
+												{
+													"k": "DUTY_OFFICER",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"ids": [
+													"2GEO13-23"
+												]
+											}
+										}
+									},
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 2
+									}
+								]
+							}
+						}
+					]
+				},
+				"vp": 3
+			},
+			{
+				"index": 1,
+				"cardId": "2GEO/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 3,
+									"filter": {
+										"suits": [
+											"PERSON"
+										],
+										"not": {
+											"traits": [
+												"STARFLEET"
+											]
+										}
+									}
+								}
+							]
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "RESEARCH",
+							"value": 1
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "INFLUENCE",
+							"value": 1
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "MILITARY",
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "ENLIST_DEVELOPMENT"
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "HAS_TRAIT_IN_PLAY",
+								"trait": "VULCAN",
+								"count": 2
+							},
+							"then": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Draw a card",
+										"body": {
+											"k": "DRAW",
+											"count": 1
+										}
+									},
+									{
+										"label": "Gain an action",
+										"body": {
+											"k": "GAIN_ACTION",
+											"amount": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				},
+				"vp": 3
+			},
+			{
+				"index": 2,
+				"cardId": "2GEO/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "RESEARCH",
+							"value": 7
+						},
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "ALIEN",
+							"count": 2
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT",
+							"free": true,
+							"filter": {
+								"ids": [
+									"2GEO03-23"
+								]
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"SCIENTIST"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						}
+					]
+				},
+				"vp": 3
+			}
+		]
+	}
+]

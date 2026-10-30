@@ -1806,18 +1806,54 @@ ul.pb-order li {
 		flex-wrap: wrap;
 	}
 	.app .end-screen {
-		margin: 16px auto;
+		margin: 12px auto;
 		padding: 0 12px 32px;
+		gap: 10px;
 	}
-	.app .end-screen h1 {
+	.app .end-screen > h1 {
 		font-size: 28px;
 	}
-	.app .score-grid {
-		grid-template-columns: minmax(0, 1fr);
+	.app .end-banner {
+		min-height: 92px;
 	}
-	.app .score-table td {
-		padding: 6px 4px;
+	.app .end-cap {
+		flex-basis: 30px;
+		border-radius: 30px 0 0 30px;
+	}
+	.app .end-tail {
+		flex-basis: 12px;
+	}
+	.app .end-banner-body {
+		padding: 8px 14px 10px;
+	}
+	.app .end-banner h1 {
+		font-size: 36px;
+	}
+	.app .end-reason {
 		font-size: 13px;
+	}
+	.app .end-seat {
+		padding: 10px 12px 12px;
+	}
+	.app .end-seat-name {
+		font-size: 16px;
+	}
+	.app .end-seat-total {
+		font-size: 46px;
+	}
+	.app .end-table th,
+	.app .end-table td {
+		padding-left: 4px;
+		padding-right: 4px;
+	}
+	.app .end-sub th[scope='row'] {
+		padding-left: 12px;
+	}
+	.app .end-cell {
+		gap: 6px;
+	}
+	.app .end-calc {
+		font-size: 11px;
 	}
 }
 

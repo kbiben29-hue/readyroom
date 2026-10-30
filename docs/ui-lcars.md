@@ -269,7 +269,7 @@ min/max with a live count, and Decline when optional. One renderer per `PendingC
 | Locations            | `CHOOSE_LOCATION`, or `CHOOSE_CARDS` over Locations: one picker by area, tokens and ships shown           |
 | Operations           | which PLAY / which operation to duplicate: the card, each printed operation a block                       |
 | `CHOOSE_DESTINATION` | the gained card beside **Top of deck** stacked over **Discard pile**; one _Remember decision_ checkbox    |
-| `OPTIONAL_TRIGGERS`  | Use / Skip all, highlighting the source card where it sits in play                                        |
+| `OPTIONAL_TRIGGERS`  | a row per reaction (card + printed text), Use toggles in pick order, highlighting the card in play        |
 | `ORDER_OPERATIONS`   | drag list + **Auto** when the engine proved independence                                                  |
 | Control Step         | the secured Location ringed, with the price (opponent's Glory, cleared tokens) stated _before_ the button |
 

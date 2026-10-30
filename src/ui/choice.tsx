@@ -31,13 +31,15 @@ import {
 	confirmChoice,
 	usePendingChoice,
 } from './store'
-import { CardSprite, OpText } from './cards'
+import { CardFace, CardSprite, OpText } from './cards'
 import { MarketSlot } from './board'
 import { LocationCard, isLocationInPlay } from './location'
 import { OperationOptions, operationOptions } from './opOptions'
 import { seatLabel } from './format'
 import { useDefForIid, useDefById } from './defs'
 import { cardName, withCardNames } from '../data/cardNames'
+import { printedOpFor, printedOps } from '../data/stcc'
+import { stccCard } from './stcc'
 
 /** The sentinel "skip" Location candidate for the Control Step (phases.ts). */
 const SKIP_CONTROL = '__SKIP__' as CardInstanceId
@@ -49,20 +51,28 @@ const SKIP_CONTROL = '__SKIP__' as CardInstanceId
 function SourceCard({
 	sourceCard,
 	sourceDef,
+	label,
 }: {
 	sourceCard: CardInstanceId | null
 	sourceDef?: string | undefined
+	label?: string | undefined
 }) {
 	// The instance may have gone face-down (an Incident returned to its deck
-	// mid-effect) — fall back to the def id stamped on the choice.
+	// mid-effect, an ALLY gained onto the deck top) — fall back to the def id
+	// stamped on the choice. A card nobody may name is left out.
 	const liveDef = useDefForIid(sourceCard)
 	const stampedDef = useDefById(sourceDef ?? '')
 	const def = liveDef ?? stampedDef
-	if (sourceCard === null) return null
+	if (sourceCard === null || def === null) return null
 	return (
 		<span className="source-card">
-			<CardSprite iid={sourceCard} size="micro" detailOnHover={false} />
-			<span>{cardName(def) ?? '??'}</span>
+			{label !== undefined && <span>{label}</span>}
+			{liveDef !== null ? (
+				<CardSprite iid={sourceCard} size="micro" detailOnHover={false} />
+			) : (
+				<CardFace def={def} size="micro" />
+			)}
+			<span className="source-card-name">{cardName(def)}</span>
 		</span>
 	)
 }
@@ -70,9 +80,12 @@ function SourceCard({
 function ChoiceHeader({
 	choice,
 	extra,
+	sourceLabel,
 }: {
 	choice: PendingChoice
 	extra?: ReactNode
+	/** words before the source card ("Triggered by") */
+	sourceLabel?: string
 }) {
 	return (
 		<div className="choice-head">
@@ -84,6 +97,7 @@ function ChoiceHeader({
 				<SourceCard
 					sourceCard={choice.sourceCard}
 					sourceDef={choice.sourceDef}
+					label={sourceLabel}
 				/>
 			</div>
 			{extra !== undefined && <div className="choice-extra">{extra}</div>}
@@ -935,59 +949,106 @@ function OptionalTriggersChoice({
 				: [...prev, ref]
 		})
 	}
+	const several = choice.offered.length > 1
 	return (
 		<section className="panel choice-panel">
-			<ChoiceHeader
-				choice={choice}
-				extra={
-					<span className="choice-count muted">
-						take any number, including none
-					</span>
-				}
-			/>
-			<div className="trigger-list">
-				{choice.offered.map((ref, i) => {
-					const isPicked = picked.some(
-						(p) => p.card === ref.card && p.opIndex === ref.opIndex,
-					)
-					return (
-						<div
-							key={i}
-							className={`trigger-row${isPicked ? ' trigger-picked' : ''}`}
-						>
-							<button
-								type="button"
-								className="btn"
-								onClick={() => toggle(ref)}
-								onMouseEnter={() =>
-									useGameStore.getState().setHoverIid(ref.card)
-								}
-								onMouseLeave={() => useGameStore.getState().setHoverIid(null)}
-							>
-								{isPicked ? '✓ taken' : 'Use'}
-							</button>
-							<OpName ref={ref} />
-						</div>
-					)
-				})}
-			</div>
+			<ChoiceHeader choice={choice} sourceLabel="Triggered by" />
+			<ul className="reaction-list">
+				{choice.offered.map((ref) => (
+					<ReactionRow
+						key={`${ref.card}#${ref.opIndex}`}
+						opRef={ref}
+						order={
+							picked.findIndex(
+								(p) => p.card === ref.card && p.opIndex === ref.opIndex,
+							) + 1
+						}
+						showOrder={several}
+						onToggle={() => toggle(ref)}
+					/>
+				))}
+			</ul>
 			<div className="choice-actions">
 				<button
 					type="button"
 					className="btn btn-primary"
+					disabled={picked.length === 0}
 					onClick={() => confirmChoice(picked)}
 				>
-					Take selected ({picked.length})
+					Use selected ({picked.length})
 				</button>
 				<button type="button" className="btn" onClick={() => confirmChoice([])}>
-					Skip all
+					{several ? 'Skip all' : 'Skip'}
 				</button>
 			</div>
-			<p className="muted small">
-				Reactions resolve in the order you select them; hover highlights the
-				card on the board.
-			</p>
+			{several && (
+				<p className="muted small">
+					The reactions you pick resolve in the order you pick them.
+				</p>
+			)}
 		</section>
+	)
+}
+
+/** One offered REACTION: its card, the card's printed wording of the
+ *  operation, and the toggle. `order` is its place among the picked ones
+ *  (0 = not picked); hovering highlights the card where it sits in play. */
+function ReactionRow({
+	opRef,
+	order,
+	showOrder,
+	onToggle,
+}: {
+	opRef: OperationRef
+	order: number
+	/** several are offered, so the pick order matters */
+	showOrder: boolean
+	onToggle: () => void
+}) {
+	const def = useDefForIid(opRef.card)
+	const op = def?.operations[opRef.opIndex]
+	const stcc = def === null ? null : stccCard(def)
+	const printed =
+		def === null || stcc === null
+			? null
+			: printedOpFor(printedOps(stcc.text), def.operations, opRef.opIndex)
+	const text =
+		printed?.text ?? (op === undefined ? null : describeOperation(op))
+	const setHoverIid = useGameStore((s) => s.setHoverIid)
+	const picked = order > 0
+	return (
+		<li
+			className={`reaction-row${picked ? ' reaction-picked' : ''}`}
+			onClick={(e) => {
+				// the whole row toggles; the button is the keyboard path
+				if ((e.target as HTMLElement).closest('button') === null) onToggle()
+			}}
+			onMouseEnter={() => setHoverIid(opRef.card)}
+			onMouseLeave={() => setHoverIid(null)}
+		>
+			<CardSprite
+				iid={opRef.card}
+				size="micro"
+				detailOnHover={false}
+				hoverable={false}
+			/>
+			<div className="reaction-body">
+				<strong className="reaction-name">{cardName(def) ?? opRef.card}</strong>
+				{text !== null && (
+					<p className="reaction-text">
+						<OpText text={text} plain />
+					</p>
+				)}
+			</div>
+			<button
+				type="button"
+				className={`btn reaction-toggle${picked ? ' option-selected' : ''}`}
+				aria-pressed={picked}
+				onClick={onToggle}
+			>
+				{!picked ? 'Use' : showOrder ? `✓ ${order}` : '✓'}
+			</button>
+		</li>
 	)
 }
 

@@ -218,6 +218,26 @@ describe('reaction windows only offer reactions whose cost can be paid', () => {
 		expect(s.cards['ally']!.zone).toEqual({ k: 'BEAMED', host: 'ship' })
 	})
 
+	// The window names its card only when both players know it: a face-up
+	// Market pick put onto the deck top is public, a blind deck-top gain not.
+	it('the window names an ALLY gained face up onto the deck top', () => {
+		const onTop = (seen: boolean | undefined): GameState => {
+			let s = pic(1)
+			s = place(s, 'pxAlly', ID('ally'), { k: 'DRAW', seat: 0 }, 0)
+			return {
+				...s,
+				eventQueue: [{ k: 'CARD_GAINED', iid: ID('ally'), seat: 0, seen }],
+			}
+		}
+		const seen = run(drainEvents(onTop(true)).state).pendingChoice
+		expect(seen?.k).toBe('OPTIONAL_TRIGGERS')
+		expect(seen?.sourceCard).toBe(ID('ally'))
+		expect(seen?.sourceDef).toBe('pxAlly')
+		const blind = run(drainEvents(onTop(undefined)).state).pendingChoice
+		expect(blind?.k).toBe('OPTIONAL_TRIGGERS')
+		expect(blind?.sourceDef).toBeUndefined()
+	})
+
 	it('a second reaction is not re-offered once the first spent the last card', () => {
 		let s = place(
 			fresh(),

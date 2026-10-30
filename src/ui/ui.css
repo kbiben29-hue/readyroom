@@ -1649,8 +1649,12 @@ h3,
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	font-size: 12px;
+	font-size: 14px;
 	color: var(--dim);
+}
+.source-card-name {
+	color: var(--text);
+	font-weight: 600;
 }
 .source-card .card {
 	width: 40px;
@@ -1921,23 +1925,58 @@ h3,
 	flex-wrap: wrap;
 }
 
-.trigger-list {
+/* the reaction window: one row per offered REACTION — its card, the printed
+   wording at a reading measure (which also keeps the dialog narrow), and the
+   toggle; the whole row toggles */
+.reaction-list {
 	display: flex;
 	flex-direction: column;
 	gap: var(--gap);
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
-.trigger-row {
+.reaction-row {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 5px 10px;
+	gap: 12px;
+	padding: 8px 12px 8px 8px;
 	background: var(--panel-2);
 	border-radius: 4px;
 	border-left: 4px solid var(--periwinkle);
+	cursor: pointer;
 }
-.trigger-picked {
+.reaction-row:hover {
+	background: #1d1d2b;
+}
+.reaction-picked,
+.reaction-picked:hover {
 	border-left-color: var(--ice);
 	background: #0d1c2a;
+}
+.reaction-row .card {
+	flex: none;
+}
+.reaction-body {
+	flex: 1 1 auto;
+	min-width: 0;
+	max-width: 56ch;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+.reaction-name {
+	font-size: 15px;
+}
+.reaction-text {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.45;
+	color: var(--text);
+}
+.reaction-toggle {
+	flex: none;
+	min-width: 76px;
 }
 .witness-sets {
 	display: flex;

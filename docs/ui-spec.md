@@ -127,8 +127,10 @@ One component per `PendingChoice` variant (`docs/state-machine.md` §4). Contrac
   **[Discard pile]**, beside the gained card shown large. This one fires constantly, so it is one
   click; a single **Remember decision** checkbox keeps the pick as the highlighted default for
   the rest of the game.
-- `OPTIONAL_TRIGGERS`: a list of reaction cards with **[Use] / [Skip all]**. Highlight the card
-  on the board as you hover.
+- `OPTIONAL_TRIGGERS`: a list of reaction cards, each row the card and its printed operation,
+  toggled by **[Use]** (numbered in pick order when several are offered), then **[Use selected]** /
+  **[Skip all]**. The triggering card heads the dialog, face up even when it went onto the deck top,
+  as long as both players know it. Highlight the card on the board as you hover.
 - `ORDER_OPERATIONS`: drag-to-order list, plus a **[Resolve in this order]** confirm. Offer
   **[Auto — no meaningful choice]** when the engine can prove order-independence (all pending
   operations are non-interacting), which will be the common case.

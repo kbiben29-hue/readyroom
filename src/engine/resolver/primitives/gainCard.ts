@@ -12,7 +12,7 @@ import {
 	skipBenefit,
 } from '../runtime'
 import { refillMarket, suitOfOffer } from '../../market'
-import { zonesOf, moveCard } from '../../state'
+import { zonesOf, moveCard, zoneProps } from '../../state'
 import { cardDef } from '../../cards'
 import { scanIncludesJunk } from '../../modifiers'
 import type { GameState } from '../../state'
@@ -225,6 +225,8 @@ export function finish(
 	// so suitOfOffer is only answerable while it still sits there.
 	const suit =
 		card.zone.k === 'MARKET_OFFER' ? suitOfOffer(state, iid) : undefined
+	// a face-up pick stays public knowledge after it goes onto the deck top
+	const seen = zoneProps(card.zone).visibleTo === 'ALL'
 	if (card.zone.k === 'MARKET_OFFER') {
 		// faceup pick: transfer resource tokens to the pool (via 'MARKET'), move,
 		// refill the slot (rules/05 §5.4.4).
@@ -237,12 +239,12 @@ export function finish(
 		}
 		next = setOwner(next, iid, seat)
 		next = moveCard(next, iid, placeRef(dest, seat), toTop)
-		next = emit(next, { k: 'CARD_GAINED', iid, seat, dest })
+		next = emit(next, { k: 'CARD_GAINED', iid, seat, dest, seen })
 		if (suit !== undefined) next = refillMarket(next, suit)
 		return next
 	}
 	// deck-top or Junk pick — no tokens, no refill.
 	next = setOwner(next, iid, seat)
 	next = moveCard(next, iid, placeRef(dest, seat), toTop)
-	return emit(next, { k: 'CARD_GAINED', iid, seat, dest })
+	return emit(next, { k: 'CARD_GAINED', iid, seat, dest, seen })
 }

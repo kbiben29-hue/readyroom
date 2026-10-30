@@ -192,6 +192,27 @@ describe('GAIN_CARD (todo/08 §2, rules/05 §5.4.1)', () => {
 		expect(ch.hidden).toContain(ID('top')) // deck top is surface face-down
 	})
 
+	it('a face-up gain is marked seen, a blind deck-top gain is not', () => {
+		register([mk('cargo', 'CARGO')])
+		const gainEvent = (pick: 'off' | 'top') => {
+			let s = fresh()
+			s = place(s, 'cargo', ID('off'), { k: 'MARKET_OFFER', suit: 'CARGO' })
+			s = place(s, 'cargo', ID('top'), { k: 'MARKET_DECK', suit: 'CARGO' })
+			const frame: Frame = {
+				k: 'EFFECT',
+				node: { k: 'GAIN_CARD', suits: ['CARGO'] },
+				ctx: { actor: 0, source: ID('e'), bindings: {} },
+				ip: 0,
+			}
+			const { events } = drive({ ...s, stack: [frame] }, (c) =>
+				c.k === 'CHOOSE_CARDS' ? [ID(pick)] : firstPick(c),
+			)
+			return events.find((e) => e.k === 'CARD_GAINED')
+		}
+		expect(gainEvent('off')).toMatchObject({ dest: 'DECK_TOP', seen: true })
+		expect(gainEvent('top')).toMatchObject({ dest: 'DECK_TOP', seen: false })
+	})
+
 	it('paying a cost then gaining moves the card to the buyer, deducts the cost, and refills deterministically', () => {
 		register([mk('cargo', 'CARGO')])
 		let s = fresh()

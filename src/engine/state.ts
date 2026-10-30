@@ -129,6 +129,10 @@ export type GameEvent =
 			/** where the gained card was placed (deck top matters to 1SHI06);
 			 *  absent = unknown/other. */
 			dest?: 'DECK_TOP' | 'DISCARD' | undefined
+			/** the card lay face up before it moved (a Market offer, the Junk
+			 *  pile), so both players know what was gained even once it lies
+			 *  face-down on the deck top; absent = a blind deck-top gain. */
+			seen?: boolean | undefined
 	  }
 	| { k: 'CARD_DEPLOYED'; iid: CardInstanceId; seat: Seat } // DEPLOY: Staging → Fleet (SHIP or ONGOING)
 	| { k: 'CARD_DRAWN'; iid: CardInstanceId; seat: Seat }

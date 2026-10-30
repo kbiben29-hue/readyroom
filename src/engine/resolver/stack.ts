@@ -496,20 +496,37 @@ function stepReactionWindow(
 	if (remaining.length === 0) return { ...state, stack }
 	const id = makeChoiceId(state)
 	const next = nextRng(state)
+	const sourceCard = eventCardOf(frame.event)
 	next.pendingChoice = {
 		k: 'OPTIONAL_TRIGGERS',
 		id,
 		seat: frame.seat,
-		prompt:
-			'Reaction window — take any number of these, in any order (or decline)',
+		prompt: 'Reaction window — use any of these, or none',
 		// Clone the refs: the same objects also live on the window frame, and
 		// assertSerialisable treats a shared reference across two structures as a
 		// cycle (the published choice must own its own copies).
 		offered: remaining.map((r) => ({ ...r })),
-		sourceCard: eventCardOf(frame.event),
+		sourceCard,
 	}
+	const sourceDef = publicEventDef(state, frame.event, sourceCard)
+	if (sourceDef !== undefined) next.pendingChoice.sourceDef = sourceDef
 	next.stack = [...stack, { ...frame, choiceId: id, bindings }]
 	return next
+}
+
+/** The def of the window's event card when both players know it: it lies face
+ *  up, or it was gained face up and now lies face-down on the deck top (a
+ *  Market pick put there). A card only its owner can see gets no stamp: the
+ *  stamp outlives the seat projection, so it may name only public cards. */
+function publicEventDef(
+	state: GameState,
+	event: Extract<Frame, { k: 'REACTION_WINDOW' }>['event'],
+	iid: CardInstanceId | null,
+): string | undefined {
+	const card = iid === null ? undefined : state.cards[iid]
+	if (card === undefined) return undefined
+	const seen = event.k === 'CARD_GAINED' && event.seen === true
+	return seen || zoneProps(card.zone).visibleTo === 'ALL' ? card.def : undefined
 }
 
 /** Re-validate a reaction ref at window-answer time — the card may have left

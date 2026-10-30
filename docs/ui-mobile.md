@@ -1,7 +1,7 @@
 # Pocket Bridge — the phone shell and async play
 
 The phone and tablet layer of the UI, and the async model it plays over. The desktop console
-(`ui-lcars.md`) stays as it is; `ui-spec.md` still decides _what_ must be reachable. This file
+has its own layout (`ui-lcars.md` §4); `ui-spec.md` still decides _what_ must be reachable. This file
 records the design and the decisions taken on 2026-09-28 (design proposal: "Pocket Bridge"
 artifact). Build order in §9.
 
@@ -20,7 +20,7 @@ artifact). Build order in §9.
 | width < 768px                | **phone**      | pinned header · station tabs · one station · hand dock · bottom sheets |
 | landscape and height < 500px | **phone-wide** | header as a left rail · station · hand as a right column · side sheets |
 | 768px ≤ width < 1080px       | **tablet**     | header · Sector and Ship side by side · Crew in a drawer · hand dock   |
-| width ≥ 1080px               | **console**    | the existing LCARS desktop, unchanged                                  |
+| width ≥ 1080px               | **console**    | the LCARS desktop, laid out across the table (`ui-lcars.md` §4)        |
 
 A player may force a shell from the menu (stored per device). Shells share every component below
 the station level; only the frame differs.
@@ -55,8 +55,8 @@ detail: everything.
 ## 4. The phone screen
 
 - **Header (pinned on every station):** turn and phase rail (Resupply · Control · Action ·
-  Clean-up), actions left as chips, your pool (DIL/LAT/GLO), ≈VP, an opponent pill (seat colour,
-  ≈VP; opens the opponent view), Stardate meter (sequence, Glory left, cards left) and the **Burn
+  Clean-up), actions left as chips, your pool (DIL/LAT/GLO), ~VP, an opponent pill (seat colour,
+  ~VP; opens the opponent view), Stardate meter (sequence, Glory left, cards left) and the **Burn
   meter** (Incident deck left, and who would win the Burn now).
 - **Stations (tabs):**
   - **Sector** — Market 2×2 (Glory tokens, deck counts, Junk/Encounter counts), then the Neutral

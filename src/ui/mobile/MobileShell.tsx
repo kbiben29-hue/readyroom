@@ -14,7 +14,7 @@
 // Data comes only through the store hooks: useProjected for rendering, the
 // viewer's legal-intents list for every lit line and button, dispatch /
 // confirmChoice for moves. The real state is read only for optional extras
-// (why-not reasons, ≈VP, the Burn forecast, "if the game ended now"), so an
+// (why-not reasons, ~VP, the Burn forecast, "if the game ended now"), so an
 // online source that sends a seat view and its legal intents can stand in
 // for the local session.
 

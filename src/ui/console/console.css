@@ -1,0 +1,815 @@
+/* The console laid out across the table (docs/ui-lcars.md §4, ConsoleShell).
+ *
+ *   head bar   38px  ─ this turn and the doors
+ *   board            ─ size container; everything below sizes from it
+ *     table          ─ opponent band · shared row · your row (scrolls only
+ *                      below the card-size floor)
+ *     hand dock  72px ─ your decks + the hand peeking up from the edge
+ *
+ * Card size is ONE number, --card-w, worked out from the board's height: the
+ * shared row is one card high and your area two, and a card is its face at
+ * the printed 1:1.397 inside a 1px frame plus 5px — 1.397W + 2.2px — so 4.19
+ * card widths of height must fit beside the fixed parts: 346px measured (band
+ * 104, dock 72, the shared row's suit row and standees 62, your area's
+ * labels, padding and ship/beamed chips 96, gaps 12) and 7px of frames.
+ * It stops shrinking at 84px (the table scrolls instead) and growing at
+ * 132px. */
+
+.frame.console {
+	--band-h: 104px;
+	--dock-h: 72px;
+	grid-template-rows: auto minmax(0, 1fr);
+	padding: var(--gap) 10px;
+	/* no double-tap zoom on iPad: a double tap is a double click here */
+	touch-action: manipulation;
+}
+
+/* --------------------------------------------------------------- head bar */
+.head-bar {
+	gap: 10px;
+	min-height: 38px;
+	padding: 2px 6px 2px 14px;
+	container: head / inline-size;
+}
+.head-bar .topbar-left {
+	gap: 12px;
+	flex: 1 1 auto;
+}
+.head-turn {
+	font-size: 13px;
+	color: var(--ink-soft);
+}
+/* ~VP, yours here and theirs in the band: a framed read-out, so the number
+ * stands apart from the counters around it */
+.head-vp,
+.band-vp {
+	flex: none;
+	padding: 0 10px;
+	border: 2px solid var(--ink);
+	border-radius: var(--radius-pill);
+	font-family: 'Antonio', sans-serif;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 22px;
+	letter-spacing: 0.04em;
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+.band-vp {
+	border-color: var(--salmon);
+	color: var(--salmon);
+	font-size: 14px;
+	line-height: 18px;
+}
+.frame-alert .head-vp {
+	border-color: #fff;
+}
+.head-bar .topbar-actions {
+	gap: 6px;
+}
+.head-bar .btn {
+	min-height: 30px;
+	padding: 2px 12px;
+}
+.head-bar .action-tray {
+	padding: 0 10px 0 4px;
+}
+.head-bar .tray-lg .icon-md {
+	height: 20px;
+	vertical-align: -5px;
+}
+.head-bar .tray-lg .tray-count strong {
+	font-size: 19px;
+}
+.head-bar .head-icon {
+	padding: 2px 9px;
+	display: inline-flex;
+	align-items: center;
+}
+.head-alerts {
+	display: flex;
+	gap: 6px;
+	flex: none;
+}
+.head-alerts:empty {
+	display: none;
+}
+.head-alert {
+	padding: 2px 12px;
+	border-radius: 10px;
+	background: var(--ink);
+	color: var(--sunflower);
+	font-family: 'Antonio', sans-serif;
+	font-size: 13px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.frame-alert .head-alert {
+	background: #3a0000;
+	color: #fff;
+}
+.head-bot {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex: none;
+	padding: 1px 3px 1px 10px;
+	border-radius: var(--radius-pill);
+	background: #000c;
+	color: var(--text);
+	font-size: 12px;
+	white-space: nowrap;
+}
+.head-bot .btn {
+	min-height: 24px;
+	padding: 0 10px;
+}
+.head-badge {
+	display: inline-block;
+	margin-left: 6px;
+	min-width: 18px;
+	padding: 0 5px;
+	border-radius: 9px;
+	background: var(--salmon);
+	color: var(--ink);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 18px;
+	text-align: center;
+}
+.head-menu {
+	position: relative;
+}
+.head-menu-list {
+	position: absolute;
+	top: calc(100% + 8px);
+	right: 0;
+	z-index: 45;
+	display: flex;
+	flex-direction: column;
+	min-width: 170px;
+	padding: 4px 0;
+	background: var(--panel);
+	border-left: 5px solid var(--periwinkle);
+	border-radius: 4px;
+	box-shadow: 0 14px 36px #000d;
+}
+.head-menu-item {
+	padding: 9px 16px;
+	border: 0;
+	background: none;
+	color: var(--text);
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+.head-menu-item:hover:not(:disabled),
+.head-menu-item:focus-visible {
+	background: #ffffff14;
+}
+.head-menu-item:disabled {
+	color: var(--dim);
+	cursor: default;
+}
+/* An iPad is ~1180px wide: the turn line and the tray's words go first. */
+@container head (max-width: 1180px) {
+	.head-turn,
+	.head-bar .tray-count {
+		display: none;
+	}
+}
+@container head (max-width: 1020px) {
+	.head-bot > .bot-status {
+		display: none;
+	}
+}
+
+/* ------------------------------------------------------------------ board */
+.board {
+	--card-w: clamp(
+		84px,
+		min((100cqh - 353px) / 4.19, (100cqw - 400px) / 7),
+		132px
+	);
+	container: board / size;
+	position: relative;
+	flex: 1;
+	min-height: 0;
+	display: grid;
+	grid-template-rows: minmax(0, 1fr) var(--dock-h);
+	gap: var(--gap);
+}
+.table {
+	min-height: 0;
+	overflow: auto;
+	display: grid;
+	grid-template-rows: auto auto 1fr;
+	gap: var(--gap);
+	align-content: start;
+}
+/* Every card on the table steps on --card-w; the hand keeps its own size.
+ * The face inside the 1px frame takes the printed card's own proportions
+ * (1170×1635, 1:1.397), so the art fills it without cropping an edge. */
+.board .card-board {
+	width: var(--card-w);
+}
+.board .card-board .card-inner {
+	min-height: calc((var(--card-w) - 2px) * 1.397);
+}
+
+/* -------------------------------------------------------------- the decks */
+.cardstack-deck {
+	gap: 2px;
+}
+.cardstack-deck .stack-back {
+	width: 38px;
+	height: 53px;
+	font-family: 'Antonio', sans-serif;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--text);
+	box-shadow:
+		2px 2px 0 -1px #0f1424,
+		2px 2px 0 0 #26304a,
+		4px 4px 0 -1px #0f1424,
+		4px 4px 0 0 #26304a;
+}
+.cardstack-deck.cardstack-empty .stack-back {
+	background: none;
+	border-style: dashed;
+	box-shadow: none;
+	color: var(--dim);
+}
+.cardstack-deck.cardstack-warn .stack-back {
+	box-shadow: 0 0 0 2px var(--mars);
+	color: var(--mars);
+}
+.cardstack-deck .stack-count {
+	font-family: 'Antonio', sans-serif;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.deck-piles {
+	display: flex;
+	gap: 8px;
+	flex: none;
+	align-items: flex-start;
+}
+
+/* ------------------------------------------------------------- shared row */
+/* Market ×4, Neutral Zone ×3 and the centre piles in one row, one card high.
+ * Each panel's name runs up its left edge, an LCARS tab, so the row spends
+ * its height on cards. */
+.shared-row {
+	display: flex;
+	gap: var(--gap);
+	align-items: stretch;
+}
+.shared-row > .panel {
+	display: flex;
+	gap: 10px;
+	padding: 6px 10px 6px 6px;
+}
+.shared-row > .panel > h3 {
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	margin: 0;
+	font-size: 12px;
+}
+.shared-row > .panel > h3::before {
+	width: 12px;
+	height: 22px;
+	border-radius: 6px 6px 0 0;
+}
+.shared-row > .panel > h3::after {
+	width: 4px;
+	height: auto;
+	min-height: 10px;
+}
+.shared-row .market,
+.shared-row .neutral-zone {
+	flex: none;
+}
+.market-row {
+	display: grid;
+	grid-template-columns: repeat(4, var(--card-w));
+	gap: 10px;
+}
+.shared-row .market-col {
+	gap: 4px;
+	align-items: stretch;
+}
+.market-head {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	height: 26px;
+}
+.market-head .suit-pill {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 11px;
+	padding: 0 6px;
+}
+.market-head .cardstack-deck .stack-back {
+	width: 22px;
+	height: 26px;
+	font-size: 12px;
+	box-shadow:
+		2px -2px 0 -1px #0f1424,
+		2px -2px 0 0 #26304a;
+}
+.market-head .cardstack-deck .stack-count {
+	display: none;
+}
+.nz-row {
+	display: grid;
+	grid-template-columns: repeat(3, var(--card-w));
+	gap: 10px;
+	align-items: start;
+	/* the Market's suit row: the three Locations line up with its cards */
+	padding-top: 30px;
+}
+.location-slot {
+	align-items: stretch;
+}
+.centre-piles {
+	--c: var(--lilac);
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.centre-piles > h3 + * {
+	flex: 1;
+}
+.centre-stacks {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 14px;
+	align-content: flex-start;
+	padding-top: 30px;
+}
+.stardate-pile {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+}
+.stardate-pile .stardate-name {
+	font-size: 14px;
+	line-height: 1.1;
+}
+.stardate-glory {
+	display: inline-flex;
+	gap: 3px;
+	align-items: center;
+	font-variant-numeric: tabular-nums;
+}
+.centre-piles .resolution-banner {
+	margin-top: 6px;
+	padding: 4px 8px;
+	font-size: 12px;
+}
+.centre-piles {
+	flex-direction: row;
+}
+.centre-piles > .resolution-banner {
+	align-self: flex-end;
+}
+
+/* ---------------------------------------------------------------- your row */
+.own-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 320px;
+	gap: var(--gap);
+	align-items: stretch;
+}
+.own-row .player-area,
+.viewscreen .player-area {
+	padding: 6px 10px;
+}
+.own-row .crew-board {
+	padding: 8px 10px;
+}
+/* The zones flow in two lines — Captain, Fleet, Duty Officer, Location Area,
+ * then the Staging Area on its own — and wrap only when a late game runs out
+ * of width. Labels sit above their cards. */
+.area-flow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 16px;
+	align-items: flex-start;
+}
+.area-zone {
+	min-width: 0;
+}
+.area-full {
+	flex-basis: 100%;
+}
+.area-zone .slot-group {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+/* An empty card place is exactly a card: --card-w wide, and as high as a
+ * card at that width (the face at 1:1.397 plus its frame, 5px). */
+.board .area-zone .empty-slot,
+.board .market-offer-slot .empty-slot,
+.board .location-slot .empty-slot {
+	box-sizing: border-box;
+	width: var(--card-w);
+	height: calc((var(--card-w) - 2px) * 1.397 + 5px);
+	min-height: 0;
+}
+.area-slot-label {
+	margin-bottom: 2px;
+}
+
+/* --------------------------------------------------------- opponent band */
+.opp-band {
+	--c: var(--salmon);
+	display: flex;
+	gap: 12px;
+	align-items: stretch;
+	height: var(--band-h);
+	padding: 6px 10px;
+	overflow: hidden;
+	cursor: pointer;
+}
+.band-hold {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+	flex: none;
+}
+/* Their hand: face-down cards overlapping, one back per card. */
+.opp-hand {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	min-width: 48px;
+	padding-top: 2px;
+}
+.opp-hand > .card {
+	flex: none;
+	width: 46px;
+}
+.opp-hand > .card + .card {
+	margin-left: -32px;
+}
+.opp-hand > .card:nth-child(odd) {
+	transform: rotate(-3deg);
+}
+.opp-hand > .card:nth-child(even) {
+	transform: rotate(3deg);
+}
+.opp-hand .card-micro .card-inner {
+	min-height: 64px;
+}
+.opp-band .cardstack-deck .stack-back {
+	width: 34px;
+	height: 48px;
+	font-size: 14px;
+}
+.band-main {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.band-head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 24px;
+	white-space: nowrap;
+}
+.band-name {
+	flex: none;
+	color: var(--salmon);
+	font-family: 'Antonio', sans-serif;
+	font-size: 14px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+.band-pool {
+	display: inline-flex;
+	gap: 8px;
+	flex: none;
+	padding: 1px 10px;
+	border-radius: var(--radius-pill);
+	background: #000a;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+.band-fact {
+	flex: none;
+	color: var(--dim);
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+}
+/* Their tracks: the cap and the read-out of each bar, without the steps. */
+.band-tracks {
+	display: inline-flex;
+	gap: 4px;
+	flex: none;
+}
+.band-tracks .console-track {
+	height: 20px;
+	font-size: 11px;
+}
+.band-tracks .console-segs {
+	display: none;
+}
+/* the full console's read-out is 30px high; here it fits the 20px bar */
+.band-tracks .console-track-cap {
+	width: auto;
+	padding: 0 6px 0 4px;
+	border-radius: 10px 0 0 10px;
+}
+.band-tracks .console-track-cap .icon {
+	height: 11px;
+	padding: 1px;
+}
+.band-tracks .console-readout {
+	width: auto;
+	min-width: 38px;
+	padding: 0 8px 0 4px;
+	border-radius: 0 10px 10px 0;
+	line-height: 20px;
+}
+.band-tracks .readout-pos {
+	font-size: 15px;
+}
+.band-tracks .readout-mult {
+	font-size: 11px;
+}
+.band-head .bot-ticker {
+	flex: 1 1 auto;
+	min-width: 0;
+	margin: 0;
+}
+.band-screen {
+	flex: none;
+	margin-left: auto;
+}
+.band-tableau {
+	display: flex;
+	gap: 14px;
+	align-items: flex-start;
+	flex: 1;
+	min-height: 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+.band-zone {
+	display: flex;
+	gap: 3px;
+	flex: none;
+}
+/* the zone's name runs up beside its cards, like the shared row's tabs */
+.band-zone-label {
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	color: var(--dim);
+	font-family: 'Antonio', sans-serif;
+	font-size: 10px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+.band-cards {
+	display: flex;
+	gap: 4px;
+}
+.band-cards .card-micro {
+	width: 46px;
+}
+.band-cards .card-micro .card-inner {
+	min-height: 64px;
+}
+kbd {
+	padding: 0 4px;
+	border: 1px solid currentColor;
+	border-radius: 3px;
+	font: inherit;
+	font-size: 0.85em;
+	opacity: 0.7;
+}
+
+/* -------------------------------------------------------------- hand dock */
+/* The hand rests with only the top strip of each card showing (the rest runs
+ * off the bottom edge, clipped by the frame) and lifts straight up to full
+ * size — never sideways, so a double click lands on the same card. */
+.hand-dock {
+	--c: var(--orange);
+	position: relative;
+	z-index: 26;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	height: var(--dock-h);
+	padding: 6px 8px 0 10px;
+	background: var(--panel);
+	border-left: 5px solid var(--c);
+	border-radius: 4px;
+}
+.hand-dock .deck-piles {
+	align-self: center;
+}
+.hand-dock .cardstack-deck .stack-back {
+	width: 32px;
+	height: 42px;
+	font-size: 14px;
+}
+.dock-handle {
+	flex: none;
+	align-self: stretch;
+	margin-bottom: 6px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 58px;
+	border: 0;
+	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
+	background: var(--orange);
+	color: var(--ink);
+	font-family: 'Antonio', sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	cursor: pointer;
+}
+.dock-handle[aria-pressed='true'] {
+	background: var(--sunflower);
+}
+.dock-handle-label {
+	font-size: 11px;
+}
+.dock-fan {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	container-type: inline-size;
+}
+.dock-fan .hand {
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+}
+.dock-fan .hand-head,
+.dock-fan .hand > p {
+	display: none;
+}
+.dock-fan .hand-row {
+	overflow: visible;
+	gap: 0;
+	padding: 0;
+}
+/* Overlap as much as the width needs, never more than the cards' width. */
+.dock-fan .hand-row > .card {
+	flex: none;
+	transition: transform 0.18s ease;
+}
+.dock-fan .hand-row > .card + .card {
+	margin-left: clamp(
+		-118px,
+		(100cqw - var(--hand-n) * 156px) / max(1, var(--hand-n) - 1),
+		8px
+	);
+}
+.hand-dock .hand-row > .card:hover {
+	z-index: 2;
+}
+.hand-dock:not(.dock-raised) .hand-row > .card-clickable:hover {
+	transform: translateY(-6px);
+}
+.dock-raised .hand-row > .card {
+	transform: translateY(calc(var(--dock-h) - 100% - 10px));
+	box-shadow: 0 -8px 26px #000b;
+}
+.dock-raised .hand-row > .card:hover {
+	transform: translateY(calc(var(--dock-h) - 100% - 18px));
+}
+@media (prefers-reduced-motion: reduce) {
+	.dock-fan .hand-row > .card {
+		transition: none;
+	}
+}
+
+/* -------------------------------------------------------------- viewscreen */
+.viewscreen-backdrop {
+	position: absolute;
+	inset: 0 0 calc(var(--dock-h) + var(--gap)) 0;
+	z-index: 34;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	padding: 6px;
+	background: #05050acc;
+}
+.viewscreen {
+	width: 100%;
+	max-height: 100%;
+	overflow: auto;
+	padding: 0 10px 10px;
+	background: var(--ground);
+	border: 3px solid var(--salmon);
+	border-radius: 22px 6px 22px 6px;
+	box-shadow: 0 20px 60px #000e;
+}
+.viewscreen-head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 0;
+	color: var(--salmon);
+	font-family: 'Antonio', sans-serif;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.viewscreen-head strong {
+	flex: 1;
+}
+.viewscreen-cap {
+	width: 40px;
+	height: 18px;
+	border-radius: 9px 0 0 9px;
+	background: var(--salmon);
+}
+.viewscreen-body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 320px;
+	gap: var(--gap);
+	align-items: start;
+}
+
+/* -------------------------------------------------------------- log drawer */
+.log-drawer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: calc(var(--dock-h) + var(--gap));
+	z-index: 36;
+	width: min(380px, 92%);
+	display: flex;
+	flex-direction: column;
+	box-shadow: -14px 0 36px #000c;
+}
+.log-drawer .log-panel {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+.log-drawer .log-list {
+	flex: 1;
+	min-height: 0;
+	max-height: none;
+}
+.log-drawer-close {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	z-index: 1;
+}
+
+/* ------------------------------------------------------------ hand-offs */
+.console .pass-bar {
+	bottom: calc(var(--dock-h) + 16px + env(safe-area-inset-bottom, 0px));
+}
+
+/* A console forced onto a narrow window: no fitting, the page scrolls. */
+@media (max-width: 900px) {
+	.board {
+		--card-w: 94px;
+		container-type: normal;
+		grid-template-rows: auto var(--dock-h);
+	}
+	.table {
+		overflow: visible;
+	}
+	.own-row,
+	.viewscreen-body {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.shared-row {
+		flex-wrap: wrap;
+	}
+	.hand-dock {
+		position: sticky;
+		bottom: 0;
+	}
+}
+
+/* Long press reads a card (console/longPress.ts): no callout or selection. */
+.console .card {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}

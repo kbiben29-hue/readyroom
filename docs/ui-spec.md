@@ -34,14 +34,15 @@ animation.** Every affordance should answer: _what can I do right now, and why n
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-The top bar's **Orders** button (with the move count, or the `O` key) opens a drawer listing
+The head bar's **Orders** button (with the move count, or the `O` key) opens a drawer listing
 every legal PLAY / ACTIVATE / COMPLETE_MISSION move, grouped by where the card is. Each row is the
 card detail's operation block with its button, so a whole turn can be played from the list. It
 is the desktop twin of the phone's Orders sheet (`ui-mobile.md` §4).
 
-Below 1280px: collapse the log into a drawer. Below 900px: stack the opponent area into a
-summary strip. Phones and tablets get their own shells (the Pocket Bridge), specified in
-[`ui-mobile.md`](ui-mobile.md).
+The diagram above was the first sketch. The console as built lays the board out across the
+table instead — the opponent in a band along the top, the decks on the table, the log in a
+drawer, the hand docked along the bottom edge — see [`ui-lcars.md`](ui-lcars.md) §4. Phones and
+tablets get their own shells (the Pocket Bridge), specified in [`ui-mobile.md`](ui-mobile.md).
 
 ## 3. Card rendering
 

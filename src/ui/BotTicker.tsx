@@ -40,6 +40,7 @@ import {
 	type OptionView,
 } from './botMoves'
 import { useGameStore, type BotSpeed } from './store'
+import { useEscape } from './console/useShortcut'
 
 /** How long one move stays in the ticker before the next queued one. */
 export const TICKER_DWELL_MS: Record<BotSpeed, number> = {
@@ -366,14 +367,9 @@ export function BotHistory() {
 	const openWhy = useGameStore((s) => s.openBotHistory)
 	const panel = useRef<HTMLDivElement>(null)
 	useEffect(() => {
-		if (!isOpen) return
-		panel.current?.focus()
-		const onKey = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') close()
-		}
-		window.addEventListener('keydown', onKey)
-		return () => window.removeEventListener('keydown', onKey)
-	}, [isOpen, close])
+		if (isOpen) panel.current?.focus()
+	}, [isOpen])
+	useEscape(isOpen, close)
 	if (!enabled || !isOpen) return null
 	const latest = moves[moves.length - 1]?.id
 	return (

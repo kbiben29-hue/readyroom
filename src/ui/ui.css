@@ -233,12 +233,6 @@ h3,
 	padding: var(--gap) 12px;
 	background: var(--ground);
 }
-.frame-head {
-	display: flex;
-	flex-direction: column;
-	gap: var(--gap);
-	min-width: 0;
-}
 .frame-body {
 	display: flex;
 	flex-direction: column;
@@ -247,101 +241,17 @@ h3,
 	min-height: 0;
 	overflow: hidden;
 }
-.frame-foot {
-	display: flex;
-	gap: var(--gap);
-	min-width: 0;
-}
-
 .head-row {
 	display: flex;
 	gap: var(--gap);
 	align-items: stretch;
 	min-width: 0;
 }
-.head-cap,
-.foot-cap {
+.head-cap {
 	flex: none;
 	width: 72px;
 	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
 	background: var(--sunflower);
-}
-.foot-cap {
-	width: 56px;
-	background: var(--lilac);
-}
-
-/* console strip — the nav, one block-row under the title bar */
-.console-nav {
-	display: flex;
-	align-items: stretch;
-	gap: var(--gap);
-	flex-wrap: wrap;
-	min-height: 30px;
-	min-width: 0;
-}
-.console-nav .btn {
-	min-height: 30px;
-	padding: 0 16px;
-	border-radius: 0;
-	box-shadow: none;
-	background: var(--periwinkle);
-	color: #0a0a12;
-	font-size: 14px;
-	display: inline-flex;
-	align-items: center;
-}
-.console-nav .btn:hover:not(:disabled) {
-	background: var(--periwinkle);
-	filter: brightness(1.14);
-	box-shadow: none;
-}
-.console-nav .btn:disabled {
-	background: var(--panel-2);
-	color: var(--dim);
-}
-.console-nav .btn-active {
-	background: var(--orange);
-	color: var(--ink);
-}
-.console-nav .btn.micro {
-	background: var(--lilac);
-	font-size: 13px;
-}
-/* The strip reads as one bar: rounded only where it actually ends. */
-.console-nav > :first-child {
-	border-radius: var(--radius-pill) 0 0 var(--radius-pill);
-}
-.console-nav > :last-child {
-	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
-}
-.nav-label {
-	display: inline-flex;
-	align-items: center;
-	padding: 0 14px;
-	background: var(--panel);
-	color: var(--orange);
-	font-family: 'Antonio', sans-serif;
-	font-size: 12px;
-	letter-spacing: 0.12em;
-	text-transform: uppercase;
-}
-.nav-spacer {
-	flex: 1;
-	min-width: 8px;
-	background: var(--panel);
-	border-radius: 0;
-}
-.nav-num {
-	display: inline-flex;
-	align-items: center;
-	padding: 0 14px;
-	background: var(--panel);
-	color: var(--dim);
-	font-family: 'Antonio', sans-serif;
-	font-size: 12px;
-	letter-spacing: 0.08em;
-	font-variant-numeric: tabular-nums;
 }
 
 /* ---------------------------------------------------------------- topbar */
@@ -415,66 +325,21 @@ h3,
 	font-variant-numeric: tabular-nums;
 	font-weight: 700;
 }
-.score-est {
-	font-size: 12px;
-	color: var(--ink-soft);
-	white-space: nowrap;
-	font-variant-numeric: tabular-nums;
-}
-
-/* foot status bar — the two end conditions, always legible, never a modal */
-.bottombar {
-	flex: 1;
-	min-width: 0;
-	display: flex;
-	align-items: center;
-	gap: var(--gap);
-	min-height: var(--bar-h);
-	padding: 0 14px;
-	background: var(--orange);
-	color: var(--ink);
-	border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
-	font-family: 'Antonio', sans-serif;
-	font-size: 13px;
-	letter-spacing: 0.08em;
-	text-transform: uppercase;
-	flex-wrap: wrap;
-}
-.bottombar .seg {
-	background: var(--ink-veil);
-	border-radius: 10px;
-	padding: 1px 14px;
-	font-variant-numeric: tabular-nums;
-}
-.bottombar .seg-alert {
-	background: var(--ink);
-	color: var(--sunflower);
-}
-
 /* Alert is the ONE thing allowed to recolour the frame: the Burn one card
  * away, or an ATTACK aimed at you. docs/ui-lcars.md §7. */
-.frame-alert .topbar,
-.frame-alert .bottombar {
+.frame-alert .topbar {
 	background: var(--mars);
 	color: #fff;
 }
 .frame-alert .head-cap {
 	background: var(--mars);
 }
-.frame-alert .topbar .muted,
-.frame-alert .score-est {
+.frame-alert .topbar .muted {
 	color: #ffd9d9;
 }
 .frame-alert .phase-chip {
 	background: #3a0000;
 	color: #ffd9d9;
-}
-.frame-alert .bottombar .seg {
-	background: #3a000080;
-}
-.frame-alert .bottombar .seg-alert {
-	background: #3a0000;
-	color: #fff;
 }
 @keyframes lcars-alert {
 	50% {
@@ -505,184 +370,6 @@ h3,
 	border-left: 6px solid var(--sunflower);
 	border-radius: 4px;
 	color: #f2e6b3;
-}
-
-/* ------------------------------------------------------------------ grid */
-/* Two working columns and a pinned hand. The main column carries everything
- * the active player acts on; the side column carries reference — the opponent
- * and the log. (Card zoom used to hold a third panel here; it is an
- * Option-held overlay now, and the log got the space.) */
-.board-grid {
-	position: relative; /* the hand overlay anchors here */
-	flex: 1;
-	min-height: 0;
-	display: grid;
-	gap: var(--gap);
-	grid-template-columns: minmax(0, 1fr) 328px;
-	grid-template-rows: minmax(0, 1fr);
-	grid-template-areas: 'main side';
-}
-.main-col {
-	grid-area: main;
-	min-width: 0;
-	min-height: 0;
-	overflow: auto;
-	display: grid;
-	grid-template-rows: auto auto minmax(190px, 1fr);
-	gap: var(--gap);
-}
-.side-col {
-	grid-area: side;
-	display: flex;
-	flex-direction: column;
-	gap: var(--gap);
-	overflow: auto;
-	min-width: 0;
-}
-
-/* The strip is one line high: heading, chips and note side by side. Three
- * stacked panels here cost 160px for what is six numbers. */
-.ops-strip > .panel {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	padding: 5px 10px;
-	flex-wrap: wrap;
-}
-.ops-strip > .panel > h3 {
-	margin: 0;
-	flex: none;
-}
-.ops-strip > .panel > h3::after {
-	display: none;
-}
-.ops-strip .piles-bar {
-	gap: 12px;
-}
-.ops-strip .stardate-row {
-	gap: 10px;
-}
-/* The Burn explainer is the foot bar's job — it states the count and warns at
- * ≤2. Repeating the sentence here cost the strip half its height. */
-.ops-strip .piles-bar .muted.small {
-	display: none;
-}
-
-/* Counters, not cards: Stardate, Junk, Incidents and your deck in one thin bar.
- * A facedown deck's only information is its count, so it gets a chip, not a
- * card-sized slot — that space belongs to cards you can actually read. */
-.ops-strip {
-	display: flex;
-	gap: var(--gap);
-	flex-wrap: nowrap;
-	align-items: stretch;
-}
-.ops-strip .cardstack,
-.market-col .cardstack {
-	flex-direction: row;
-	align-items: center;
-	gap: 8px;
-}
-/* In the strip each chip is only as wide as its label; in a Market column the
- * chip spans the column so it lines up over the offer card. */
-.ops-strip .cardstack {
-	width: auto;
-	flex: 0 1 auto;
-}
-.market-col .cardstack {
-	width: 100%;
-}
-.ops-strip .piles-bar {
-	flex-wrap: nowrap;
-}
-.ops-strip .stack-back,
-.market-col .stack-back {
-	width: 34px;
-	height: 26px;
-	min-height: 26px;
-	border-radius: 3px;
-	font-size: 13px;
-	flex: none;
-}
-.ops-strip .stack-count,
-.market-col .stack-count {
-	font-size: 12px;
-}
-/* Each counter panel is as wide as its content and they share what is left,
- * so the Stardate track no longer takes half the strip and every panel keeps
- * its label on the same line as its chips. */
-.ops-strip > .panel {
-	flex: 1 1 auto;
-	min-width: 0;
-}
-.ops-strip > .player-deck {
-	flex-wrap: nowrap;
-}
-
-/* All seven shared card slots in one row — Market's four and the Zone's three. */
-.shared-row {
-	display: grid;
-	grid-template-columns: 4fr 3fr;
-	gap: var(--gap);
-	align-items: start;
-}
-.own-row {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) 340px;
-	gap: var(--gap);
-	align-items: start;
-	min-height: 190px;
-	overflow: auto;
-}
-/* Cards away from the hand are read at a glance and clicked for detail, so
- * they run smaller: five zone rows at hand size would never fit a laptop, and
- * the shared board has seven slots to fit across one row. */
-.player-area.full .card-board {
-	width: 94px;
-}
-.player-area.full .card-board .card-inner {
-	min-height: 132px;
-}
-.market .card-board,
-.neutral-zone .card-board {
-	width: 104px;
-}
-.market .card-board .card-inner,
-.neutral-zone .card-board .card-inner {
-	min-height: 146px;
-}
-.market-offer-slot {
-	min-height: 0;
-}
-.opp-block {
-	display: flex;
-	flex-direction: column;
-	gap: var(--gap);
-}
-
-/* The hand never scrolls away — ui-spec §5 calls it always-visible, which on a
- * laptop is only true if it is pinned. */
-/* The hand floats over the board's bottom-right corner instead of taking a
- * full-width row. It shrink-wraps its cards, so the board stays readable to
- * its left rather than being pushed up by a band that is mostly empty panel —
- * and the board reclaims the row height the strip used to reserve.
- *
- * Right-alignment falls out of the shrink-wrap: the panel is exactly as wide
- * as the cards and pinned to the right edge, which beats `justify-content:
- * flex-end` on the row — that clips the first card once the hand overflows. */
-.hand-strip {
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	z-index: 25;
-	max-width: 100%;
-}
-.hand-strip .hand {
-	width: max-content;
-	max-width: 100%;
-	box-shadow:
-		-10px -10px 30px #000000b3,
-		0 0 0 1px #ffffff14;
 }
 
 /* ---------------------------------------------------------------- panels */
@@ -725,20 +412,11 @@ h3,
 }
 
 /* One hue per system. Never decorative — the colour IS the key. */
-.stardate-track {
-	--c: var(--lilac);
-}
 .market {
 	--c: var(--sunflower);
 }
 .neutral-zone {
 	--c: var(--periwinkle);
-}
-.piles-bar {
-	--c: var(--mars);
-}
-.player-deck {
-	--c: var(--ice);
 }
 .log-panel {
 	--c: var(--orange);
@@ -761,10 +439,10 @@ h3,
 .player-area {
 	--c: var(--salmon);
 }
-.player-area.full {
+.player-area.area-mine {
 	--c: var(--ice);
 }
-.opp-block .crew-board {
+.crew-board {
 	--c: var(--salmon);
 }
 .own-row .crew-board {
@@ -775,12 +453,6 @@ h3,
 }
 
 /* -------------------------------------------------------------- stardate */
-.stardate-row {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	flex-wrap: wrap;
-}
 .stardate-name {
 	font-family: 'Antonio', sans-serif;
 	font-size: 18px;
@@ -789,10 +461,6 @@ h3,
 .stardate-glory {
 	display: inline-flex;
 	gap: 3px;
-}
-.stardate-count {
-	font-size: 12px;
-	font-variant-numeric: tabular-nums;
 }
 .resolution-banner {
 	margin-top: 8px;
@@ -847,13 +515,6 @@ h3,
 }
 .location-slot .location-secured > .card {
 	outline: 2px solid var(--ice);
-}
-.location-tokens {
-	display: flex;
-	gap: 8px;
-	flex-wrap: wrap;
-	justify-content: center;
-	font-size: 12px;
 }
 .secured-badge {
 	background: var(--ice);
@@ -928,12 +589,6 @@ h3,
 }
 
 /* ----------------------------------------------------------- shared piles */
-.piles-bar {
-	display: flex;
-	align-items: center;
-	gap: 18px;
-	flex-wrap: wrap;
-}
 .cardstack {
 	display: flex;
 	flex-direction: column;
@@ -996,52 +651,6 @@ h3,
 	align-items: center;
 	flex-wrap: wrap;
 }
-/* The player area is one grid, not five independent rows (rules/02 §2.3):
- *
- *   col 1        cols 2…n
- *   Duty Officer Location Area ───────►
- *   Captain      Fleet Area ──────────►
- *   Staging Area ──────────────────────►   (starts back at column 1)
- *
- * Every cell's cards step on the same --slot-w rhythm, and the Staging Area
- * spans the full width starting at column 1 — so Duty Officer, Captain and the
- * first Staging card share a column, and nothing is half a card out of line.
- * Labels sit ABOVE their cards for the same reason: a label between two cards
- * would break the rhythm. */
-.player-area.full {
-	--slot-w: 94px;
-	--slot-gap: 6px;
-}
-.area-grid {
-	display: grid;
-	/* --do-slots (set inline): one column per Duty Officer, so a second Duty
-	 * Officer shifts the Location Area right (rules/08 promote). */
-	grid-template-columns:
-		calc(
-			var(--slot-w) * var(--do-slots, 1) + var(--slot-gap) *
-				(var(--do-slots, 1) - 1)
-		)
-		minmax(0, 1fr);
-	gap: 10px var(--slot-gap);
-	align-items: start;
-}
-.area-row {
-	min-width: 0;
-}
-.area-slot {
-	grid-column: 1;
-}
-.area-full {
-	grid-column: 1 / -1;
-}
-/* Cards flow on the shared rhythm; an area picks up exactly where the slot
- * column's grid line leaves off. */
-.area-row .slot-group {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, var(--slot-w));
-	gap: var(--slot-gap);
-	justify-content: start;
-}
 .area-slot-label {
 	color: var(--dim);
 	font-size: 11px;
@@ -1056,23 +665,6 @@ h3,
 	gap: 6px;
 	flex-wrap: wrap;
 }
-.area-row .empty-slot {
-	grid-column: 1 / -1;
-	min-height: 40px;
-}
-.piles-row {
-	display: flex;
-	gap: 10px;
-	flex-wrap: wrap;
-	margin-bottom: 6px;
-}
-.area-compact-grid {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	font-size: 12px;
-}
-
 /* ------------------------------------------------------------ crew board */
 .crew-head {
 	display: flex;
@@ -1166,7 +758,6 @@ h3,
 .console-seg.seg-at {
 	background: var(--h);
 	color: var(--ink);
-	box-shadow: inset 0 -3px 0 var(--c, var(--ice));
 }
 .console-readout {
 	flex: none;
@@ -1314,22 +905,6 @@ h3,
 	gap: 8px;
 	margin-bottom: 8px;
 }
-.hand-toggle kbd {
-	margin-left: 4px;
-	padding: 0 4px;
-	border: 1px solid currentColor;
-	border-radius: 3px;
-	font: inherit;
-	opacity: 0.7;
-}
-/* folded: only the head stays, so the board underneath is free */
-.hand-folded .hand-row {
-	display: none;
-}
-.hand-folded .hand-head {
-	margin-bottom: 0;
-}
-
 /* ----------------------------------------------------------------- icons */
 /* Printed marks lifted off the card art (tools/extract-icons.ts). They carry
  * the count beside them, never alone — the image is decorative and the number
@@ -2210,6 +1785,60 @@ h3,
 }
 .candidate-tile .card {
 	width: 110px;
+}
+/* the face at the printed card's proportions (1:1.397) inside the 1px frame,
+ * so the art is not cropped at the sides */
+.candidate-tile .card-board .card-inner {
+	min-height: calc(108px * 1.397);
+}
+/* Market candidates lie as on the table (MarketSlot): the suit banner over
+ * the deck, face down on the left, and the offered card face up on its
+ * right — a deck the same size as the card beside it. */
+.candidate-market {
+	gap: 16px;
+}
+.market-slot {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.market-slot > .suit-banner {
+	align-self: stretch;
+	font-size: 13px;
+}
+.market-pair {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+}
+.market-pair .cardstack-deck .stack-back {
+	/* as big as the candidate card beside it: 110 wide, face + frame high */
+	width: 110px;
+	height: calc(108px * 1.397 + 5px);
+	font-size: 24px;
+}
+.market-pair .cardstack-deck .stack-count {
+	display: none;
+}
+/* the deck as the pick for its top card: a card like the others, ringed
+ * when selected and dimmed with its reason when it can't be taken */
+.market-pair .deck-pick .stack-back {
+	cursor: pointer;
+}
+.market-pair .deck-pick .stack-back:hover:not(:disabled) {
+	border-color: var(--periwinkle);
+}
+.market-pair .deck-pick.candidate-selected .stack-back {
+	outline: 3px solid var(--ice);
+	outline-offset: 1px;
+}
+.market-pair .deck-pick.candidate-disabled {
+	opacity: 0.4;
+}
+.market-pair .deck-pick .stack-count {
+	display: block;
+	max-width: 110px;
+	text-align: center;
 }
 .candidate-selected .card {
 	outline: 3px solid var(--ice);
@@ -3274,38 +2903,9 @@ h3,
 }
 
 /* --------------------------------------------------------------- responsive */
-@media (max-width: 1240px) {
-	.own-row {
-		grid-template-columns: minmax(0, 1fr);
-	}
-}
-@media (max-width: 1080px) {
-	/* One column: the hand rejoins the flow rather than covering the board. */
-	.board-grid {
-		grid-template-columns: minmax(0, 1fr);
-		grid-template-rows: minmax(0, 1fr) auto auto;
-		grid-template-areas: 'main' 'hand' 'side';
-	}
-	.side-col {
-		overflow: visible;
-	}
-	.shared-row {
-		grid-template-columns: minmax(0, 1fr);
-	}
-	.hand-strip {
-		position: sticky;
-		grid-area: hand;
-		right: auto;
-		bottom: 0;
-		max-width: none;
-	}
-	.hand-strip .hand {
-		width: auto;
-		box-shadow: 0 -10px 28px #000000a6;
-	}
-}
 @media (max-width: 900px) {
-	/* Below this the console stops being one screen; the page scrolls normally. */
+	/* Below this the console stops being one screen (it only gets here when a
+	 * player forces it onto a narrow window); the page scrolls normally. */
 	.frame {
 		height: auto;
 		min-height: 100%;
@@ -3313,23 +2913,11 @@ h3,
 	.frame-body {
 		overflow: visible;
 	}
-	.main-col {
-		overflow: visible;
-	}
-	.head-cap,
-	.foot-cap {
+	.head-cap {
 		display: none;
 	}
-	.topbar,
-	.bottombar {
+	.topbar {
 		border-radius: var(--radius-pill);
-	}
-	.console-nav > :first-child,
-	.console-nav > :last-child {
-		border-radius: var(--radius-pill);
-	}
-	.nav-spacer {
-		display: none;
 	}
 }
 

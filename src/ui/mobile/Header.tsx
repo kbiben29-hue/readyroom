@@ -1,5 +1,5 @@
 // The pinned header (docs/ui-mobile.md §4): turn and phase rail, actions left
-// as chips, your pool and ≈VP, the opponent pill, the Stardate meter and
+// as chips, your pool and ~VP, the opponent pill, the Stardate meter and
 // the Burn meter. It never scrolls away; on a phone on its side it becomes
 // the left rail (mobile.css).
 
@@ -32,7 +32,7 @@ export function phaseWord(phase: GameState['phase']['k']): string {
 	}
 }
 
-/** ≈VP for both seats from the scoring function ("if the game ended now").
+/** ~VP for both seats from the scoring function ("if the game ended now").
  *  Scoring reads every owned card, hidden ones too, so it is an extra shown
  *  only when the client holds the real state (local play); null otherwise. */
 export function useVpNow(): [number, number] | null {
@@ -132,7 +132,7 @@ export function Header({ onMenu }: { onMenu: () => void }) {
 				</span>
 				{vp !== null && (
 					<span className="pb-vpc" title="If the game ended now">
-						≈ {vp[viewer]} VP
+						~{vp[viewer]} VP
 					</span>
 				)}
 				<button

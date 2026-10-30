@@ -20,7 +20,7 @@ import type {
 import type { OperationRef } from '../engine/state'
 import { otherSeat, zoneKey } from '../engine/state'
 import type { CardInstanceId } from '../engine/ids'
-import type { ZoneRef } from '../engine/resolver/queries'
+import type { Seat, ZoneRef } from '../engine/resolver/queries'
 import type { MarketSuit, SpecialtyId, TraitId } from '../data/ids'
 import { describeOperation } from '../engine/describe'
 import {
@@ -32,6 +32,7 @@ import {
 	usePendingChoice,
 } from './store'
 import { CardSprite, OpText } from './cards'
+import { MarketSlot } from './board'
 import { LocationCard, isLocationInPlay } from './location'
 import { OperationOptions, operationOptions } from './opOptions'
 import { seatLabel } from './format'
@@ -236,6 +237,7 @@ function ChooseCardsChoice({
 }) {
 	const selected = useSelected()
 	const projected = useProjected()
+	const viewer = useViewerSeat()
 	if (projected === null) return null
 	const { min, max, optional } = choice
 	const disabledByIid = new Map(
@@ -253,32 +255,30 @@ function ChooseCardsChoice({
 		isLocationInPlay(projected.cards[iid]?.zone),
 	)
 
-	// Group candidates by zone so the panel keeps spatial context inline.
-	const groups = new Map<string, CardInstanceId[]>()
+	// Group candidates by zone so the panel keeps spatial context inline. A
+	// Market deck's top card (the one card a gain may take face down) is not a
+	// group of its own: it is the deck in its suit's Market slot.
+	const deckPicks = new Map<string, number>()
+	for (const iid of candidates) {
+		const z = projected.cards[iid]?.zone
+		if (z?.k === 'MARKET_DECK')
+			deckPicks.set(z.suit, (deckPicks.get(z.suit) ?? 0) + 1)
+	}
+	const groups = new Map<string, CandidateGroup>()
 	for (const iid of candidates) {
 		const z = projected.cards[iid]?.zone
 		if (z === undefined) continue
-		let key: string = z.k
-		if (
-			z.k === 'HAND' ||
-			z.k === 'DRAW' ||
-			z.k === 'DISCARD' ||
-			z.k === 'RESERVE' ||
-			z.k === 'DEVELOPMENT' ||
-			z.k === 'LOG' ||
-			z.k === 'STAGING' ||
-			z.k === 'FLEET' ||
-			z.k === 'LOCATION_AREA' ||
-			z.k === 'DUTY_OFFICER' ||
-			z.k === 'CAPTAIN'
-		) {
-			key = `${z.k}:${(z as { seat?: number }).seat ?? '?'}`
-		} else if (z.k === 'MARKET_DECK') {
-			key = `${z.k}:${(z as { suit?: string }).suit ?? '?'}`
+		const asMarket = z.k === 'MARKET_DECK' && deckPicks.get(z.suit) === 1
+		const { key, label } = asMarket
+			? { key: 'MARKET_OFFER', label: 'Market' }
+			: groupOf(z as ZoneRef, viewer)
+		const group = groups.get(key) ?? {
+			label,
+			market: key === 'MARKET_OFFER',
+			iids: [],
 		}
-		const arr = groups.get(key) ?? []
-		arr.push(iid)
-		groups.set(key, arr)
+		group.iids.push(iid)
+		groups.set(key, group)
 	}
 
 	return (
@@ -295,6 +295,21 @@ function ChooseCardsChoice({
 					</span>
 				}
 			/>
+			{locationsOnly ? (
+				<LocationPicker
+					offered={choice.candidates}
+					disabled={disabledByIid}
+					selected={selected}
+				/>
+			) : (
+				<CardCandidates
+					groups={groups}
+					disabledByIid={disabledByIid}
+					hidden={hidden}
+					selected={selected}
+				/>
+			)}
+			{/* the decision comes after looking at the cards */}
 			<div className="choice-actions">
 				<button
 					type="button"
@@ -321,96 +336,178 @@ function ChooseCardsChoice({
 					Clear
 				</button>
 			</div>
-			{locationsOnly ? (
-				<LocationPicker
-					offered={choice.candidates}
-					disabled={disabledByIid}
-					selected={selected}
-				/>
-			) : (
-				<CardCandidates
-					groups={groups}
-					disabledByIid={disabledByIid}
-					hidden={hidden}
-					selected={selected}
-				/>
-			)}
 		</section>
 	)
 }
 
+interface CandidateGroup {
+	label: string
+	/** Market offers: drawn as on the table, each by its suit's deck */
+	market: boolean
+	iids: CardInstanceId[]
+}
+
+/** Where a group of candidates lies, in the player's words (the key keeps
+ *  each seat's and each suit's piles apart). */
+function groupOf(z: ZoneRef, viewer: Seat): { key: string; label: string } {
+	switch (z.k) {
+		case 'MARKET_OFFER':
+			return { key: 'MARKET_OFFER', label: 'Market' }
+		case 'MARKET_DECK':
+			return { key: `MARKET_DECK:${z.suit}`, label: `${z.suit} deck` }
+		case 'NEUTRAL_ZONE':
+			return { key: 'NEUTRAL_ZONE', label: 'Neutral Zone' }
+		case 'JUNK':
+			return { key: 'JUNK', label: 'Junk' }
+		case 'INCIDENT_DECK':
+			return { key: z.k, label: 'Incident deck' }
+		case 'ENCOUNTER_DECK':
+			return { key: z.k, label: 'Encounter deck' }
+		case 'LOCATION_DECK':
+			return { key: z.k, label: 'Location deck' }
+		case 'STARDATE_PILE':
+			return { key: z.k, label: 'Stardates' }
+		case 'BOX':
+			return { key: z.k, label: 'Out of the game' }
+		case 'BEAMED':
+			return { key: 'BEAMED', label: 'Beamed aboard' }
+		default: {
+			const whose = z.seat === viewer ? 'Your' : 'Their'
+			return { key: `${z.k}:${z.seat}`, label: `${whose} ${SEAT_ZONE[z.k]}` }
+		}
+	}
+}
+
+const SEAT_ZONE: Record<Extract<ZoneRef, { seat: Seat }>['k'], string> = {
+	HAND: 'hand',
+	DRAW: 'Draw pile',
+	DISCARD: 'Discard pile',
+	RESERVE: 'Reserve',
+	DEVELOPMENT: 'Development pile',
+	LOG: "Captain's Log",
+	STAGING: 'Staging Area',
+	FLEET: 'Fleet Area',
+	LOCATION_AREA: 'Location Area',
+	DUTY_OFFICER: 'Duty Officer',
+	CAPTAIN: 'Captain',
+	STATUS: 'Status',
+}
+
+/** The Market group's candidates by suit, in the order they were offered:
+ *  the face-up offers, and the deck when its top card is a candidate. */
+function marketSlots(
+	iids: readonly CardInstanceId[],
+	cards: Readonly<Record<string, { zone: ZoneRef } | undefined>>,
+) {
+	const bySuit = new Map<
+		MarketSuit,
+		{ suit: MarketSuit; offers: CardInstanceId[]; deck?: CardInstanceId }
+	>()
+	for (const iid of iids) {
+		const z = cards[iid]?.zone
+		if (z?.k !== 'MARKET_OFFER' && z?.k !== 'MARKET_DECK') continue
+		const slot = bySuit.get(z.suit) ?? { suit: z.suit, offers: [] }
+		if (z.k === 'MARKET_OFFER') slot.offers.push(iid)
+		else slot.deck = iid
+		bySuit.set(z.suit, slot)
+	}
+	return [...bySuit.values()]
+}
+
 /** The card choice's own candidate rows: the offered cards grouped by zone,
- *  each with where its ship stands and why a greyed one can't be picked. */
+ *  each with where its ship stands and why a greyed one can't be picked.
+ *  Market offers lie as on the table — the suit banner over its deck and
+ *  the offered card (MarketSlot) — not as a row of bare cards. */
 function CardCandidates({
 	groups,
 	disabledByIid,
 	hidden,
 	selected,
 }: {
-	groups: ReadonlyMap<string, readonly CardInstanceId[]>
+	groups: ReadonlyMap<string, CandidateGroup>
 	disabledByIid: ReadonlyMap<CardInstanceId, string>
 	hidden: ReadonlySet<CardInstanceId>
 	selected: readonly CardInstanceId[]
 }) {
 	const projected = useProjected()
 	if (projected === null) return null
-	return (
-		<>
-			<div className="candidate-groups">
-				{[...groups.entries()].map(([group, iids]) => (
-					<div key={group} className="candidate-group">
-						<span className="muted small">
-							— {group} ({iids.length}) —
-						</span>
-						<div className="candidate-row">
-							{iids.map((iid) => {
-								const disabledReason = disabledByIid.get(iid)
-								const isSel = selected.includes(iid)
-								const isHiddenCandidate = hidden.has(iid)
-								const click =
-									disabledReason === undefined
-										? () => useGameStore.getState().cardClicked(iid)
-										: undefined
-								// a Location in play brings its Away Teams and ships along
-								const isLocation = isLocationInPlay(projected.cards[iid]?.zone)
-								const Sprite = isLocation ? LocationCard : CardSprite
-								return (
-									<div
-										key={iid}
-										className={`candidate-tile${isLocation ? ' location-tile' : ''}${isSel ? ' candidate-selected' : ''}${disabledReason !== undefined ? ' candidate-disabled' : ''}`}
-										title={disabledReason}
-									>
-										<div className="candidate-card-wrap">
-											<Sprite
-												iid={iid}
-												size="board"
-												selected={isSel}
-												dimmed={disabledReason !== undefined}
-												reason={disabledReason}
-												onClick={click}
-											/>
-										</div>
-										<ShipWhere iid={iid} />
-										{disabledReason !== undefined && (
-											<span className="muted small why-not">
-												why not: {disabledReason}
-											</span>
-										)}
-										{isHiddenCandidate && !isSel && (
-											<span className="muted small">(face down)</span>
-										)}
-									</div>
-								)
-							})}
-						</div>
-					</div>
-				))}
+	const tile = (iid: CardInstanceId) => {
+		const disabledReason = disabledByIid.get(iid)
+		const isSel = selected.includes(iid)
+		const isHiddenCandidate = hidden.has(iid)
+		const click =
+			disabledReason === undefined
+				? () => useGameStore.getState().cardClicked(iid)
+				: undefined
+		// a Location in play brings its Away Teams and ships along
+		const isLocation = isLocationInPlay(projected.cards[iid]?.zone)
+		const Sprite = isLocation ? LocationCard : CardSprite
+		return (
+			<div
+				key={iid}
+				className={`candidate-tile${isLocation ? ' location-tile' : ''}${isSel ? ' candidate-selected' : ''}${disabledReason !== undefined ? ' candidate-disabled' : ''}`}
+				title={disabledReason}
+			>
+				<div className="candidate-card-wrap">
+					<Sprite
+						iid={iid}
+						size="board"
+						selected={isSel}
+						dimmed={disabledReason !== undefined}
+						reason={disabledReason}
+						onClick={click}
+					/>
+				</div>
+				<ShipWhere iid={iid} />
+				{disabledReason !== undefined && (
+					<span className="muted small why-not">why not: {disabledReason}</span>
+				)}
+				{isHiddenCandidate && !isSel && (
+					<span className="muted small">(face down)</span>
+				)}
 			</div>
-			<p className="muted small">
-				Tip: click the cards where they sit — selection rings appear in place,
-				e.g. in your Hand.
-			</p>
-		</>
+		)
+	}
+	return (
+		<div className="candidate-groups">
+			{[...groups.entries()].map(([key, group]) => (
+				<div key={key} className="candidate-group">
+					<span className="candidate-group-label">
+						{group.label}
+						{group.market ? '' : ` · ${group.iids.length}`}
+					</span>
+					<div
+						className={`candidate-row${group.market ? ' candidate-market' : ''}`}
+					>
+						{group.market
+							? marketSlots(
+									group.iids,
+									projected.cards as unknown as Readonly<
+										Record<string, { zone: ZoneRef } | undefined>
+									>,
+								).map(({ suit, offers, deck }) => (
+									<MarketSlot
+										key={suit}
+										suit={suit}
+										deckPick={
+											deck === undefined
+												? undefined
+												: {
+														selected: selected.includes(deck),
+														disabled: disabledByIid.get(deck),
+														onClick: () =>
+															useGameStore.getState().cardClicked(deck),
+													}
+										}
+									>
+										{offers.map(tile)}
+									</MarketSlot>
+								))
+							: group.iids.map(tile)}
+					</div>
+				</div>
+			))}
+		</div>
 	)
 }
 

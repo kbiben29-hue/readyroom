@@ -116,6 +116,8 @@ export function eventTriggerKind(event: GameEvent): TriggerSpec['on'] | null {
 			return 'CARD_GAINED'
 		case 'CARD_LOGGED':
 			return 'CARD_LOGGED'
+		case 'CARD_DISCARDED':
+			return 'CARD_DISCARDED'
 		case 'CARD_DEPLOYED':
 			return 'CARD_DEPLOYED'
 		case 'CARD_RETURNED_INCIDENT':
@@ -203,6 +205,18 @@ export function matchesTrigger(
 		case 'CARD_LOGGED':
 			// "After logging a card" (1LOC14) — the owner's own log by default.
 			if (trigger.on !== 'CARD_LOGGED') return false
+			return (
+				seatMatches(trigger.seat, event.seat, ownerSeat) &&
+				filterMatches(state, event, trigger.filter)
+			)
+		case 'CARD_DISCARDED':
+			// "After discarding a card during your Action Step" (2LOC04)
+			if (trigger.on !== 'CARD_DISCARDED') return false
+			if (
+				trigger.duringAction === true &&
+				(state.phase.k !== 'ACTION' || state.activeSeat !== event.seat)
+			)
+				return false
 			return (
 				seatMatches(trigger.seat, event.seat, ownerSeat) &&
 				filterMatches(state, event, trigger.filter)

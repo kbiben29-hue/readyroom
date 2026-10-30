@@ -1124,6 +1124,7 @@ const TRIGGER_PHRASES: Record<TriggerSpec['on'], string> = {
 	CARD_DEPLOYED: 'After deploying',
 	LOCATION_CONTROLLED: 'After you control a Location',
 	CARD_LOGGED: 'When you log',
+	CARD_DISCARDED: 'After discarding',
 	AWAY_TEAM_SENT: 'After sending an Away Team',
 	SHIP_WARPED: 'After your ship warps',
 	INCIDENT_TAKEN: 'After taking an Incident',
@@ -1173,6 +1174,10 @@ export function describeTrigger(trigger: TriggerSpec): string {
 			return trigger.seat === 'OPPONENT' || trigger.seat === 'ANY'
 				? `After ${actor(trigger.seat, 'logging', 'logs')} ${withArticle(describeFilter(trigger.filter))}`
 				: `When you log ${withArticle(describeFilter(trigger.filter))}`
+		case 'CARD_DISCARDED':
+			return `After ${actor(trigger.seat, 'discarding', 'discards')} ${withArticle(describeFilter(trigger.filter))}${
+				trigger.duringAction === true ? ' during your Action Step' : ''
+			}`
 		case 'LOCATION_CONTROLLED':
 			return trigger.seat === 'OPPONENT'
 				? 'After your opponent takes control of a Location'

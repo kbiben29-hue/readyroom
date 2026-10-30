@@ -969,6 +969,8 @@ export function shorthandTrigger(t: TriggerSpec): Tok[] {
 			return whose(t.seat, [glyph('CONTROL')])
 		case 'CARD_LOGGED':
 			return whose(t.seat, [glyph('LOG'), ...qual(filt(t.filter, false))])
+		case 'CARD_DISCARDED':
+			return whose(t.seat, [glyph('CARD', '−'), ...qual(filt(t.filter, false))])
 		case 'AWAY_TEAM_SENT':
 			return [
 				glyph('SEND'),

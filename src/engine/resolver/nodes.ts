@@ -471,6 +471,14 @@ export type TriggerSpec =
 	  } // "after deploying a SHIP" (1KOL03, 1CAR03): a DEPLOY moved it Staging → Fleet
 	| { on: 'LOCATION_CONTROLLED'; seat?: 'SELF' | 'OPPONENT' | undefined }
 	| {
+			/** "After discarding a card [during your Action Step]" (2LOC04): a
+			 *  card going from hand or deck top to the Discard pile */
+			on: 'CARD_DISCARDED'
+			filter?: CardFilter | undefined
+			seat?: TriggerSeat | undefined
+			duringAction?: boolean | undefined
+	  }
+	| {
 			on: 'CARD_LOGGED'
 			filter?: CardFilter | undefined
 			seat?: TriggerSeat | undefined

@@ -1,0 +1,807 @@
+[
+	{
+		"id": "2ENC01-8",
+		"cardId": "2ENC01/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"ANOMALY"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 4,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 1,
+							"suits": [
+								"PERSON",
+								"CARGO",
+								"SHIP",
+								"ALLY"
+							]
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 2
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"XINDI"
+									]
+								},
+								"seat": "SELF"
+							},
+							"bind": "$2enc01.x",
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Gain 1 Dilithium",
+										"body": {
+											"k": "GAIN_RESOURCE",
+											"res": "DIL",
+											"amount": 1
+										}
+									},
+									{
+										"label": "Gain 1 Latinum",
+										"body": {
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ENC02-8",
+		"cardId": "2ENC02/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"ALIEN",
+			"ANCIENT",
+			"TELEPATH",
+			"ATTACK",
+			"ONGOING"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_ACTION"
+								},
+								"body": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "MILITARY",
+									"amount": {
+										"k": "SKILL_ICONS",
+										"specialty": "RESEARCH"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ENC03-8",
+		"cardId": "2ENC03/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"ANOMALY",
+			"ONGOING",
+			"TIME_TRAVEL",
+			"TRANSCENDENT"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "1ENC03"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "RECALL",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"not": {
+										"traits": [
+											"TIME_TRAVEL"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_TAKE_INCIDENT",
+									"count": 1
+								},
+								"body": {
+									"k": "GAIN_ACTION",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		],
+		"passives": [
+			"1ENC03"
+		]
+	},
+	{
+		"id": "2ENC04-8",
+		"cardId": "2ENC04/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"WILDCARD"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 8,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"cannotBePlayed": true,
+		"operations": []
+	},
+	{
+		"id": "2ENC05-8",
+		"cardId": "2ENC05/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"STARFLEET",
+			"AMBASSADOR"
+		],
+		"skills": [],
+		"focus": "FOCUS_ANY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 2
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "BEAM",
+											"from": {
+												"k": "HAND",
+												"seat": 0
+											},
+											"filter": {
+												"suits": [
+													"INCIDENT"
+												]
+											},
+											"count": 1,
+											"to": {
+												"zones": [
+													{
+														"k": "FLEET",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"suits": [
+														"SHIP"
+													],
+													"traits": [
+														"STARFLEET"
+													]
+												}
+											},
+											"bind": "$2enc05.beamed"
+										},
+										{
+											"k": "IF",
+											"cond": {
+												"k": "DID",
+												"bind": "$2enc05.beamed"
+											},
+											"then": {
+												"k": "GAIN_RESOURCE",
+												"res": "GLO",
+												"amount": 1
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"BEAMED_ANY"
+							],
+							"filter": {
+								"suits": [
+									"INCIDENT"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										"BEAMED_ANY"
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									},
+									"seat": "SELF"
+								}
+							},
+							{
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ENC06-8",
+		"cardId": "2ENC06/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"ALIEN",
+			"CREATURE",
+			"COMMUNICATION"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Gain 1 RESEARCH",
+							"body": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "RESEARCH",
+								"amount": 1
+							}
+						},
+						{
+							"label": "Gain 1 INFLUENCE",
+							"body": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "INFLUENCE",
+								"amount": 1
+							}
+						},
+						{
+							"label": "Gain 1 MILITARY",
+							"body": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "MILITARY",
+								"amount": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SELECT",
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$2enc06.sel"
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "SUM",
+								"terms": [
+									{
+										"k": "TRAIT_COUNT",
+										"bind": "$2enc06.sel"
+									},
+									{
+										"k": "ICON_COUNT",
+										"bind": "$2enc06.sel",
+										"kind": "SKILL"
+									}
+								]
+							},
+							"body": {
+								"k": "FIND",
+								"filter": {},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									}
+								]
+							}
+						},
+						{
+							"k": "LOG",
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"bound": "$2enc06.sel"
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"COMMUNICATION"
+										]
+									},
+									"seat": "SELF",
+									"exceptThis": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ENC07-8",
+		"cardId": "2ENC07/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"VULCAN",
+			"WEAPON",
+			"ANCIENT",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_INFLUENCE"
+		],
+		"focus": null,
+		"vp": 6,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "FOR_EACH",
+					"over": {
+						"zones": [
+							{
+								"k": "DUTY_OFFICER",
+								"seat": 0
+							}
+						],
+						"seat": "OPPONENT"
+					},
+					"bind": "$2enc07.d",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FORCE",
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Dismiss it",
+											"body": {
+												"k": "DISMISS",
+												"target": {
+													"zones": [
+														{
+															"k": "DUTY_OFFICER",
+															"seat": 0
+														}
+													],
+													"bound": "$2enc07.d"
+												}
+											}
+										},
+										{
+											"label": "Exhaust it (they gain 1 Glory)",
+											"body": {
+												"k": "EXHAUST",
+												"target": {
+													"zones": [
+														{
+															"k": "DUTY_OFFICER",
+															"seat": 0
+														}
+													],
+													"bound": "$2enc07.d"
+												}
+											}
+										}
+									]
+								}
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "DUTY_OFFICER",
+												"seat": 0
+											}
+										],
+										"seat": "OPPONENT",
+										"bound": "$2enc07.d"
+									},
+									"value": 1
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						},
+						{
+							"k": "GAIN_CARD",
+							"suits": [
+								"PERSON",
+								"CARGO",
+								"SHIP",
+								"ALLY"
+							],
+							"filter": {
+								"traits": [
+									"ATTACK"
+								]
+							},
+							"includeJunk": true,
+							"bind": "$2enc07.g"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "DID",
+										"bind": "$2enc07.g"
+									},
+									{
+										"k": "HAS_TRAIT_IN_PLAY",
+										"trait": "TELEPATH"
+									}
+								]
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "FREE_PLAY",
+									"filter": {},
+									"bound": "$2enc07.g"
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ENC08-8",
+		"cardId": "2ENC08/8",
+		"suit": "ENCOUNTER",
+		"deck": "COMMON",
+		"traits": [
+			"SYNTHETIC"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 9,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UP_TO",
+						"max": 2
+					},
+					"body": {
+						"k": "LOG",
+						"target": {
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								}
+							],
+							"seat": "SELF"
+						}
+					}
+				}
+			}
+		]
+	}
+]

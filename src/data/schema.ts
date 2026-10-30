@@ -930,6 +930,14 @@ const TriggerSchema: z.ZodType<TriggerSpec> = z.discriminatedUnion('on', [
 		.strict(),
 	z
 		.object({
+			on: z.literal('CARD_DISCARDED'),
+			filter: CardFilterSchema.optional(),
+			seat: TriggerSeatSchema.optional(),
+			duringAction: z.boolean().optional(),
+		})
+		.strict(),
+	z
+		.object({
 			on: z.literal('CARD_LOGGED'),
 			filter: CardFilterSchema.optional(),
 			seat: TriggerSeatSchema.optional(),

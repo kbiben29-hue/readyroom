@@ -11,7 +11,8 @@ import type { GameState } from '../engine/state'
 import type { SetupConfig } from '../engine/setup'
 import type { DeckId } from '../data/ids'
 import type { Seat } from '../engine/resolver/queries'
-import { availableDecks } from './browserCatalog'
+import { availableDecks, boxPlayable } from './browserCatalog'
+import { GAME_BOXES, boxLabel, type GameBox } from '../data/boxes'
 import {
 	useProjected,
 	useGameStore,
@@ -256,9 +257,13 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 	const savedMode = useGameStore((s) =>
 		s.session !== null ? s.session.setup.mode : undefined,
 	)
+	// which game's cards to play with: the original box or To Boldly Go
+	const [box, setBox] = useState<GameBox>('ORIGINAL')
+	const playable = (b: GameBox) =>
+		b === 'ORIGINAL' || (catalog !== null && boxPlayable(catalog, b))
 	const decks = useMemo<DeckId[]>(
-		() => (catalog !== null ? availableDecks(catalog) : []),
-		[catalog],
+		() => (catalog !== null ? availableDecks(catalog, box) : []),
+		[catalog, box],
 	)
 	const [seat0, setSeat0] = useState<DeckId>('PIC')
 	const [seat1, setSeat1] = useState<DeckId>('SHR')
@@ -292,6 +297,7 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 				{ deck: seat1, boardSide: side1 },
 			],
 			seed,
+			box,
 		}
 		startGame(config, opponentsOf(controllers))
 		// roll the next game's seed now, in case this screen stays mounted
@@ -318,6 +324,32 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 				<p>Loading cards…</p>
 			) : (
 				<div className="setup-form">
+					<div className="box-picker">
+						<div className="side-toggle" role="group" aria-label="game box">
+							{GAME_BOXES.map((b) => (
+								<button
+									key={b}
+									type="button"
+									className={`btn${box === b ? ' btn-active' : ''}`}
+									onClick={() => setBox(b)}
+									disabled={!playable(b)}
+									title={
+										playable(b)
+											? undefined
+											: 'Not playable yet: needs two captains and its Market cards'
+									}
+								>
+									{boxLabel(b)}
+								</button>
+							))}
+						</div>
+						{!playable('TBG') && (
+							<p className="muted small">
+								To Boldly Go unlocks once two of its captains and its Market
+								cards are in.
+							</p>
+						)}
+					</div>
 					<button
 						type="button"
 						className="btn"

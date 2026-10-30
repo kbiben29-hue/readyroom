@@ -20,6 +20,7 @@
 
 import type { CardDef } from '../data/schema'
 import type { DeckId } from '../data/ids'
+import { DEFAULT_BOX, inBox, type GameBox } from '../data/boxes'
 import type { Effect } from './resolver/nodes'
 import type { GameState, MissionState, PlayerState, TrackTable } from './state'
 import type { Seat, ZoneRef } from './resolver/queries'
@@ -40,6 +41,9 @@ export interface SetupConfig {
 	mode: GameMode
 	players: SetupPlayer[]
 	seed: number
+	/** Which box's common cards the game uses (Market, Locations, Encounters,
+	 *  Incidents). Absent = the original game, so older saves replay as before. */
+	box?: GameBox | undefined
 	/** An agreed first player (an online invite: the captain who answers it
 	 *  opens). Absent = the random draw of §2.1 #17. The draw is still made
 	 *  either way, so the seed stream is the same as a random game's. */
@@ -86,6 +90,11 @@ export interface CardCatalog {
 	boards: Partial<Record<DeckId, BoardMissions>>
 }
 
+/** A common card of the chosen box (src/data/boxes.ts). */
+function isCommon(d: CardDef, box: GameBox): boolean {
+	return d.deck === 'COMMON' && inBox(d, box)
+}
+
 // ---------------------------------------------------------------------------
 // Top level
 // ---------------------------------------------------------------------------
@@ -109,10 +118,11 @@ export function setupGame(
 	catalog: CardCatalog,
 ): GameState {
 	let s = state
-	s = setupMarket(s, catalog) // §2.1 #2/#3/#7
-	s = setupEncounterDeck(s, catalog) // #4
+	const box = config.box ?? DEFAULT_BOX
+	s = setupMarket(s, catalog, box) // §2.1 #2/#3/#7
+	s = setupEncounterDeck(s, catalog, box) // #4
 	s = setupIncidentDeck(s, config, catalog) // #5 (+ crew INCIDENT_DECK, §2.1.1)
-	s = setupLocationDeck(s, catalog) // #8/#9/#10
+	s = setupLocationDeck(s, catalog, box) // #8/#9/#10
 	s = setupStardateTrack(s, config, catalog) // #11/#13
 	s = setupSupply(s, config, catalog) // #15 (token supplies are unbounded)
 	s = setupStartingPlayer(s, config.startingSeat) // #17
@@ -128,11 +138,15 @@ export function setupGame(
 
 /** §2.1 #2/#3/#7: separate the common Market suits into four facedown decks,
  *  shuffle each, and reveal one card of each below the strip. */
-export function setupMarket(state: GameState, catalog: CardCatalog): GameState {
+export function setupMarket(
+	state: GameState,
+	catalog: CardCatalog,
+	box: GameBox = DEFAULT_BOX,
+): GameState {
 	let s = state
 	for (const suit of ['PERSON', 'CARGO', 'SHIP', 'ALLY'] as const) {
 		const defs = catalog.defs.filter(
-			(d) => d.deck === 'COMMON' && d.suit === suit,
+			(d) => isCommon(d, box) && d.suit === suit,
 		)
 		s = placeShuffledDeck(s, defs, { k: 'MARKET_DECK', suit }, null, 'cm')
 	}
@@ -149,9 +163,10 @@ export function setupMarket(state: GameState, catalog: CardCatalog): GameState {
 export function setupEncounterDeck(
 	state: GameState,
 	catalog: CardCatalog,
+	box: GameBox = DEFAULT_BOX,
 ): GameState {
 	const defs = catalog.defs.filter(
-		(d) => d.deck === 'COMMON' && d.suit === 'ENCOUNTER',
+		(d) => isCommon(d, box) && d.suit === 'ENCOUNTER',
 	)
 	return placeShuffledDeck(state, defs, { k: 'ENCOUNTER_DECK' }, null, 'cm')
 }
@@ -166,8 +181,9 @@ export function setupIncidentDeck(
 ): GameState {
 	const iids: CardInstanceId[] = []
 	let s = state
+	const box = config.box ?? DEFAULT_BOX
 	for (const d of catalog.defs.filter(
-		(d) => d.deck === 'COMMON' && d.suit === 'INCIDENT',
+		(d) => isCommon(d, box) && d.suit === 'INCIDENT',
 	)) {
 		const r = mintInto(s, d.id, null, { k: 'INCIDENT_DECK' }, 'cm')
 		s = r.state
@@ -204,16 +220,17 @@ export function setupIncidentDeck(
 export function setupLocationDeck(
 	state: GameState,
 	catalog: CardCatalog,
+	box: GameBox = DEFAULT_BOX,
 ): GameState {
 	const starting = catalog.defs.filter(
 		(d) =>
-			d.deck === 'COMMON' &&
+			isCommon(d, box) &&
 			d.suit === 'LOCATION' &&
 			d.locationTier === 'STARTING',
 	)
 	const advanced = catalog.defs.filter(
 		(d) =>
-			d.deck === 'COMMON' &&
+			isCommon(d, box) &&
 			d.suit === 'LOCATION' &&
 			d.locationTier === 'ADVANCED',
 	)
@@ -575,7 +592,8 @@ export function assertSetupCompleteness(
 	const chosen = new Set(config.players.map((p) => p.deck))
 	const expected = new Set<string>()
 	for (const d of catalog.defs) {
-		if (d.deck === 'COMMON' || chosen.has(d.deck)) expected.add(d.id)
+		if (isCommon(d, config.box ?? DEFAULT_BOX) || chosen.has(d.deck))
+			expected.add(d.id)
 	}
 	for (const st of catalog.stardates) expected.add(st.id)
 

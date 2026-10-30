@@ -17,6 +17,7 @@ import { CardArraySchema } from '../data/schema'
 import { BoardArraySchema, addBoardSides } from '../data/boards'
 import type { DeckId } from '../data/ids'
 import { stardateSpecs } from '../data/stardate'
+import { inBox, type GameBox } from '../data/boxes'
 
 /** Vite's static glob — keyed by import path, eager so the values are plain
  *  JSON (parsed already). Only `.json` card/board files match; `.gitkeep` is
@@ -103,10 +104,24 @@ export function loadBrowserCatalog(): CardCatalog {
 /** The crew decks that actually have cards on disk right now (PIC/SHR/
  *  KOL are built; SIS/SEL/BUR land with later todo passes). The deck
  *  picker only offers these. */
-export function availableDecks(catalog: CardCatalog): DeckId[] {
+export function availableDecks(
+	catalog: CardCatalog,
+	box?: GameBox,
+): DeckId[] {
 	const decks = new Set<DeckId>()
 	for (const def of catalog.defs) {
-		if (def.deck !== 'COMMON' && def.deck !== undefined) decks.add(def.deck)
+		if (def.deck === 'COMMON' || def.deck === undefined) continue
+		// a crew deck belongs to the box its printed numbers carry (2GEO… = TBG)
+		if (box !== undefined && def.cardId !== null && !inBox(def, box)) continue
+		decks.add(def.deck)
 	}
 	return [...decks].sort((a, b) => a.localeCompare(b))
+}
+
+/** A box is playable once it has two crew decks and its own Market. */
+export function boxPlayable(catalog: CardCatalog, box: GameBox): boolean {
+	const commons = catalog.defs.filter(
+		(d) => d.deck === 'COMMON' && d.cardId !== null && inBox(d, box),
+	)
+	return availableDecks(catalog, box).length >= 2 && commons.length > 0
 }

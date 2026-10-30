@@ -936,7 +936,8 @@ solo-only Directives are out of scope, as in box 1.
 - **Not modelled yet** (the rest of each card works):
   - 2ENC02 counting as a SHIP "for all purposes" (its warp and attack activations), and 2ENC06
     counting as an ALLY.
-  - The conditional WILDCARD on 2ENC01 and 2ALL15 (while in the Staging Area).
+  - The conditional WILDCARD on 2ENC01 and 2ALL15 (while in the Staging Area), and 2ENC05's
+    "best" Focus icon (it has no Focus for now).
   - 2ALL05's three {DIL} kept on the card: it gives 1 {DIL} per logged PERSON/DIRECTIVE and is
     logged at its first Clean-up after one {RES}.
   - 2ALL13 "give your opponent an INCIDENT"; 2ALL15's duplicate of an in-play PERSON/CARGO.

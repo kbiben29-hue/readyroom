@@ -308,7 +308,7 @@
 			"AMBASSADOR"
 		],
 		"skills": [],
-		"focus": "FOCUS_ANY",
+		"focus": null,
 		"vp": 0,
 		"vpAsterisk": false,
 		"startPosition": null,

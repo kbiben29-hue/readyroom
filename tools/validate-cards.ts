@@ -213,14 +213,14 @@ async function main(): Promise<void> {
 			warnings.push(
 				`${file}:${id}: file is outside the 14 counted groups (expected counts do not cover it)`,
 			)
-		} else if (group.file.startsWith('common/')) {
+		} else if (/^(tbg\/)?common\//.test(group.file)) {
 			if (card.deck !== 'COMMON') {
 				warnings.push(
 					`${file}:${id}: deck ${card.deck} does not match the common/ file grouping`,
 				)
 			}
 			const expectedSuit = group.file
-				.replace('common/', '')
+				.replace(/^(tbg\/)?common\//, '')
 				.replace('.json', '')
 				.toUpperCase()
 			// The Stardate group has no single suit (DIRECTIVE faces) — skip the check.

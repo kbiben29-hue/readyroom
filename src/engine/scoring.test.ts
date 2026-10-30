@@ -276,6 +276,32 @@ describe('score — Focus suppression (rules/12 §12.27, §7.2.2)', () => {
 		expect(b.total).toBe(0)
 	})
 
+	it('finalizeGame still records the suppressed Focus values for the end screen', () => {
+		register([
+			def({
+				id: 'fc1',
+				suit: 'PERSON',
+				focus: 'FOCUS_RESEARCH',
+				operations: [],
+			}),
+		])
+		let s = setTracks(fresh(), 0)
+		s = place(s, 'fc1', ID('f1'), { k: 'LOG', seat: 0 }, 0)
+		s = place(s, 'fc1', ID('f2'), { k: 'HAND', seat: 0 }, 0)
+		s = setSpecialty(s, 0, 'RESEARCH', 4) // ×2
+		s = withBoard(s, 0, 'ADVANCED', [mkMission(0, 0, SPECIALTY_GOAL, false)])
+		const out = finalizeGame({ ...s, result: { kind: 'FINAL_SCORING' } })
+		const [b0] = completeOf(out).scoreboard.breakdown
+		expect(b0.focusSuppressed).toBe(true)
+		expect(b0.focus).toEqual([])
+		expect(b0.total).toBe(0)
+		expect(b0.focusBySpecialty).toEqual([
+			{ specialty: 'RESEARCH', multiplier: 2, cards: 2, vp: 4 },
+			{ specialty: 'INFLUENCE', multiplier: 0, cards: 0, vp: 0 },
+			{ specialty: 'MILITARY', multiplier: 0, cards: 0, vp: 0 },
+		])
+	})
+
 	it('completing at least one mission lifts the suppression', () => {
 		register([
 			def({

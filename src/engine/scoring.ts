@@ -58,6 +58,10 @@ export interface ScoreBreakdown {
 	endgame: EndgameScore[]
 	printedVp: PrintedVpEntry[]
 	focus: FocusScore[]
+	/** Every specialty's icons × multiplier, also when `focusSuppressed` — set
+	 *  by `finalizeGame` for the end screen, never part of `total`. Absent on
+	 *  results finalised before it existed. */
+	focusBySpecialty?: FocusScore[] | undefined
 	missions: { index: number; vp: number }[]
 	missionsCompleted: number
 	focusSuppressed: boolean
@@ -145,6 +149,16 @@ function countScoringFocusIcons(
 		if (cardDef(card.def).focus === `FOCUS_${specialty}`) n++
 	}
 	return n
+}
+
+/** Focus icons × highest-reached multiplier for every specialty, whether or
+ *  not a mission is completed (rules/07 §7.4.1 #5 without the §12.27 gate). */
+export function focusBySpecialty(state: GameState, seat: Seat): FocusScore[] {
+	return SPECIALTY_ORDER.map((specialty) => {
+		const cards = countScoringFocusIcons(state, seat, specialty)
+		const multiplier = highestMultiplierReached(state, seat, specialty)
+		return { specialty, multiplier, cards, vp: cards * multiplier }
+	})
 }
 
 /** Away Team + Ship tokens of `seat` at neutral (uncontrolled) Locations —
@@ -340,13 +354,10 @@ export function score(state: GameState, seat: Seat): ScoreBreakdown {
 	b.missionsCompleted = p.missions.filter((m) => m.completed).length
 	b.focusSuppressed = b.missionsCompleted === 0
 	if (b.missionsCompleted > 0) {
-		for (const specialty of SPECIALTY_ORDER) {
-			const cards = countScoringFocusIcons(state, seat, specialty)
-			if (cards === 0) continue
-			const multiplier = highestMultiplierReached(state, seat, specialty)
-			const vp = cards * multiplier
-			b.focus.push({ specialty, multiplier, cards, vp })
-			b.total += vp
+		for (const f of focusBySpecialty(state, seat)) {
+			if (f.cards === 0) continue
+			b.focus.push(f)
+			b.total += f.vp
 		}
 	}
 
@@ -383,8 +394,14 @@ function winningSeats(a: number, b: number): Seat[] {
 export function finalizeGame(state: GameState): GameState {
 	if (state.result === null || state.result.kind === 'COMPLETE') return state
 
-	const b0 = score(state, 0)
-	const b1 = score(state, 1)
+	const b0 = {
+		...score(state, 0),
+		focusBySpecialty: focusBySpecialty(state, 0),
+	}
+	const b1 = {
+		...score(state, 1),
+		focusBySpecialty: focusBySpecialty(state, 1),
+	}
 	const scoreboard: FinalScoreboard = {
 		breakdown: [b0, b1],
 		winners: [],

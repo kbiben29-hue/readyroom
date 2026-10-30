@@ -1,7 +1,7 @@
 // Root app shell (todo/14). Three screens:
 //   - SetupScreen  — pick two decks / board sides / seed, start a game
 //   - GameScreen   — board + areas + hand + log + choice panel, hot-seat flow
-//   - EndScreen    — the full scoring breakdown incl. focusSuppressed (todo/10)
+//   - EndScreen    — winner banner + scoring breakdown (EndScreen.tsx, todo/10)
 // plus the overlay hosts (CardDetail, PileBrowser, Rules drawer, Card List).
 //
 // Components never read the raw state — everything renders `useProjected()`.
@@ -66,6 +66,7 @@ import {
 	type Opponents,
 } from '../session/opponents'
 import { BotBar } from './BotBar'
+import { EndScreen } from './EndScreen'
 
 function useRuleAnchor(): [string | null, (a: string | null) => void] {
 	const [anchor, setAnchor] = useState<string | null>(null)
@@ -913,127 +914,5 @@ function PassDeviceBar({ state }: { state: GameState }) {
 				I&apos;m {seatLabel(state.activeSeat)}
 			</button>
 		</div>
-	)
-}
-
-// ---------------------------------------------------------------------------
-// End screen
-// ---------------------------------------------------------------------------
-
-function EndScreen({ onNewGame }: { onNewGame: () => void }) {
-	const projected = useProjected()
-	const state = projected as unknown as GameState | null
-	const scoreboard =
-		state !== null && state.result !== null && state.result.kind === 'COMPLETE'
-			? state.result.scoreboard
-			: null
-	if (scoreboard === null) {
-		return (
-			<main className="end-screen">
-				<h1>Game over</h1>
-				<button type="button" className="btn btn-primary" onClick={onNewGame}>
-					New game
-				</button>
-			</main>
-		)
-	}
-	return (
-		<main className="end-screen">
-			<h1>Final score</h1>
-			<p className="muted">
-				{scoreboard.cadetLoss
-					? 'Cadet Training — the Burn is a loss.'
-					: `Winner${scoreboard.winners.length > 1 ? 's' : ''}: ${scoreboard.winners.map((w) => seatLabel(w)).join(', ')}`}
-			</p>
-			<div className="score-grid">
-				{([0, 1] as const).map((seat) => (
-					<ScoreColumn
-						key={seat}
-						seat={seat}
-						b={scoreboard.breakdown[seat]}
-						label={seatLabel(seat)}
-					/>
-				))}
-			</div>
-			<button
-				type="button"
-				className="btn btn-primary btn-lg"
-				onClick={onNewGame}
-			>
-				New game
-			</button>
-		</main>
-	)
-}
-
-function ScoreColumn({
-	seat,
-	b,
-	label,
-}: {
-	seat: Seat
-	b: Extract<
-		GameState['result'],
-		{ kind: 'COMPLETE' }
-	>['scoreboard']['breakdown'][number]
-	label: string
-}) {
-	void seat
-	const endgameVp = b.endgame.reduce((a, e) => a + e.vp, 0)
-	const printedVp = b.printedVp.reduce((a, p) => a + p.vp, 0)
-	const missionVp = b.missions.reduce((a, m) => a + m.vp, 0)
-	return (
-		<section className="panel score-col" aria-label={`${label} score`}>
-			<h3>{label}</h3>
-			<table className="score-table">
-				<tbody>
-					<tr>
-						<td>Glory</td>
-						<td>{b.glory}</td>
-					</tr>
-					<tr>
-						<td>Tokens on neutral Locations</td>
-						<td>
-							{b.neutralTokens.count} tokens → {b.neutralTokens.vp}
-						</td>
-					</tr>
-					<tr>
-						<td>Endgame operations</td>
-						<td>{endgameVp}</td>
-					</tr>
-					<tr>
-						<td>Printed VP</td>
-						<td>{printedVp}</td>
-					</tr>
-					<tr>
-						<td>Focus × multiplier</td>
-						<td>
-							{b.focus
-								.map(
-									(f) => `${f.specialty.charAt(0)}×${f.multiplier}(${f.cards})`,
-								)
-								.join(', ')}
-						</td>
-					</tr>
-					<tr>
-						<td>Completed missions</td>
-						<td>
-							{b.missionsCompleted} → {missionVp}
-						</td>
-					</tr>
-					<tr className="score-total">
-						<td>Total</td>
-						<td>{b.total}</td>
-					</tr>
-				</tbody>
-			</table>
-			{b.focusSuppressed && (
-				<p className="muted small focus-suppression" title="rules/12 §12.27">
-					Focus suppressed (rules/12 §12.27): your Focus icons score only ×1
-					because your specialty tracks never reached a multiplier step — so the
-					Focus row above contributes its base value.
-				</p>
-			)}
-		</section>
 	)
 }

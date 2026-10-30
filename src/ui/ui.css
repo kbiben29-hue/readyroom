@@ -749,7 +749,7 @@ h3,
 .choice-panel {
 	--c: var(--sunflower);
 }
-.score-col {
+.end-breakdown {
 	--c: var(--lilac);
 }
 .saved-games,
@@ -2754,39 +2754,285 @@ h3,
 }
 
 /* ------------------------------------------------------------------- end */
+/* EndScreen.tsx. The banner is the one block that spends colour: the
+ * winner's seat hue, lilac (score) for a tie, the alert red for a Cadet loss
+ * to the Burn. Everything below it is seat-keyed: ice = seat 0, salmon = 1. */
 .end-screen {
-	max-width: 900px;
+	max-width: 760px;
 	margin: 5vh auto;
-	padding: 0 16px;
-	text-align: center;
+	padding: 0 16px 40px;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
 }
-.end-screen h1 {
+.end-screen > h1 {
 	font-size: 34px;
 	color: var(--orange);
 }
-.score-grid {
+.end-screen > .btn-lg {
+	align-self: center;
+	margin-top: 6px;
+}
+.end-banner {
+	--tone: var(--orange);
+	display: flex;
+	gap: var(--gap);
+	min-height: 116px;
+}
+.end-banner.tone-seat-0 {
+	--tone: var(--ice);
+}
+.end-banner.tone-seat-1 {
+	--tone: var(--salmon);
+}
+.end-banner.tone-tie {
+	--tone: var(--lilac);
+}
+.end-banner.tone-alert {
+	--tone: var(--mars);
+}
+.end-cap {
+	flex: 0 0 58px;
+	border-radius: 58px 0 0 58px;
+	background: var(--tone);
+}
+.end-banner-body {
+	flex: 1;
+	min-width: 0;
+	padding: 10px 22px 12px;
+	background: var(--tone);
+	color: var(--ink);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.end-tail {
+	flex: 0 0 26px;
+	background: var(--tone);
+	opacity: 0.5;
+}
+.end-kicker {
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	opacity: 0.72;
+}
+.end-banner h1 {
+	margin: 2px 0 0;
+	font-size: 54px;
+	font-weight: 700;
+	line-height: 1;
+	color: var(--ink);
+}
+.end-reason {
+	margin: 8px 0 0;
+	font-size: 15px;
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+.end-versus {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: var(--gap);
-	text-align: left;
-	margin: 20px 0;
 }
-.score-table {
+.end-versus.solo {
+	grid-template-columns: minmax(0, 1fr);
+}
+.end-seat {
+	--seat: var(--ice);
+	min-width: 0;
+	padding: 12px 16px 14px;
+	background: var(--panel);
+	border-left: 5px solid var(--seat);
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+.end-seat.seat-1 {
+	--seat: var(--salmon);
+}
+.end-seat.is-winner {
+	background: color-mix(in srgb, var(--seat) 12%, var(--panel));
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--seat) 40%, transparent);
+}
+.end-seat-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+.end-seat-name,
+.end-seat-badge,
+.end-seat-total {
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+}
+.end-seat-name {
+	font-size: 19px;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--seat);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.end-seat-badge {
+	flex: none;
+	padding: 2px 12px;
+	border-radius: var(--radius-pill);
+	background: var(--seat);
+	color: var(--ink);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+.end-seat-captain,
+.end-seat-incidents {
+	font-size: 13px;
+	color: var(--dim);
+}
+.end-seat-total {
+	margin-top: 6px;
+	font-size: 66px;
+	font-weight: 700;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+.end-seat:not(.is-winner) .end-seat-total {
+	color: var(--dim);
+}
+.end-seat-total small {
+	margin-left: 6px;
+	font-size: 18px;
+	letter-spacing: 0.08em;
+	color: var(--dim);
+}
+
+.end-table {
 	width: 100%;
 	border-collapse: collapse;
 	font-variant-numeric: tabular-nums;
 }
-.score-table td {
-	padding: 6px 8px;
-	border-bottom: 1px solid #ffffff12;
+.end-table th,
+.end-table td {
+	padding: 7px 10px;
+	border-bottom: 1px solid var(--hair);
 }
-.score-total td {
-	font-weight: 800;
-	font-size: 16px;
-	border-top: 2px solid var(--lilac);
-}
-.focus-suppression {
+.end-table th[scope='row'] {
 	text-align: left;
+	font-weight: 500;
+}
+.end-table td {
+	text-align: right;
+}
+.end-table thead td {
+	border-bottom: 0;
+}
+.end-table thead th,
+.end-total th {
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.end-table thead th {
+	width: 28%;
+	text-align: right;
+	font-size: 13px;
+	color: var(--ice);
+	border-bottom: 3px solid var(--ice);
+}
+.end-table thead th.seat-1 {
+	color: var(--salmon);
+	border-bottom-color: var(--salmon);
+}
+.end-cell {
+	display: inline-flex;
+	align-items: baseline;
+	justify-content: flex-end;
+	gap: 10px;
+}
+.end-calc {
+	font-size: 13px;
+	color: var(--dim);
+	white-space: nowrap;
+}
+.end-calc s {
+	text-decoration-color: var(--text);
+}
+/* Focus left unscored (rules/12 §12.27): amber, like the phone's
+ * "if the game ended now" warning (.pb-warn) */
+.end-hint {
+	display: block;
+	margin-top: 2px;
+	font-size: 12px;
+	color: var(--sunflower);
+}
+.end-warn {
+	color: var(--sunflower);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+}
+.end-vp {
+	min-width: 2ch;
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+	font-size: 17px;
+	font-weight: 600;
+}
+/* Focus: a group row, then one line per specialty, closed by the last */
+.end-group th,
+.end-group td,
+.end-sub th,
+.end-sub td {
+	border-bottom: 0;
+}
+.end-sub th,
+.end-sub td {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+.end-sub th[scope='row'] {
+	padding-left: 28px;
+	font-size: 13px;
+	color: var(--dim);
+}
+.end-sub .end-vp {
+	font-size: 14px;
+	color: var(--dim);
+}
+.end-sub.end-sub-last th,
+.end-sub.end-sub-last td {
+	padding-bottom: 9px;
+	border-bottom: 1px solid var(--hair);
+}
+.end-total th,
+.end-total td {
+	padding-top: 10px;
+	border-top: 2px solid var(--lilac);
+	border-bottom: 0;
+}
+.end-total th {
+	font-size: 15px;
+}
+.end-total td {
+	font-family: 'Antonio', 'Arial Narrow', sans-serif;
+	font-size: 28px;
+	font-weight: 700;
+	color: var(--ice);
+}
+.end-total td.seat-1 {
+	color: var(--salmon);
+}
+.end-note {
+	margin: 10px 0 0;
+	font-size: 12px;
+	color: var(--dim);
 }
 
 /* ---------------------------------------------------------- autosave/undo */

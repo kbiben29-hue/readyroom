@@ -338,6 +338,51 @@ describe('the ticker', () => {
 	})
 })
 
+describe('the history entry', () => {
+	it('shows the card the move played while it is open', async () => {
+		const { state, plays } = botPlayState()
+		const play = plays[0]!
+		const log = addBotIntent(
+			emptyBotLog(),
+			{
+				seat: 1,
+				botId: 'normal',
+				intent: play,
+				info: null,
+				before: state,
+				after: reduce(state, play).state,
+				logIndex: 0,
+			},
+			{ seat: 0 },
+		)
+		expect(log.moves[0]!.steps[0]!.card).toBe(defOf(state, play))
+		setBotRunner(silentRunner())
+		start(7, { 1: 'normal' })
+		act(() => useGameStore.setState({ botLog: log }))
+		render('console')
+		act(() => store().openBotHistory(null))
+		const entry = host.querySelector('.bot-history-item')!
+		const details = entry.querySelector('details')!
+		const shown = () =>
+			entry
+				.querySelector('.bot-move-card .card-inner')
+				?.getAttribute('aria-label')
+		// the latest move opens with its card
+		expect(details.open).toBe(true)
+		expect(shown()).toBe(cardNameById(defOf(state, play)))
+		await act(async () => {
+			details.open = false
+			await new Promise((r) => setTimeout(r, 0))
+		})
+		expect(shown()).toBeUndefined()
+		await act(async () => {
+			details.open = true
+			await new Promise((r) => setTimeout(r, 0))
+		})
+		expect(shown()).toBe(cardNameById(defOf(state, play)))
+	})
+})
+
 describe('Why? masking', () => {
 	it('masks the hidden hand options the bot did not choose, for a human', () => {
 		const { state, plays } = botPlayState()

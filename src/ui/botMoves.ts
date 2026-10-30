@@ -85,6 +85,8 @@ export interface BotStep {
 	headline: boolean
 	/** the choice prompt, for a RESOLVE_CHOICE */
 	prompt?: string | undefined
+	/** the def id of the card played or activated, if the viewer may see it */
+	card?: string | undefined
 	/** the LogEntries this intent produced, humanized (CHOICE entries left
 	 *  out); `hit` = the entry is about the viewer, so a BotHit covers it */
 	notes: { kind: LogKind; text: string; hit?: boolean | undefined }[]
@@ -615,6 +617,11 @@ export function botStep(
 
 	const why =
 		rec.info === null ? null : decisionView(rec.info, before, after, viewer)
+	const card =
+		(intent.t === 'PLAY_CARD' || intent.t === 'ACTIVATE') &&
+		revealed(intent.iid)
+			? before.cards[intent.iid]?.def
+			: undefined
 	const step: BotStep = {
 		intent,
 		phrase,
@@ -622,6 +629,7 @@ export function botStep(
 		...(intent.t === 'RESOLVE_CHOICE' && before.pendingChoice !== null
 			? { prompt: before.pendingChoice.prompt }
 			: {}),
+		...(card !== undefined ? { card } : {}),
 		notes,
 		why,
 	}

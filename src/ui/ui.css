@@ -3725,6 +3725,23 @@ h3,
 	cursor: pointer;
 	line-height: 1.4;
 }
+/* the card the move played or activated, beside its steps */
+.bot-history-item {
+	display: flow-root;
+}
+.bot-move-card {
+	float: right;
+	margin: 6px 0 6px 10px;
+}
+.bot-history-item .why-list {
+	clear: both;
+}
+@media (max-width: 480px) {
+	.bot-move-card {
+		float: none;
+		margin: 6px 0 0 14px;
+	}
+}
 .bot-steps {
 	margin: 6px 0 6px 14px;
 }

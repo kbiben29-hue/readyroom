@@ -8,8 +8,9 @@
 //     stays up for a dwell time that follows the spectator speed; a backlog
 //     (or the Instant speed) skips to the latest, and "+N more" opens the
 //     history. It stays until a human decides. aria-live="polite".
-//   - BotHistory: the recent moves (newest first), each expandable into its
-//     steps and log notes, with the "Why?" panel of the bot's decisions.
+//   - BotHistory: the recent moves (newest first), each expandable into the
+//     card it played or activated, its steps and log notes, with the "Why?"
+//     panel of the bot's decisions.
 //   - BotHighlight: briefly marks the cards a move involved (the card played
 //     or activated, the Location or market card it picked) by iid, like the
 //     flight layer's source glow; a static outline with prefers-reduced-motion.
@@ -26,7 +27,8 @@ import {
 	hasBots,
 	isSpectator,
 } from '../session/opponents'
-import { OpText } from './cards'
+import { cardDef } from '../engine/cards'
+import { CardFace, OpText } from './cards'
 import { seatLabel, shortSeat } from './format'
 import {
 	botTurns,
@@ -468,13 +470,21 @@ function MoveItem({
 	name: string
 	onWhy: (move: number | null) => void
 }) {
+	// the card the move played or activated, drawn only while the entry is open
+	const [expanded, setExpanded] = useState(open)
+	const card = m.steps[0]?.card
 	return (
 		<li className="bot-history-item" data-move={m.id}>
-			<details open={open}>
+			<details open={open} onToggle={(e) => setExpanded(e.currentTarget.open)}>
 				<summary>
 					<span className="bot-ticker-who">{name}</span>{' '}
 					<OpText text={headline} plain />
 				</summary>
+				{expanded && card !== undefined && (
+					<div className="bot-move-card">
+						<CardFace def={cardDef(card)} size="board" />
+					</div>
+				)}
 				<ol className="bot-steps">
 					{m.steps.map((s, j) => (
 						<li key={j} className="bot-step">

@@ -184,7 +184,9 @@ export function splitTokens(text: string): TextPart[] {
 
 // ---------------------------------------------------------------------------
 // Printed operations: their text is grouped per card area (hand/table/goal),
-// each operation prefixed with its type ("[[action]] Attack Play: …").
+// each operation prefixed with its type ("[[action]] Attack Play: …"), and a
+// specialty requirement sits before the colon ("Play [[inf3]]: …"); the
+// operation's `requires` chip shows it, so it is not part of the text.
 // ---------------------------------------------------------------------------
 
 export interface PrintedOp {
@@ -196,7 +198,7 @@ export interface PrintedOp {
 }
 
 const OP_HEAD =
-	/(\[\[action\]\]\s*)?(Attack\s+)?\b(Play|Activation|Passive|Reaction|Resupply|Cleanup|Control|Endgame|Special)\s*:\s*/gi
+	/(\[\[action\]\]\s*)?(Attack\s+)?\b(Play|Activation|Passive|Reaction|Resupply|Cleanup|Control|Endgame|Special)(?:\s*\[\[[a-z]+\d+\]\])?\s*:\s*/gi
 
 /** Split one card's printed text into operations, in printed order. The
  *  development cost and mission reward sections are not operations. */

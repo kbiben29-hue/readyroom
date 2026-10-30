@@ -107,6 +107,22 @@ describe('stcc join', () => {
 		expect(printedOpFor(ops, ours, 3)).toBeNull()
 	})
 
+	it('reads a specialty requirement before the colon as part of the header', () => {
+		const ops = printedOps(
+			text({
+				hand: '[[action]] Attack Play [[inf3]]: Do a thing. Play [[mil6]]: Do another.',
+				table: 'Activation: Gain 1 [[dilithium]].',
+			}),
+		)
+		expect(ops.map((o) => [o.type, o.costsAction, o.isAttack, o.text])).toEqual(
+			[
+				['PLAY', true, true, 'Do a thing.'],
+				['PLAY', false, false, 'Do another.'],
+				['ACTIVATION', false, false, 'Gain 1 [[dilithium]].'],
+			],
+		)
+	})
+
 	it('splits [[tokens]] out of text and maps trait spellings', () => {
 		expect(splitTokens('Gain 2 [[Dilithium]] or a [[lower decker]].')).toEqual([
 			{ k: 'text', text: 'Gain 2 ' },

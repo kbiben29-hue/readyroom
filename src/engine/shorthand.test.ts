@@ -327,6 +327,7 @@ describe('shorthand readability budget', () => {
 					`${def.id} ${o.type}`,
 				).toBe(true)
 			}
-		expect(withRules).toBeLessThanOrEqual(30)
+		// 30 for box 1 (+ MAL); To Boldly Go's 2GEO04 adds its Duty Officer slots
+		expect(withRules).toBeLessThanOrEqual(32)
 	})
 })

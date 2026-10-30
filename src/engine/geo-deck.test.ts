@@ -230,20 +230,20 @@ describe('2GEO13', () => {
 
 describe('2GEO22', () => {
 	it('Clean-up: gains a SPY from the Market to hand and logs itself', () => {
-		let s = place(fresh(), real(22), ID('gant'), { k: 'DUTY_OFFICER', seat: 0 }, 0)
+		let s = place(fresh(), real(22), ID('kg'), { k: 'DUTY_OFFICER', seat: 0 }, 0)
 		s = place(s, 'gxSpy', ID('spy'), { k: 'MARKET_OFFER', suit: 'PERSON' })
 		s = place(s, 'gxPerson', ID('other'), { k: 'MARKET_OFFER', suit: 'PERSON' })
-		s = resolveOp(s, ID('gant'), 2)
+		s = resolveOp(s, ID('kg'), 2)
 		expect(s.cards['spy']!.zone).toEqual({ k: 'HAND', seat: 0 })
 		expect(s.cards['other']!.owner).toBeNull()
-		expect(s.cards['gant']!.zone).toEqual({ k: 'LOG', seat: 0 })
+		expect(s.cards['kg']!.zone).toEqual({ k: 'LOG', seat: 0 })
 	})
 
 	it('Clean-up: does nothing without a SPY in the Market', () => {
-		let s = place(fresh(), real(22), ID('gant'), { k: 'DUTY_OFFICER', seat: 0 }, 0)
+		let s = place(fresh(), real(22), ID('kg'), { k: 'DUTY_OFFICER', seat: 0 }, 0)
 		s = place(s, 'gxPerson', ID('other'), { k: 'MARKET_OFFER', suit: 'PERSON' })
-		s = resolveOp(s, ID('gant'), 2)
-		expect(s.cards['gant']!.zone).toEqual({ k: 'DUTY_OFFICER', seat: 0 })
+		s = resolveOp(s, ID('kg'), 2)
+		expect(s.cards['kg']!.zone).toEqual({ k: 'DUTY_OFFICER', seat: 0 })
 	})
 })
 

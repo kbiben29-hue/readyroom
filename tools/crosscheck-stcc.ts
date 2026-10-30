@@ -34,6 +34,14 @@ const ACCEPTED: Record<string, Record<string, string>> = {
 		skills:
 			'two variable skills whose passive reads "has 2 wild skills" — modelled as SKILL_ANY ×2',
 	},
+	'2GEO13/23': {
+		skills:
+			'the pinned STCC snapshot lists no icon; later STCC data prints a {RES} Skill, which we model',
+	},
+	'2GEO21/23': {
+		skills:
+			'a variable skill whose passive reads "has 1 wild skill" — modelled as SKILL_ANY (as 1BUR20)',
+	},
 }
 
 const sorted = (xs: Iterable<string>) => [...xs].sort().join(',')

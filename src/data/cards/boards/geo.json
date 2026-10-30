@@ -65,7 +65,11 @@
 						"value": 1
 					},
 					{
-						"step": 5,
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
 						"value": 3
 					},
 					{
@@ -275,7 +279,11 @@
 				"specialty": "MILITARY",
 				"multipliers": [
 					{
-						"step": 5,
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
 						"value": 2
 					},
 					{

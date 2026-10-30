@@ -964,3 +964,13 @@ solo-only Directives are out of scope, as in box 1.
   2SOV21's scan for a Skill icon.
 - **Keyed on:** `src/data/cards/crew/sov.json`, `src/data/cards/boards/sov.json`; tests
   `src/engine/tbg-box.test.ts`.
+
+## 055 — 2GEO and 2SOV crew-board glyphs, read off the printed boards
+
+Supersedes the guessed glyph steps in 052 and 054. From photos of both Advanced sides; each Basic
+side is its Advanced side one higher plus ×1 at step 0, as on every box-1 board.
+
+- **2GEO MILITARY:** Advanced ×1 at 2, ×2 at 7, ×3 at 10, ×4 at 14 (Basic 0/2/7/10/14 → ×1–×5).
+  RESEARCH and INFLUENCE were already right.
+- **2SOV INFLUENCE:** Advanced ×1 at 3, ×3 at 8, ×4 at 11, ×5 at 15 (Basic ×1 at 0, ×2 at 3, ×4
+  at 8, ×5 at 11, ×6 at 15). RESEARCH and MILITARY were already right.

@@ -40,19 +40,15 @@
 						"value": 1
 					},
 					{
-						"step": 2,
+						"step": 3,
 						"value": 2
 					},
 					{
-						"step": 7,
-						"value": 3
-					},
-					{
-						"step": 10,
+						"step": 8,
 						"value": 4
 					},
 					{
-						"step": 13,
+						"step": 11,
 						"value": 5
 					},
 					{
@@ -224,19 +220,15 @@
 				"specialty": "INFLUENCE",
 				"multipliers": [
 					{
-						"step": 2,
+						"step": 3,
 						"value": 1
 					},
 					{
-						"step": 7,
-						"value": 2
-					},
-					{
-						"step": 10,
+						"step": 8,
 						"value": 3
 					},
 					{
-						"step": 13,
+						"step": 11,
 						"value": 4
 					},
 					{

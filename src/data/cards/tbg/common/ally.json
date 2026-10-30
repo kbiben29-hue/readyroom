@@ -259,6 +259,111 @@
 		]
 	},
 	{
+		"id": "2ALL05-16",
+		"cardId": "2ALL05/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"SCIENTIST",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "EXHAUST",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_LOGGED",
+					"filter": {
+						"suits": [
+							"PERSON",
+							"DIRECTIVE"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW_FROM_DISCARD",
+								"count": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
 		"id": "2ALL06-16",
 		"cardId": "2ALL06/16",
 		"suit": "ALLY",
@@ -434,6 +539,345 @@
 		]
 	},
 	{
+		"id": "2ALL09-16",
+		"cardId": "2ALL09/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"ORION",
+			"SHADY",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"seat": "SELF"
+								},
+								"value": 3
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "LAT",
+								"amount": 2
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"seat": "OPPONENT"
+								},
+								"value": 3
+							},
+							"then": {
+								"k": "STEAL",
+								"res": "DIL",
+								"amount": 2
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": [
+											"SHADY"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_ACTION",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"ORION"
+										]
+									},
+									"seat": "SELF",
+									"exceptThis": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 2
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ALL10-16",
+		"cardId": "2ALL10/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"PILOT",
+			"STARFLEET",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"from": {
+									"k": "STAGING",
+									"seat": 0
+								},
+								"count": 1,
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"to": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 3
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {
+								"traits": [
+									"STARFLEET",
+									"DOMINION"
+								]
+							},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							]
+						},
+						{
+							"k": "DRAW",
+							"count": 2
+						},
+						{
+							"k": "FORCE",
+							"body": {
+								"k": "DISMISS",
+								"target": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ALL11-16",
+		"cardId": "2ALL11/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"TELEPATH",
+			"CREATURE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DRAW",
+					"count": 2
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "LOG",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
 		"id": "2ALL12-16",
 		"cardId": "2ALL12/16",
 		"suit": "ALLY",
@@ -496,6 +940,329 @@
 								],
 								"opType": "PLAY"
 							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ALL13-16",
+		"cardId": "2ALL13/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"TELLARITE",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_INFLUENCE"
+		],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"traits": [
+									"TELLARITE"
+								]
+							},
+							"seat": "SELF",
+							"exceptThis": true
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "GAIN_ACTION",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ALL14-16",
+		"cardId": "2ALL14/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"BORG",
+			"COMMUNICATION"
+		],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SPEND_RESOURCE",
+							"res": "DIL",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"BORG"
+										]
+									},
+									"seat": "SELF",
+									"exceptThis": true
+								}
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": 2
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"BORG"
+											]
+										},
+										"seat": "SELF",
+										"exceptThis": true
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "LOG",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ALL15-16",
+		"cardId": "2ALL15/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"CHANGELING",
+			"AUGMENT"
+		],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Put a PERSON into your Staging Area",
+							"body": {
+								"k": "PUT_INTO_STAGING",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								}
+							}
+						},
+						{
+							"label": "Take an INCIDENT",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ALL16-16",
+		"cardId": "2ALL16/16",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"SHADY",
+			"DOCTOR"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {
+								"suits": [
+									"INCIDENT"
+								]
+							},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							],
+							"bind": "$2all16.i"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"INCIDENT"
+									]
+								},
+								"bound": "$2all16.i"
+							}
+						},
+						{
+							"k": "FIND",
+							"filter": {
+								"suits": [
+									"PERSON"
+								]
+							},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								}
+							],
+							"bind": "$2all16.p"
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Log the found PERSON and gain 1 Glory",
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "LOG",
+												"target": {
+													"zones": [
+														{
+															"k": "HAND",
+															"seat": 0
+														}
+													],
+													"bound": "$2all16.p"
+												}
+											},
+											{
+												"k": "GAIN_RESOURCE",
+												"res": "GLO",
+												"amount": 1
+											}
+										]
+									}
+								},
+								{
+									"label": "Free play the found PERSON and log this card",
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "FREE_PLAY",
+												"filter": {
+													"suits": [
+														"PERSON"
+													]
+												},
+												"bound": "$2all16.p"
+											},
+											{
+												"k": "LOG",
+												"target": "THIS"
+											}
+										]
+									}
+								}
+							]
 						}
 					]
 				}

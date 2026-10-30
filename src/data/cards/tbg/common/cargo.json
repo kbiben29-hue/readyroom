@@ -1,5 +1,128 @@
 [
 	{
+		"id": "2CAR01-18",
+		"cardId": "2CAR01/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"KLINGON",
+			"AUGMENT",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 3
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "LAT",
+								"amount": 1
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DEPLOY",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							},
+							{
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "MILITARY",
+								"amount": 2
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "CAPTAIN_HAS_TRAIT",
+									"trait": "KLINGON"
+								},
+								"then": {
+									"k": "MAY",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_TAKE_INCIDENT",
+											"count": 1
+										},
+										"body": {
+											"k": "DRAW",
+											"count": 3
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": true,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"seat": "OPPONENT",
+					"filter": {
+						"traits": [
+							"KLINGON"
+						]
+					}
+				},
+				"effect": {
+					"k": "DISCARD",
+					"count": 1,
+					"from": "HAND",
+					"whose": "OPPONENT"
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"KLINGON"
+						]
+					}
+				},
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "GLO",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
 		"id": "2CAR02-18",
 		"cardId": "2CAR02/18",
 		"suit": "CARGO",
@@ -302,6 +425,261 @@
 									"ignoreBlocking": true
 								}
 							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2CAR04-18",
+		"cardId": "2CAR04/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"ENGINEER",
+			"COMMUNICATION",
+			"ATTACK",
+			"ONGOING"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "FORCE",
+							"body": {
+								"k": "IF",
+								"cond": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"BEAMED_TO_SHIP"
+										],
+										"seat": "SELF"
+									},
+									"value": 1
+								},
+								"then": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											"BEAMED_TO_SHIP"
+										],
+										"seat": "SELF"
+									}
+								},
+								"else": {
+									"k": "TAKE",
+									"deck": "INCIDENT",
+									"count": 1
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"seat": "OPPONENT",
+					"filter": {
+						"traits": [
+							"SECURITY",
+							"ENGINEER"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2CAR05-18",
+		"cardId": "2CAR05/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"HELMET",
+			"STARFLEET",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								},
+								"count": 1,
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "BEAM",
+					"from": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						}
+					],
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					},
+					"count": 1,
+					"to": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SHIP_WARPED"
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									],
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								}
+							},
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"atBound": "$event.card"
+							}
+						},
+						{
+							"k": "DISMISS",
+							"target": "THIS"
 						}
 					]
 				}
@@ -736,6 +1114,333 @@
 		]
 	},
 	{
+		"id": "2CAR09-18",
+		"cardId": "2CAR09/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"DOCTOR",
+			"AUGMENT",
+			"BUSINESS",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"bind": "$2car09.d"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DEPLOY",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$2car09.d",
+									"filter": {
+										"traits": [
+											"DOCTOR",
+											"BUSINESS"
+										]
+									}
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 2
+										},
+										{
+											"k": "MAY",
+											"body": {
+												"k": "FREE_PLAY",
+												"filter": {
+													"suits": [
+														"INCIDENT"
+													]
+												},
+												"from": {
+													"k": "HAND",
+													"seat": 0
+												}
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"AUGMENT"
+									]
+								},
+								"seat": "SELF"
+							},
+							"bind": "$2car09.a",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "DRAW",
+										"count": 1
+									},
+									{
+										"k": "DISCARD",
+										"count": 1,
+										"from": "HAND"
+									}
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "DUTY_OFFICER",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "DISMISS",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2CAR10-18",
+		"cardId": "2CAR10/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"XINDI",
+			"SHADY",
+			"TIME_TRAVEL"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Find and free play a WEAPON outside your Reserve deck",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FIND",
+										"filter": {
+											"traits": [
+												"WEAPON"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											}
+										],
+										"bind": "$2car10.w"
+									},
+									{
+										"k": "FREE_PLAY",
+										"filter": {
+											"traits": [
+												"WEAPON"
+											]
+										},
+										"bound": "$2car10.w"
+									}
+								]
+							}
+						},
+						{
+							"label": "Find and free play a WEAPON in your Reserve deck (take an INCIDENT)",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FIND",
+										"filter": {
+											"traits": [
+												"WEAPON"
+											]
+										},
+										"zones": [
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										],
+										"bind": "$2car10.w"
+									},
+									{
+										"k": "TAKE",
+										"deck": "INCIDENT",
+										"count": 1
+									},
+									{
+										"k": "FREE_PLAY",
+										"filter": {
+											"traits": [
+												"WEAPON"
+											]
+										},
+										"bound": "$2car10.w"
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISMISS",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"SHIP"
+							]
+						},
+						"from": {
+							"k": "FLEET",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RECALL",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"not": {
+											"traits": [
+												"TIME_TRAVEL"
+											]
+										}
+									}
+								}
+							},
+							{
+								"k": "DRAW",
+								"count": 2
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": [
+							"WEAPON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
 		"id": "2CAR11-18",
 		"cardId": "2CAR11/18",
 		"suit": "CARGO",
@@ -833,6 +1538,91 @@
 										}
 									},
 									5
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2CAR12-18",
+		"cardId": "2CAR12/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"HELMET",
+			"DOCTOR"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": {
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"DOCTOR",
+													"ALIEN"
+												]
+											},
+											"seat": "SELF"
+										}
+									},
+									5
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW_FROM_DISCARD",
+								"count": 1,
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"INCIDENT"
+									]
+								},
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
 								]
 							}
 						}
@@ -1099,6 +1889,133 @@
 		]
 	},
 	{
+		"id": "2CAR16-18",
+		"cardId": "2CAR16/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"ALIEN",
+			"BEVERAGE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 5
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": {
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"STARFLEET"
+												]
+											},
+											"seat": "SELF"
+										}
+									},
+									3
+								]
+							}
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "CAPTAIN",
+										"seat": 0
+									}
+								]
+							}
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 0
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SCAN_N",
+								"n": 2,
+								"suits": [
+									"PERSON"
+								],
+								"includeJunk": true
+							},
+							{
+								"k": "JUNK",
+								"target": {
+									"zones": [
+										{
+											"k": "MARKET_OFFER",
+											"suit": "PERSON"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "CARGO"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "SHIP"
+										},
+										{
+											"k": "MARKET_OFFER",
+											"suit": "ALLY"
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
 		"id": "2CAR17-18",
 		"cardId": "2CAR17/18",
 		"suit": "CARGO",
@@ -1239,6 +2156,152 @@
 							}
 						}
 					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2CAR18-18",
+		"cardId": "2CAR18/18",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"COMMUNICATION"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": [
+								"STARFLEET"
+							]
+						}
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": [
+							"ALIEN"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"traits": [
+									"ALIEN"
+								],
+								"suits": [
+									"PERSON",
+									"CARGO",
+									"SHIP",
+									"ALLY",
+									"LOCATION",
+									"DIRECTIVE",
+									"INCIDENT"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 3
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"to": "DISCARD"
+							},
+							{
+								"k": "FOR_EACH",
+								"over": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										],
+										"traits": [
+											"ALIEN"
+										]
+									}
+								},
+								"bind": "$2car18.s",
+								"body": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"bound": "$2car18.s"
+									}
+								}
+							},
+							{
+								"k": "FOR_EACH",
+								"over": {
+									"zones": [
+										"BEAMED_ANY"
+									],
+									"filter": {
+										"traits": [
+											"ALIEN"
+										]
+									},
+									"seat": "SELF"
+								},
+								"bind": "$2car18.b",
+								"body": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											"BEAMED_ANY"
+										],
+										"seat": "SELF",
+										"bound": "$2car18.b"
+									}
+								}
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
 				}
 			}
 		]

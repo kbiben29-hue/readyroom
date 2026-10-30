@@ -38,6 +38,10 @@ const ACCEPTED: Record<string, Record<string, string>> = {
 		skills:
 			'the pinned STCC snapshot lists no icon; later STCC data prints a {RES} Skill, which we model',
 	},
+	'2PER12/26': {
+		skills:
+			'three variable skills whose passive counts AUGMENTs in play (max 3) — one SKILL_VARIABLE (as 1BUR12)',
+	},
 	'2GEO21/23': {
 		skills:
 			'a variable skill whose passive reads "has 1 wild skill" — modelled as SKILL_ANY (as 1BUR20)',

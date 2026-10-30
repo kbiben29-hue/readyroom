@@ -226,6 +226,25 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 	},
 	// describe-only: the wild Skill is the card's SKILL_ANY icon (as 1BUR20)
 	'2GEO21_WILD_SKILL': { describe: 'This card has 1 wild Skill.' },
+	// --- To Boldly Go common cards ---
+	'2PER03_HAND': {
+		describe: 'If you have 8+ {GLO}, increase your hand size by 2.',
+		handSize: (base, state, seat) =>
+			player(state, seat).resources.GLO >= 8 ? base + 2 : base,
+	},
+	// describe-only: the counting lives on the card's variableSkill (as 1BUR12)
+	'2PER12_ICONS': {
+		describe:
+			'This card has 1 MILITARY Skill per AUGMENT you have in play (this card included, max 3).',
+	},
+	'2PER15_DUTY': {
+		describe: 'You may have an additional PERSON with AMBASSADOR on duty.',
+		dutyOfficerSlot: { traits: ['AMBASSADOR'] },
+	},
+	'2PER23_HAND': {
+		describe: 'Increase your hand size by 2.',
+		handSize: (base) => base + 2,
+	},
 	// 1ENC07: describe-only — the rule is the CardDef flag
 	// `treatedAsLocation` (src/engine/cards.ts isLocationDef, DEPLOY).
 	'1ENC07_LOCATION': {

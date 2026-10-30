@@ -915,3 +915,33 @@ combined pool. Rulings made while encoding its cards:
   (RES 0/2/7/10/13/15, INF 0/3/8/11/15, MIL 0/5/10/14). To be checked against the printed board.
 - **Keyed on:** `src/data/cards/crew/geo.json`, `src/data/cards/boards/geo.json`; tests
   `src/engine/geo-deck.test.ts`.
+
+## 053 — To Boldly Go common cards: first implementation
+
+The 107 common cards of To Boldly Go (box 2) are used when a game is set up with
+`SetupConfig.box = 'TBG'` (src/data/boxes.ts). 53 of them reprint a box-1 card (the same text,
+or a `†` updated card) and copy its def; the rest are encoded from their STCC text. The two
+solo-only Directives are out of scope, as in box 1.
+
+- **Not used in this box:** TREACHERY (2PER23, 2ALL09: "If you have 6+/8+ TREACHERY" never
+  holds), the BORG COLLECTIVE and XB (2ALL14 counts them as 0), and MISSION as a scannable suit
+  (2ENC01 scans the four Market suits).
+- **Approximations** (as close as the DSL allows today):
+  - 2PER04: the found PERSON is promoted from hand by filter (PROMOTE has no `bound`).
+  - 2PER08: "a SHIP with 2+ SHIPs beamed to it" checks 2+ SHIPs beamed to your SHIPs, then
+    dismisses a deployed SHIP.
+  - 2PER15: "return up to 3 … if you returned at least 2" is a choice of returning 1, 2 or 3.
+  - 2PER13: "reveal a card and put it on your deck" is one option per Market suit.
+  - 2ALL10: "draw 2 cards and discard one of the drawn cards" discards any card from hand.
+- **Not modelled yet** (the rest of each card works):
+  - 2ENC02 counting as a SHIP "for all purposes" (its warp and attack activations), and 2ENC06
+    counting as an ALLY.
+  - The conditional WILDCARD on 2ENC01 and 2ALL15 (while in the Staging Area).
+  - 2ALL05's three {DIL} kept on the card: it gives 1 {DIL} per logged PERSON/DIRECTIVE and is
+    logged at its first Clean-up after one {RES}.
+  - 2ALL13 "give your opponent an INCIDENT"; 2ALL15's duplicate of an in-play PERSON/CARGO.
+  - 2PER02 "when you would return an INCIDENT, give it to your opponent instead"; 2PER04's
+    reaction after sending an Away Team to a controlled LOCATION; 2PER25's Resupply (per Away
+    Team on neutral LOCATIONs); 2PER26's ban on opponent reactions; 2CAR04's reaction to the
+    opponent warping.
+- **Keyed on:** `src/data/cards/tbg/common/*.json`.

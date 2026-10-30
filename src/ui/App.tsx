@@ -44,6 +44,10 @@ import {
 } from '../session/opponents'
 import { EndScreen } from './EndScreen'
 
+/** A random 31-bit game seed (the engine's shuffles are all derived from it). */
+const randomSeed = (): number =>
+	crypto.getRandomValues(new Uint32Array(1))[0]! >>> 1
+
 function useRuleAnchor(): [string | null, (a: string | null) => void] {
 	const [anchor, setAnchor] = useState<string | null>(null)
 	useEffect(() => {
@@ -260,7 +264,9 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 	const [seat1, setSeat1] = useState<DeckId>('SHR')
 	const [side0, setSide0] = useState<'BASIC' | 'ADVANCED'>('BASIC')
 	const [side1, setSide1] = useState<'BASIC' | 'ADVANCED'>('BASIC')
-	const [seed, setSeed] = useState(12345)
+	// a fresh random seed per game, so every new game shuffles differently;
+	// type one in to replay a specific deal
+	const [seed, setSeed] = useState(randomSeed)
 	const [seats, setSeatsState] =
 		useState<[SeatController, SeatController]>(loadSeats)
 	const setSeat = (seat: Seat, c: SeatController) => {
@@ -288,6 +294,8 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 			seed,
 		}
 		startGame(config, opponentsOf(controllers))
+		// roll the next game's seed now, in case this screen stays mounted
+		setSeed(randomSeed())
 	}
 	// one click to a game against the house AI: you as Player 1, the level
 	// last picked for Player 2 (Normal by default)
@@ -350,6 +358,13 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 							onChange={(e) => setSeed(Number(e.target.value))}
 							aria-label="random seed"
 						/>
+						<button
+							type="button"
+							className="btn"
+							onClick={() => setSeed(randomSeed())}
+						>
+							New seed
+						</button>
 					</label>
 					<button
 						type="button"

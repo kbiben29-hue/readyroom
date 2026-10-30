@@ -7,10 +7,11 @@
  *     hand dock  72px ─ your decks + the hand peeking up from the edge
  *
  * Card size is ONE number, --card-w, worked out from the board's height: the
- * shared row is one card high and your area two, and a card is 1.45 times as
- * high as it is wide, so 4.35 card widths of height must fit beside the fixed
- * parts — 346px, measured: band 104, dock 72, the shared row's suit row and
- * standees 62, your area's labels, padding and ship/beamed chips 96, gaps 12.
+ * shared row is one card high and your area two, and a card is its face at
+ * the printed 1:1.397 inside a 1px frame plus 5px — 1.397W + 2.2px — so 4.19
+ * card widths of height must fit beside the fixed parts: 346px measured (band
+ * 104, dock 72, the shared row's suit row and standees 62, your area's
+ * labels, padding and ship/beamed chips 96, gaps 12) and 7px of frames.
  * It stops shrinking at 84px (the table scrolls instead) and growing at
  * 132px. */
 
@@ -188,7 +189,7 @@
 .board {
 	--card-w: clamp(
 		84px,
-		min((100cqh - 346px) / 4.35, (100cqw - 400px) / 7),
+		min((100cqh - 353px) / 4.19, (100cqw - 400px) / 7),
 		132px
 	);
 	container: board / size;
@@ -207,12 +208,14 @@
 	gap: var(--gap);
 	align-content: start;
 }
-/* Every card on the table steps on --card-w; the hand keeps its own size. */
+/* Every card on the table steps on --card-w; the hand keeps its own size.
+ * The face inside the 1px frame takes the printed card's own proportions
+ * (1170×1635, 1:1.397), so the art fills it without cropping an edge. */
 .board .card-board {
 	width: var(--card-w);
 }
 .board .card-board .card-inner {
-	min-height: calc(var(--card-w) * 1.4);
+	min-height: calc((var(--card-w) - 2px) * 1.397);
 }
 
 /* -------------------------------------------------------------- the decks */
@@ -413,13 +416,13 @@
 	flex-wrap: wrap;
 }
 /* An empty card place is exactly a card: --card-w wide, and as high as a
- * printed card at that width (1.45 — the face plus its frame). */
+ * card at that width (the face at 1:1.397 plus its frame, 5px). */
 .board .area-zone .empty-slot,
 .board .market-offer-slot .empty-slot,
 .board .location-slot .empty-slot {
 	box-sizing: border-box;
 	width: var(--card-w);
-	height: calc(var(--card-w) * 1.45);
+	height: calc((var(--card-w) - 2px) * 1.397 + 5px);
 	min-height: 0;
 }
 .area-slot-label {

@@ -150,10 +150,11 @@ What the layout follows:
   viewscreen) and the **log drawer** (**L** or the Log button; it never opens by itself, and the
   button counts what the other side did since you last looked). **Esc** closes the topmost one.
 - **Cards fit the screen.** One number, `--card-w`, sizes every card on the table from the
-  board's height: the shared row is one card high and your area two, a card is 1.45× as high as
-  it is wide, so 4.35 card widths plus the measured fixed parts (346px) must fit. It runs from
-  84px (below that the table scrolls) to 132px — about 102px on a 1470×840 laptop and 84px on a
-  1180×760 iPad, where the old layout had 94px cards and still scrolled. The hand keeps its 156px.
+  board's height: the shared row is one card high and your area two, and a card's face keeps the
+  printed proportions (1170×1635, 1:1.397 — any other box crops the art's edges), so 4.19 card
+  widths plus the measured fixed parts (353px) must fit. It runs from 84px (below that the table
+  scrolls) to 132px — about 104px on a 1470×840 laptop and 85px on a 1180×760 iPad, where the old
+  layout had 94px cards and still scrolled. The hand keeps its 156px.
 - **Zoom is held, not hovered.** Hovering a card does nothing on its own; hold **Option** and the
   hovered card lifts to the middle of the screen at 360×504, over a dimmed board. On a touch
   screen, hold a finger on the card for half a second; the tap that ends the press is swallowed,

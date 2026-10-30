@@ -1786,6 +1786,60 @@ h3,
 .candidate-tile .card {
 	width: 110px;
 }
+/* the face at the printed card's proportions (1:1.397) inside the 1px frame,
+ * so the art is not cropped at the sides */
+.candidate-tile .card-board .card-inner {
+	min-height: calc(108px * 1.397);
+}
+/* Market candidates lie as on the table (MarketSlot): the suit banner over
+ * the deck, face down on the left, and the offered card face up on its
+ * right — a deck the same size as the card beside it. */
+.candidate-market {
+	gap: 16px;
+}
+.market-slot {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.market-slot > .suit-banner {
+	align-self: stretch;
+	font-size: 13px;
+}
+.market-pair {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+}
+.market-pair .cardstack-deck .stack-back {
+	/* as big as the candidate card beside it: 110 wide, face + frame high */
+	width: 110px;
+	height: calc(108px * 1.397 + 5px);
+	font-size: 24px;
+}
+.market-pair .cardstack-deck .stack-count {
+	display: none;
+}
+/* the deck as the pick for its top card: a card like the others, ringed
+ * when selected and dimmed with its reason when it can't be taken */
+.market-pair .deck-pick .stack-back {
+	cursor: pointer;
+}
+.market-pair .deck-pick .stack-back:hover:not(:disabled) {
+	border-color: var(--periwinkle);
+}
+.market-pair .deck-pick.candidate-selected .stack-back {
+	outline: 3px solid var(--ice);
+	outline-offset: 1px;
+}
+.market-pair .deck-pick.candidate-disabled {
+	opacity: 0.4;
+}
+.market-pair .deck-pick .stack-count {
+	display: block;
+	max-width: 110px;
+	text-align: center;
+}
 .candidate-selected .card {
 	outline: 3px solid var(--ice);
 	outline-offset: 1px;

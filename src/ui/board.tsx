@@ -5,6 +5,7 @@
 // Hook discipline: every component calls its hooks unconditionally at the top
 // (React rules even though the react-hooks linter plugin is not configured).
 
+import type { ReactNode } from 'react'
 import type { GameState } from '../engine/state'
 import { zoneKey, player } from '../engine/state'
 import { dutyOfficerSlots } from '../engine/dutyOfficers'
@@ -156,6 +157,60 @@ function MarketSuitCol({ suit }: { suit: MarketSuit }) {
 				) : (
 					<div className="empty-slot muted">empty</div>
 				)}
+			</div>
+		</div>
+	)
+}
+
+/** One Market suit as it lies on the table, for the choice panel's Market
+ *  candidates: the suit banner over its deck, face down on the left, and the
+ *  offered card face up on the right (the board's Market keeps the deck in
+ *  its banner row, to fit four suits beside the Neutral Zone). When the
+ *  deck's top card is itself a candidate, the deck is the pick (`deckPick`):
+ *  a click selects it, and it rings like any selected card. */
+export function MarketSlot({
+	suit,
+	deckPick,
+	children,
+}: {
+	suit: MarketSuit
+	deckPick?:
+		| { selected: boolean; disabled?: string | undefined; onClick: () => void }
+		| undefined
+	children: ReactNode
+}) {
+	const deck = useZones({ k: 'MARKET_DECK', suit })
+	return (
+		<div className="market-slot">
+			<span className={`suit-pill suit-banner card-suit-${suit.toLowerCase()}`}>
+				<Icon id={suitIconId(suit)} label={suit} size="md" />
+				{suit}
+			</span>
+			<div className="market-pair">
+				{deckPick === undefined ? (
+					<CardStack label={`${suit} deck`} count={deck.length} deck />
+				) : (
+					<div
+						className={`cardstack cardstack-deck deck-pick${deckPick.selected ? ' candidate-selected' : ''}${deckPick.disabled !== undefined ? ' candidate-disabled' : ''}`}
+						title={deckPick.disabled ?? `The top card of the ${suit} deck`}
+					>
+						<button
+							type="button"
+							className="stack-back"
+							onClick={deckPick.onClick}
+							disabled={deckPick.disabled !== undefined}
+							aria-pressed={deckPick.selected}
+							aria-label={`Top card of the ${suit} deck (${deck.length})`}
+						>
+							<span className="stack-n">{deck.length}</span>
+						</button>
+						<div className="stack-count">top card, face down</div>
+					</div>
+				)}
+				{children !== undefined &&
+					(!Array.isArray(children) || children.length > 0) && (
+						<div className="market-slot-card">{children}</div>
+					)}
 			</div>
 		</div>
 	)

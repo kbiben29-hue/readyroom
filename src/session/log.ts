@@ -62,6 +62,10 @@ export interface SessionMeta {
 	deckNames: [string, string]
 	boardSides: [BoardSide, BoardSide]
 	scoreEstimate: [number, number]
+	/** The final score once the game is over: each seat's total and the
+	 *  winners (both on a tie, none for a Cadet Training loss). Absent while
+	 *  the game runs and on saves from before it existed. */
+	final?: { score: [number, number]; winners: Seat[] } | undefined
 	/** Hash of the card data this session was played against. On load, a
 	 *  mismatch warns that the saved log may replay differently (todo/17 §1). */
 	cardDataHash: string
@@ -264,7 +268,33 @@ function metaFor(
 		],
 		boardSides: [config.players[0]!.boardSide, config.players[1]!.boardSide],
 		scoreEstimate: [estimateScore(state, 0), estimateScore(state, 1)],
+		final: finalOf(state),
 		cardDataHash: cardDataHashCached(catalog),
+	}
+}
+
+function finalOf(state: GameState): SessionMeta['final'] {
+	if (state.result?.kind !== 'COMPLETE') return undefined
+	const { breakdown, winners } = state.result.scoreboard
+	return { score: [breakdown[0].total, breakdown[1].total], winners }
+}
+
+/** A finished save from before `meta.final` existed gets its result from one
+ *  replay; the rest of the meta (updatedAt included) stays as stored. The
+ *  session comes back unchanged when there is nothing to fill in, when its
+ *  card data drifted (a replay could reach a different result) or when the
+ *  replay fails. */
+export function backfillFinal(session: Session, catalog: CardCatalog): Session {
+	if (session.meta.result !== 'COMPLETE' || session.meta.final !== undefined)
+		return session
+	if (!checkCardData(session, catalog).ok) return session
+	try {
+		const final = finalOf(replay(session, catalog))
+		return final === undefined
+			? session
+			: { ...session, meta: { ...session.meta, final } }
+	} catch {
+		return session
 	}
 }
 

@@ -3090,8 +3090,15 @@ h3,
 	border-radius: 4px;
 	border-left: 4px solid var(--periwinkle);
 }
+.save-ended {
+	border-left-color: var(--lilac);
+}
 .save-drift {
 	border-left-color: var(--sunflower);
+}
+.save-result {
+	color: var(--lilac);
+	font-weight: 600;
 }
 .save-meta {
 	display: grid;

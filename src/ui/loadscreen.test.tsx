@@ -18,6 +18,7 @@ import {
 	resetSessionStoreForTests,
 } from './persistence'
 import { loadBrowserCatalog } from './browserCatalog'
+import { endedLine } from './load'
 
 const catalog = loadBrowserCatalog()
 
@@ -109,6 +110,31 @@ describe('saved-games load screen', () => {
 		expect(useGameStore.getState().warning).not.toBeNull()
 	})
 
+	it('shows a finished game as ended, with its result and View result', async () => {
+		await seedSave((s) => ({
+			...s,
+			opponents: { 1: 'easy' },
+			meta: {
+				...s.meta,
+				phase: 'GAME_OVER',
+				result: 'COMPLETE',
+				turnNumber: 21,
+				final: { score: [43, 20], winners: [0] },
+			},
+		}))
+		act(() => useGameStore.getState().loadCatalog())
+		const host = await renderApp()
+
+		const row = host.querySelector('.save-row.save-ended')
+		expect(row).not.toBeNull()
+		const text = row!.textContent ?? ''
+		expect(text).toContain('ended on turn 21')
+		expect(text).toContain('Game over · You won · 43–20')
+		expect(text).toContain('View result')
+		expect(text).not.toContain('score est.')
+		expect(text).not.toContain('awaiting')
+	})
+
 	it('Delete removes the save from the list and from storage', async () => {
 		await seedSave()
 		act(() => useGameStore.getState().loadCatalog())
@@ -122,6 +148,48 @@ describe('saved-games load screen', () => {
 		await flush(() => del!.click())
 		expect(host.querySelectorAll('.save-row')).toHaveLength(0)
 		expect(await getSessionStore().list()).toHaveLength(0)
+	})
+})
+
+describe('endedLine', () => {
+	const ended = (
+		final: Session['meta']['final'],
+		extra: Partial<Session> = {},
+	): Session => {
+		const s = createSession(config(), catalog, { id: 'ended' })
+		return {
+			...s,
+			...extra,
+			meta: { ...s.meta, result: 'COMPLETE', final },
+		}
+	}
+
+	it('names the winner: You, the House AI, or the captain in hot-seat', () => {
+		const vsAi = { opponents: { 1: 'easy' as const } }
+		expect(endedLine(ended({ score: [43, 20], winners: [0] }, vsAi))).toBe(
+			'Game over · You won · 43–20',
+		)
+		expect(endedLine(ended({ score: [20, 43], winners: [1] }, vsAi))).toBe(
+			'Game over · House AI (Easy) won · 20–43',
+		)
+		const hotSeat = ended({ score: [30, 41], winners: [1] })
+		expect(endedLine(hotSeat)).toBe(
+			`Game over · ${hotSeat.meta.deckNames[1]} won · 30–41`,
+		)
+	})
+
+	it('a tie, a Cadet result, and an old save without the result', () => {
+		expect(endedLine(ended({ score: [33, 33], winners: [0, 1] }))).toBe(
+			'Game over · tie · 33–33',
+		)
+		const cadet = { setup: { ...config(), mode: 'CADET' as const } }
+		expect(endedLine(ended({ score: [85, 0], winners: [0] }, cadet))).toBe(
+			'Game over · 85 VP',
+		)
+		expect(endedLine(ended({ score: [85, 0], winners: [] }, cadet))).toBe(
+			'Game over · lost to the Burn',
+		)
+		expect(endedLine(ended(undefined))).toBe('Game over')
 	})
 })
 

@@ -26,6 +26,7 @@ import {
 	checkCardData,
 	estimateScore,
 	sessionSeed,
+	backfillFinal,
 } from './log'
 import type { SessionAdapter } from './adapter'
 import { SessionAdapter as Adapter } from './adapter'
@@ -85,6 +86,7 @@ describe('log: createSession + meta', () => {
 		expect(session.meta.deckNames[0]).not.toBe('') // captain-name labels
 		expect(sessionSeed(session)).toBe(25)
 		expect(session.meta.scoreEstimate).toHaveLength(2)
+		expect(session.meta.final).toBeUndefined()
 		expect(session.meta.cardDataHash.length).toBe(16)
 	})
 
@@ -93,11 +95,44 @@ describe('log: createSession + meta', () => {
 		expect(s.meta.intentCount).toBe(s.log.length)
 		expect(s.meta.phase).toBe('GAME_OVER')
 		expect(s.meta.result).toBe('COMPLETE')
+		// the save list shows the result without replaying the game
+		const result = adapter.state.result
+		if (result?.kind !== 'COMPLETE') throw new Error('game not finalised')
+		expect(s.meta.final).toEqual({
+			score: [
+				result.scoreboard.breakdown[0].total,
+				result.scoreboard.breakdown[1].total,
+			],
+			winners: result.scoreboard.winners,
+		})
 		// The terminal turn number/seat are whatever the engine's final END_TURN
 		// produced (deterministic per run) — meta must mirror the live state.
 		expect(s.meta.turnNumber).toBe(adapter.state.turnNumber)
 		expect(s.meta.activeSeat).toBe(adapter.state.activeSeat)
 		expect(s.meta.turnNumber).toBeGreaterThanOrEqual(4)
+	})
+})
+
+describe('log: backfillFinal', () => {
+	it('fills in the result of a finished save from before meta.final', () => {
+		const done = adapter.session
+		const { final, ...rest } = done.meta
+		const old: Session = { ...done, meta: rest }
+		const filled = backfillFinal(old, catalog)
+		expect(filled.meta.final).toEqual(final)
+		expect(filled.meta.updatedAt).toBe(old.meta.updatedAt)
+		expect(backfillFinal(filled, catalog)).toBe(filled) // nothing left to do
+	})
+
+	it('leaves running games and drifted card data alone', () => {
+		const running = createSession(sessionConfig(), catalog, { id: 'r' })
+		expect(backfillFinal(running, catalog)).toBe(running)
+		const { final: _final, ...rest } = adapter.session.meta
+		const drifted: Session = {
+			...adapter.session,
+			meta: { ...rest, cardDataHash: 'deadbeefdeadbeef' },
+		}
+		expect(backfillFinal(drifted, catalog)).toBe(drifted)
 	})
 })
 

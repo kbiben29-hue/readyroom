@@ -3,16 +3,23 @@
 // board sides, turn number, phase, timestamp, score estimate), so the list is
 // just `listSessions()` + the stored meta. A card-data hash mismatch labels a
 // save as stale instead of silently replaying it under different card data.
+// The one replay: a finished save from before `meta.final` existed, once, to
+// store its result (backfillFinal).
 // Import-from-file (todo/17 §3) also lives here: `importSession` + resume.
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CardCatalog } from '../engine/setup'
 import { useGameStore } from './store'
-import type { Session } from '../session/log'
+import { backfillFinal, type Session } from '../session/log'
 import { cardDataDrift, getSessionStore, readSessionFile } from './persistence'
 import { seatLabel } from './format'
 import { shortUpdatedAt } from './format'
-import { opponentsLabel } from '../session/opponents'
+import {
+	botFor,
+	botLabel,
+	humanSeats,
+	opponentsLabel,
+} from '../session/opponents'
 
 export function SavedGamesPanel({ catalog }: { catalog: CardCatalog | null }) {
 	const resume = useGameStore((s) => s.resumeGame)
@@ -23,17 +30,23 @@ export function SavedGamesPanel({ catalog }: { catalog: CardCatalog | null }) {
 	const fileRef = useRef<HTMLInputElement | null>(null)
 
 	const refresh = useCallback(() => {
-		void getSessionStore()
+		const store = getSessionStore()
+		void store
 			.list()
 			.then((list) => {
-				setSaves(list)
+				const filled =
+					catalog === null ? list : list.map((s) => backfillFinal(s, catalog))
+				filled.forEach((s, i) => {
+					if (s !== list[i]) void store.save(s).catch(() => undefined)
+				})
+				setSaves(filled)
 				setListError(null)
 			})
 			.catch((e: unknown) => {
 				setSaves([])
 				setListError((e as Error).message)
 			})
-	}, [])
+	}, [catalog])
 
 	useEffect(() => {
 		refresh()
@@ -118,6 +131,29 @@ export function SavedGamesPanel({ catalog }: { catalog: CardCatalog | null }) {
 	)
 }
 
+/** A finished save's result line: "Game over · You won · 43–20". The score
+ *  reads in seat order, like the "A vs B" title above it. A save without
+ *  `meta.final` that backfillFinal could not fill says only "Game over". */
+export function endedLine(session: Session): string {
+	const f = session.meta.final
+	if (f === undefined) return 'Game over'
+	const [a, b] = f.score
+	if (session.setup.mode === 'CADET')
+		return f.winners.length === 0
+			? 'Game over · lost to the Burn'
+			: `Game over · ${a} VP`
+	if (f.winners.length !== 1) return `Game over · tie · ${a}–${b}`
+	const w = f.winners[0]!
+	const bot = botFor(session.opponents, w)
+	const who =
+		bot !== undefined
+			? botLabel(bot)
+			: humanSeats(session.opponents).length === 1
+				? 'You'
+				: session.meta.deckNames[w]
+	return `Game over · ${who} won · ${a}–${b}`
+}
+
 function SaveRow({
 	session,
 	catalog,
@@ -135,12 +171,17 @@ function SaveRow({
 }) {
 	const m = session.meta
 	const drift = catalog !== null ? cardDataDrift(session, catalog) : null
+	const ended = m.result === 'COMPLETE'
 	const sitsAt =
-		m.phase === 'SETUP' ? 'setup' : `turn ${m.turnNumber} · ${m.phase}`
+		m.phase === 'SETUP'
+			? 'setup'
+			: ended
+				? `ended on turn ${m.turnNumber}`
+				: `turn ${m.turnNumber} · ${m.phase}`
 	const vs = opponentsLabel(session.opponents)
 	return (
 		<li
-			className={`save-row${drift !== null && !drift.ok ? ' save-drift' : ''}`}
+			className={`save-row${ended ? ' save-ended' : ''}${drift !== null && !drift.ok ? ' save-drift' : ''}`}
 		>
 			<div className="save-meta">
 				<strong className="save-title">
@@ -152,10 +193,14 @@ function SaveRow({
 					intent{m.intentCount === 1 ? '' : 's'} · updated{' '}
 					{shortUpdatedAt(m.updatedAt)}
 				</span>
-				<span className="muted small">
-					score est. {m.scoreEstimate[0]}–{m.scoreEstimate[1]} · awaiting{' '}
-					{seatLabel(m.activeSeat)}
-				</span>
+				{ended ? (
+					<span className="small save-result">{endedLine(session)}</span>
+				) : (
+					<span className="muted small">
+						score est. {m.scoreEstimate[0]}–{m.scoreEstimate[1]} · awaiting{' '}
+						{seatLabel(m.activeSeat)}
+					</span>
+				)}
 				{drift !== null && !drift.ok && (
 					<span
 						className="save-warn-badge"
@@ -171,7 +216,7 @@ function SaveRow({
 					className="btn micro btn-primary"
 					onClick={onResume}
 				>
-					Continue
+					{ended ? 'View result' : 'Continue'}
 				</button>
 				<button type="button" className="btn micro" onClick={onCopy}>
 					{copied ? 'Copied ✓' : 'Copy JSON'}

@@ -1,0 +1,86 @@
+# Full checks for work branches (dev/**): card validation, the publish audit,
+# the type check, lint, the test suite and the STCC crosscheck. Each step's
+# output is written to a report on the `ci-report` branch
+# (report.txt, overwritten per run) so it can be read with plain git.
+#
+# A commit message containing [update-snapshots] also refreshes the vitest
+# snapshots and commits them back to the branch.
+
+name: Dev check
+
+on:
+  push:
+    branches: ['dev/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dev-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Fetch the STCC card database
+        run: npm run fetch-cards || echo "fetch-cards failed (continuing)"
+
+      - name: Update snapshots (on request)
+        if: contains(github.event.head_commit.message, '[update-snapshots]')
+        run: |
+          npx vitest run -u || true
+          git config user.name "dev-check"
+          git config user.email "dev-check@users.noreply.github.com"
+          git add -A '*.snap'
+          git diff --cached --quiet || {
+            git commit -m "Update vitest snapshots"
+            git push origin HEAD:${{ github.ref_name }}
+          }
+
+      - name: Run checks
+        run: |
+          set +e
+          mkdir -p /tmp/report
+          R=/tmp/report/report.txt
+          echo "sha: ${{ github.sha }}" > $R
+          echo "branch: ${{ github.ref_name }}" >> $R
+          run() {
+            name=$1; shift
+            "$@" > /tmp/report/$name.log 2>&1
+            code=$?
+            echo "$name: exit $code" >> $R
+          }
+          run validate npm run validate:cards
+          run audit npm run audit:publish
+          run tsc npx tsc -b
+          run lint npm run lint
+          run test npx vitest run
+          run crosscheck npx tsx tools/crosscheck-stcc.ts
+          for f in validate audit tsc lint test crosscheck; do
+            echo "" >> $R
+            echo "===== $f (last 150 lines) =====" >> $R
+            tail -n 150 /tmp/report/$f.log >> $R
+          done
+          grep -E "FAIL|✗|×" /tmp/report/test.log | head -100 > /tmp/report/test-failures.txt
+          cat $R | head -20
+
+      - name: Publish the report
+        if: always()
+        run: |
+          cd /tmp/report
+          git init -q
+          git config user.name "dev-check"
+          git config user.email "dev-check@users.noreply.github.com"
+          git checkout -q -b ci-report
+          git add -A
+          git commit -q -m "Report for ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ci-report

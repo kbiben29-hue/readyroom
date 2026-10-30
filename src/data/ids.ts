@@ -73,6 +73,7 @@ export const REGULAR_TRAITS = [
 	'MIND_CONTROL',
 	'NX_01',
 	'OPS',
+	'PATH_OF_SURAK', // To Boldly Go (2SOV08, 2SOV19)
 	'PILOT',
 	'MAQUIS',
 	'SCIENTIST',
@@ -122,6 +123,7 @@ export const DECKS = [
 	'MAL',
 	// To Boldly Go (box 2) crew decks, by their card-number code (2GEO01/23 …)
 	'GEO',
+	'SOV',
 ] as const
 export type DeckId = (typeof DECKS)[number]
 

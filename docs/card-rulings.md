@@ -946,3 +946,21 @@ solo-only Directives are out of scope, as in box 1.
     Team on neutral LOCATIONs); 2PER26's ban on opponent reactions; 2CAR04's reaction to the
     opponent warping.
 - **Keyed on:** `src/data/cards/tbg/common/*.json`.
+
+## 054 — The 2SOV crew deck (To Boldly Go): first implementation
+
+- **Reprints:** 2SOV11, 14, 17, 18, 22 and 23 copy 1SHR12, 1INC01, 1PIC15, 1PIC17, 1SHR13 and
+  1PIC19. 2SOV10 is 1SHI03 plus a "promote a PERSON from your hand" activation; 2SOV03's
+  activation is 1PIC21's.
+- **Crew board glyphs:** the published maxima are ×6 on every track; the steps use the standard
+  ×6 layout (0/2/7/10/13/15, Advanced one lower). To be checked against the printed board.
+- **2SOV/M1 "5 cards with {RES-skill}/wild Skill in play (excluding beamed)":** counted over the
+  Fleet, Location area, Duty Officers and Staging area with an `exhibits: RESEARCH` filter, which
+  also counts a {RES} Focus icon.
+- **Approximations:** 2SOV05's dismissed SHIP may be at any LOCATION (the "neutral" check and
+  "not secured by your opponent" are not modelled), and its Away Team goes to any neutral
+  LOCATION. 2SOV06 gains 1 {GLO} for an INCIDENT you return, not for one your opponent returns.
+- **Not modelled yet:** 2SOV13's swap of a Junk card with the Market card of its suit, and
+  2SOV21's scan for a Skill icon.
+- **Keyed on:** `src/data/cards/crew/sov.json`, `src/data/cards/boards/sov.json`; tests
+  `src/engine/tbg-box.test.ts`.

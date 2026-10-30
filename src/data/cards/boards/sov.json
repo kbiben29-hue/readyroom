@@ -1,0 +1,550 @@
+[
+	{
+		"deck": "SOV",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2SOV/M1",
+				"goal": {
+					"k": "COUNT_AT_LEAST",
+					"query": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							},
+							{
+								"k": "LOCATION_AREA",
+								"seat": 0
+							},
+							{
+								"k": "DUTY_OFFICER",
+								"seat": 0
+							},
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"exhibits": [
+								"RESEARCH"
+							]
+						}
+					},
+					"value": 5
+				},
+				"reward": {
+					"k": "FOR_EACH",
+					"over": {
+						"zones": [
+							"IN_PLAY"
+						],
+						"filter": {
+							"traits": [
+								"TELEPATH"
+							]
+						},
+						"seat": "SELF"
+					},
+					"bind": "$2sov-m1.t",
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Draw a card",
+								"body": {
+									"k": "DRAW",
+									"count": 1
+								}
+							},
+							{
+								"label": "Gain 1 Latinum and you may return an INCIDENT",
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 1
+										},
+										{
+											"k": "MAY",
+											"body": {
+												"k": "RETURN_INCIDENT",
+												"target": {
+													"zones": [
+														{
+															"k": "HAND",
+															"seat": 0
+														},
+														{
+															"k": "DISCARD",
+															"seat": 0
+														}
+													],
+													"filter": {
+														"suits": [
+															"INCIDENT"
+														]
+													}
+												}
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "SOV",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2SOV/M1",
+				"goal": {
+					"k": "COUNT_AT_LEAST",
+					"query": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							},
+							{
+								"k": "LOCATION_AREA",
+								"seat": 0
+							},
+							{
+								"k": "DUTY_OFFICER",
+								"seat": 0
+							},
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"exhibits": [
+								"RESEARCH"
+							]
+						}
+					},
+					"value": 5
+				},
+				"reward": {
+					"k": "FOR_EACH",
+					"over": {
+						"zones": [
+							"IN_PLAY"
+						],
+						"filter": {
+							"traits": [
+								"TELEPATH"
+							]
+						},
+						"seat": "SELF"
+					},
+					"bind": "$2sov-m1.t",
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Draw a card",
+								"body": {
+									"k": "DRAW",
+									"count": 1
+								}
+							},
+							{
+								"label": "Gain 1 Latinum and you may return an INCIDENT",
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 1
+										},
+										{
+											"k": "MAY",
+											"body": {
+												"k": "RETURN_INCIDENT",
+												"target": {
+													"zones": [
+														{
+															"k": "HAND",
+															"seat": 0
+														},
+														{
+															"k": "DISCARD",
+															"seat": 0
+														}
+													],
+													"filter": {
+														"suits": [
+															"INCIDENT"
+														]
+													}
+												}
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				},
+				"vp": 2
+			},
+			{
+				"index": 1,
+				"cardId": "2SOV/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								}
+							},
+							"value": 3
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"BEAMED_ANY"
+								],
+								"filter": {
+									"traits": [
+										"STARFLEET"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 3
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"ENCOUNTER"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"HUMAN",
+								"STARFLEET"
+							]
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 3
+							},
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 2,
+				"cardId": "2SOV/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 5
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"ALLY"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 2
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "INFLUENCE",
+							"value": 5
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 2
+							},
+							"body": {
+								"k": "RECALL",
+								"target": {
+									"zones": [
+										"BEAMED_ANY"
+									],
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"from": {
+										"k": "DUTY_OFFICER",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "ENLIST_DEVELOPMENT"
+								}
+							}
+						}
+					]
+				},
+				"vp": 3
+			}
+		]
+	}
+]

@@ -19,7 +19,7 @@
 // stays a pure lookup and each hook stays data-driven.
 
 import type { GameState } from './state'
-import { player, inPlayCards, zoneProps } from './state'
+import { player, inPlayCards, zoneProps, zonesOf } from './state'
 import { cardDef } from './cards'
 import type { CardInstanceId } from './ids'
 import type { Effect, Operation } from './resolver/nodes'
@@ -226,6 +226,25 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 	},
 	// describe-only: the wild Skill is the card's SKILL_ANY icon (as 1BUR20)
 	'2GEO21_WILD_SKILL': { describe: 'This card has 1 wild Skill.' },
+	// --- To Boldly Go: the 2SOV crew deck ---
+	'2SOV03_DUTY': {
+		describe: 'You may have an additional PERSON with VULCAN on duty.',
+		dutyOfficerSlot: { traits: ['VULCAN'] },
+	},
+	// describe-only: the wild Skills are the card's SKILL_ANY icons (as 1BUR20)
+	'2SOV06_WILD_SKILLS': { describe: 'This card has 2 wild Skills.' },
+	'2SOV07_HAND': {
+		describe:
+			'Increase your hand size by 1 for every non-VULCAN controlled LOCATION you have in play (max 3).',
+		handSize: (base, state, seat) =>
+			base +
+			Math.min(
+				3,
+				zonesOf(state, { k: 'LOCATION_AREA', seat }).filter(
+					(iid) => !cardDef(state.cards[iid]!.def).traits.includes('VULCAN'),
+				).length,
+			),
+	},
 	// --- To Boldly Go common cards ---
 	'2PER03_HAND': {
 		describe: 'If you have 8+ {GLO}, increase your hand size by 2.',

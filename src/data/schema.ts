@@ -168,6 +168,8 @@ const AmountSchema: z.ZodType<Amount> = z.lazy(() =>
 			})
 			.strict(),
 		z.object({ k: z.literal('UNUSED_ACTIONS') }).strict(),
+		z.object({ k: z.literal('STARDATE_SEQUENCE') }).strict(),
+		z.object({ k: z.literal('HIGHEST_MULTIPLIER') }).strict(),
 		z
 			.object({
 				k: z.enum(['MIN', 'MAX', 'SUM']),

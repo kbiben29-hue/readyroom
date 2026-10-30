@@ -265,6 +265,10 @@ function amt(a: Amount): Amt {
 			}
 		case 'UNUSED_ACTIONS':
 			return { n: '1', per: [glyph('ACT', 'unused')] }
+		case 'STARDATE_SEQUENCE':
+			return { n: 'SD#', per: [] }
+		case 'HIGHEST_MULTIPLIER':
+			return { n: '×max', per: [] }
 		case 'UP_TO': {
 			const m = amt(a.max)
 			return { ...m, n: `≤${m.n}` }

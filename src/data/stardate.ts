@@ -85,6 +85,11 @@ addSet(28, [5, 5, 6, 6, 5], [], {
  *  2 Cadet + 5 solo levels × 5). */
 export const STARDATE_COUNT = META.size
 
+/** A Stardate card's printed sequence number (#1 sits on top); 0 if unknown. */
+export function stardateSequence(defId: string): number {
+	return META.get(defId)?.sequence ?? 0
+}
+
 /** Wrap the parsed `CardDef[]` from common/stardate.json into `StardateSpec[]`.
  *  Every def must have a track entry (a card with no sequence/glory/modes is a
  *  hard error — same spirit as the schema gate). */

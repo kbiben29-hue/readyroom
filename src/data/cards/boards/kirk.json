@@ -1,0 +1,1011 @@
+[
+	{
+		"deck": "KIRK",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 7,
+						"value": 4
+					},
+					{
+						"step": 10,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 7,
+						"value": 4
+					},
+					{
+						"step": 10,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 7,
+						"value": 4
+					},
+					{
+						"step": 10,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2KIRK/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 2,
+									"filter": {
+										"suits": [
+											"ENCOUNTER"
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "RESEARCH",
+							"value": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "ENCOUNTER",
+							"count": 1
+						},
+						{
+							"k": "REMOVE_STARDATE_GLORY",
+							"amount": 2
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "KIRK",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2KIRK/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"count": 2,
+									"filter": {
+										"suits": [
+											"ENCOUNTER"
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "RESEARCH",
+							"value": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "ENCOUNTER",
+							"count": 1
+						},
+						{
+							"k": "REMOVE_STARDATE_GLORY",
+							"amount": 2
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 1,
+				"cardId": "2KIRK/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "OR",
+							"terms": [
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"ALIEN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"AENAR"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"ANDORIAN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"ANDROID"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"BAJORAN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"BETAZOID"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"BORG"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"BREEN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"CARDASSIAN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"CHANGELING"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"FERENGI"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"JEM_HADAR"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"KAZON"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"KELPIEN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"KLINGON"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"ORION"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"PAKLED"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"REMAN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"ROMULAN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"SYNTHETIC"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"TELLARITE"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"TRANSCENDENT"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"TRILL"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"VAU_NAKAT"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"VORTA"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"VULCAN"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"XB"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								},
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"XINDI"
+											],
+											"not": {
+												"traits": [
+													"HUMAN",
+													"STARFLEET"
+												]
+											}
+										},
+										"seat": "SELF"
+									},
+									"value": 3
+								}
+							]
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "INFLUENCE",
+							"value": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "ENLIST_DEVELOPMENT",
+					"free": true
+				},
+				"vp": 1
+			},
+			{
+				"index": 2,
+				"cardId": "2KIRK/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOG",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"2KIRK24-25"
+									]
+								}
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"ids": [
+										"2KIRK11-25"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 5
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "MILITARY",
+							"value": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {
+								"ids": [
+									"2KIRK24-25"
+								]
+							},
+							"zones": [
+								{
+									"k": "LOG",
+									"seat": 0
+								}
+							],
+							"bind": "$2kirk-m3.s"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"ids": [
+										"2KIRK24-25"
+									]
+								},
+								"bound": "$2kirk-m3.s"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"INCIDENT"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											},
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										],
+										"bind": "$2kirk-m3.i"
+									},
+									{
+										"k": "RETURN_INCIDENT",
+										"target": {
+											"zones": [
+												{
+													"k": "HAND",
+													"seat": 0
+												}
+											],
+											"bound": "$2kirk-m3.i"
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						},
+						{
+							"k": "DISMISS",
+							"target": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"ids": [
+										"2KIRK11-25"
+									]
+								},
+								"seat": "SELF"
+							}
+						}
+					]
+				},
+				"vp": 4
+			}
+		]
+	}
+]

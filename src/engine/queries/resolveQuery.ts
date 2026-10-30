@@ -20,6 +20,7 @@ import {
 } from './traits'
 import { exhibitsSpecialty, countSkillIcons } from './counting'
 import { isSecured } from './board'
+import { stardateSequence } from '../../data/stardate'
 import {
 	isCadetOpponent,
 	opponentCardsInPlay,
@@ -750,6 +751,20 @@ export function evalAmount(
 				}
 				case 'UNUSED_ACTIONS':
 					return player(state, ctx.actor).actions.available
+				case 'STARDATE_SEQUENCE': {
+					const top = state.stardates.pile[0]
+					if (top === undefined) return 0
+					return stardateSequence(state.cards[top]?.def ?? '')
+				}
+				case 'HIGHEST_MULTIPLIER': {
+					// the highest glyph VALUE reached on any track (as final scoring)
+					const p = player(state, ctx.actor)
+					let best = 0
+					for (const sp of ['RESEARCH', 'INFLUENCE', 'MILITARY'] as const)
+						for (const { step, value } of p.tracks[sp])
+							if (p.specialties[sp] >= step && value > best) best = value
+					return best
+				}
 				case 'MIN':
 					return Math.min(...amount.terms.map((t) => rec(t)))
 				case 'MAX':

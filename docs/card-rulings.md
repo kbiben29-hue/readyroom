@@ -974,3 +974,25 @@ side is its Advanced side one higher plus ×1 at step 0, as on every box-1 board
   RESEARCH and INFLUENCE were already right.
 - **2SOV INFLUENCE:** Advanced ×1 at 3, ×3 at 8, ×4 at 11, ×5 at 15 (Basic ×1 at 0, ×2 at 3, ×4
   at 8, ×5 at 11, ×6 at 15). RESEARCH and MILITARY were already right.
+
+## 056 — The 2KIRK crew deck (To Boldly Go): first implementation
+
+- **Reprints:** 2KIRK02, 14, 16, 18, 19, 20, 21 and 25 copy 1PIC02, 1PIC15, 1INC05, 1PIC17,
+  1PIC19, 1PIC22, 1PIC18 and 1BUR19; 2KIRK08 copies 2GEO04.
+- **New amounts:** `STARDATE_SEQUENCE` (the current Stardate card's sequence number, 2KIRK03)
+  and `HIGHEST_MULTIPLIER` (the highest glyph value reached on any track, as in final scoring,
+  2KIRK09).
+- **"Free if …" Development costs (2KIRK05, 2KIRK06):** a choice between the {DIL} cost and a
+  `COST_REQUIRE` that the named card is logged / on duty.
+- **2KIRK13's reaction "after warping a SHIP to a neutral LOCATION":** sends to that SHIP's
+  LOCATION only if it is a neutral one, so the reaction is offered only after such a warp.
+- **2KIRK22 "for each different species … (max 3 times)":** up to three optional payments, the
+  n-th offered when n different species (excluding STARFLEET cards) are in play.
+- **2KIRK23 "after discarding or logging a PERSON during your Action Step":** the discard half
+  checks the Action Step; the log half (CARD_LOGGED has no step filter) fires on any log.
+- **2KIRK/M2 "3 of the same species":** any species (other than HUMAN) on 3+ of your in-play
+  cards that are neither HUMAN nor STARFLEET.
+- **Crew board glyphs:** placeholders (the printed ×5 maximum on every track) until read off the
+  printed board.
+- **Keyed on:** `src/data/cards/crew/kirk.json`, `src/data/cards/boards/kirk.json`; tests
+  `src/engine/tbg-box.test.ts`.

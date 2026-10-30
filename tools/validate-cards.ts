@@ -53,6 +53,7 @@ const GROUPS: ReadonlyArray<{ file: string; label: string; expected: number }> =
 		// To Boldly Go (box 2) crew decks
 		{ file: 'crew/geo.json', label: 'GEO', expected: 23 },
 		{ file: 'crew/sov.json', label: 'SOV', expected: 24 },
+		{ file: 'crew/kirk.json', label: 'KIRK', expected: 25 },
 		// To Boldly Go common cards
 		{ file: 'tbg/common/person.json', label: 'TBG PERSON', expected: 26 },
 		{ file: 'tbg/common/cargo.json', label: 'TBG CARGO', expected: 18 },
@@ -63,7 +64,7 @@ const GROUPS: ReadonlyArray<{ file: string; label: string; expected: number }> =
 		{ file: 'tbg/common/incident.json', label: 'TBG INCIDENT', expected: 6 },
 	]
 
-const OVERALL_EXPECTED = 479
+const OVERALL_EXPECTED = 504
 
 // ---------------------------------------------------------------------------
 // Helpers

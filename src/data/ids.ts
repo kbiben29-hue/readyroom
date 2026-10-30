@@ -124,6 +124,7 @@ export const DECKS = [
 	// To Boldly Go (box 2) crew decks, by their card-number code (2GEO01/23 …)
 	'GEO',
 	'SOV',
+	'KIRK',
 ] as const
 export type DeckId = (typeof DECKS)[number]
 

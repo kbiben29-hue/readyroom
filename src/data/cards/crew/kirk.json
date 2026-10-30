@@ -1,0 +1,3097 @@
+[
+	{
+		"id": "2KIRK01-25",
+		"cardId": "2KIRK01/25",
+		"suit": "CAPTAIN",
+		"deck": "KIRK",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"KLINGON"
+						]
+					}
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "ADVANCE_SPECIALTY",
+						"specialty": "MILITARY",
+						"amount": 1
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "DRAW_FROM_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"DIRECTIVE"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "PER",
+						"every": 2,
+						"of": {
+							"k": "MIN",
+							"terms": [
+								{
+									"k": "SPECIALTY",
+									"specialty": "RESEARCH"
+								},
+								{
+									"k": "SPECIALTY",
+									"specialty": "INFLUENCE"
+								},
+								{
+									"k": "SPECIALTY",
+									"specialty": "MILITARY"
+								}
+							]
+						}
+					}
+				}
+			}
+		],
+		"awayTeams": 5
+	},
+	{
+		"id": "2KIRK02-25",
+		"cardId": "2KIRK02/25",
+		"suit": "SHIP",
+		"deck": "KIRK",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_ANY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"thisCard": true
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Warp this ship",
+									"body": {
+										"k": "WARP",
+										"ship": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											},
+											"thisCard": true
+										},
+										"to": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									}
+								},
+								{
+									"label": "Beam a card here",
+									"body": {
+										"k": "BEAM",
+										"count": 1,
+										"to": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK03-25",
+		"cardId": "2KIRK03/25",
+		"suit": "LOCATION",
+		"deck": "KIRK",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_ANY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "CONTROLLED_LOCATION",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "SPECIAL",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_LOGGED"
+				},
+				"effect": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UP_TO",
+						"max": {
+							"k": "STARDATE_SEQUENCE"
+						}
+					},
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK04-25",
+		"cardId": "2KIRK04/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 4,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "LAT",
+			"amount": 3
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"filter": {
+							"suits": [
+								"SHIP"
+							]
+						},
+						"from": {
+							"k": "FLEET",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": {
+									"k": "UP_TO",
+									"max": 3
+								},
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"bind": "$2kirk04.loc"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"NEUTRAL_LOCATIONS"
+										],
+										"bound": "$2kirk04.loc",
+										"secured": true
+									},
+									"value": 1
+								},
+								"then": {
+									"k": "TAKE_CONTROL",
+									"target": {
+										"zones": [
+											"NEUTRAL_LOCATIONS"
+										],
+										"bound": "$2kirk04.loc"
+									},
+									"requireSecured": true
+								}
+							},
+							{
+								"k": "OPPONENT",
+								"body": {
+									"k": "TAKE",
+									"deck": "INCIDENT",
+									"count": 1
+								}
+							},
+							{
+								"k": "FORCE",
+								"body": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											{
+												"k": "DUTY_OFFICER",
+												"seat": 0
+											}
+										]
+									}
+								}
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK05-25",
+		"cardId": "2KIRK05/25",
+		"suit": "SHIP",
+		"deck": "KIRK",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_ANY",
+			"SKILL_ANY"
+		],
+		"focus": null,
+		"vp": 4,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "CHOOSE_ONE",
+			"options": [
+				{
+					"label": "Spend 6 Dilithium",
+					"body": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 6
+					}
+				},
+				{
+					"label": "Free: the first Enterprise is logged",
+					"body": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOG",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"2KIRK02-25"
+									]
+								}
+							},
+							"value": 1
+						}
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Warp this ship",
+									"body": {
+										"k": "WARP",
+										"ship": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											},
+											"thisCard": true
+										},
+										"to": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									}
+								},
+								{
+									"label": "Beam a card here",
+									"body": {
+										"k": "BEAM",
+										"count": 1,
+										"to": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									}
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "BEAM",
+									"count": 1,
+									"to": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"thisCard": true
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK06-25",
+		"cardId": "2KIRK06/25",
+		"suit": "SHIP",
+		"deck": "KIRK",
+		"traits": [
+			"STARFLEET",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_ANY",
+			"SKILL_ANY"
+		],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "CHOOSE_ONE",
+			"options": [
+				{
+					"label": "Spend 6 Dilithium",
+					"body": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 6
+					}
+				},
+				{
+					"label": "Free: your pilot is a Duty Officer",
+					"body": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"2KIRK07-25"
+									]
+								}
+							},
+							"value": 1
+						}
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"NEUTRAL_LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"withShip": true,
+									"shipSeat": "OPPONENT"
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "OPPONENT",
+								"body": {
+									"k": "TAKE",
+									"deck": "INCIDENT",
+									"count": 1
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FIND",
+								"filter": {
+									"ids": [
+										"2KIRK20-25"
+									]
+								},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									},
+									{
+										"k": "RESERVE",
+										"seat": 0
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "RECALL",
+						"target": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK07-25",
+		"cardId": "2KIRK07/25",
+		"suit": "PERSON",
+		"deck": "KIRK",
+		"traits": [
+			"HUMAN",
+			"PILOT",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "INCIDENT",
+							"count": 1,
+							"to": "DISCARD"
+						},
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 2,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "WOULD_BE_ATTACKED"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_EXHAUST",
+						"filter": {
+							"suits": [
+								"SHIP"
+							]
+						}
+					},
+					"body": {
+						"k": "IGNORE_ATTACK",
+						"scope": "EFFECT"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK08-25",
+		"cardId": "2KIRK08/25",
+		"suit": "PERSON",
+		"deck": "KIRK",
+		"traits": [
+			"VULCAN",
+			"TELEPATH",
+			"AMBASSADOR"
+		],
+		"skills": [
+			"SKILL_INFLUENCE"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"VULCAN"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "PROMOTE",
+										"from": "STAGING",
+										"target": "THIS"
+									},
+									{
+										"k": "MAY",
+										"body": {
+											"k": "PROMOTE",
+											"from": "STAGING",
+											"filter": {
+												"suits": [
+													"PERSON"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO04_DUTY_A"
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO04_DUTY_B"
+				}
+			}
+		],
+		"passives": [
+			"2GEO04_DUTY_A",
+			"2GEO04_DUTY_B"
+		]
+	},
+	{
+		"id": "2KIRK09-25",
+		"cardId": "2KIRK09/25",
+		"suit": "LOCATION",
+		"deck": "KIRK",
+		"traits": [
+			"VULCAN"
+		],
+		"skills": [
+			"SKILL_RESEARCH",
+			"SKILL_RESEARCH"
+		],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 4
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 4
+				},
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FIND",
+								"filter": {
+									"traits": [
+										"VULCAN"
+									]
+								},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									},
+									{
+										"k": "RESERVE",
+										"seat": 0
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW_FROM_DISCARD",
+								"count": 1,
+								"filter": {
+									"ids": [
+										"2KIRK19-25",
+										"1PIC19-24",
+										"2GEO18-23",
+										"2SOV23-24"
+									]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"INCIDENT"
+									]
+								},
+								"from": {
+									"k": "HAND",
+									"seat": 0
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "HIGHEST_MULTIPLIER"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK10-25",
+		"cardId": "2KIRK10/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [
+			"ANOMALY",
+			"TIME_TRAVEL"
+		],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_TAKE_INCIDENT",
+					"count": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "FIND",
+					"filter": {},
+					"zones": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						},
+						{
+							"k": "DRAW",
+							"seat": 0
+						},
+						{
+							"k": "RESERVE",
+							"seat": 0
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "RECALL",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"not": {
+								"traits": [
+									"TIME_TRAVEL"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK11-25",
+		"cardId": "2KIRK11/25",
+		"suit": "SHIP",
+		"deck": "KIRK",
+		"traits": [
+			"KLINGON",
+			"CLOAK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 5
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										}
+									},
+									"ignoreBlocking": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK12-25",
+		"cardId": "2KIRK12/25",
+		"suit": "PERSON",
+		"deck": "KIRK",
+		"traits": [
+			"HUMAN",
+			"ENGINEER",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Find a SHIP outside your Reserve deck",
+							"body": {
+								"k": "FIND",
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									}
+								],
+								"bind": "$2kirk12.f"
+							}
+						},
+						{
+							"label": "Find a SHIP in your Reserve deck and take an INCIDENT",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										},
+										"zones": [
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										],
+										"bind": "$2kirk12.f"
+									},
+									{
+										"k": "TAKE",
+										"deck": "INCIDENT",
+										"count": 1
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISMISS",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"SHIP"
+							]
+						},
+						"from": {
+							"k": "FLEET",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TRIGGER_CONTROL",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 2
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"SHIP",
+										"CARGO"
+									]
+								},
+								"seat": "SELF"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK13-25",
+		"cardId": "2KIRK13/25",
+		"suit": "PERSON",
+		"deck": "KIRK",
+		"traits": [
+			"HUMAN",
+			"OPS",
+			"STARFLEET",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "DECK_TOP"
+						},
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$2kirk13.loc"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"bound": "$2kirk13.loc"
+								},
+								"seat": "OPPONENT",
+								"value": 1
+							},
+							"then": {
+								"k": "DISCARD",
+								"count": 1,
+								"from": "HAND",
+								"whose": "OPPONENT"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SHIP_WARPED"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"PERSON"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"NEUTRAL_LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"atBound": "$event.card"
+								}
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK14-25",
+		"cardId": "2KIRK14/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"SHIP"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"CARGO"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK15-25",
+		"cardId": "2KIRK15/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Dismiss a deployed SHIP",
+									"body": {
+										"k": "DISMISS",
+										"target": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											}
+										},
+										"bind": "$2kirk15.d"
+									}
+								},
+								{
+									"label": "Dismiss a Duty Officer",
+									"body": {
+										"k": "DISMISS",
+										"target": {
+											"zones": [
+												{
+													"k": "DUTY_OFFICER",
+													"seat": 0
+												}
+											]
+										},
+										"bind": "$2kirk15.d"
+									}
+								}
+							]
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$2kirk15.d"
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "LOG",
+										"target": {
+											"zones": [
+												{
+													"k": "DISCARD",
+													"seat": 0
+												}
+											],
+											"bound": "$2kirk15.d"
+										}
+									},
+									{
+										"k": "ENLIST_DEVELOPMENT",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK16-25",
+		"cardId": "2KIRK16/25",
+		"suit": "INCIDENT",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"bind": "discarded"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "discarded",
+									"filter": {
+										"exhibits": [
+											"RESEARCH"
+										]
+									}
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "DRAW",
+											"count": 2,
+											"bind": [
+												"$1inc05.a",
+												"$1inc05.b"
+											]
+										},
+										{
+											"k": "DISCARD",
+											"count": 1,
+											"from": "HAND",
+											"onlyBound": [
+												"$1inc05.a",
+												"$1inc05.b"
+											]
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "HAS_TRAIT_IN_PLAY",
+						"trait": "TIME_TRAVEL"
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "DRAW",
+								"count": 2,
+								"bind": [
+									"$1inc05.a",
+									"$1inc05.b"
+								]
+							},
+							{
+								"k": "DISCARD",
+								"count": 1,
+								"from": "HAND",
+								"onlyBound": [
+									"$1inc05.a",
+									"$1inc05.b"
+								]
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK17-25",
+		"cardId": "2KIRK17/25",
+		"suit": "CARGO",
+		"deck": "KIRK",
+		"traits": [
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 3
+							},
+							"body": {
+								"k": "BEAM",
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								},
+								"count": 1,
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										]
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "DISMISS",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "RECALL",
+							"target": {
+								"zones": [
+									{
+										"k": "BEAMED_TO",
+										"host": "THIS"
+									}
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										]
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "DISMISS",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"from": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": [
+								"PERSON"
+							]
+						},
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK18-25",
+		"cardId": "2KIRK18/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"ALLY"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK19-25",
+		"cardId": "2KIRK19/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"seat": "SELF",
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "loc",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 2
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "ADVANCE_SPECIALTY",
+					"specialty": "CHOICE",
+					"amount": {
+						"k": "SKILL_ICONS",
+						"specialty": "CHOSEN"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK20-25",
+		"cardId": "2KIRK20/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SELECT",
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"bind": "$1pic22.loc"
+							},
+							{
+								"k": "REPEAT",
+								"times": {
+									"k": "UP_TO",
+									"max": 3
+								},
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_DISCARD",
+										"count": 1,
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									},
+									"body": {
+										"k": "SEND_AWAY_TEAM",
+										"count": 1,
+										"target": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											},
+											"bound": "$1pic22.loc"
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND"
+						},
+						{
+							"k": "WARP",
+							"ship": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								}
+							},
+							"to": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"count": {
+								"k": "UP_TO",
+								"max": 2
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK21-25",
+		"cardId": "2KIRK21/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SELECT",
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$1pic18.loc"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"bound": "$1pic18.loc",
+											"withAwayTeam": true
+										},
+										"value": 1
+									},
+									{
+										"k": "OR",
+										"terms": [
+											{
+												"k": "COUNT_AT_LEAST",
+												"query": {
+													"zones": [
+														{
+															"k": "LOCATION_AREA",
+															"seat": 0
+														}
+													],
+													"bound": "$1pic18.loc",
+													"withShip": true
+												},
+												"value": 1
+											},
+											{
+												"k": "COUNT_AT_LEAST",
+												"query": {
+													"zones": [
+														{
+															"k": "BEAMED_TO",
+															"bound": "$1pic18.loc"
+														}
+													],
+													"filter": {
+														"suits": [
+															"SHIP"
+														]
+													}
+												},
+												"value": 1
+											}
+										]
+									}
+								]
+							},
+							"then": {
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"look": 2,
+								"returnUnpicked": true
+							}
+						},
+						{
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "LOG",
+									"target": {
+										"zones": [
+											{
+												"k": "LOCATION_AREA",
+												"seat": 0
+											}
+										],
+										"bound": "$1pic18.loc"
+									}
+								},
+								{
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							]
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK22-25",
+		"cardId": "2KIRK22/25",
+		"suit": "PERSON",
+		"deck": "KIRK",
+		"traits": [
+			"HUMAN",
+			"STARFLEET",
+			"COMMUNICATION"
+		],
+		"skills": [
+			"SKILL_INFLUENCE"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON",
+							"ALLY"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 5
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON",
+							"CARGO",
+							"SHIP",
+							"ALLY"
+						],
+						"filter": {
+							"traits": [
+								"ALIEN"
+							]
+						},
+						"includeJunk": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DIFFERENT_SPECIES_IN_PLAY",
+								"count": 1,
+								"filter": {
+									"not": {
+										"traits": [
+											"STARFLEET"
+										]
+									}
+								}
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									},
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DIFFERENT_SPECIES_IN_PLAY",
+								"count": 2,
+								"filter": {
+									"not": {
+										"traits": [
+											"STARFLEET"
+										]
+									}
+								}
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									},
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DIFFERENT_SPECIES_IN_PLAY",
+								"count": 3,
+								"filter": {
+									"not": {
+										"traits": [
+											"STARFLEET"
+										]
+									}
+								}
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									},
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK23-25",
+		"cardId": "2KIRK23/25",
+		"suit": "PERSON",
+		"deck": "KIRK",
+		"traits": [
+			"HUMAN",
+			"DOCTOR",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DISCARDED",
+					"duringAction": true,
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				},
+				"effect": {
+					"k": "FREE_PLAY",
+					"filter": {
+						"suits": [
+							"INCIDENT"
+						]
+					},
+					"from": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_LOGGED",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				},
+				"effect": {
+					"k": "FREE_PLAY",
+					"filter": {
+						"suits": [
+							"INCIDENT"
+						]
+					},
+					"from": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK24-25",
+		"cardId": "2KIRK24/25",
+		"suit": "PERSON",
+		"deck": "KIRK",
+		"traits": [
+			"HUMAN",
+			"VULCAN",
+			"TELEPATH",
+			"SCIENTIST",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"from": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						],
+						"bind": "$2kirk24.l"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 3
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Gain 1 RESEARCH",
+											"body": {
+												"k": "PAY_THEN",
+												"cost": {
+													"k": "COST_REQUIRE",
+													"cond": {
+														"k": "BOUND_IS",
+														"bind": "$2kirk24.l",
+														"filter": {
+															"exhibits": [
+																"RESEARCH"
+															]
+														}
+													}
+												},
+												"body": {
+													"k": "ADVANCE_SPECIALTY",
+													"specialty": "RESEARCH",
+													"amount": 1
+												}
+											}
+										},
+										{
+											"label": "Gain 1 INFLUENCE",
+											"body": {
+												"k": "PAY_THEN",
+												"cost": {
+													"k": "COST_REQUIRE",
+													"cond": {
+														"k": "BOUND_IS",
+														"bind": "$2kirk24.l",
+														"filter": {
+															"exhibits": [
+																"INFLUENCE"
+															]
+														}
+													}
+												},
+												"body": {
+													"k": "ADVANCE_SPECIALTY",
+													"specialty": "INFLUENCE",
+													"amount": 1
+												}
+											}
+										},
+										{
+											"label": "Gain 1 MILITARY",
+											"body": {
+												"k": "PAY_THEN",
+												"cost": {
+													"k": "COST_REQUIRE",
+													"cond": {
+														"k": "BOUND_IS",
+														"bind": "$2kirk24.l",
+														"filter": {
+															"exhibits": [
+																"MILITARY"
+															]
+														}
+													}
+												},
+												"body": {
+													"k": "ADVANCE_SPECIALTY",
+													"specialty": "MILITARY",
+													"amount": 1
+												}
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_GAINED",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"withShip": true
+								},
+								"bind": "$2kirk24.s"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$2kirk24.s"
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KIRK25-25",
+		"cardId": "2KIRK25/25",
+		"suit": "DIRECTIVE",
+		"deck": "KIRK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2,
+							"bind": [
+								"$1bur19.a",
+								"$1bur19.b"
+							]
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND",
+							"onlyBound": [
+								"$1bur19.a",
+								"$1bur19.b"
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"to": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+]

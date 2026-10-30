@@ -251,6 +251,10 @@ export function describeAmount(amount: Amount): string {
 			return `your ${resourceToken(amount.res)}`
 		case 'UNUSED_ACTIONS':
 			return 'your unused actions'
+		case 'STARDATE_SEQUENCE':
+			return "the current Stardate card's sequence number"
+		case 'HIGHEST_MULTIPLIER':
+			return 'your highest multiplier on any Specialty track'
 		case 'MIN':
 			return `the lesser of ${amount.terms.map(describeAmount).join(' and ')}`
 		case 'MAX':

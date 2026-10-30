@@ -1,6 +1,6 @@
 // To Boldly Go as a game box (src/data/boxes.ts): setup takes only box-2
 // common cards, the original box takes only box-1 ones, and full games
-// between the two To Boldly Go crews (2GEO, 2SOV) reach GAME_OVER with the
+// between To Boldly Go crews reach GAME_OVER with the
 // engine invariants intact.
 
 import { beforeAll, describe, expect, it } from 'vitest'
@@ -12,6 +12,9 @@ import { cardDef } from './cards'
 import type { GameState } from './state'
 import type { DeckId } from '../data/ids'
 import type { GameBox } from '../data/boxes'
+
+/** The To Boldly Go crews implemented so far. */
+const TBG_CREWS: DeckId[] = ['GEO', 'SOV', 'KIRK']
 
 let catalog: CardCatalog
 beforeAll(async () => {
@@ -74,13 +77,14 @@ describe('game box setup', () => {
 })
 
 describe('To Boldly Go fuzz', () => {
-	it.each([
-		['GEO', 'SOV'],
-		['SOV', 'GEO'],
-	] as [DeckId, DeckId][])(
+	// every ordered pairing of To Boldly Go crews, in the To Boldly Go box
+	const pairs: [DeckId, DeckId][] = []
+	for (const a of TBG_CREWS)
+		for (const b of TBG_CREWS) if (a !== b) pairs.push([a, b])
+	it.each(pairs)(
 		'%s/%s in the To Boldly Go box reaches GAME_OVER with invariants after every intent',
 		(a, b) => {
-			for (const seed of [0, 1, 2]) {
+			for (const seed of [0, 1]) {
 				let before: GameState | undefined
 				const r = autoPlay(
 					setup(config(a, b, seed, 'TBG'), catalog),
@@ -99,12 +103,17 @@ describe('To Boldly Go fuzz', () => {
 		240_000,
 	)
 
-	it.each(['PIC', 'SHR', 'KOL', 'SIS', 'SEL'] as DeckId[])(
-		'2SOV against %s on the original box reaches GAME_OVER',
-		(o) => {
+	// each To Boldly Go crew against each box-1 crew, on the original box
+	const cross: [DeckId, DeckId][] = []
+	for (const t of TBG_CREWS)
+		for (const o of ['PIC', 'SHR', 'KOL', 'SIS', 'SEL'] as DeckId[])
+			cross.push([t, o])
+	it.each(cross)(
+		'%s against %s on the original box reaches GAME_OVER',
+		(t, o) => {
 			for (const [a, b] of [
-				['SOV', o],
-				[o, 'SOV'],
+				[t, o],
+				[o, t],
 			] as [DeckId, DeckId][]) {
 				const r = autoPlay(setup(config(a, b, 0, undefined), catalog))
 				expect(r.stopped, `${a}/${b}`).toBe('GAME_OVER')

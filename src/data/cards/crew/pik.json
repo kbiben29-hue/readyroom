@@ -1,0 +1,3458 @@
+[
+	{
+		"id": "3PIK01-26",
+		"cardId": "3PIK01/26",
+		"suit": "CAPTAIN",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"STARFLEET",
+			"TIME_TRAVEL"
+		],
+		"skills": [],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"TIME_TRAVEL"
+						]
+					}
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"filter": {
+							"suits": [
+								"INCIDENT"
+							]
+						},
+						"from": {
+							"k": "HAND",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "GAIN_RESOURCE",
+						"res": "GLO",
+						"amount": 1
+					}
+				}
+			}
+		],
+		"awayTeams": 4
+	},
+	{
+		"id": "3PIK02-26",
+		"cardId": "3PIK02/26",
+		"suit": "STATUS",
+		"deck": "PIK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"exhibits": [
+							"RESEARCH",
+							"INFLUENCE",
+							"MILITARY"
+						]
+					}
+				},
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Gain 1 Research",
+							"body": {
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$event.card",
+									"filter": {
+										"exhibits": [
+											"RESEARCH"
+										]
+									}
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"label": "Gain 1 Influence",
+							"body": {
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$event.card",
+									"filter": {
+										"exhibits": [
+											"INFLUENCE"
+										]
+									}
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "INFLUENCE",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"label": "Gain 1 Military",
+							"body": {
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$event.card",
+									"filter": {
+										"exhibits": [
+											"MILITARY"
+										]
+									}
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "MILITARY",
+									"amount": 1
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "NOT",
+						"term": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"SHADY",
+										"ATTACK"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						}
+					},
+					"then": {
+						"k": "ADVANCE_SPECIALTY",
+						"specialty": "INFLUENCE",
+						"amount": 1
+					},
+					"else": {
+						"k": "IF",
+						"cond": {
+							"k": "COMPARE",
+							"a": {
+								"k": "RESOURCE",
+								"res": "GLO"
+							},
+							"op": "GE",
+							"b": 1
+						},
+						"then": {
+							"k": "SPEND_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK03-26",
+		"cardId": "3PIK03/26",
+		"suit": "LOCATION",
+		"deck": "PIK",
+		"traits": [
+			"STARBASE",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "CONTROLLED_LOCATION",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_ACTION",
+					"amount": 1
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DRAW",
+					"count": {
+						"k": "MIN",
+						"terms": [
+							{
+								"k": "PER",
+								"every": 2,
+								"of": {
+									"k": "COUNT",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										},
+										"seat": "SELF"
+									}
+								}
+							},
+							3
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		],
+		"startAwayTeams": 1
+	},
+	{
+		"id": "3PIK04-26",
+		"cardId": "3PIK04/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"ENGINEER",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "NOT",
+						"term": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "DEVELOPMENT",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"3PIK08-26"
+									]
+								}
+							},
+							"value": 1
+						}
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISMISS",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"from": {
+										"k": "FLEET",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "TRIGGER_CONTROL",
+									"target": {
+										"zones": [
+											{
+												"k": "LOCATION_AREA",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										}
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_EXHAUST",
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "DRAW",
+											"count": 2,
+											"bind": [
+												"$3pik04.a",
+												"$3pik04.b"
+											]
+										},
+										{
+											"k": "DISCARD",
+											"count": 1,
+											"from": "HAND",
+											"onlyBound": [
+												"$3pik04.a",
+												"$3pik04.b"
+											]
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 2
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Find a SHIP",
+									"body": {
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											},
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										]
+									}
+								},
+								{
+									"label": "Refresh a SHIP",
+									"body": {
+										"k": "REFRESH",
+										"target": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											},
+											"seat": "SELF"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "REFRESH",
+						"target": {
+							"zones": [
+								{
+									"k": "LOCATION_AREA",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK05-26",
+		"cardId": "3PIK05/26",
+		"suit": "ALLY",
+		"deck": "PIK",
+		"traits": [
+			"TELEPATH"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Draw a PERSON from your Discard pile",
+							"body": {
+								"k": "MAY",
+								"body": {
+									"k": "DRAW_FROM_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								}
+							}
+						},
+						{
+							"label": "Draw a CARGO from your Discard pile",
+							"body": {
+								"k": "MAY",
+								"body": {
+									"k": "DRAW_FROM_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"CARGO"
+										]
+									}
+								}
+							}
+						},
+						{
+							"label": "Draw a SHIP from your Discard pile",
+							"body": {
+								"k": "MAY",
+								"body": {
+									"k": "DRAW_FROM_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								}
+							}
+						},
+						{
+							"label": "Draw a ALLY from your Discard pile",
+							"body": {
+								"k": "MAY",
+								"body": {
+									"k": "DRAW_FROM_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"ALLY"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": {
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "SUM",
+										"terms": [
+											{
+												"k": "COUNT",
+												"query": {
+													"zones": [
+														"IN_PLAY"
+													],
+													"filter": {
+														"traits": [
+															"TELEPATH"
+														]
+													},
+													"seat": "SELF"
+												}
+											},
+											{
+												"k": "COUNT",
+												"query": {
+													"zones": [
+														"IN_PLAY"
+													],
+													"filter": {
+														"traits": [
+															"TELEPATH"
+														]
+													},
+													"seat": "SELF"
+												}
+											}
+										]
+									},
+									6
+								]
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"TELEPATH"
+										]
+									},
+									"seat": "SELF"
+								}
+							},
+							"body": {
+								"k": "PUT_ON_DECK_TOP",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK06-26",
+		"cardId": "3PIK06/26",
+		"suit": "ALLY",
+		"deck": "PIK",
+		"traits": [
+			"ALIEN",
+			"ANOMALY",
+			"DOCTOR"
+		],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_TAKE_INCIDENT",
+					"count": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "FIND",
+					"filter": {},
+					"zones": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						},
+						{
+							"k": "DRAW",
+							"seat": 0
+						},
+						{
+							"k": "RESERVE",
+							"seat": 0
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 9
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Scan 2 of PERSON",
+									"body": {
+										"k": "SCAN_N",
+										"n": 2,
+										"suits": [
+											"PERSON"
+										]
+									}
+								},
+								{
+									"label": "Scan 2 of CARGO",
+									"body": {
+										"k": "SCAN_N",
+										"n": 2,
+										"suits": [
+											"CARGO"
+										]
+									}
+								},
+								{
+									"label": "Scan 2 of ALLY",
+									"body": {
+										"k": "SCAN_N",
+										"n": 2,
+										"suits": [
+											"ALLY"
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"DOCTOR"
+										]
+									},
+									"seat": "SELF",
+									"exceptThis": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK07-26",
+		"cardId": "3PIK07/26",
+		"suit": "LOCATION",
+		"deck": "PIK",
+		"traits": [],
+		"skills": [],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 2
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"to": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"count": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": {
+								"k": "PER",
+								"every": 2,
+								"of": {
+									"k": "COUNT",
+									"query": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "BEAMED_TO",
+										"host": "THIS"
+									}
+								]
+							},
+							"bind": "$3pik07.b",
+							"body": {
+								"k": "LOG",
+								"target": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									],
+									"bound": "$3pik07.b"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"to": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"count": 1
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK08-26",
+		"cardId": "3PIK08/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"ENGINEER",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "CHOOSE_ONE",
+			"options": [
+				{
+					"label": "Spend 3 Latinum",
+					"body": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 3
+					}
+				},
+				{
+					"label": "Free: have 3PIK20 logged",
+					"body": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOG",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"3PIK20-26"
+									]
+								}
+							},
+							"value": 1
+						}
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FIND",
+								"filter": {
+									"suits": [
+										"CARGO"
+									]
+								},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									},
+									{
+										"k": "RESERVE",
+										"seat": 0
+									}
+								],
+								"bind": "$3pik08.f"
+							},
+							{
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"CARGO"
+									]
+								},
+								"bound": "$3pik08.f"
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": [
+									"CARGO"
+								],
+								"onlyJunk": true
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_RESOURCE",
+										"res": "LAT",
+										"amount": 1
+									},
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "DRAW",
+												"count": 1
+											},
+											{
+												"k": "GAIN_RESOURCE",
+												"res": "GLO",
+												"amount": 1
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK09-26",
+		"cardId": "3PIK09/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"TIME_TRAVEL"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "LOG",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"INCIDENT"
+								]
+							}
+						},
+						"value": 2
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW_FROM_DISCARD",
+								"count": 1,
+								"filter": {
+									"suits": [
+										"DIRECTIVE"
+									]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"DIRECTIVE"
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SCAN_N",
+								"n": 3,
+								"suits": [
+									"PERSON"
+								]
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"PERSON"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Gain a PERSON",
+										"body": {
+											"k": "GAIN_CARD",
+											"suits": [
+												"PERSON"
+											]
+										}
+									},
+									{
+										"label": "Gain a SHIP",
+										"body": {
+											"k": "GAIN_CARD",
+											"suits": [
+												"SHIP"
+											]
+										}
+									}
+								]
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							},
+							{
+								"k": "DISMISS",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK10-26",
+		"cardId": "3PIK10/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 3
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "FREE_PLAY",
+					"filter": {
+						"traits": [
+							"STARFLEET"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PROMOTE",
+							"from": "STAGING",
+							"target": "THIS"
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Promote a PERSON from your hand",
+									"body": {
+										"k": "PROMOTE",
+										"from": "HAND",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									}
+								},
+								{
+									"label": "Promote a PERSON from your Staging Area",
+									"body": {
+										"k": "PROMOTE",
+										"from": "STAGING",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									}
+								},
+								{
+									"label": "Promote a PERSON from your Discard pile",
+									"body": {
+										"k": "PROMOTE",
+										"from": "DISCARD",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "REFRESH",
+					"target": {
+						"zones": [
+							{
+								"k": "STATUS",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"ids": [
+								"3PIK02-26"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "3PIK10_DUTY"
+				}
+			}
+		],
+		"passives": [
+			"3PIK10_DUTY"
+		]
+	},
+	{
+		"id": "3PIK11-26",
+		"cardId": "3PIK11/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"KLINGON",
+			"AMBASSADOR"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SCAN_N",
+						"n": 1,
+						"suits": [
+							"ALLY"
+						]
+					}
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"traits": [
+									"WEAPON"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "LOG",
+								"target": "THIS"
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK12-26",
+		"cardId": "3PIK12/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"DOCTOR"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FREE_PLAY",
+							"filter": {
+								"suits": [
+									"INCIDENT"
+								]
+							},
+							"bind": "$3pik12.f"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$3pik12.f"
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "BEAM",
+											"target": "THIS",
+											"from": {
+												"k": "STAGING",
+												"seat": 0
+											},
+											"to": {
+												"zones": [
+													{
+														"k": "FLEET",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"suits": [
+														"SHIP"
+													]
+												}
+											},
+											"count": 1,
+											"bind": "$3pik12.b"
+										},
+										{
+											"k": "IF",
+											"cond": {
+												"k": "DID",
+												"bind": "$3pik12.b"
+											},
+											"then": {
+												"k": "SEND_AWAY_TEAM",
+												"count": 1,
+												"target": {
+													"zones": [
+														"LOCATIONS"
+													],
+													"filter": {
+														"suits": [
+															"LOCATION"
+														]
+													},
+													"withShip": true
+												}
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 6
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"DOCTOR"
+							]
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			}
+		],
+		"cannotBePromoted": true
+	},
+	{
+		"id": "3PIK13-26",
+		"cardId": "3PIK13/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"AUGMENT",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": [
+								"STARFLEET"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": [
+									"SHIP"
+								],
+								"bind": "$3pik13.g"
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_DISCARD",
+										"count": 1
+									},
+									"body": {
+										"k": "FREE_PLAY",
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										},
+										"from": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											}
+										],
+										"bound": "$3pik13.g"
+									}
+								}
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "NOT",
+									"term": {
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"AUGMENT"
+												]
+											},
+											"seat": "SELF",
+											"exceptThis": true
+										},
+										"value": 1
+									}
+								},
+								"then": {
+									"k": "TAKE",
+									"deck": "INCIDENT",
+									"count": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "DUPLICATE",
+						"suits": [
+							"PERSON"
+						],
+						"from": [
+							"DISCARD"
+						],
+						"opType": "RESUPPLY"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK14-26",
+		"cardId": "3PIK14/26",
+		"suit": "INCIDENT",
+		"deck": "PIK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"bind": "$3pik14.d"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$3pik14.d",
+									"filter": {
+										"exhibits": [
+											"INFLUENCE"
+										]
+									}
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "LAT",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"traits": [
+									"AMBASSADOR"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "LAT",
+								"amount": 1
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK15-26",
+		"cardId": "3PIK15/26",
+		"suit": "CARGO",
+		"deck": "PIK",
+		"traits": [
+			"TIME_TRAVEL"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RECALL",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"not": {
+											"traits": [
+												"TIME_TRAVEL"
+											]
+										}
+									}
+								}
+							},
+							{
+								"k": "LOG",
+								"target": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"TIME_TRAVEL"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK16-26",
+		"cardId": "3PIK16/26",
+		"suit": "DIRECTIVE",
+		"deck": "PIK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "DRAW",
+									"count": 2,
+									"bind": [
+										"$3pik16.a",
+										"$3pik16.b"
+									]
+								},
+								{
+									"k": "DISCARD",
+									"count": 1,
+									"from": "HAND",
+									"onlyBound": [
+										"$3pik16.a",
+										"$3pik16.b"
+									]
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"to": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_REQUIRE",
+								"cond": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "LOCATION_AREA",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"withShip": {
+											"ids": [
+												"3PIK19-26"
+											]
+										}
+									},
+									"value": 1
+								}
+							},
+							{
+								"k": "COST_TAKE_INCIDENT",
+								"count": 1
+							}
+						]
+					},
+					"body": {
+						"k": "TRIGGER_CONTROL",
+						"target": {
+							"zones": [
+								{
+									"k": "LOCATION_AREA",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							},
+							"withShip": {
+								"ids": [
+									"3PIK19-26"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK17-26",
+		"cardId": "3PIK17/26",
+		"suit": "DIRECTIVE",
+		"deck": "PIK",
+		"traits": [
+			"TIME_TRAVEL",
+			"ONGOING",
+			"SURPRISE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": -4,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"filter": {
+							"suits": [
+								"ENCOUNTER"
+							]
+						},
+						"from": {
+							"k": "HAND",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "DESTROY",
+						"target": "THIS"
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "INCIDENT_TAKEN"
+				},
+				"effect": {
+					"k": "DRAW",
+					"count": 2
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DESTROY",
+					"target": {
+						"zones": [
+							{
+								"k": "DEVELOPMENT",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": [
+								"PERSON",
+								"ALLY"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK18-26",
+		"cardId": "3PIK18/26",
+		"suit": "DIRECTIVE",
+		"deck": "PIK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true,
+								"withAwayTeam": true
+							},
+							"value": 1
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"look": 2,
+								"returnUnpicked": true
+							},
+							{
+								"k": "LOG",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"withShip": true,
+									"withAwayTeam": true
+								},
+								"bind": "$3pik18.l"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$3pik18.l"
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK19-26",
+		"cardId": "3PIK19/26",
+		"suit": "SHIP",
+		"deck": "PIK",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_ANY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Warp this ship",
+									"body": {
+										"k": "WARP",
+										"ship": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											},
+											"thisCard": true
+										},
+										"to": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									}
+								},
+								{
+									"label": "Beam a card here",
+									"body": {
+										"k": "BEAM",
+										"count": 1,
+										"to": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "PROMOTE",
+							"from": "HAND",
+							"filter": {
+								"suits": [
+									"PERSON"
+								]
+							}
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "STATUS",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"3PIK02-26"
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK20-26",
+		"cardId": "3PIK20/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"AENAR",
+			"ENGINEER",
+			"STARFLEET",
+			"TELEPATH"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 3
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": [
+									"SHIP"
+								],
+								"bind": "$3pik20.g"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$3pik20.g",
+									"filter": {
+										"traits": [
+											"ATTACK"
+										]
+									}
+								},
+								"then": {
+									"k": "TAKE",
+									"deck": "INCIDENT",
+									"count": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"INCIDENT"
+									]
+								}
+							}
+						},
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_LOG",
+								"target": "THIS"
+							},
+							"body": {
+								"k": "TAKE_CONTROL",
+								"target": {
+									"zones": [
+										"NEUTRAL_LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"requireSecured": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "RECALL",
+								"target": {
+									"zones": [
+										"BEAMED_TO_SHIP"
+									],
+									"seat": "SELF"
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK21-26",
+		"cardId": "3PIK21/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"VULCAN",
+			"SCIENTIST",
+			"STARFLEET",
+			"TELEPATH"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"from": {
+							"k": "HAND",
+							"seat": 0
+						},
+						"bind": "$3pik21.l"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 3
+							},
+							{
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "CHOICE",
+								"amount": 1
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$3pik21.l",
+									"filter": {
+										"exhibits": [
+											"MILITARY"
+										]
+									}
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "INFLUENCE",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"exhibits": [
+								"RESEARCH"
+							]
+						}
+					},
+					"body": {
+						"k": "FIND",
+						"filter": {},
+						"zones": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							},
+							{
+								"k": "DRAW",
+								"seat": 0
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "SPECIALTY",
+							"specialty": "RESEARCH"
+						},
+						"op": "GE",
+						"b": {
+							"k": "SUM",
+							"terms": [
+								{
+									"k": "SPECIALTY",
+									"specialty": "INFLUENCE"
+								},
+								1
+							]
+						}
+					},
+					"then": {
+						"k": "MAY",
+						"body": {
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_EXHAUST",
+								"filter": {
+									"ids": [
+										"3PIK21-26"
+									]
+								}
+							},
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Gain 1 Glory",
+										"body": {
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										}
+									},
+									{
+										"label": "Draw a card",
+										"body": {
+											"k": "DRAW",
+											"count": 1
+										}
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK22-26",
+		"cardId": "3PIK22/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"SECURITY",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SCAN_N",
+								"n": 1,
+								"suits": [
+									"CARGO"
+								]
+							},
+							{
+								"k": "DRAW",
+								"count": {
+									"k": "COUNT",
+									"query": {
+										"zones": [
+											{
+												"k": "LOCATION_AREA",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"withAwayTeam": true
+									}
+								}
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "AWAY_TEAMS_AT",
+									"at": {
+										"zones": [
+											"NEUTRAL_LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										}
+									},
+									"value": 2
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "MILITARY",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "BEAM",
+					"count": 1,
+					"to": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": [
+								"SHIP"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK23-26",
+		"cardId": "3PIK23/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"DOCTOR",
+			"STARFLEET",
+			"WEAPON"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DISCARDED",
+					"filter": {
+						"exhibits": [
+							"MILITARY"
+						]
+					},
+					"duringAction": true
+				},
+				"effect": {
+					"k": "RETURN_INCIDENT",
+					"target": {
+						"zones": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": [
+								"INCIDENT"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 5
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							},
+							"withShip": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK24-26",
+		"cardId": "3PIK24/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"COMMUNICATION",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Gain a PERSON",
+								"body": {
+									"k": "GAIN_CARD",
+									"suits": [
+										"PERSON"
+									]
+								}
+							},
+							{
+								"label": "Gain an ALLY",
+								"body": {
+									"k": "GAIN_CARD",
+									"suits": [
+										"ALLY"
+									]
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 5
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON",
+							"CARGO",
+							"SHIP",
+							"ALLY"
+						],
+						"includeJunk": true,
+						"filter": {
+							"traits": [
+								"ALIEN"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_EXHAUSTED",
+					"filter": {
+						"ids": [
+							"3PIK02-26"
+						]
+					}
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "DRAW_FROM_DISCARD",
+						"count": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK25-26",
+		"cardId": "3PIK25/26",
+		"suit": "DIRECTIVE",
+		"deck": "PIK",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 1 Latinum",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "LAT",
+										"amount": 1
+									}
+								},
+								{
+									"label": "Gain 2 Dilithium",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 2
+									}
+								}
+							]
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 3
+							},
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"CARGO",
+											"SHIP",
+											"ALLY"
+										]
+									}
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 1
+										},
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "DIL",
+											"amount": 1
+										}
+									]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FIND",
+								"filter": {
+									"suits": [
+										"ENCOUNTER"
+									]
+								},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									},
+									{
+										"k": "RESERVE",
+										"seat": 0
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3PIK26-26",
+		"cardId": "3PIK26/26",
+		"suit": "PERSON",
+		"deck": "PIK",
+		"traits": [
+			"HUMAN",
+			"PILOT",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "WARP",
+							"ship": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								}
+							},
+							"to": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$3pik26.w"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"bound": "$3pik26.w"
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_TAKE_INCIDENT",
+									"count": 1
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"bound": "$3pik26.w"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DEPLOYED",
+					"filter": {
+						"suits": [
+							"SHIP"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "FIND",
+									"filter": {
+										"ids": [
+											"3PIK16-26"
+										]
+									},
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										},
+										{
+											"k": "DRAW",
+											"seat": 0
+										},
+										{
+											"k": "RESERVE",
+											"seat": 0
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"to": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"bind": "$3pik26.r"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$3pik26.r"
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	}
+]

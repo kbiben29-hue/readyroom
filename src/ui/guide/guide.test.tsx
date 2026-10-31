@@ -41,8 +41,8 @@ describe('glossary', () => {
 		expect(new Set(LEXICON_GLYPHS).size).toBe(LEXICON_GLYPHS.length)
 	})
 
-	it('lists all ten timing marks', () => {
-		expect(LEXICON[0]!.entries).toHaveLength(10)
+	it('lists all eleven timing marks (Second Contact adds SUPPORT)', () => {
+		expect(LEXICON[0]!.entries).toHaveLength(11)
 	})
 
 	it('shows every grammar rule on a real card operation that compiles', () => {

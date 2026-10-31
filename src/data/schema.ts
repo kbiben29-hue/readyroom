@@ -1138,6 +1138,9 @@ export interface CardDef {
 	/** "REWARDS" on the position indicator (Second Contact): a common set
 	 *  aside in the Reward pile, never part of the Market. */
 	rewardPile?: boolean | undefined
+	/** AWAY TEAMs that start on this (starting, controlled) LOCATION — in
+	 *  addition to the CAPTAIN's (3PIK03) */
+	startAwayTeams?: number | undefined
 	/** "This card cannot be promoted." (1SIS13) — PROMOTE never
 	 *  offers it. */
 	cannotBePromoted?: boolean | undefined
@@ -1239,6 +1242,7 @@ export const CardDefSchema = z
 		onEnlist: EffectSchema.optional(),
 		backOf: z.string().min(1).optional(),
 		rewardPile: z.boolean().optional(),
+		startAwayTeams: z.number().int().min(1).optional(),
 		cannotBePromoted: z.boolean().optional(),
 		treatedAsLocation: z.boolean().optional(),
 	})

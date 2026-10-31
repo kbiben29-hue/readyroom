@@ -1,0 +1,462 @@
+[
+	{
+		"deck": "PIK",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 9,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 9,
+						"value": 4
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "3PIK/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"TIME_TRAVEL"
+									],
+									"not": {
+										"suits": [
+											"CAPTAIN"
+										]
+									}
+								},
+								"seat": "SELF"
+							},
+							"value": 4
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"traits": [
+										"ONGOING"
+									]
+								}
+							},
+							"value": 2
+						}
+					]
+				},
+				"reward": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UP_TO",
+						"max": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										},
+										{
+											"k": "LOG",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							}
+						]
+					}
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "PIK",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 9,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 9,
+						"value": 3
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "3PIK/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"TIME_TRAVEL"
+									],
+									"not": {
+										"suits": [
+											"CAPTAIN"
+										]
+									}
+								},
+								"seat": "SELF"
+							},
+							"value": 4
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"traits": [
+										"ONGOING"
+									]
+								}
+							},
+							"value": 2
+						}
+					]
+				},
+				"reward": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UP_TO",
+						"max": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										},
+										{
+											"k": "LOG",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							}
+						]
+					}
+				},
+				"vp": 3
+			},
+			{
+				"index": 1,
+				"cardId": "3PIK/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 7
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "INFLUENCE",
+							"value": 7
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 2,
+							"suits": [
+								"ALLY"
+							]
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"seat": "SELF"
+							},
+							"count": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"suits": [
+											"PERSON"
+										],
+										"not": {
+											"traits": [
+												"STARFLEET"
+											]
+										}
+									},
+									"seat": "SELF"
+								}
+							}
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 2,
+				"cardId": "3PIK/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"ENCOUNTER"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 2
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"BEAMED_TO_SHIP"
+								],
+								"filter": {
+									"traits": [
+										"STARFLEET"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 3
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"BEAMED_TO_SHIP"
+								],
+								"filter": {
+									"traits": [
+										"ALIEN",
+										"ANOMALY"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true
+							},
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE_CONTROL",
+							"target": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true
+							}
+						},
+						{
+							"k": "REMOVE_STARDATE_GLORY",
+							"amount": 1
+						}
+					]
+				},
+				"vp": 2
+			}
+		]
+	}
+]

@@ -579,10 +579,21 @@ function setupPlayerRecord(
 		heldStardate: null,
 		modifiers: p.modifiers,
 	}
+	// Away Teams printed on a starting LOCATION begin there, beside the ones
+	// on the Captain card (3PIK03: "place 1 AWAY TEAM on Starbase One")
+	let awayTeamsAt = state.awayTeamsAt
+	for (const iid of state.zones[zoneKey({ k: 'LOCATION_AREA', seat })] ?? []) {
+		const n = cardDef(state.cards[iid]!.def).startAwayTeams ?? 0
+		if (n <= 0) continue
+		const at: [number, number] = [...(awayTeamsAt[iid] ?? [0, 0])]
+		at[seat] += n
+		awayTeamsAt = { ...awayTeamsAt, [iid]: at }
+		nextP.awayTeamsTotal += n
+	}
 	const players = state.players.map((pl) =>
 		pl.seat === seat ? nextP : pl,
 	) as GameState['players']
-	return { ...state, players }
+	return { ...state, players, awayTeamsAt }
 }
 
 /** Attach rule-modifier layers whose cards start in play (BUR's Inert

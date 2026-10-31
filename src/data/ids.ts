@@ -130,6 +130,7 @@ export const DECKS = [
 	'ARC',
 	'REB',
 	'KHA',
+	'PIK',
 ] as const
 export type DeckId = (typeof DECKS)[number]
 

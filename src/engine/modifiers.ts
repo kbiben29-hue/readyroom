@@ -275,6 +275,10 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 		describe: 'Increase your hand size by 1.',
 		handSize: (base) => base + 1,
 	},
+	'3PIK10_DUTY': {
+		describe: 'You may have an additional PERSON on duty.',
+		dutyOfficerSlot: {},
+	},
 	// --- 2KHA ---
 	'2KHA01_BOARD': {
 		describe: 'You do not enlist when you cycle your deck.',

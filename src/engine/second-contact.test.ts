@@ -12,6 +12,8 @@ import { applyChoice } from './resolver/choices'
 import { setup, type CardCatalog, type SetupConfig } from './setup'
 import { zoneKey, type GameState } from './state'
 import { score } from './scoring'
+import { autoPlay } from '../bot/autoPlay'
+import { assertInvariants } from './invariants'
 import type { DeckId } from '../data/ids'
 import type { GameBox } from '../data/boxes'
 
@@ -171,4 +173,55 @@ describe('Reward cards score negative unless logged', () => {
 		s = place(fresh(), '3PER01-13', ID('spk'), { k: 'LOG', seat: 0 }, 0)
 		expect(score(s, 0).printedVp.find((e) => e.card === 'spk')).toBeUndefined()
 	})
+})
+
+/** The Second Contact crews implemented so far. */
+const SC_CREWS: DeckId[] = ['PIK']
+
+describe('Second Contact fuzz', () => {
+	// each Second Contact crew against crews of both base boxes, both seats,
+	// with the expansion added to that box
+	const cases: [DeckId, DeckId, GameBox][] = []
+	for (const t of SC_CREWS) {
+		for (const o of ['PIC', 'SHR', 'KOL'] as DeckId[]) cases.push([t, o, 'ORIGINAL'])
+		for (const o of ['GEO', 'SOV', 'KHA'] as DeckId[]) cases.push([t, o, 'TBG'])
+		for (const o of SC_CREWS) if (o !== t) cases.push([t, o, 'TBG'])
+	}
+	it.each(cases)(
+		'%s against %s on %s + Second Contact reaches GAME_OVER with invariants',
+		(t, o, box) => {
+			for (const [a, b] of [
+				[t, o],
+				[o, t],
+			] as [DeckId, DeckId][]) {
+				for (const seed of [0, 1]) {
+					let before: GameState | undefined
+					const r = autoPlay(
+						setup(
+							{
+								mode: 'TWO_PLAYER',
+								players: [
+									{ deck: a, boardSide: 'ADVANCED' },
+									{ deck: b, boardSide: 'ADVANCED' },
+								],
+								seed,
+								box,
+								expansions: ['SECOND_CONTACT'],
+							},
+							catalog,
+						),
+						undefined,
+						undefined,
+						(s: GameState) => {
+							const pre = before
+							before = s
+							assertInvariants(s, { since: pre })
+						},
+					)
+					expect(r.stopped, `${a}/${b} seed ${seed}`).toBe('GAME_OVER')
+				}
+			}
+		},
+		240_000,
+	)
 })

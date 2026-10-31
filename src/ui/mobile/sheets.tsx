@@ -609,7 +609,7 @@ export function DetailSheet() {
 							disabled={scan === null}
 							title={
 								scan === null
-									? 'No printed scan on this device (npm run fetch-cards)'
+									? 'No printed scan on this device. Download the card database from the start screen.'
 									: undefined
 							}
 							onClick={() => setPrinted(true)}

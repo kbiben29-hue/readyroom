@@ -44,7 +44,14 @@ export const tauriIo: StccIo = {
 	},
 	writeBytes: async (rel, bytes) => {
 		const cache = await caches.open(CARD_CACHE)
-		await cache.put(assetUrl(rel), new Response(new Uint8Array(bytes)))
+		await cache.put(
+			assetUrl(rel),
+			new Response(new Uint8Array(bytes), {
+				headers: {
+					'Content-Type': rel.endsWith('.svg') ? 'image/svg+xml' : 'image/png',
+				},
+			}),
+		)
 	},
 	exists: async (rel) => {
 		if (rel.startsWith('vendor/'))

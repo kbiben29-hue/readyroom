@@ -471,7 +471,7 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 					>
 						Learn the card glyphs
 					</button>
-					{isDesktop() && (
+					{(isDesktop() || import.meta.env.MODE === 'pages') && (
 						<button type="button" className="btn" onClick={openCardDatabase}>
 							Card database
 						</button>

@@ -1141,6 +1141,8 @@ export interface CardDef {
 	/** AWAY TEAMs that start on this (starting, controlled) LOCATION — in
 	 *  addition to the CAPTAIN's (3PIK03) */
 	startAwayTeams?: number | undefined
+	/** A SHIP counting as this many tokens for securing a LOCATION (3FRE03) */
+	secureWeight?: number | undefined
 	/** "This card cannot be promoted." (1SIS13) — PROMOTE never
 	 *  offers it. */
 	cannotBePromoted?: boolean | undefined
@@ -1243,6 +1245,7 @@ export const CardDefSchema = z
 		backOf: z.string().min(1).optional(),
 		rewardPile: z.boolean().optional(),
 		startAwayTeams: z.number().int().min(1).optional(),
+		secureWeight: z.number().int().min(2).optional(),
 		cannotBePromoted: z.boolean().optional(),
 		treatedAsLocation: z.boolean().optional(),
 	})

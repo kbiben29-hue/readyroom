@@ -279,6 +279,15 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 		describe: 'You may have an additional PERSON on duty.',
 		dutyOfficerSlot: {},
 	},
+	'3FRE03_DUTY': {
+		describe: 'You may have an additional PERSON on duty.',
+		dutyOfficerSlot: {},
+	},
+	'3FRE14_DUTY': {
+		describe:
+			'You may additionally have another PERSON with STARFLEET on duty.',
+		dutyOfficerSlot: { traits: ['STARFLEET'] },
+	},
 	// --- 2KHA ---
 	'2KHA01_BOARD': {
 		describe: 'You do not enlist when you cycle your deck.',

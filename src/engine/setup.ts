@@ -580,7 +580,7 @@ function setupPlayerRecord(
 		modifiers: p.modifiers,
 	}
 	// Away Teams printed on a starting LOCATION begin there, beside the ones
-	// on the Captain card (3PIK03: "place 1 AWAY TEAM on Starbase One")
+	// on the Captain card (3PIK03: "place 1 AWAY TEAM on" its starting LOCATION)
 	let awayTeamsAt = state.awayTeamsAt
 	for (const iid of state.zones[zoneKey({ k: 'LOCATION_AREA', seat })] ?? []) {
 		const n = cardDef(state.cards[iid]!.def).startAwayTeams ?? 0

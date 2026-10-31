@@ -19,7 +19,7 @@ function pile(state: GameState, node: Node): CardInstanceId[] {
 	)
 }
 
-/** TAKE_REWARD (Second Contact, Krulmuth-B): look at `look` random cards
+/** TAKE_REWARD (Second Contact, 3LOC01): look at `look` random cards
  *  from the Reward pile, take one into your hand and destroy the others.
  *  The random pick is drawn once and kept in the frame's bindings so the
  *  choice resumes on the same cards. */

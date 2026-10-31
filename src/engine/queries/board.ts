@@ -8,6 +8,7 @@
 //     block, controlled Locations are never blocked — rules/12 §12.15).
 
 import { otherSeat, type GameState } from '../state'
+import { cardDef } from '../cards'
 import type { CardInstanceId } from '../ids'
 import type { Seat } from '../resolver/queries'
 import { blocksSendsTo, ignoresOpponentShips } from '../modifiers'
@@ -52,6 +53,26 @@ function isControlled(state: GameState, locIid: CardInstanceId): boolean {
 	return state.cards[locIid]?.zone.k === 'LOCATION_AREA'
 }
 
+/** Tokens counted for securing: a SHIP whose card counts as several tokens
+ *  (3FRE03: "for the purposes of securing … counts as 2 tokens") adds the
+ *  extra ones. */
+function securingTokensAt(
+	state: GameState,
+	locIid: CardInstanceId,
+	seat: Seat,
+): number {
+	let n = tokensAt(state, locIid, seat)
+	for (const card of Object.values(state.cards)) {
+		if (
+			card.owner === seat &&
+			card.zone.k === 'FLEET' &&
+			card.shipTokenAt === locIid
+		)
+			n += (cardDef(card.def).secureWeight ?? 1) - 1
+	}
+	return n
+}
+
 /** A neutral LOCATION is secured by `seat` iff they have ≥3 tokens there and
  *  ≥2 more than the opponent (rules/03 §3.4.1). Non-neutral Locations are
  *  never secured. */
@@ -61,8 +82,8 @@ export function isSecured(
 	seat: Seat,
 ): boolean {
 	if (!isNeutral(state, locIid)) return false
-	const mine = tokensAt(state, locIid, seat)
-	const opp = tokensAt(state, locIid, otherSeat(seat))
+	const mine = securingTokensAt(state, locIid, seat)
+	const opp = securingTokensAt(state, locIid, otherSeat(seat))
 	return mine >= 3 && mine - opp >= 2
 }
 

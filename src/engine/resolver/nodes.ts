@@ -434,7 +434,7 @@ export type EffectNode =
 	// negate: the amount scores as negative VP ("if not logged, this card
 	// scores −2 VP" — Second Contact's Reward cards)
 	| { k: 'SCORE_VP'; amount: Amount; negate?: boolean | undefined }
-	// Krulmuth-B: look at `look` random cards from the Reward pile (matching
+	// 3LOC01: look at `look` random cards from the Reward pile (matching
 	// `filter`), take one to your hand and destroy the rest
 	| { k: 'TAKE_REWARD'; look: number; filter?: CardFilter | undefined }
 	// --- Escape hatch (docs/effect-dsl.md §8) ------------------------------------

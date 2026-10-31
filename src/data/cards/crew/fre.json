@@ -1,0 +1,3263 @@
+[
+	{
+		"id": "3FRE01-25",
+		"cardId": "3FRE01/25",
+		"suit": "CAPTAIN",
+		"deck": "FRE",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SPECIALTY_ADVANCED"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"PERSON"
+							]
+						}
+					},
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							},
+							"withShip": {
+								"ids": [
+									"3FRE02-25"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "INCIDENT_RETURNED"
+				},
+				"effect": {
+					"k": "WARP",
+					"ship": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"ids": [
+								"3FRE02-25"
+							]
+						}
+					},
+					"to": {
+						"zones": [
+							"LOCATIONS"
+						],
+						"filter": {
+							"suits": [
+								"LOCATION"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "PER",
+						"every": 2,
+						"of": {
+							"k": "COUNT",
+							"query": {
+								"zones": [
+									{
+										"k": "LOG",
+										"seat": 0
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		],
+		"awayTeams": 5
+	},
+	{
+		"id": "3FRE02-25",
+		"cardId": "3FRE02/25",
+		"suit": "SHIP",
+		"deck": "FRE",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "LOWEST",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "EXHAUST",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE03-25",
+		"cardId": "3FRE03/25",
+		"suit": "SHIP",
+		"deck": "FRE",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_ANY"
+		],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 6
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "WARP",
+							"ship": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"thisCard": true
+							},
+							"to": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							}
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"seat": "SELF"
+							},
+							"bind": "$3fre03.s",
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"bound": "$3fre03.s"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "3FRE03_DUTY"
+				}
+			}
+		],
+		"passives": [
+			"3FRE03_DUTY"
+		],
+		"secureWeight": 2
+	},
+	{
+		"id": "3FRE04-25",
+		"cardId": "3FRE04/25",
+		"suit": "ALLY",
+		"deck": "FRE",
+		"traits": [
+			"ANOMALY"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "LAT",
+			"amount": 3
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Find a PERSON",
+									"body": {
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											},
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										],
+										"bind": "$3fre04.f"
+									}
+								},
+								{
+									"label": "Find a CARGO",
+									"body": {
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"CARGO"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											},
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										],
+										"bind": "$3fre04.f"
+									}
+								}
+							]
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 2
+							},
+							"body": {
+								"k": "DUPLICATE",
+								"suits": [
+									"PERSON",
+									"CARGO"
+								],
+								"from": [
+									"BOUND"
+								],
+								"bound": "$3fre04.f",
+								"opType": "PLAY"
+							}
+						},
+						{
+							"k": "LOG",
+							"target": {
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "STAGING",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"bound": "$3fre04.f"
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 2
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE05-25",
+		"cardId": "3FRE05/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"VULCAN",
+			"SCIENTIST",
+			"STARFLEET",
+			"LOWER_DECKER"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "SUPPORT",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_LOGGED"
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 2 Dilithium",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 2
+									}
+								},
+								{
+									"label": "Draw a card from your Discard pile",
+									"body": {
+										"k": "DRAW_FROM_DISCARD",
+										"count": 1
+									}
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Free play a LOWER DECKER",
+										"body": {
+											"k": "FREE_PLAY",
+											"filter": {
+												"traits": [
+													"LOWER_DECKER"
+												]
+											}
+										}
+									},
+									{
+										"label": "Promote a LOWER DECKER from your hand",
+										"body": {
+											"k": "PROMOTE",
+											"from": "HAND",
+											"filter": {
+												"traits": [
+													"LOWER_DECKER"
+												]
+											}
+										}
+									},
+									{
+										"label": "Promote a LOWER DECKER from your Staging Area",
+										"body": {
+											"k": "PROMOTE",
+											"from": "STAGING",
+											"filter": {
+												"traits": [
+													"LOWER_DECKER"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_GAINED"
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "FREE_PLAY",
+									"filter": {},
+									"from": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										},
+										{
+											"k": "DRAW",
+											"seat": 0
+										}
+									],
+									"bound": "$event.card"
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE06-25",
+		"cardId": "3FRE06/25",
+		"suit": "DIRECTIVE",
+		"deck": "FRE",
+		"traits": [],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_LOG",
+					"filter": {
+						"traits": [
+							"STARFLEET"
+						]
+					},
+					"from": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						},
+						{
+							"k": "DRAW",
+							"seat": 0
+						},
+						{
+							"k": "RESERVE",
+							"seat": 0
+						}
+					]
+				},
+				{
+					"k": "COST_LOG",
+					"filter": {
+						"traits": [
+							"STARFLEET"
+						]
+					},
+					"from": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						},
+						{
+							"k": "DRAW",
+							"seat": 0
+						},
+						{
+							"k": "RESERVE",
+							"seat": 0
+						}
+					]
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true,
+								"withAwayTeam": true
+							},
+							"value": 1
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"look": 2,
+								"returnUnpicked": true
+							},
+							{
+								"k": "LOG",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"withShip": true,
+									"withAwayTeam": true
+								},
+								"bind": "$3pik18.l"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$3pik18.l"
+								},
+								"then": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE07-25",
+		"cardId": "3FRE07/25",
+		"suit": "CARGO",
+		"deck": "FRE",
+		"traits": [
+			"ENGINEER",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "WOULD_GAIN_CARD"
+				},
+				"effect": {
+					"k": "REPLACE_GAIN",
+					"scan": 2
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE08-25",
+		"cardId": "3FRE08/25",
+		"suit": "LOCATION",
+		"deck": "FRE",
+		"traits": [
+			"DOCTOR"
+		],
+		"skills": [
+			"SKILL_ANY"
+		],
+		"focus": null,
+		"vp": 1,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "FREE_PLAY",
+						"filter": {
+							"suits": [
+								"INCIDENT"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "BEAM",
+					"count": 1,
+					"to": {
+						"zones": [
+							{
+								"k": "LOCATION_AREA",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "RESEARCH",
+					"min": 5
+				},
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "BEAMED_TO",
+									"host": "THIS"
+								}
+							],
+							"filter": {
+								"traits": [
+									"ANOMALY"
+								]
+							}
+						},
+						"value": 2
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FOR_EACH",
+								"over": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									]
+								},
+								"bind": "$3fre08.b",
+								"body": {
+									"k": "LOG",
+									"target": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										],
+										"bound": "$3fre08.b"
+									}
+								}
+							},
+							{
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					},
+					"else": {
+						"k": "FOR_EACH",
+						"over": {
+							"zones": [
+								{
+									"k": "BEAMED_TO",
+									"host": "THIS"
+								}
+							]
+						},
+						"bind": "$3fre08.b",
+						"body": {
+							"k": "LOG",
+							"target": {
+								"zones": [
+									{
+										"k": "BEAMED_TO",
+										"host": "THIS"
+									}
+								],
+								"bound": "$3fre08.b"
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE09-25",
+		"cardId": "3FRE09/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"ALIEN",
+			"SECURITY",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"CARGO"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"ALLY"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"ENCOUNTER"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "PROMOTE",
+							"from": "STAGING",
+							"target": "THIS"
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 5
+				},
+				"effect": {
+					"k": "REPEAT",
+					"times": {
+						"k": "SUM",
+						"terms": [
+							1,
+							{
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"SPY"
+										]
+									},
+									"seat": "OPPONENT"
+								}
+							}
+						]
+					},
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE10-25",
+		"cardId": "3FRE10/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"BAJORAN",
+			"SECURITY",
+			"STARFLEET",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_MILITARY",
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "DIL",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"from": {
+										"k": "HAND",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "GLO",
+									"amount": 2
+								}
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 2
+							},
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REMOVE_AWAY_TEAM",
+							"count": 1,
+							"whose": "OPPONENT",
+							"target": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$3fre10.r"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$3fre10.r"
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "SPECIAL",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_LOGGED",
+					"filter": {
+						"ids": [
+							"3FRE10-25"
+						]
+					}
+				},
+				"effect": {
+					"k": "FIND",
+					"filter": {
+						"ids": [
+							"3FRE10-25"
+						]
+					},
+					"zones": [
+						{
+							"k": "LOG",
+							"seat": 0
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE11-25",
+		"cardId": "3FRE11/25",
+		"suit": "SHIP",
+		"deck": "FRE",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "LOWEST",
+									"amount": 1
+								}
+							}
+						},
+						{
+							"k": "EXHAUST",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE12-25",
+		"cardId": "3FRE12/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"DOCTOR",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "INCIDENT_TAKEN"
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "RETURN_INCIDENT",
+							"target": {
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								],
+								"bound": "$event.card"
+							}
+						},
+						{
+							"k": "PUT_ON_DECK_TOP",
+							"target": "THIS"
+						},
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE13-25",
+		"cardId": "3FRE13/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"HUMAN",
+			"SYNTHETIC",
+			"ENGINEER",
+			"STARFLEET",
+			"LOWER_DECKER"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "ENLIST_DEVELOPMENT"
+					}
+				}
+			},
+			{
+				"type": "SUPPORT",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_EXHAUSTED",
+					"filter": {
+						"suits": [
+							"SHIP"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"bound": "$event.card"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"target": "THIS",
+								"from": {
+									"k": "STAGING",
+									"seat": 0
+								},
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"bound": "$event.card"
+								},
+								"count": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"SYNTHETIC"
+										]
+									},
+									"seat": "SELF",
+									"exceptThis": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": {
+								"k": "SUM",
+								"terms": [
+									1,
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									},
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"ENGINEER"
+										]
+									},
+									"seat": "SELF",
+									"exceptThis": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_DISCARD",
+										"count": 1
+									},
+									"body": {
+										"k": "GAIN_ACTION",
+										"amount": 1
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE14-25",
+		"cardId": "3FRE14/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"ORION",
+			"WEAPON",
+			"SCIENTIST",
+			"STARFLEET",
+			"LOWER_DECKER"
+		],
+		"skills": [
+			"SKILL_INFLUENCE",
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 5
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SCAN_FOR_TRAIT",
+								"traits": [
+									"ORION"
+								],
+								"bind": "$3fre14.g"
+							},
+							{
+								"k": "FREE_PLAY",
+								"filter": {},
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									}
+								],
+								"bound": "$3fre14.g"
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "SUPPORT",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_PROMOTED",
+					"filter": {
+						"traits": [
+							"LOWER_DECKER"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "CHOICE",
+							"amount": 2
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PROMOTE",
+								"from": "STAGING",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "3FRE14_DUTY"
+				}
+			}
+		],
+		"passives": [
+			"3FRE14_DUTY"
+		]
+	},
+	{
+		"id": "3FRE15-25",
+		"cardId": "3FRE15/25",
+		"suit": "INCIDENT",
+		"deck": "FRE",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"bind": "$3fre15.d"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$3fre15.d",
+									"filter": {
+										"exhibits": [
+											"RESEARCH"
+										]
+									}
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "DRAW",
+											"count": 2,
+											"bind": [
+												"$3fre15a.a",
+												"$3fre15a.b"
+											]
+										},
+										{
+											"k": "DISCARD",
+											"count": 1,
+											"from": "HAND",
+											"onlyBound": [
+												"$3fre15a.a",
+												"$3fre15a.b"
+											]
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"traits": [
+									"TIME_TRAVEL"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "DRAW",
+										"count": 2,
+										"bind": [
+											"$3fre15b.a",
+											"$3fre15b.b"
+										]
+									},
+									{
+										"k": "DISCARD",
+										"count": 1,
+										"from": "HAND",
+										"onlyBound": [
+											"$3fre15b.a",
+											"$3fre15b.b"
+										]
+									}
+								]
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE16-25",
+		"cardId": "3FRE16/25",
+		"suit": "DIRECTIVE",
+		"deck": "FRE",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "GAIN_CARD",
+								"suits": [
+									"ALLY"
+								],
+								"onlyJunk": true
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "RESERVE",
+												"seat": 0
+											}
+										]
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "LOG",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE17-25",
+		"cardId": "3FRE17/25",
+		"suit": "DIRECTIVE",
+		"deck": "FRE",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "REPEAT",
+					"times": {
+						"k": "UP_TO",
+						"max": 3
+					},
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_DISCARD",
+							"count": 1,
+							"filter": {
+								"suits": [
+									"PERSON"
+								]
+							}
+						},
+						"body": {
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND"
+						},
+						{
+							"k": "WARP",
+							"ship": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								}
+							},
+							"to": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"count": {
+								"k": "UP_TO",
+								"max": 2
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE18-25",
+		"cardId": "3FRE18/25",
+		"suit": "SHIP",
+		"deck": "FRE",
+		"traits": [
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PUT_ON_DECK_TOP",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Beam a card to a SHIP",
+										"body": {
+											"k": "BEAM",
+											"count": 1,
+											"to": {
+												"zones": [
+													{
+														"k": "FLEET",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"suits": [
+														"SHIP"
+													]
+												}
+											}
+										}
+									},
+									{
+										"label": "Recall a card beamed to a SHIP",
+										"body": {
+											"k": "RECALL",
+											"target": {
+												"zones": [
+													"BEAMED_TO_SHIP"
+												],
+												"seat": "SELF"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE19-25",
+		"cardId": "3FRE19/25",
+		"suit": "LOCATION",
+		"deck": "FRE",
+		"traits": [
+			"STARBASE",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "GAIN_CARD",
+								"suits": [
+									"PERSON"
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "LOG",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"LOWER_DECKER"
+										]
+									},
+									"seat": "SELF"
+								},
+								"value": 4
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "DRAW",
+										"count": 1
+									},
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE20-25",
+		"cardId": "3FRE20/25",
+		"suit": "ALLY",
+		"deck": "FRE",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "INCIDENT",
+							"count": 1,
+							"to": "DISCARD"
+						},
+						{
+							"k": "GAIN_CARD",
+							"suits": [
+								"ALLY"
+							]
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 1
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Spend 1 Latinum",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_RESOURCE",
+											"res": "LAT",
+											"amount": 1
+										},
+										"body": {
+											"k": "NOOP"
+										}
+									}
+								},
+								{
+									"label": "Put this card back into your deck",
+									"body": {
+										"k": "PUT_ON_DECK_TOP",
+										"target": {
+											"zones": [
+												{
+													"k": "STAGING",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE21-25",
+		"cardId": "3FRE21/25",
+		"suit": "DIRECTIVE",
+		"deck": "FRE",
+		"traits": [
+			"ANOMALY"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								},
+								"body": {
+									"k": "GAIN_CARD",
+									"suits": [
+										"CARGO"
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE22-25",
+		"cardId": "3FRE22/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW_FROM_DISCARD",
+								"count": 1,
+								"filter": {
+									"not": {
+										"traits": [
+											"LOWER_DECKER"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"bind": "$3fre22.l"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": [
+											"LOWER_DECKER"
+										]
+									}
+								},
+								"body": {
+									"k": "TRIGGER_CONTROL",
+									"target": {
+										"zones": [
+											{
+												"k": "LOCATION_AREA",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"bound": "$3fre22.l"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE23-25",
+		"cardId": "3FRE23/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"HUMAN",
+			"STARFLEET",
+			"LOWER_DECKER"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UNUSED_ACTIONS"
+							},
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_ACTION"
+								},
+								"body": {
+									"k": "DRAW",
+									"count": 1
+								}
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "FREE_PLAY",
+							"filter": {}
+						}
+					]
+				}
+			},
+			{
+				"type": "SUPPORT",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_PROMOTED",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				},
+				"effect": {
+					"k": "DUPLICATE",
+					"suits": [
+						"PERSON"
+					],
+					"from": [
+						"BOUND"
+					],
+					"bound": "$event.card",
+					"opType": "PLAY"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_DISMISS",
+								"count": 4,
+								"filter": {
+									"traits": [
+										"LOWER_DECKER"
+									]
+								}
+							},
+							{
+								"k": "COST_TAKE_INCIDENT",
+								"count": 1
+							}
+						]
+					},
+					"body": {
+						"k": "TAKE",
+						"deck": "ENCOUNTER",
+						"count": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE24-25",
+		"cardId": "3FRE24/25",
+		"suit": "PERSON",
+		"deck": "FRE",
+		"traits": [
+			"HUMAN",
+			"STARFLEET",
+			"LOWER_DECKER"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 2
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_CARD",
+								"suits": [
+									"SHIP"
+								],
+								"bind": "$3fre24.g"
+							},
+							{
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								},
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									}
+								],
+								"bound": "$3fre24.g"
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "SUPPORT",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"suits": [
+							"ALLY"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 1
+						},
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Gain Research for each matching Skill icon",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "RESEARCH",
+										"amount": {
+											"k": "SKILL_ICONS",
+											"specialty": "RESEARCH"
+										}
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "COMPARE",
+											"a": {
+												"k": "SKILL_ICONS",
+												"specialty": "RESEARCH"
+											},
+											"op": "GE",
+											"b": 3
+										},
+										"then": {
+											"k": "DISMISS",
+											"target": "THIS"
+										}
+									}
+								]
+							}
+						},
+						{
+							"label": "Gain Influence for each matching Skill icon",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "INFLUENCE",
+										"amount": {
+											"k": "SKILL_ICONS",
+											"specialty": "INFLUENCE"
+										}
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "COMPARE",
+											"a": {
+												"k": "SKILL_ICONS",
+												"specialty": "INFLUENCE"
+											},
+											"op": "GE",
+											"b": 3
+										},
+										"then": {
+											"k": "DISMISS",
+											"target": "THIS"
+										}
+									}
+								]
+							}
+						},
+						{
+							"label": "Gain Military for each matching Skill icon",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "MILITARY",
+										"amount": {
+											"k": "SKILL_ICONS",
+											"specialty": "MILITARY"
+										}
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "COMPARE",
+											"a": {
+												"k": "SKILL_ICONS",
+												"specialty": "MILITARY"
+											},
+											"op": "GE",
+											"b": 3
+										},
+										"then": {
+											"k": "DISMISS",
+											"target": "THIS"
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3FRE25-25",
+		"cardId": "3FRE25/25",
+		"suit": "INCIDENT",
+		"deck": "FRE",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "INCIDENT_DECK",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "PROMOTE",
+									"from": "STAGING",
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	}
+]

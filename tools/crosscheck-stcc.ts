@@ -34,6 +34,10 @@ const ACCEPTED: Record<string, Record<string, string>> = {
 		skills:
 			'two variable skills whose passive reads "has 2 wild skills" — modelled as SKILL_ANY ×2',
 	},
+	'3FRE12/25': {
+		skills:
+			'a variable skill whose passive reads "this card has 1 {RES-skill}" — modelled as SKILL_RESEARCH',
+	},
 	'2GEO13/23': {
 		skills:
 			'the pinned STCC snapshot lists no icon; later STCC data prints a {RES} Skill, which we model',

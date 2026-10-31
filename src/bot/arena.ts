@@ -44,6 +44,7 @@ export const CREW_DECKS = [
 	'REB',
 	'KHA',
 	'PIK',
+	'FRE',
 ] as const
 
 export type BoardSide = 'BASIC' | 'ADVANCED'

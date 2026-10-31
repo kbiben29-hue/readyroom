@@ -590,31 +590,17 @@ export function CardFace({
 	)
 }
 
-/** Our own exhausted marker: an LCARS-orange disc with a "powered down"
- *  symbol, small enough to leave the card's picture visible. */
+/** The exhausted marker: the game's own "exhaust" glyph (a card turned on
+ *  its side, the mark of ACTIVATION operations) on an LCARS-orange disc,
+ *  small enough to leave the card's picture visible. */
 function ExhaustedMark() {
 	return (
-		<span className="exhausted-mark" title="Exhausted" aria-label="Exhausted">
-			<svg viewBox="0 0 32 32" aria-hidden="true">
-				<circle cx="16" cy="16" r="15" className="exhausted-mark-disc" />
-				<path
-					d="M11.2 10.4a8 8 0 1 0 9.6 0"
-					fill="none"
-					strokeWidth="2.8"
-					strokeLinecap="round"
-					className="exhausted-mark-sym"
-				/>
-				<line
-					x1="16"
-					y1="7.5"
-					x2="16"
-					y2="15.5"
-					strokeWidth="2.8"
-					strokeLinecap="round"
-					className="exhausted-mark-sym"
-				/>
-			</svg>
-		</span>
+		<span
+			className="exhausted-mark"
+			title="Exhausted"
+			aria-label="Exhausted"
+			dangerouslySetInnerHTML={{ __html: glyphMarkup('EXHAUST') }}
+		/>
 	)
 }
 

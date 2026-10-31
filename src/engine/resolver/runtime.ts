@@ -964,10 +964,25 @@ export function spendResource(
 	return payResource(state, seat, res, amount)
 }
 
-export function spendAction(state: GameState, seat: Seat): GameState {
+export function spendAction(
+	state: GameState,
+	seat: Seat,
+	/** the card whose operation the action pays for: the token is set on it
+	 *  as a reminder until Clean-up (rules/12 §12.7) */
+	onCard?: CardInstanceId,
+): GameState {
 	const p = player(state, seat)
 	if (p.actions.available <= 0)
 		throw new Error(`spendAction: ${seat} has no available action`)
+	const card = onCard === undefined ? undefined : state.cards[onCard]
+	if (card !== undefined)
+		state = {
+			...state,
+			cards: {
+				...state.cards,
+				[card.iid]: { ...card, actionTokens: card.actionTokens + 1 },
+			},
+		}
 	const players = state.players.map((pl) =>
 		pl.seat === seat
 			? {

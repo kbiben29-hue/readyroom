@@ -1394,21 +1394,72 @@ h3,
 	display: flex;
 	gap: 3px;
 }
-.action-token-chips {
-	display: inline-flex;
-	gap: 3px;
+/* Action tokens laid on the card (cards.tsx ActionTokens): about the card's
+   width, centred and fanned, like the physical chit sitting on the table. */
+.action-token-stack {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	pointer-events: none;
+	z-index: 3;
 }
-.action-chip {
+.action-token-big {
+	grid-area: 1 / 1;
+	width: 76%;
+	aspect-ratio: 1;
+	display: grid;
+	place-items: center;
+	filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.55));
+	/* appears as the flying token lands (flight.tsx FLIGHT_MS) */
+	animation: action-token-land 260ms ease-out 620ms backwards;
+}
+.action-token-big img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+.action-token-glyph {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
 	background: var(--orange);
 	color: var(--ink);
-	border-radius: 50%;
-	width: 15px;
-	height: 15px;
-	font-size: 10px;
+	display: grid;
+	place-items: center;
+	font-size: clamp(14px, 40cqw, 64px);
 	font-weight: 700;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+	container-type: inline-size;
+}
+.action-token-glyph svg {
+	width: 55%;
+	height: 55%;
+}
+.action-token-count {
+	position: absolute;
+	right: 6%;
+	bottom: 6%;
+	background: var(--ink, #000);
+	color: #fff;
+	border-radius: 999px;
+	padding: 1px 7px;
+	font-weight: 700;
+	font-size: 12px;
+}
+@keyframes action-token-land {
+	from {
+		opacity: 0;
+		scale: 1.25;
+	}
+	to {
+		opacity: 1;
+		scale: 1;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.action-token-big {
+		animation: none;
+	}
 }
 .resource-pips {
 	top: 4px;

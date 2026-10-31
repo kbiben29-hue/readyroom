@@ -114,7 +114,7 @@ describe('card art', () => {
 		)
 		expect(host.querySelector('.card-art')).not.toBeNull()
 		expect(host.querySelector('.card-badge .test-badge')).not.toBeNull()
-		expect(host.querySelectorAll('.action-chip').length).toBe(2)
+		expect(host.querySelectorAll('.action-token-big').length).toBe(2)
 		const dil = host.querySelector('.res-pip.pip-dil')
 		expect(dil?.getAttribute('title')).toContain('×3')
 		expect(host.querySelector('.res-pip.pip-lat')).not.toBeNull()

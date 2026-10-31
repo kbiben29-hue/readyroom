@@ -51,7 +51,8 @@ import { RESOURCE_LABEL } from './format'
 import type { SpecialtyId } from '../data/ids'
 import { cardImageUrl, stccCard, stccIconUrl, tokenView } from './stcc'
 import { printedOpFor, printedOps } from '../data/stcc'
-import { Icon, SpecialtyLabel, suitIconId } from './icons'
+import { Icon, SpecialtyLabel, iconUrl, suitIconId } from './icons'
+import { glyphMarkup } from './shorthandGlyphs'
 import { ShorthandOp } from './shorthand'
 import { GlyphLegend } from './guide/legend'
 import { linesOfDef } from './guide/glossary'
@@ -728,15 +729,7 @@ function TextFace({
 				)}
 			</div>
 			{badge !== undefined && <div className="card-badge">{badge}</div>}
-			{actionTokens > 0 && (
-				<div className="card-tokens action-token-chips">
-					{Array.from({ length: actionTokens }).map((_, i) => (
-						<span key={i} className="action-chip" title="action token">
-							<Icon id="ACTION" label="Action token" />
-						</span>
-					))}
-				</div>
-			)}
+			{actionTokens > 0 && <ActionTokens n={actionTokens} />}
 			{tokenList.length > 0 && (
 				<div className="card-tokens resource-pips">
 					{tokenList.map(([res, n]) => (
@@ -814,15 +807,7 @@ function CardArtFace({
 		>
 			<img src={url} alt="" className="card-art-img" draggable={false} />
 			{badge !== undefined && <div className="card-badge">{badge}</div>}
-			{actionTokens > 0 && (
-				<div className="card-tokens action-token-chips">
-					{Array.from({ length: actionTokens }).map((_, i) => (
-						<span key={i} className="action-chip" title="action token">
-							<Icon id="ACTION" label="Action token" />
-						</span>
-					))}
-				</div>
-			)}
+			{actionTokens > 0 && <ActionTokens n={actionTokens} />}
 			{tokenList.length > 0 && (
 				<div className="card-tokens resource-pips">
 					{tokenList.map(([res, n]) => (
@@ -1645,4 +1630,39 @@ function describeZone(zone: {
 	if (zone.seat !== undefined) s += ` · P${zone.seat + 1}`
 	if (zone.suit !== undefined) s += ` · ${zone.suit}`
 	return s
+}
+
+/** Action tokens spent on this card's operations, laid on the card as on the
+ *  table: each about card-sized, slightly fanned so a second one shows. They
+ *  stay until Clean-up returns them (rules/12 §12.7). */
+function ActionTokens({ n }: { n: number }) {
+	const url = iconUrl('ACTION')
+	const shown = Math.min(n, 3)
+	return (
+		<div
+			className="action-token-stack"
+			title={`${n} action token${n === 1 ? '' : 's'}`}
+			aria-label={`${n} action token${n === 1 ? '' : 's'}`}
+		>
+			{Array.from({ length: shown }).map((_, i) => (
+				<span
+					key={i}
+					className="action-token-big"
+					style={{
+						transform: `translate(${(i - (shown - 1) / 2) * 14}%, ${(i - (shown - 1) / 2) * 10}%) rotate(${[-8, 6, -3][i]}deg)`,
+					}}
+				>
+					{url !== null ? (
+						<img src={url} alt="" draggable={false} />
+					) : (
+						<span
+							className="action-token-glyph"
+							dangerouslySetInnerHTML={{ __html: glyphMarkup('ACT') }}
+						/>
+					)}
+				</span>
+			))}
+			{n > 3 && <span className="action-token-count">×{n}</span>}
+		</div>
+	)
 }

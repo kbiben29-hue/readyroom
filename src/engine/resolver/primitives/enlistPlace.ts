@@ -14,7 +14,15 @@ export function placeEnlisted(
 	iid: CardInstanceId,
 	seat: 0 | 1,
 ): GameState {
-	const next = moveCard(state, iid, { k: 'DRAW', seat }, { toTop: true })
+	// a STATUS Development goes into play when enlisted (3RIK09: "When this
+	// card is enlisted, put it into play immediately")
+	const status = cardDef(state.cards[iid]!.def).suit === 'STATUS'
+	const next = moveCard(
+		state,
+		iid,
+		status ? { k: 'STATUS', seat } : { k: 'DRAW', seat },
+		status ? undefined : { toTop: true },
+	)
 	const onEnlist = cardDef(next.cards[iid]!.def).onEnlist
 	if (onEnlist !== undefined)
 		next.stack.push({

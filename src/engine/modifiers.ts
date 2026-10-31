@@ -288,6 +288,10 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 			'You may additionally have another PERSON with STARFLEET on duty.',
 		dutyOfficerSlot: { traits: ['STARFLEET'] },
 	},
+	'3RIK05_HAND': {
+		describe: 'Increase your hand size by 1.',
+		handSize: (base) => base + 1,
+	},
 	// --- 2KHA ---
 	'2KHA01_BOARD': {
 		describe: 'You do not enlist when you cycle your deck.',

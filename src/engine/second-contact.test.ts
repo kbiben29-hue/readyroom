@@ -176,7 +176,7 @@ describe('Reward cards score negative unless logged', () => {
 })
 
 /** The Second Contact crews implemented so far. */
-const SC_CREWS: DeckId[] = ['PIK', 'FRE']
+const SC_CREWS: DeckId[] = ['PIK', 'FRE', 'RIK']
 
 describe('Second Contact fuzz', () => {
 	// each Second Contact crew against crews of both base boxes, both seats,

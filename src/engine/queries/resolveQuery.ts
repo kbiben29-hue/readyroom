@@ -205,6 +205,8 @@ export function matchFilter(
 	}
 
 	if (filter.ids !== undefined && !filter.ids.includes(def.id)) return false
+	if (filter.exhausted !== undefined && card.exhausted !== filter.exhausted)
+		return false
 
 	if (filter.exhibits !== undefined && filter.exhibits.length > 0) {
 		const any = filter.exhibits.some((sp) =>

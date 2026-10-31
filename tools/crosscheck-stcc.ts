@@ -34,6 +34,14 @@ const ACCEPTED: Record<string, Record<string, string>> = {
 		skills:
 			'two variable skills whose passive reads "has 2 wild skills" — modelled as SKILL_ANY ×2',
 	},
+	'3RIK09/25': {
+		startPosition:
+			'a STATUS card with a Development cost — it starts in the Development pile and goes into play when enlisted',
+	},
+	'3RIK12/25': {
+		skills:
+			'three variable skills whose passive counts STARFLEET PERSONs in play (max 3) — one SKILL_VARIABLE (as 2PER12)',
+	},
 	'3FRE12/25': {
 		skills:
 			'a variable skill whose passive reads "this card has 1 {RES-skill}" — modelled as SKILL_RESEARCH',

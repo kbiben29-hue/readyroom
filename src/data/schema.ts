@@ -65,6 +65,7 @@ const CardFilterSchema: z.ZodType<CardFilter> = z.lazy(() =>
 			exhibits: z.array(SpecialtySchema).optional(), // Skill or Focus icon, NOT restriction
 			focus: z.array(SpecialtySchema).optional(), // Focus icon only (1BUR04)
 			minVp: z.number().int().min(0).optional(),
+			exhausted: z.boolean().optional(),
 			not: CardFilterSchema.optional(),
 		})
 		.strict(),

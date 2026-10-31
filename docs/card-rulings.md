@@ -1080,3 +1080,60 @@ side is its Advanced side one higher plus ×1 at step 0, as on every box-1 board
   Cadet-mode Khan.
 - **Keyed on:** `src/data/cards/crew/kha.json`, `src/data/cards/boards/kha.json`; tests
   `src/engine/kha-deck.test.ts`, `src/engine/tbg-box.test.ts`.
+
+## 060 — Second Contact (box 3): the expansion, SUPPORT and the commons
+
+- **Setup:** `SetupConfig.expansions: ['SECOND_CONTACT']` adds box-3 commons and crews to either
+  base box. Once the Market is out, the top card of each Market deck goes to the Junk (once per
+  expansion). Cards marked REWARDS (`rewardPile`) start in the Reward pile (zone `REWARD_PILE`),
+  never part of the Market.
+- **SUPPORT:** a card in its owner's hand is offered in the reaction window of its trigger during
+  that player's Action Step; taking it moves the card into the Staging Area (put into play, not
+  played) and resolves only that operation. Triggers added for it: `CARD_PROMOTED`,
+  `CARD_JUNKED`, `CARD_EXHAUSTED` (also fired by activating a card and by taking a REACTION),
+  `RESOURCE_SPENT`.
+- **Reward cards:** "If not logged, this card scores −N VP" is `SCORE_VP negate` under a SPECIAL.
+  3LOC01's activation is `TAKE_REWARD` (2 random CROSSOVER cards, take one, destroy the other).
+- **Not modelled yet:** "scan for {X-focus}" (no scan by Focus icon); 3PER02 refreshes another
+  card with one of its own traits; 3PER09's ORION extension; 3PER13's "except during your
+  Resupply Step"; 3ALL02 "promote the gained card" and its Staging-Area Special; 3ALL03's
+  SUPPORT takes any Junk card into hand; 3CAR03's Staging-Area Special; 3SHI01 "another SHIP";
+  3SHI02's Control-Step PASSIVE; 3LOC02 "from the top of the deck".
+- **Keyed on:** `src/data/cards/sc/common/*.json`; tests `src/engine/second-contact.test.ts`.
+
+## 061 — The 3PIK and 3FRE crew decks (Second Contact)
+
+- **3PIK03:** `startAwayTeams: 1` — one AWAY TEAM starts on it besides the CAPTAIN's four.
+- **3PIK02:** its REACTION offers the three tracks; only a track the card shows a Skill/Focus for
+  gains.
+- **3FRE03:** `secureWeight: 2` — counts as 2 tokens for securing a LOCATION.
+- **3FRE12:** its variable icon is the {RES-skill} its PASSIVE names; "put this card on the bottom
+  of your deck" puts it on top. 3FRE20 "shuffle this card into your deck" puts it on top.
+- **3FRE06 cost "find 2 STARFLEET and log both":** logs 2 STARFLEET from hand, Discard pile, Draw
+  deck or Reserve.
+- **3PIK/M3, 3FRE/M3 "at the same neutral LOCATION":** read as the counted cards in play (3PIK/M3:
+  beamed to your SHIPs) while you have a SHIP at a neutral LOCATION.
+- **Not modelled yet:** 3PIK01's PASSIVE (INCIDENT effects reaching the Log); 3PIK05's Market/Junk
+  swap; 3PIK06 "multiple different species" (finds any card; 1 Glory for the scan); 3PIK08's
+  WILDCARD Special; 3PIK11 "lose 1 MILITARY"; 3PIK15 duplicating from the Development pile; 3PIK17
+  "junk … from your Development pile" destroys it; 3PIK22's wild-skill PASSIVE; 3PIK23 "if you
+  do both"; 3FRE04 "ignoring any effect that would log this card"; 3FRE14 spending {LAT} as
+  {DIL}; 3FRE16 shuffling the gained card into the deck; 3FRE21's Special; 3FRE/M3's Focus scan.
+- **Keyed on:** `src/data/cards/crew/pik.json`, `src/data/cards/crew/fre.json` and their boards
+  (glyphs read off the printed boards).
+
+## 062 — The 3RIK crew deck (Second Contact)
+
+- **3RIK09:** a STATUS card with a Development cost: it starts in the Development pile and an
+  enlist puts it straight into the STATUS zone. Its Clean-up checks `filter.exhausted`.
+- **3RIK12:** one `SKILL_VARIABLE` counting STARFLEET PERSONs in play (max 3) as {MIL-skill}.
+- **3RIK01 "draw a card of the same suit":** you pick the suit, put a card of it on the deck and
+  draw one of it from the Discard pile.
+- **3RIK08's cost "find/recall and log" 3RIK23:** logs it from hand, Discard pile, Draw deck,
+  Reserve or play.
+- **3RIK/M3 "Take the bottom ENCOUNTER":** takes the top one.
+- **Not modelled yet:** 3RIK04's MIL-as-RES PASSIVE; 3RIK05's cost "find 3 PERSON and beam them to
+  the same SHIP"; 3RIK07 "sharing a LOCATION with one of your SHIP"; 3RIK09's face-up Draw deck;
+  3RIK11 duplicating from hand; 3RIK13's WEAPON PASSIVE; 3RIK15's INCIDENT PASSIVE; 3RIK25's
+  promotion as a PERSON; 3RIK/M2 "excluding beamed cards".
+- **Keyed on:** `src/data/cards/crew/rik.json`, `src/data/cards/boards/rik.json`.

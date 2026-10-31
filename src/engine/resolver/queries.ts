@@ -95,6 +95,8 @@ export interface CardFilter {
 	 *  icon ("your cards with {INF-focus}/{MIL-focus}" — 1BUR04) */
 	focus?: SpecialtyId[] | undefined
 	minVp?: number | undefined
+	/** only exhausted (true) or ready (false) cards — "if this card is exhausted" (3RIK09) */
+	exhausted?: boolean | undefined
 	not?: CardFilter | undefined
 }
 

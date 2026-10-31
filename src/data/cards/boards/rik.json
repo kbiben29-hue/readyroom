@@ -1,0 +1,693 @@
+[
+	{
+		"deck": "RIK",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 11,
+						"value": 4
+					},
+					{
+						"step": 13,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 5,
+						"value": 3
+					},
+					{
+						"step": 10,
+						"value": 4
+					},
+					{
+						"step": 14,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 2,
+						"value": 2
+					},
+					{
+						"step": 7,
+						"value": 3
+					},
+					{
+						"step": 11,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "3RIK/M1",
+				"goal": {
+					"k": "OR",
+					"terms": [
+						{
+							"k": "AND",
+							"terms": [
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "LOG",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"traits": [
+												"PAKLED"
+											]
+										}
+									},
+									"value": 1
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "MILITARY",
+									"value": 8
+								}
+							]
+						},
+						{
+							"k": "AND",
+							"terms": [
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "LOG",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"traits": [
+												"PAKLED"
+											]
+										}
+									},
+									"value": 1
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "INFLUENCE",
+									"value": 4
+								}
+							]
+						},
+						{
+							"k": "AND",
+							"terms": [
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "MILITARY",
+									"value": 8
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "INFLUENCE",
+									"value": 4
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 3 Dilithium",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 3
+									}
+								},
+								{
+									"label": "Gain 3 Latinum",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "LAT",
+										"amount": 3
+									}
+								}
+							]
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 2
+							},
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												{
+													"k": "LOG",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"traits": [
+													"PAKLED"
+												]
+											}
+										},
+										"value": 1
+									},
+									{
+										"k": "SPECIALTY_AT_LEAST",
+										"specialty": "MILITARY",
+										"value": 8
+									},
+									{
+										"k": "SPECIALTY_AT_LEAST",
+										"specialty": "INFLUENCE",
+										"value": 4
+									}
+								]
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 2
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "RIK",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 8,
+						"value": 2
+					},
+					{
+						"step": 11,
+						"value": 3
+					},
+					{
+						"step": 13,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 5,
+						"value": 2
+					},
+					{
+						"step": 10,
+						"value": 3
+					},
+					{
+						"step": 14,
+						"value": 4
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 2,
+						"value": 1
+					},
+					{
+						"step": 7,
+						"value": 2
+					},
+					{
+						"step": 11,
+						"value": 3
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "3RIK/M1",
+				"goal": {
+					"k": "OR",
+					"terms": [
+						{
+							"k": "AND",
+							"terms": [
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "LOG",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"traits": [
+												"PAKLED"
+											]
+										}
+									},
+									"value": 1
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "MILITARY",
+									"value": 8
+								}
+							]
+						},
+						{
+							"k": "AND",
+							"terms": [
+								{
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "LOG",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"traits": [
+												"PAKLED"
+											]
+										}
+									},
+									"value": 1
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "INFLUENCE",
+									"value": 4
+								}
+							]
+						},
+						{
+							"k": "AND",
+							"terms": [
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "MILITARY",
+									"value": 8
+								},
+								{
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "INFLUENCE",
+									"value": 4
+								}
+							]
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 3 Dilithium",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 3
+									}
+								},
+								{
+									"label": "Gain 3 Latinum",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "LAT",
+										"amount": 3
+									}
+								}
+							]
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 2
+							},
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												{
+													"k": "LOG",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"traits": [
+													"PAKLED"
+												]
+											}
+										},
+										"value": 1
+									},
+									{
+										"k": "SPECIALTY_AT_LEAST",
+										"specialty": "MILITARY",
+										"value": 8
+									},
+									{
+										"k": "SPECIALTY_AT_LEAST",
+										"specialty": "INFLUENCE",
+										"value": 4
+									}
+								]
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 2
+							}
+						}
+					]
+				},
+				"vp": 3
+			},
+			{
+				"index": 1,
+				"cardId": "3RIK/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"traits": [
+										"STARFLEET"
+									]
+								}
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"exhibits": [
+										"RESEARCH"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 5
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						},
+						{
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"ALIEN",
+								"AENAR",
+								"ANDORIAN",
+								"ANDROID",
+								"BAJORAN",
+								"BETAZOID",
+								"BORG",
+								"BREEN",
+								"CARDASSIAN",
+								"CHANGELING",
+								"FERENGI",
+								"HUMAN",
+								"JEM_HADAR",
+								"KAZON",
+								"KELPIEN",
+								"KLINGON",
+								"ORION",
+								"PAKLED",
+								"REMAN",
+								"ROMULAN",
+								"SYNTHETIC",
+								"TELLARITE",
+								"TRANSCENDENT",
+								"TRILL",
+								"VAU_NAKAT",
+								"VORTA",
+								"VULCAN",
+								"XB",
+								"XINDI"
+							]
+						}
+					]
+				},
+				"vp": 2
+			},
+			{
+				"index": 2,
+				"cardId": "3RIK/M3",
+				"goal": {
+					"k": "COMPARE",
+					"a": {
+						"k": "SUM",
+						"terms": [
+							{
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"KLINGON"
+												]
+											},
+											"seat": "SELF"
+										}
+									},
+									1
+								]
+							},
+							{
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"PILOT"
+												]
+											},
+											"seat": "SELF"
+										}
+									},
+									1
+								]
+							},
+							{
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"DOCTOR"
+												]
+											},
+											"seat": "SELF"
+										}
+									},
+									1
+								]
+							},
+							{
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"SCIENTIST"
+												]
+											},
+											"seat": "SELF"
+										}
+									},
+									1
+								]
+							},
+							{
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"SYNTHETIC"
+												]
+											},
+											"seat": "SELF"
+										}
+									},
+									1
+								]
+							}
+						]
+					},
+					"op": "GE",
+					"b": 4
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "CAPTAIN",
+										"seat": 0
+									}
+								]
+							}
+						},
+						{
+							"k": "TAKE",
+							"deck": "ENCOUNTER",
+							"count": 1
+						}
+					]
+				},
+				"vp": 2
+			}
+		]
+	}
+]

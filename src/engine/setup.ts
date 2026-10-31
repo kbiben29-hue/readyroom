@@ -448,7 +448,8 @@ export function setupDeck(
 			s = r.state
 			continue
 		}
-		if (d.suit === 'STATUS') {
+		// a STATUS card that is a Development (3RIK09) waits in the pile
+		if (d.suit === 'STATUS' && d.startPosition !== 'DEVELOPMENT') {
 			const r = mintInto(s, d.id, seat, { k: 'STATUS', seat }, prefix)
 			s = r.state
 			continue

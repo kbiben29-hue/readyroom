@@ -274,7 +274,21 @@
 		"vp": 3,
 		"vpAsterisk": false,
 		"startPosition": "DEVELOPMENT",
-		"developmentCost": null,
+		"developmentCost": {
+			"k": "COST_REQUIRE",
+			"cond": {
+				"k": "COUNT_AT_LEAST",
+				"query": {
+					"zones": [
+						{
+							"k": "HAND",
+							"seat": 0
+						}
+					]
+				},
+				"value": 0
+			}
+		},
 		"operations": [
 			{
 				"type": "PLAY",

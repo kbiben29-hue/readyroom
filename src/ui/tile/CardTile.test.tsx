@@ -3,7 +3,7 @@
 // what a density does not show. Behaviour: a lit line is a button that
 // dispatches; the header opens the detail; a candidate rings and toggles.
 
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react'
 import type { CardCatalog } from '../../engine/setup'
@@ -14,6 +14,8 @@ import { createSession } from '../../session/log'
 import { useGameStore } from '../store'
 import { loadBrowserCatalog } from '../browserCatalog'
 import { CardTile, candidateState } from './CardTile'
+import { setStccIndex } from '../stcc'
+import { fakeStccIndex } from '../testStcc'
 
 // React's act() warns unless the test environment says it is one
 ;(
@@ -68,7 +70,24 @@ beforeEach(() => {
 	root = createRoot(host)
 })
 
+afterEach(() => setStccIndex(new Map()))
+
 describe('CardTile', () => {
+	it('shows downloaded artwork without removing live action controls, and falls back on image failure', () => {
+		const state = start()
+		const iid = inZone(state, 'FLEET:0', '1PIC02-24')
+		const def = cardDef(state.cards[iid]!.def)
+		setStccIndex(fakeStccIndex([def]))
+		render(<CardTile iid={iid} />)
+		const image = host.querySelector<HTMLImageElement>('.pb-card-scan img')!
+		expect(image).not.toBeNull()
+		expect(image.getAttribute('src')).toBeTruthy()
+		expect(host.querySelectorAll('.pb-ln.pb-lit').length).toBe(3)
+		act(() => image.dispatchEvent(new Event('error')))
+		expect(host.querySelector('.pb-card-scan')).toBeNull()
+		expect(host.querySelectorAll('.pb-ln.pb-lit').length).toBe(3)
+	})
+
 	it('carries every density part in its markup', () => {
 		const s = start()
 		const ent = inZone(s, 'FLEET:0', '1PIC02-24')

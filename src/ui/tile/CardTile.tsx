@@ -46,6 +46,7 @@ import { intentOffered, speakable, tileLines, type TileLine } from './lines'
 import { useViewerLegal } from './legal'
 import './tile.css'
 import { cardName, deckLabel } from '../../data/cardNames'
+import { cardImageUrl } from '../stcc'
 
 // ---------------------------------------------------------------------------
 // Candidate state of the pending choice (pure)
@@ -385,6 +386,45 @@ export interface CardTileProps {
 	emptyText?: string | undefined
 }
 
+/** A failed or unavailable scan leaves all of the existing text controls intact. */
+function TabletCardScan({
+	url,
+	label,
+	onOpen,
+}: {
+	url: string
+	label: string
+	onOpen?: (() => void) | undefined
+}) {
+	const [broken, setBroken] = useState(false)
+	if (broken) return null
+	return (
+		<div
+			className="pb-card-scan"
+			role={onOpen ? 'button' : undefined}
+			tabIndex={onOpen ? 0 : undefined}
+			aria-label={onOpen ? `View printed card: ${label}` : undefined}
+			onClick={
+				onOpen
+					? (e) => {
+							e.stopPropagation()
+							onOpen()
+						}
+					: undefined
+			}
+			onKeyDown={onOpen ? onKeys(onOpen) : undefined}
+		>
+			<img
+				src={url}
+				alt={`Printed card: ${label}`}
+				loading="lazy"
+				draggable={false}
+				onError={() => setBroken(true)}
+			/>
+		</div>
+	)
+}
+
 export function CardTile(props: CardTileProps) {
 	const {
 		iid,
@@ -500,6 +540,7 @@ export function CardTile(props: CardTileProps) {
 		([, n]) => (n ?? 0) > 0,
 	) as ['DIL' | 'LAT' | 'GLO', number][]
 	const headerButton = interactive && !pickable
+	const scan = cardImageUrl(def)
 
 	return (
 		<div className="pb-slot">
@@ -537,6 +578,14 @@ export function CardTile(props: CardTileProps) {
 						<span className={`pb-vp${def.vp < 0 ? ' pb-neg' : ''}`}>{vp}</span>
 					)}
 				</header>
+				{scan !== null && (
+					<TabletCardScan
+						key={scan}
+						url={scan}
+						label={cardName(def)}
+						onOpen={headerButton ? open : undefined}
+					/>
+				)}
 				<Traits def={def} />
 				<div className="pb-meta">
 					{iid !== undefined && projected !== null && (

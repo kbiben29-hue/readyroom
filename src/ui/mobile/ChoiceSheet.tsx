@@ -366,7 +366,11 @@ function PickSheet({
 							Clear
 						</Pill>
 					)}
-					{optional && <Pill onClick={() => confirmChoice([])}>Decline</Pill>}
+					{(optional || (choice.k === 'CHOOSE_CARDS' && min === 0)) && (
+						<Pill onClick={() => confirmChoice([])}>
+							{optional ? 'Decline' : 'None'}
+						</Pill>
+					)}
 					{skip && (
 						<Pill onClick={() => confirmChoice(SKIP_CONTROL)}>Skip</Pill>
 					)}

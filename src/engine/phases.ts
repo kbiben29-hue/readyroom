@@ -588,7 +588,7 @@ function cleanupDiscard(state: GameState, ctx: EffectCtx): GameState {
 		return pushStep(s, { k: 'CLEANUP', sub: 'DRAW' }, phaseCtx(seat))
 	return phaseSuspend(s, seat, { k: 'CLEANUP', sub: 'DISCARD' }, ctx, key, {
 		k: 'CHOOSE_CARDS',
-		prompt: 'Discard any cards from hand?',
+		prompt: 'Discard any cards from your hand? You may keep them all.',
 		candidates: hand,
 		min: 0,
 		max: hand.length,

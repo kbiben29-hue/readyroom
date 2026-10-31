@@ -333,13 +333,15 @@ function ChooseCardsChoice({
 				>
 					Confirm {selected.length > 0 ? `(${selected.length})` : ''}
 				</button>
-				{optional === true && (
+				{/* picking nothing is allowed: say so with a button of its own
+				    (the Clean-up discard keeps the whole hand this way) */}
+				{(optional === true || min === 0) && (
 					<button
 						type="button"
 						className="btn"
 						onClick={() => confirmChoice([])}
 					>
-						Decline / none
+						{optional === true ? 'Decline / none' : 'None'}
 					</button>
 				)}
 				<button

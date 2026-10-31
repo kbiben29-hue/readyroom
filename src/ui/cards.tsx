@@ -590,31 +590,25 @@ export function CardFace({
 	)
 }
 
-/** Our own exhausted marker: an LCARS-orange disc with a "powered down"
- *  symbol, small enough to leave the card's picture visible. */
+/** The exhausted marker: our own badge — a star with two small ones beside
+ *  it under a curved "turned" arrow, on an LCARS-orange disc, small enough to
+ *  leave the card's picture visible. */
+const EXHAUSTED_SVG =
+	'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+	'<path d="M12 8.2l1.35 2.9 3.15.35-2.35 2.15.65 3.1L12 15.1l-2.8 1.6.65-3.1-2.35-2.15 3.15-.35Z" fill="currentColor"/>' +
+	'<path d="M5.6 15.2l.5 1 1.1.15-.8.75.2 1.1-1-.55-1 .55.2-1.1-.8-.75 1.1-.15Z" fill="currentColor"/>' +
+	'<path d="M18.4 15.2l.5 1 1.1.15-.8.75.2 1.1-1-.55-1 .55.2-1.1-.8-.75 1.1-.15Z" fill="currentColor"/>' +
+	'<path d="M5.4 9.6A7.4 7.4 0 0 1 18.2 7.4M18.9 4.3v3.6h-3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>' +
+	'</svg>'
+
 function ExhaustedMark() {
 	return (
-		<span className="exhausted-mark" title="Exhausted" aria-label="Exhausted">
-			<svg viewBox="0 0 32 32" aria-hidden="true">
-				<circle cx="16" cy="16" r="15" className="exhausted-mark-disc" />
-				<path
-					d="M11.2 10.4a8 8 0 1 0 9.6 0"
-					fill="none"
-					strokeWidth="2.8"
-					strokeLinecap="round"
-					className="exhausted-mark-sym"
-				/>
-				<line
-					x1="16"
-					y1="7.5"
-					x2="16"
-					y2="15.5"
-					strokeWidth="2.8"
-					strokeLinecap="round"
-					className="exhausted-mark-sym"
-				/>
-			</svg>
-		</span>
+		<span
+			className="exhausted-mark"
+			title="Exhausted"
+			aria-label="Exhausted"
+			dangerouslySetInnerHTML={{ __html: EXHAUSTED_SVG }}
+		/>
 	)
 }
 
@@ -1196,8 +1190,23 @@ export function CardDetailHost() {
 						},
 					}
 				: null
-		const why =
-			notHere ??
+		// A PLAY operation of a card already out of the hand is not "blocked":
+		// the card was played. Say which operation it was played for, this turn.
+		const liveZone = realState.cards[detailIid]?.zone.k
+		const playedOut =
+			notHere === undefined &&
+			op.type === 'PLAY' &&
+			liveZone !== undefined &&
+			liveZone !== 'HAND'
+		const playedNow =
+			playedOut &&
+			realState.resolvedOps?.turn === realState.turnNumber &&
+			realState.resolvedOps.refs.some(
+				(r) => r.card === detailIid && r.opIndex === i,
+			)
+		const why = playedOut
+			? null
+			: notHere ??
 			(op.type !== 'ACTIVATION' && op.type !== 'PLAY'
 				? usable.ok
 					? null
@@ -1206,11 +1215,14 @@ export function CardDetailHost() {
 					? turnBlockReason
 					: usable.message)
 		return (
-			<OpBlock key={i} blocked={!usable.ok} run={run}>
+			<OpBlock key={i} blocked={!usable.ok && !playedOut} run={run}>
 				<div className="op-detail-head">
 					<span className={`op-type op-type-${op.type.toLowerCase()}`}>
 						{op.type}
 					</span>
+					{playedNow ? (
+						<span className="chip chip-played">played this turn</span>
+					) : null}
 					{op.costsAction ? (
 						<span className="chip">costs an action</span>
 					) : null}

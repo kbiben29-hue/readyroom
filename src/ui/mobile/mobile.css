@@ -1874,3 +1874,20 @@ ul.pb-order li {
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 }
+
+/* Touch screens (iPad, phones): taps act at once — no double-tap zoom, no
+   text selection or callout menu when a card is pressed and held */
+@media (pointer: coarse) {
+	html {
+		touch-action: manipulation;
+		-webkit-text-size-adjust: 100%;
+	}
+	.card,
+	.card-inner,
+	button {
+		-webkit-user-select: none;
+		user-select: none;
+		-webkit-touch-callout: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+}

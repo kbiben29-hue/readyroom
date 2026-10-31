@@ -1291,6 +1291,110 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
   "2ALL16-16": [
     "PLAY ACT | FIND ·<INCIDENT> (FREE_PLAY)? FIND ·<PERSON> ( LOG +1 GLO | FREE_PLAY LOG )",
   ],
+  "2ARC01-23": [
+    "ENDG | 1 VP / 3 CARD trait",
+    "RESU | IF ≥1 <SHIP> ⇒ ({EXHAUST} › CARD + GLO)?",
+  ],
+  "2ARC02-23": [
+    "REAC | − CARD ·<DIRECTIVE> : ( +1 DIL CARD | +1 LAT CARD )",
+    "CLEA | (BEAM ·non-<DIRECTIVE> IF CHECK + non-'shares a trait' ⇒ +1 INFLUENCE +1 GLO CARD)?",
+  ],
+  "2ARC03-23": [
+    "PLAY ACT | DEPLOY ({EXHAUST ·<PERSON>} › WARP)?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 DIL} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "2ARC04-23": [
+    "PLAY ACT | ENLIST / RESERVE CARD + GLO ≤3×(BEAM ·<ALLY> ✓⇒ (FIND ·<INCIDENT> −1<INCIDENT>)?) LOG",
+    "DEV | −1 DIL −1 LAT REQ[≥5 #ALIEN / #AENAR / #ANDORIAN / #ANDROID / #BAJORAN / #BETAZOID / #BORG / #BREEN / #CARDASSIAN / #CHANGELING / #FERENGI / #HUMAN / #JEM_HADAR / #KAZON / #KELPIEN / #KLINGON / #ORION / #PAKLED / #REMAN / #ROMULAN / #SYNTHETIC / #TELLARITE / #TRANSCENDENT / #TRILL / #VAU_NAKAT / #VORTA / #VULCAN / #XB / #XINDI]",
+  ],
+  "2ARC05-23": [
+    "PLAY ACT | ( +1 CARD | +1 FROM_DISCARD ) +1 RESEARCH / #ANOMALY +1 INFLUENCE / #AMBASSADOR +1 MILITARY / #ALIEN / #XINDI",
+    "ACTI | {−1 CARD} › RECALL ·non-#TIME_TRAVEL",
+    "PASS | §«Increase your hand size by 1 for each of RESEARCH, INFLUENCE and MILITARY at 6+.»",
+    "DEV | −3 DIL REQ[≥2 #XINDI]",
+  ],
+  "2ARC06-23": [
+    "PLAY ACT | SCAN #ANDORIAN / #WEAPON +1 CARD",
+    "ACTI | {−1 CARD} › 1 SEND IF =<DIRECTIVE> / <CARGO>? ⇒ +2 DIL",
+    "DEV | −2 DIL −2 LAT",
+  ],
+  "2ARC07-23": [
+    "PLAY ACT | SCAN #VULCAN / #SCIENTIST +1 CARD",
+    "ACTI | {−1 CARD ·#HUMAN} › +2 CARD ( +1 RESEARCH | +1 INFLUENCE | +1 MILITARY )",
+    "DEV | −3 DIL EXHAUST ·<CAPTAIN>",
+  ],
+  "2ARC08-23": [
+    "PLAY | (FREE_PLAY ·<INCIDENT> / <DIRECTIVE>)? (PROMOTE)? ≤2×(( PROMOTE ·<PERSON> | PROMOTE ·<PERSON> ·DISCARD_PILE ))",
+    "ACTI | {−1 CARD} › +1 GLO CARD",
+    "PASS | §«You may have an additional PERSON on duty.»",
+    "PASS | §«You may have an additional PERSON on duty.»",
+    "DEV | REQ[≥4 CARD]",
+  ],
+  "2ARC09-23": [
+    "PLAY ACT | +2 INFLUENCE SCAN #XINDI +junk",
+    "PLAY ATTACK REQ[INFLUENCE ≥6] | IF ≥1 OPP[#XINDI] ⇒ +1<INCIDENT> OPP[+1<INCIDENT>] OPP[EXHAUST ·<LOCATION>] +1<ENCOUNTER> LOG",
+    "DEV | REQ[≥1 <INCIDENT> + ≥1 <ENCOUNTER>]",
+  ],
+  "2ARC10-23": [
+    "PLAY ACT | CONTROL",
+    "CONT | (BEAM ·<PERSON> ✓⇒ SCAN1 <SHIP>)?",
+    "ACTI | IF ≥1 <LOCATION> ⇒ +1 CARD",
+    "REAC | DEPLOY ·<SHIP> : {LOG ·<PERSON>} › +1 CARD +1 DIL REFRESH",
+    "REAC | WARP : {LOG ·<PERSON>} › +1 CARD +1 DIL REFRESH",
+    "DEV | REQ[≥0 HAND]",
+  ],
+  "2ARC11-23": [
+    "PLAY ACT | 1 SEND",
+    "PLAY | ({LOG} › CARD + GLO)? JUNK",
+    "ACTI ACT ATTACK REQ[MILITARY ≥3] | ≤6×(OPP[−1 AWAY] ✓⇒ +1 GLO) IF ≥1 #SECURITY ⇒ (1 SEND)? LOG",
+  ],
+  "2ARC12-23": [
+    "PLAY ACT | (+1 CARD)? (PROMOTE ·<PERSON>)?",
+    "ACTI | {−1 CARD ·#HUMAN / #ENGINEER} › +1 FROM_DISCARD ·<CARGO> / <DIRECTIVE>",
+    "RESU | ( +1 DIL | {−1 DIL} › +1 RESEARCH )",
+  ],
+  "2ARC13-23": [
+    "PLAY ACT | IF ≥1 <LOCATION> + ≥1 <LOCATION> / ≥1 <SHIP> ⇒ +1<ENCOUNTER> (look 2) LOG +1 RESEARCH",
+  ],
+  "2ARC14-23": [
+    "PLAY ACT | SCAN2 <ALLY> LOG",
+  ],
+  "2ARC15-23": [
+    "PLAY ACT | +2 CARD −1 CARD +1 ANY_SPECIALTY / skill:ANY",
+  ],
+  "2ARC16-23": [
+    "PLAY | ( +1 CARD | WARP | {EXHAUST ·<CAPTAIN>} › +1 CARD WARP ) ({−1 DIL} › 1 SEND)?",
+    "PLAY ACT | {+1<INCIDENT>} › CONTROL ·'deck' LOG",
+  ],
+  "2ARC17-23": [
+    "PLAY | ( FIND ·<PERSON> | FIND ·<PERSON> −1 CARD ) (REFRESH)? IF ≥1 #ALIEN ⇒ +1 GLO +1<INCIDENT> OPP[+1<INCIDENT>]",
+  ],
+  "2ARC18-23": [
+    "PLAY ACT | 1 SEND (( BEAM | RECALL ))?",
+  ],
+  "2ARC19-23": [
+    "PLAY ACT | +CARGO ( LOG +1 DIL | +1 DIL CARD )",
+    "ACTI | REFRESH ·<SHIP> / <CARGO>",
+  ],
+  "2ARC20-23": [
+    "PLAY ACT | {TOP_DECK} › +PERSON",
+    "PLAY ACT | {+1<INCIDENT>} › +ALLY",
+  ],
+  "2ARC21-23": [
+    "PLAY ACT | {+1<INCIDENT>} › +SHIP",
+    "PLAY ACT | {−2 CARD} › +CARGO",
+    "PLAY | +2 DIL",
+  ],
+  "2ARC22-23": [
+    "PLAY | +1 FROM_DISCARD ·<DIRECTIVE> / <ENCOUNTER>",
+    "PLAY ACT | (( ENLIST | DEVELOP ))? ({+1<INCIDENT> EXHAUST ·<CAPTAIN>} › +1 CARD / 2 <LOCATION>)?",
+  ],
+  "2ARC23-23": [
+    "PLAY | {EXHAUST ·<CAPTAIN>} › SCAN #NX_01",
+    "PLAY | (PROMOTE ·<PERSON> #STARFLEET)?",
+  ],
   "2CAR01-18": [
     "PLAY ACT | {−3 DIL −1 LAT} › DEPLOY +2 MILITARY IF <CAPTAIN> #KLINGON ⇒ ({+1<INCIDENT>} › +3 CARD)?",
     "REAC ATTACK | OPP[ENTER ·#KLINGON] : OPP[−1 CARD]",
@@ -1525,6 +1629,124 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
   "2INC06-6": [
     "PLAY ACT | {−1 LAT} › −1<INCIDENT> (REFRESH ·<SHIP>)?",
   ],
+  "2KIRK01-25": [
+    "REAC | ENTER ·#KLINGON : {−1 CARD} › +1 MILITARY",
+    "ACTI | {TOP_DECK} › +1 FROM_DISCARD ·<DIRECTIVE>",
+    "ENDG | 1 VP / 2 'the lower'",
+  ],
+  "2KIRK02-25": [
+    "PLAY ACT | DEPLOY ( WARP | BEAM )",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "2KIRK03-25": [
+    "SPEC | LOG : ≤SD#×(1 SEND)",
+  ],
+  "2KIRK04-25": [
+    "PLAY ACT ATTACK | {LOG ·<SHIP>} › ≤3 SEND IF ≥1 <LOCATION> ⇒ CONTROL OPP[+1<INCIDENT>] OPP[DISMISS] LOG",
+    "DEV | −3 LAT",
+  ],
+  "2KIRK05-25": [
+    "PLAY ACT | DEPLOY ( WARP | BEAM ) ({−1 CARD} › BEAM)?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+    "DEV | ( −6 DIL | REQ[≥1 "2KIRK02-25"] )",
+  ],
+  "2KIRK06-25": [
+    "PLAY ACT ATTACK | DEPLOY IF ≥1 <LOCATION> ⇒ OPP[+1<INCIDENT>] (FIND ·"2KIRK20-25")?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | {−1 DIL} › RECALL",
+    "DEV | ( −6 DIL | REQ[≥1 "2KIRK07-25"] )",
+  ],
+  "2KIRK07-25": [
+    "PLAY ACT | +1<INCIDENT> 2 SEND",
+    "REAC | OPP[ATTACK] : {EXHAUST ·<SHIP>} › SHIELD",
+    "DEV | −2 DIL",
+  ],
+  "2KIRK08-25": [
+    "PLAY ACT | +1 INFLUENCE / #VULCAN (PROMOTE (PROMOTE ·<PERSON>)?)?",
+    "PASS | §«You may have an additional PERSON on duty.»",
+    "PASS | §«You may have an additional PERSON on duty.»",
+    "DEV | −1 DIL −1 LAT",
+  ],
+  "2KIRK09-25": [
+    "PLAY ACT REQ[RESEARCH ≥4] | CONTROL",
+    "CONT | (FIND ·#VULCAN)? (+1 FROM_DISCARD ·"2KIRK19-25" / "1PIC19/24" / "2GEO18/23" / "2SOV23/24")? (FREE_PLAY ·<INCIDENT>)?",
+    "ENDG | VP ×max / ",
+    "DEV | −4 DIL",
+  ],
+  "2KIRK10-25": [
+    "PLAY | FIND",
+    "PLAY | RECALL ·non-#TIME_TRAVEL",
+    "DEV | −2 DIL +1<INCIDENT>",
+  ],
+  "2KIRK11-25": [
+    "PLAY | DEPLOY",
+    "PLAY REQ[INFLUENCE ≥5] | DEPLOY ({−1 CARD ·<INCIDENT>} › 1 SEND)?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+  ],
+  "2KIRK12-25": [
+    "PLAY | ( FIND ·<SHIP> | FIND ·<SHIP> +1<INCIDENT> )",
+    "PLAY ACT | {DISMISS ·<SHIP>} › CONTROL again +1 CARD",
+    "ACTI | +2 DIL REFRESH ·<SHIP> / <CARGO>",
+  ],
+  "2KIRK13-25": [
+    "PLAY ACT ATTACK | −1 DECK 1 SEND IF OPP[AWAY ≥1] ⇒ OPP[−1 CARD]",
+    "REAC | WARP : {−1 CARD ·<PERSON>} › 1 SEND +1 GLO",
+  ],
+  "2KIRK14-25": [
+    "PLAY ACT | {+1<INCIDENT>} › +SHIP",
+    "PLAY ACT | {−2 CARD} › +CARGO",
+    "PLAY | +2 DIL",
+  ],
+  "2KIRK15-25": [
+    "PLAY | ( DISMISS ·<SHIP> | DISMISS ) ✓⇒ LOG DEVELOP ·<PERSON> LOG",
+  ],
+  "2KIRK16-25": [
+    "PLAY ACT | {−1 CARD} › −1<INCIDENT> IF =skill:RESEARCH? ⇒ +2 CARD −1 CARD",
+    "PLAY ACT | IF ≥1 #TIME_TRAVEL ⇒ −1<INCIDENT> +2 CARD −1 CARD",
+  ],
+  "2KIRK17-25": [
+    "PLAY | DEPLOY ≤3×(BEAM ·<PERSON>) IF non-≥1 CARD ⇒ DISMISS",
+    "ACTI | RECALL ·<PERSON> IF non-≥1 CARD ⇒ DISMISS",
+    "ACTI | {−1 DIL} › BEAM ·<PERSON>",
+  ],
+  "2KIRK18-25": [
+    "PLAY ACT | {TOP_DECK} › +PERSON",
+    "PLAY ACT | {+1<INCIDENT>} › +ALLY",
+  ],
+  "2KIRK19-25": [
+    "PLAY ACT | +1 DIL +2 DIL / <LOCATION>",
+    "PLAY ACT | +1 ANY_SPECIALTY / skill:ANY",
+  ],
+  "2KIRK20-25": [
+    "PLAY ACT | (≤3×({−1 CARD ·<PERSON>} › 1 SEND))?",
+    "PLAY | +1 CARD −1 CARD ≤2 WARP",
+  ],
+  "2KIRK21-25": [
+    "PLAY ACT | IF ≥1 <LOCATION> + ≥1 <LOCATION> / ≥1 <SHIP> ⇒ +1<ENCOUNTER> (look 2) LOG +1 RESEARCH",
+  ],
+  "2KIRK22-25": [
+    "PLAY ACT | {−2 DIL} › +PERSON/ALLY",
+    "PLAY ACT REQ[INFLUENCE ≥5] | {−2 DIL} › +PERSON/CARGO/SHIP/ALLY(+junk)",
+    "ACTI | IF ≥1 'different species' ⇒ ({−1 DIL} › +1 GLO)? IF ≥2 'different species' ⇒ ({−1 DIL} › +1 GLO)? IF ≥3 'different species' ⇒ ({−1 DIL} › +1 GLO)?",
+  ],
+  "2KIRK23-25": [
+    "PLAY ACT | +1 RESEARCH (−1<INCIDENT>)?",
+    "REAC | − CARD ·<PERSON> : FREE_PLAY ·<INCIDENT>",
+    "REAC | LOG ·<PERSON> : FREE_PLAY ·<INCIDENT>",
+  ],
+  "2KIRK24-25": [
+    "PLAY ACT | {LOG} › +3 DIL (( {REQ[=skill:RESEARCH?]} › +1 RESEARCH | {REQ[=skill:INFLUENCE?]} › +1 INFLUENCE | {REQ[=skill:MILITARY?]} › +1 MILITARY ))?",
+    "REAC | +PERSON : {−1 DIL} › 1 SEND ✓⇒ +1 GLO",
+  ],
+  "2KIRK25-25": [
+    "PLAY | +2 CARD −1 CARD (WARP)?",
+  ],
   "2LOC01-20": [
     "CONT | ({TOP_DECK −1 ACT} › DEVELOP)?",
   ],
@@ -1728,6 +1950,114 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
   "2PER26-26": [
     "PLAY ATTACK | REFRESH ·#STARFLEET OPP[−1 CARD] IF ≥1 OPP[#AUGMENT] ⇒ REFRESH ·#STARFLEET OPP[−1 CARD] +1 GLO",
     "RESU | ({−1 CARD} › +1 CARD)? / 1 + #ONGOING",
+  ],
+  "2REB01-22": [
+    "PASS | §«Your hand size is 3.»",
+    "ACTI | {REQ[non-≥1 HAND]} › +2 CARD",
+    "ACTI | {−1 LAT} › +2 CARD",
+    "ENDG | 1 VP / 2 non-#HELMET <CARGO>",
+  ],
+  "2REB02-22": [
+    "PLAY ACT | DEPLOY (+CARGO(junk) IF =#WEAPON / #ANOMALY? ⇒ +1 MILITARY)?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "2REB03-22": [
+    "PLAY | +1 LAT +1 DIL +1 GLO (REFRESH)?",
+    "DEV | REQ[≥0 HAND]",
+  ],
+  "2REB04-22": [
+    "PLAY ACT | CONTROL",
+    "CONT | (FREE_PLAY ·<SHIP>)?",
+    "ENDG | 1 VP / 4 GLO",
+    "CLEA | +1 DIL / ACT unused +1 GLO / ACT unused",
+    "DEV | −2 LAT REQ[MILITARY ≥5]",
+  ],
+  "2REB05-22": [
+    "PLAY ACT ATTACK | OPP[+1<INCIDENT>] LOG ·<LOCATION> +1 MILITARY ✓⇒ +1 MILITARY / skill:ANY + skill:ANY ( −1 CARD ·#SHADY | LOG )",
+    "DEV | ( −5 DIL | REQ[AWAY ≥1] )",
+  ],
+  "2REB06-22": [
+    "PLAY ACT ATTACK | DEPLOY +1 CARD / OPP[<SHIP>] ({LOG ·#WEAPON} › OPP[LOG ·<SHIP>])?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "DEV | −3 DIL −1 LAT",
+  ],
+  "2REB07-22": [
+    "PLAY ACT | DEPLOY +1 MILITARY / skill:MILITARY",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD ·#HELMET} › DISMISS TOP_DECK",
+    "DEV | −2 LAT",
+  ],
+  "2REB08-22": [
+    "PLAY ACT | FIND (FREE_PLAY ·<INCIDENT>)?",
+    "ACTI ACT | {REQ[≥1 "2REB03/22"] −4 DIL} › +1<ENCOUNTER> LOG",
+    "DEV | −2 LAT",
+  ],
+  "2REB09-22": [
+    "PLAY ACT ATTACK | 1 SEND OPP[−1 CARD] (DISMISS ·OPP[#SPY] ✓⇒ +1 GLO)?",
+  ],
+  "2REB10-22": [
+    "PLAY ACT | 1 SEND ({−1 CARD ·#BUSINESS / #SHADY} › 1 SEND)?",
+    "ACTI | ({−1 ACT} › +1 MILITARY / #HELMET)? IF ≥1 #HELMET ⇒ +1 LAT +1 GLO",
+  ],
+  "2REB11-22": [
+    "PLAY ACT ATTACK | DEPLOY +1 CARD / OPP[<SHIP>] ({LOG ·#WEAPON} › OPP[LOG ·<SHIP>])?",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+  ],
+  "2REB12-22": [
+    "PLAY | +1 LAT +1 DIL PROMOTE ·<PERSON>",
+    "PLAY ACT | {+1<INCIDENT>} › DEVELOP ·"2REB03/22"",
+  ],
+  "2REB13-22": [
+    "PLAY ACT | (+1 FROM_DISCARD ·#PAKLED)? ({−1 CARD ·<CARGO>} › +4 DIL IF =#WEAPON? ⇒ +1 MILITARY)?",
+    "ACTI | IF ≥1 #HELMET ⇒ (+1 FROM_DISCARD ·<PERSON>)? (WARP)? (BEAM)?",
+    "RESU | +1 DIL",
+  ],
+  "2REB14-22": [
+    "PLAY ACT | {RECALL} › −1<INCIDENT> ({−1 DIL} › ( REFRESH ·<SHIP> | +1 FROM_DISCARD ·#HELMET ))?",
+  ],
+  "2REB15-22": [
+    "PLAY ACT | +1 GLO DISMISS / #HELMET",
+    "PLAY REQ[MILITARY ≥5] | IF ≥2 #HELMET ⇒ DISMISS / #HELMET EXHAUST / #ONGOING EXHAUST / <LOCATION> 1 SEND ELSE DISMISS / #HELMET EXHAUST / #ONGOING EXHAUST / <LOCATION>",
+  ],
+  "2REB16-22": [
+    "PLAY ACT | DEPLOY",
+    "ACTI ACT | BEAM ·#HELMET ✓⇒ +CARGO",
+    "ACTI | {REQ[MILITARY ≥15] LOG ·#WEAPON} › +3 CARD −1 CARD",
+  ],
+  "2REB17-22": [
+    "PLAY | JUNK +1 CARD",
+    "PLAY ACT | {−1 LAT} › +PERSON/CARGO/SHIP/ALLY(junk)",
+  ],
+  "2REB18-22": [
+    "PLAY ACT | DEPLOY",
+    "ACTI ACT | BEAM ·#HELMET ✓⇒ {+1<INCIDENT>} › +SHIP/ALLY",
+    "ACTI | {−1 CARD ·<INCIDENT>} › +1 MILITARY",
+  ],
+  "2REB19-22": [
+    "PLAY ACT | +PERSON",
+    "PLAY ACT REQ[MILITARY ≥3] | {−1 DIL} › SCAN #ENGINEER",
+    "PLAY ACT REQ[MILITARY ≥6] | {−1 LAT} › SCAN #SHADY / #SCIENTIST",
+    "ACTI | ({−1 CARD ·<PERSON>} › +3 DIL IF =#ENGINEER? ⇒ +1 GLO IF ≥1 #HELMET ⇒ +1 MILITARY)?",
+  ],
+  "2REB20-22": [
+    "PLAY ACT | CONTROL",
+    "CONT | FIND ·#HELMET",
+    "ACTI | BEAM ·#HELMET ✓⇒ 1 SEND IF ≥1 <LOCATION> ⇒ +1 GLO",
+    "ACTI | BEAM ·#HELMET",
+  ],
+  "2REB21-22": [
+    "PLAY | +1 LAT",
+    "PLAY | +2 CARD −1 CARD",
+    "PLAY | PROMOTE ·<PERSON>",
+  ],
+  "2REB22-22": [
+    "PLAY | +1 LAT",
+    "PLAY | +2 CARD −1 CARD",
+    "PLAY | PROMOTE ·<PERSON>",
   ],
   "2SHI01-13": [
     "PLAY | DEPLOY WARP ({−1 ACT −1 DIL} › +PERSON IF non-<CAPTAIN> #BORG ⇒ LOG)?",

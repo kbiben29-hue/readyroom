@@ -57,7 +57,11 @@ describe('fx trail', () => {
 		expect(s.fx).toEqual([
 			{
 				source: 'con',
-				changes: [{ pool: { k: 'PLAYER', seat: 0, res: 'ACTION' }, delta: -1 }],
+				// the action token moves from the pool onto the card (rules/12 §12.7)
+				changes: [
+					{ pool: { k: 'PLAYER', seat: 0, res: 'ACTION' }, delta: -1 },
+					{ pool: { k: 'CARD', iid: 'con', res: 'ACTION' }, delta: 1 },
+				],
 			},
 			{
 				source: 'con',

@@ -247,7 +247,8 @@ describe('rules/12 §12.7 — action tokens are reminders, not locks', () => {
 			operationIndex: 0,
 		})
 		expect(player(state, 0).resources.DIL).toBe(1)
-		expect(state.cards[ID('s1')]!.actionTokens).toBe(1) // the reminder survives the activation
+		// the old reminder survives, and the new action's token joins it
+		expect(state.cards[ID('s1')]!.actionTokens).toBe(2)
 		assertSerialisable(state)
 	})
 

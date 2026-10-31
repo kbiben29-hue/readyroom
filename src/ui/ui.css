@@ -1031,7 +1031,7 @@ h3,
 	filter: saturate(0.45);
 }
 /* cards.tsx ExhaustedMark — bottom-right, about a quarter of the card wide:
-   the game's exhaust glyph, dark on an orange disc */
+   stars under a curved arrow, dark on an orange disc */
 .exhausted-mark {
 	position: absolute;
 	right: 5%;
@@ -1052,8 +1052,8 @@ h3,
 }
 .exhausted-mark svg {
 	display: block;
-	width: 70%;
-	height: 70%;
+	width: 100%;
+	height: 100%;
 }
 .card-clickable .card-inner {
 	cursor: pointer;

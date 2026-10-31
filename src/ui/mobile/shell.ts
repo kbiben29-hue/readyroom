@@ -4,6 +4,8 @@
 //   landscape and height < 500px → phone-wide (header rail, hand column)
 //   width < 768px                → phone
 //   768px ≤ width < 1080px       → tablet (Sector | Ship, Crew drawer)
+//   touch screen, width < 1400px → tablet (an iPad on its side is wider than
+//                                  1080px but has no mouse to hover with)
 //   width ≥ 1080px               → console (the LCARS desktop, unchanged)
 //
 // A player may force a shell from the menu; the choice is stored per device
@@ -23,6 +25,8 @@ export const SHELL_QUERIES = {
 	wide: '(orientation: landscape) and (max-height: 499.98px)',
 	phone: '(max-width: 767.98px)',
 	tablet: '(max-width: 1079.98px)',
+	/** a tablet held sideways (iPad landscape, up to the 13" Pro): touch only */
+	touchTablet: '(pointer: coarse) and (max-width: 1399.98px)',
 } as const
 
 export interface Viewport {
@@ -123,7 +127,9 @@ export function readViewport(): Viewport {
 	return {
 		wide: mql(SHELL_QUERIES.wide)?.matches ?? false,
 		phone: mql(SHELL_QUERIES.phone)?.matches ?? false,
-		tablet: mql(SHELL_QUERIES.tablet)?.matches ?? false,
+		tablet:
+			(mql(SHELL_QUERIES.tablet)?.matches ?? false) ||
+			(mql(SHELL_QUERIES.touchTablet)?.matches ?? false),
 	}
 }
 

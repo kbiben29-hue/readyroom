@@ -37,6 +37,7 @@ const TIMINGS: ShorthandLine['timing'][] = [
 	'ACTIVATION',
 	'PASSIVE',
 	'REACTION',
+	'SUPPORT',
 	'RESUPPLY',
 	'CLEANUP',
 	'CONTROL',

@@ -1,5 +1,6 @@
 import type { Effect } from '../nodes'
 import type { Primitive } from './index'
+import { emit } from '../runtime'
 import {
 	costCanResolve,
 	exhaustibleCandidates,
@@ -28,12 +29,15 @@ export const costExhaust: Primitive<Extract<Effect, { k: 'COST_EXHAUST' }>> = {
 		const iid = r.iids[0]!
 		// bind: the exhausted card ("exhaust a SHIP to refresh ITS LOCATION" — 1BUR21)
 		if (node.bind !== undefined) ctx.bindings[node.bind] = iid
-		return {
-			...state,
-			cards: {
-				...state.cards,
-				[iid]: { ...state.cards[iid]!, exhausted: true },
+		return emit(
+			{
+				...state,
+				cards: {
+					...state.cards,
+					[iid]: { ...state.cards[iid]!, exhausted: true },
+				},
 			},
-		}
+			{ k: 'CARD_EXHAUSTED', iid, seat: ctx.actor },
+		)
 	},
 }

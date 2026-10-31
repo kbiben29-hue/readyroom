@@ -17,7 +17,7 @@ import { CardArraySchema } from '../data/schema'
 import { BoardArraySchema, addBoardSides } from '../data/boards'
 import type { DeckId } from '../data/ids'
 import { stardateSpecs } from '../data/stardate'
-import { inBox, type GameBox } from '../data/boxes'
+import { inBox, type Expansion, type GameBox } from '../data/boxes'
 
 /** Vite's static glob — keyed by import path, eager so the values are plain
  *  JSON (parsed already). Only `.json` card/board files match; `.gitkeep` is
@@ -107,12 +107,19 @@ export function loadBrowserCatalog(): CardCatalog {
 export function availableDecks(
 	catalog: CardCatalog,
 	box?: GameBox,
+	expansions: readonly Expansion[] = [],
 ): DeckId[] {
 	const decks = new Set<DeckId>()
 	for (const def of catalog.defs) {
 		if (def.deck === 'COMMON' || def.deck === undefined) continue
-		// a crew deck belongs to the box its printed numbers carry (2GEO… = TBG)
-		if (box !== undefined && def.cardId !== null && !inBox(def, box)) continue
+		// a crew deck belongs to the box its printed numbers carry (2GEO… = TBG,
+		// 3PIK… = Second Contact, playable with either base box)
+		if (
+			box !== undefined &&
+			def.cardId !== null &&
+			!inBox(def, box, expansions)
+		)
+			continue
 		decks.add(def.deck)
 	}
 	return [...decks].sort((a, b) => a.localeCompare(b))

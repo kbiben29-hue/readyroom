@@ -38,7 +38,7 @@
 
 import { meetsRequirement } from '../modifiers'
 import type { GameState, GameEvent, OperationRef, Frame } from '../state'
-import { player, otherSeat, inPlayCards, zoneProps } from '../state'
+import { player, otherSeat, inPlayCards, zoneProps, zonesOf } from '../state'
 import { cardDef } from '../cards'
 import type { TriggerSpec, TriggerSeat } from './nodes'
 import type { Seat } from './queries'
@@ -70,6 +70,9 @@ export function canonicalEventKey(event: GameEvent): string {
 		case 'CARD_DEPLOYED':
 		case 'CARD_DRAWN':
 		case 'CARD_DISCARDED':
+		case 'CARD_PROMOTED':
+		case 'CARD_JUNKED':
+		case 'CARD_EXHAUSTED':
 		case 'CARD_LOGGED':
 		case 'CARD_DISMISSED':
 		case 'CARD_DESTROYED':
@@ -121,6 +124,14 @@ export function eventTriggerKind(event: GameEvent): TriggerSpec['on'] | null {
 			return 'CARD_LOGGED'
 		case 'CARD_DISCARDED':
 			return 'CARD_DISCARDED'
+		case 'CARD_PROMOTED':
+			return 'CARD_PROMOTED'
+		case 'CARD_JUNKED':
+			return 'CARD_JUNKED'
+		case 'CARD_EXHAUSTED':
+			return 'CARD_EXHAUSTED'
+		case 'RESOURCE_SPENT':
+			return 'RESOURCE_SPENT'
 		case 'CARD_DEPLOYED':
 			return 'CARD_DEPLOYED'
 		case 'CARD_RETURNED_INCIDENT':
@@ -166,6 +177,9 @@ export function eventCardOf(event: GameEvent): CardInstanceId | null {
 		case 'CARD_DEPLOYED':
 		case 'CARD_DRAWN':
 		case 'CARD_DISCARDED':
+		case 'CARD_PROMOTED':
+		case 'CARD_JUNKED':
+		case 'CARD_EXHAUSTED':
 		case 'CARD_LOGGED':
 		case 'CARD_DISMISSED':
 		case 'CARD_DESTROYED':
@@ -240,6 +254,28 @@ export function matchesTrigger(
 				seatMatches(trigger.seat, event.seat, ownerSeat) &&
 				filterMatches(state, event, trigger.filter)
 			)
+		case 'CARD_PROMOTED':
+		case 'CARD_JUNKED':
+			if (trigger.on !== event.k) return false
+			return (
+				seatMatches(trigger.seat, event.seat, ownerSeat) &&
+				filterMatches(state, event, trigger.filter)
+			)
+		case 'CARD_EXHAUSTED':
+			if (trigger.on !== 'CARD_EXHAUSTED') return false
+			if (
+				trigger.dutyOfficer === true &&
+				state.cards[event.iid]?.zone.k !== 'DUTY_OFFICER'
+			)
+				return false
+			return (
+				seatMatches(trigger.seat, event.seat, ownerSeat) &&
+				filterMatches(state, event, trigger.filter)
+			)
+		case 'RESOURCE_SPENT':
+			if (trigger.on !== 'RESOURCE_SPENT') return false
+			if (trigger.res !== undefined && event.res !== trigger.res) return false
+			return event.seat === ownerSeat
 		case 'RESOURCE_GAINED': {
 			if (trigger.on !== 'RESOURCE_GAINED') return false
 			if (trigger.res !== undefined && event.res !== trigger.res) return false
@@ -432,11 +468,30 @@ export function collectPassiveOps(
 export function reactionLegal(state: GameState, ref: OperationRef): boolean {
 	const card = state.cards[ref.card]
 	if (card === undefined) return false
+	if (cardDef(card.def).operations[ref.opIndex]?.type === 'SUPPORT')
+		return supportLegal(state, ref)
 	if (!zoneProps(card.zone).inPlay) return false
 	if (card.zone.k === 'BEAMED' || card.zone.k === 'STAGING') return false
 	if (card.exhausted) return false
 	const op = cardDef(card.def).operations[ref.opIndex]
 	if (op === undefined || op.type !== 'REACTION' || op.trigger === undefined)
+		return false
+	if (op.costsAction && player(state, ref.seat).actions.available <= 0)
+		return false
+	return true
+}
+
+/** Is the SUPPORT operation `ref` usable right now? (Second Contact: "You
+ *  can play a LOWER DECKER card from your hand into your Staging Area
+ *  reacting to that trigger during your Action Step … You cannot use SUPPORT
+ *  operations from anywhere other than your hand.") */
+export function supportLegal(state: GameState, ref: OperationRef): boolean {
+	const card = state.cards[ref.card]
+	if (card === undefined) return false
+	if (card.zone.k !== 'HAND' || card.zone.seat !== ref.seat) return false
+	if (state.phase.k !== 'ACTION' || state.activeSeat !== ref.seat) return false
+	const op = cardDef(card.def).operations[ref.opIndex]
+	if (op === undefined || op.type !== 'SUPPORT' || op.trigger === undefined)
 		return false
 	if (op.costsAction && player(state, ref.seat).actions.available <= 0)
 		return false
@@ -497,9 +552,15 @@ export function collectReactionGroups(
 	for (const set of [0, 1] as const) {
 		const seat = seats[set]!
 		const side: OperationRef[] = []
-		for (const iid of inPlayCards(state, seat)) {
+		// SUPPORT operations answer from the hand (Second Contact)
+		const hand = zonesOf(state, { k: 'HAND', seat })
+		for (const iid of [...inPlayCards(state, seat), ...hand]) {
 			cardDef(state.cards[iid]!.def).operations.forEach((op, opIndex) => {
-				if (op.type !== 'REACTION' || op.trigger === undefined) return
+				if (
+					(op.type !== 'REACTION' && op.type !== 'SUPPORT') ||
+					op.trigger === undefined
+				)
+					return
 				const ref: OperationRef = { card: iid, opIndex, seat }
 				if (!reactionLegal(state, ref)) return
 				if (!matchesTrigger(state, event, op.trigger, seat)) return

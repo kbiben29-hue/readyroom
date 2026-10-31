@@ -12,7 +12,13 @@ import type { SetupConfig } from '../engine/setup'
 import type { DeckId } from '../data/ids'
 import type { Seat } from '../engine/resolver/queries'
 import { availableDecks, boxPlayable } from './browserCatalog'
-import { GAME_BOXES, boxLabel, type GameBox } from '../data/boxes'
+import {
+	GAME_BOXES,
+	boxLabel,
+	expansionLabel,
+	type Expansion,
+	type GameBox,
+} from '../data/boxes'
 import {
 	useProjected,
 	useGameStore,
@@ -261,9 +267,18 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 	const [box, setBox] = useState<GameBox>('ORIGINAL')
 	const playable = (b: GameBox) =>
 		b === 'ORIGINAL' || (catalog !== null && boxPlayable(catalog, b))
+	// Second Contact adds its captains and commons to either base box
+	const [secondContact, setSecondContact] = useState(false)
+	const expansions = useMemo<Expansion[]>(
+		() => (secondContact ? ['SECOND_CONTACT'] : []),
+		[secondContact],
+	)
+	const secondContactReady =
+		catalog !== null &&
+		catalog.defs.some((d) => d.cardId?.startsWith('3') === true)
 	const decks = useMemo<DeckId[]>(
-		() => (catalog !== null ? availableDecks(catalog, box) : []),
-		[catalog, box],
+		() => (catalog !== null ? availableDecks(catalog, box, expansions) : []),
+		[catalog, box, expansions],
 	)
 	const [seat0, setSeat0] = useState<DeckId>('PIC')
 	const [seat1, setSeat1] = useState<DeckId>('SHR')
@@ -298,6 +313,7 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 			],
 			seed,
 			box,
+			...(expansions.length > 0 ? { expansions } : {}),
 		}
 		startGame(config, opponentsOf(controllers))
 		// roll the next game's seed now, in case this screen stays mounted
@@ -343,6 +359,22 @@ function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
 								</button>
 							))}
 						</div>
+						<label
+							className="expansion-toggle"
+							title={
+								secondContactReady
+									? 'Adds the Second Contact captains and common cards to the game picked above'
+									: 'Second Contact cards are not in yet'
+							}
+						>
+							<input
+								type="checkbox"
+								checked={secondContact}
+								disabled={!secondContactReady}
+								onChange={(e) => setSecondContact(e.target.checked)}
+							/>{' '}
+							Add {expansionLabel('SECOND_CONTACT')}
+						</label>
 						{!playable('TBG') && (
 							<p className="muted small">
 								To Boldly Go unlocks once two of its captains and its Market

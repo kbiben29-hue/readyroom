@@ -137,6 +137,9 @@ export type GameEvent =
 	| { k: 'CARD_DEPLOYED'; iid: CardInstanceId; seat: Seat } // DEPLOY: Staging → Fleet (SHIP or ONGOING)
 	| { k: 'CARD_DRAWN'; iid: CardInstanceId; seat: Seat }
 	| { k: 'CARD_DISCARDED'; iid: CardInstanceId; seat: Seat }
+	| { k: 'CARD_PROMOTED'; iid: CardInstanceId; seat: Seat } // became a Duty Officer
+	| { k: 'CARD_JUNKED'; iid: CardInstanceId; seat: Seat } // a Market card the seat junked
+	| { k: 'CARD_EXHAUSTED'; iid: CardInstanceId; seat: Seat } // the seat exhausted it
 	| {
 			k: 'CARD_LOGGED'
 			iid: CardInstanceId
@@ -429,6 +432,7 @@ export const ZONES = [
 	'LOCATION_DECK',
 	'NEUTRAL_ZONE',
 	'JUNK',
+	'REWARD_PILE',
 	'STARDATE_PILE',
 	'BOX',
 	'HAND',
@@ -481,7 +485,7 @@ export function zoneKey(ref: ZoneRef): string {
 		case 'STATUS':
 			return `${ref.k}:${ref.seat}`
 		default:
-			return ref.k // ENCOUNTER_DECK, INCIDENT_DECK, LOCATION_DECK, JUNK, STARDATE_PILE, BOX
+			return ref.k // ENCOUNTER_DECK, INCIDENT_DECK, LOCATION_DECK, JUNK, REWARD_PILE, STARDATE_PILE, BOX
 	}
 }
 
@@ -627,6 +631,16 @@ export function zoneProps(ref: ZoneRef): ZoneProps {
 				tableOps: false,
 				ordered: false,
 				visibleTo: 'ALL',
+			}
+		// a virtual supply: effects take random cards from it, unseen
+		case 'REWARD_PILE':
+			return {
+				inPlay: false,
+				traitsCount: false,
+				skillsCount: false,
+				tableOps: false,
+				ordered: false,
+				visibleTo: 'NONE',
 			}
 		case 'STARDATE_PILE':
 			return {

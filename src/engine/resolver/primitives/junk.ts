@@ -1,5 +1,6 @@
 import type { Effect } from '../nodes'
 import type { Primitive } from './index'
+import { emit } from '../runtime'
 import { pickCards, moveCard } from '../runtime'
 import { refillMarket, suitOfOffer, resolveMarketQuery } from '../../market'
 import type { CardInstanceId } from '../../ids'
@@ -33,7 +34,7 @@ export const junk: Primitive<Extract<Effect, { k: 'JUNK' }>> = {
 		let next = moveCard(state, iid, { k: 'JUNK' })
 		// a Market offer slot refills after its card leaves (rules/05 §5.4.4).
 		if (suit !== undefined) next = refillMarket(next, suit)
-		return next
+		return emit(next, { k: 'CARD_JUNKED', iid, seat: ctx.actor })
 	},
 }
 

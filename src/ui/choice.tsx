@@ -373,6 +373,8 @@ function groupOf(z: ZoneRef, viewer: Seat): { key: string; label: string } {
 			return { key: 'NEUTRAL_ZONE', label: 'Neutral Zone' }
 		case 'JUNK':
 			return { key: 'JUNK', label: 'Junk' }
+		case 'REWARD_PILE':
+			return { key: 'REWARD_PILE', label: 'Reward pile' }
 		case 'INCIDENT_DECK':
 			return { key: z.k, label: 'Incident deck' }
 		case 'ENCOUNTER_DECK':

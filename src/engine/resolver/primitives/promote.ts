@@ -71,10 +71,10 @@ export const promote: Primitive<Extract<Effect, { k: 'PROMOTE' }>> = {
 				seat: ctx.actor,
 			})
 		}
-		return emit(moveCard(s, iid, { k: 'DUTY_OFFICER', seat: ctx.actor }), {
-			k: 'PUT_INTO_PLAY',
-			iid,
-			seat: ctx.actor,
-		})
+		const promoted = emit(
+			moveCard(s, iid, { k: 'DUTY_OFFICER', seat: ctx.actor }),
+			{ k: 'PUT_INTO_PLAY', iid, seat: ctx.actor },
+		)
+		return emit(promoted, { k: 'CARD_PROMOTED', iid, seat: ctx.actor })
 	},
 }

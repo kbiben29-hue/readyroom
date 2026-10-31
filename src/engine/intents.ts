@@ -25,6 +25,7 @@ import {
 	IllegalSelectionError,
 } from './resolver/choices'
 import { runCollecting, pushOperation } from './resolver/stack'
+import { emit } from './resolver/runtime'
 import { finalizeGame } from './scoring'
 import { advancePhaseStep, beginTurnStep } from './phases'
 import { cadetChoice, CADET_SEAT } from '../bot/cadet'
@@ -238,10 +239,15 @@ function reduceActivate(
 			`ACTIVATE: ${intent.iid}#${intent.operationIndex} ${check.reason ?? ''}`,
 		)
 	const card = state.cards[intent.iid]!
-	const exhausted = {
-		...state,
-		cards: { ...state.cards, [intent.iid]: { ...card, exhausted: true } },
-	}
+	// exhausting it is part of activating (rules/03 §3.5.5) — "after you
+	// exhaust a Duty Officer" (Second Contact SUPPORT) answers it
+	const exhausted = emit(
+		{
+			...state,
+			cards: { ...state.cards, [intent.iid]: { ...card, exhausted: true } },
+		},
+		{ k: 'CARD_EXHAUSTED', iid: intent.iid, seat },
+	)
 	const ctx = { actor: seat, source: intent.iid, bindings: {} }
 	return runToHalt(
 		pushOperation(exhausted, intent.iid, intent.operationIndex, ctx),

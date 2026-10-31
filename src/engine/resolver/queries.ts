@@ -33,6 +33,7 @@ export type ZoneRef =
 	| { k: 'LOCATION_DECK' }
 	| { k: 'NEUTRAL_ZONE'; slot: 0 | 1 | 2 }
 	| { k: 'JUNK' }
+	| { k: 'REWARD_PILE' } // Second Contact's virtual supply of CROSSOVER cards
 	| { k: 'STARDATE_PILE' }
 	| { k: 'BOX' }
 	| {

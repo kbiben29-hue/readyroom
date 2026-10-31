@@ -64,12 +64,14 @@ export const REGULAR_TRAITS = [
 	'CLOAK',
 	'COMMUNICATION',
 	'CREATURE',
+	'CROSSOVER', // Second Contact: a Reward-pile card
 	'DOCTOR',
 	'DOMINION',
 	'ENGINEER',
 	'HELMET',
 	'HOLOGRAM',
 	'IMPERIAL',
+	'LOWER_DECKER', // Second Contact: carries a SUPPORT operation
 	'MIND_CONTROL',
 	'NX_01',
 	'OPS',
@@ -147,6 +149,9 @@ export const OPERATION_TYPES = [
 	'ACTIVATION',
 	'PASSIVE',
 	'REACTION',
+	// Second Contact: a LOWER DECKER answers its trigger by going from your
+	// hand into your Staging Area during your Action Step
+	'SUPPORT',
 	'RESUPPLY',
 	'CLEANUP',
 	'CONTROL',

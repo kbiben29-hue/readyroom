@@ -472,6 +472,7 @@ export function specToRef(spec: ZoneSpec, actor: Seat): ZoneRef {
 		case 'INCIDENT_DECK':
 		case 'LOCATION_DECK':
 		case 'JUNK':
+		case 'REWARD_PILE':
 		case 'STARDATE_PILE':
 		case 'BOX':
 			return spec

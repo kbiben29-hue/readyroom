@@ -446,6 +446,7 @@ const TIMING_CLASS: Record<ShorthandLine['timing'], string> = {
 	ACTIVATION: 'table',
 	PASSIVE: 'table',
 	REACTION: 'table',
+	SUPPORT: 'play',
 	RESUPPLY: 'turn',
 	CLEANUP: 'turn',
 	CONTROL: 'turn',

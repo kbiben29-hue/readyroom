@@ -92,6 +92,7 @@ const ZoneSpecSchema: z.ZodType<ZoneSpec> = z.lazy(() =>
 			})
 			.strict(),
 		z.object({ k: z.literal('JUNK') }).strict(),
+		z.object({ k: z.literal('REWARD_PILE') }).strict(),
 		z.object({ k: z.literal('STARDATE_PILE') }).strict(),
 		z.object({ k: z.literal('BOX') }).strict(),
 		z
@@ -1019,6 +1020,34 @@ const TriggerSchema: z.ZodType<TriggerSpec> = z.discriminatedUnion('on', [
 		})
 		.strict(),
 	z.object({ on: z.literal('DECK_CYCLED') }).strict(),
+	z
+		.object({
+			on: z.literal('CARD_PROMOTED'),
+			filter: CardFilterSchema.optional(),
+			seat: TriggerSeatSchema.optional(),
+		})
+		.strict(),
+	z
+		.object({
+			on: z.literal('CARD_JUNKED'),
+			filter: CardFilterSchema.optional(),
+			seat: TriggerSeatSchema.optional(),
+		})
+		.strict(),
+	z
+		.object({
+			on: z.literal('CARD_EXHAUSTED'),
+			filter: CardFilterSchema.optional(),
+			seat: TriggerSeatSchema.optional(),
+			dutyOfficer: z.boolean().optional(),
+		})
+		.strict(),
+	z
+		.object({
+			on: z.literal('RESOURCE_SPENT'),
+			res: ResourceSchema.optional(),
+		})
+		.strict(),
 	z.object({ on: z.literal('ATTACKED') }).strict(),
 	z
 		.object({
@@ -1093,6 +1122,9 @@ export interface CardDef {
 	 *  its front. Never set up as a card of its own — a FLIP turns the front
 	 *  instance to this side. */
 	backOf?: string | undefined
+	/** "REWARDS" on the position indicator (Second Contact): a common set
+	 *  aside in the Reward pile, never part of the Market. */
+	rewardPile?: boolean | undefined
 	/** "This card cannot be promoted." (1SIS13) — PROMOTE never
 	 *  offers it. */
 	cannotBePromoted?: boolean | undefined
@@ -1193,6 +1225,7 @@ export const CardDefSchema = z
 		cannotBePlayed: z.boolean().optional(),
 		onEnlist: EffectSchema.optional(),
 		backOf: z.string().min(1).optional(),
+		rewardPile: z.boolean().optional(),
 		cannotBePromoted: z.boolean().optional(),
 		treatedAsLocation: z.boolean().optional(),
 	})
@@ -1209,8 +1242,11 @@ export const CardDefSchema = z
 		// "when you log this card" (trigger CARD_LOGGED, 1SHR06) and a triggered
 		// PASSIVE ("PASSIVE: After taking an INCIDENT, you may …", 1SHR10)
 		for (const [index, operation] of card.operations.entries()) {
-			if (operation.type === 'REACTION' && operation.trigger === undefined) {
-				addIssue('REACTION operation requires a trigger.', [
+			if (
+				(operation.type === 'REACTION' || operation.type === 'SUPPORT') &&
+				operation.trigger === undefined
+			) {
+				addIssue(`${operation.type} operation requires a trigger.`, [
 					'operations',
 					index,
 					'trigger',
@@ -1223,6 +1259,7 @@ export const CardDefSchema = z
 			const triggeredPassive = operation.type === 'PASSIVE'
 			if (
 				operation.type !== 'REACTION' &&
+				operation.type !== 'SUPPORT' &&
 				operation.trigger !== undefined &&
 				!selfLogSpecial &&
 				!triggeredPassive

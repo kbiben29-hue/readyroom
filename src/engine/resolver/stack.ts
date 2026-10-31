@@ -21,6 +21,7 @@ import {
 	otherSeat,
 	zoneProps,
 	awayTeamsTotal,
+	moveCard,
 } from '../state'
 import { primitiveOf, canResolveEffect, isControl } from './primitives'
 import { recordFx } from '../fx'
@@ -41,6 +42,7 @@ import {
 	opKey,
 	eventCardOf,
 	reactionPayable,
+	supportLegal,
 } from './triggers'
 import type { OperationRef } from '../state'
 import type { CardInstanceId } from '../ids'
@@ -428,22 +430,45 @@ function stepReactionWindow(
 			// refreshed — also within one window: walk the refs in the chosen
 			// (= resolution) order, exhausting as we go, so a second op of an
 			// already-taken card is skipped. Then push in reverse (LIFO).
-			let cards = state.cards
+			let st = state
 			const accepted: OperationRef[] = []
+			const supported = new Set<string>()
 			for (const ref of chosen) {
 				if (ref.seat !== frame.seat)
 					throw new Error(
 						`REACTION_WINDOW: chosen op belongs to seat ${ref.seat}, not ${frame.seat}`,
 					)
-				if (!reactionLegalFor({ ...state, cards }, ref)) continue
-				cards = {
-					...cards,
-					[ref.card]: { ...cards[ref.card]!, exhausted: true },
+				if (supportLegal(st, ref)) {
+					// SUPPORT: the card goes from hand into the Staging Area and
+					// resolves only that operation (Second Contact)
+					st = moveCard(st, ref.card, { k: 'STAGING', seat: ref.seat })
+					supported.add(opKey(ref))
+					accepted.push(ref)
+					continue
 				}
+				if (!reactionLegalFor(st, ref)) continue
+				st = emit(
+					{
+						...st,
+						cards: {
+							...st.cards,
+							[ref.card]: { ...st.cards[ref.card]!, exhausted: true },
+						},
+					},
+					{ k: 'CARD_EXHAUSTED', iid: ref.card, seat: ref.seat },
+				)
 				accepted.push(ref)
 			}
+			const cards = st.cards
 			const ops: Frame[] = []
 			for (const ref of [...accepted].reverse()) {
+				// put into play once its SUPPORT effect is done (LIFO: below it)
+				if (supported.has(opKey(ref)))
+					ops.push({
+						k: 'EMIT',
+						event: { k: 'PUT_INTO_PLAY', iid: ref.card, seat: ref.seat },
+						ifInPlay: { iid: ref.card, seat: ref.seat },
+					})
 				ops.push({
 					k: 'OPERATION',
 					card: ref.card,
@@ -462,7 +487,7 @@ function stepReactionWindow(
 			// Push the reactions above the window, then re-arm the window so the
 			// remaining set is re-offered when the reactions pop.
 			return {
-				...state,
+				...st,
 				cards,
 				stack: [
 					...stack,
@@ -526,6 +551,8 @@ function publicEventDef(
 function reactionLegalFor(state: GameState, ref: OperationRef): boolean {
 	const card = state.cards[ref.card]
 	if (card === undefined) return false
+	if (cardDef(card.def).operations[ref.opIndex]?.type === 'SUPPORT')
+		return supportLegal(state, ref)
 	if (!zoneProps(card.zone).inPlay) return false
 	if (card.zone.k === 'BEAMED' || card.zone.k === 'STAGING') return false
 	if (card.exhausted) return false

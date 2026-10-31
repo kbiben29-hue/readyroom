@@ -3839,3 +3839,21 @@ h3,
 		animation: none;
 	}
 }
+
+/* Setup screen: "Add Second Contact" sits under the base-box toggle */
+.expansion-toggle {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 8px;
+	cursor: pointer;
+}
+.expansion-toggle input {
+	width: 18px;
+	height: 18px;
+	accent-color: var(--orange);
+}
+.expansion-toggle:has(input:disabled) {
+	opacity: 0.55;
+	cursor: default;
+}

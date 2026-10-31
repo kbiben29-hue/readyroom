@@ -997,6 +997,17 @@ export function shorthandTrigger(t: TriggerSpec): Tok[] {
 			return whose(t.seat, [glyph('LOG'), ...qual(filt(t.filter, false))])
 		case 'CARD_DISCARDED':
 			return whose(t.seat, [glyph('CARD', '−'), ...qual(filt(t.filter, false))])
+		case 'CARD_PROMOTED':
+			return whose(t.seat, [glyph('PROMOTE'), ...qual(filt(t.filter, false))])
+		case 'CARD_JUNKED':
+			return whose(t.seat, [glyph('JUNK'), ...qual(filt(t.filter, false))])
+		case 'CARD_EXHAUSTED':
+			return whose(t.seat, [
+				glyph('EXHAUST'),
+				...(t.dutyOfficer === true ? [glyph('DUTY')] : qual(filt(t.filter, false))),
+			])
+		case 'RESOURCE_SPENT':
+			return t.res !== undefined ? [glyph(t.res, '−')] : [glyph('CARD', '−')]
 		case 'AWAY_TEAM_SENT':
 			return [
 				glyph('SEND'),
@@ -1163,6 +1174,7 @@ const TIMING_TEXT: Record<ShorthandLine['timing'], string> = {
 	ACTIVATION: 'ACTI',
 	PASSIVE: 'PASS',
 	REACTION: 'REAC',
+	SUPPORT: 'SUPP',
 	RESUPPLY: 'RESU',
 	CLEANUP: 'CLEA',
 	CONTROL: 'CONT',

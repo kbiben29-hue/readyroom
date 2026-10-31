@@ -324,6 +324,7 @@ const TIMING_TONE: Record<TileLine['line']['timing'], string> = {
 	ACTIVATION: 'table',
 	PASSIVE: 'table',
 	REACTION: 'table',
+	SUPPORT: 'play',
 	RESUPPLY: 'turn',
 	CLEANUP: 'turn',
 	CONTROL: 'turn',
@@ -474,6 +475,8 @@ export function zoneWords(
 			return 'In the Neutral Zone'
 		case 'JUNK':
 			return 'In the Junk pile'
+		case 'REWARD_PILE':
+			return 'In the Reward pile'
 		case 'BEAMED':
 			return 'Beamed onto a ship'
 		default:

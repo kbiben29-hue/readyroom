@@ -152,6 +152,9 @@ export const TIMING_SVG: Record<ShorthandLine['timing'], string> = {
 	PASSIVE:
 		'<path d="M12 12c-2.1-2.8-3.7-4.2-5.6-4.2a4.2 4.2 0 0 0 0 8.4c1.9 0 3.5-1.4 5.6-4.2s3.7-4.2 5.6-4.2a4.2 4.2 0 0 1 0 8.4c-1.9 0-3.5-1.4-5.6-4.2Z"/>',
 	REACTION: `<path d="M13.8 2.2 5.2 13.6h6.2l-1.2 8.2 8.6-11.4h-6.2Z" ${FILL}/>`,
+	// a hand lifting a card into play
+	SUPPORT:
+		'<path d="M4 20.4h16M12 16.6V4.2M7.4 8.8 12 4.2l4.6 4.6"/>',
 	RESUPPLY:
 		'<path d="M2.6 19.2h18.8M6.8 19.2a5.2 5.2 0 0 1 10.4 0"/><path d="M12 3v6.4M9.2 5.8 12 3l2.8 2.8"/>',
 	CLEANUP:
@@ -231,6 +234,7 @@ export const TIMING_WORD: Record<ShorthandLine['timing'], string> = {
 	ACTIVATION: 'Activation (exhausts the card)',
 	PASSIVE: 'Passive (always on)',
 	REACTION: 'Reaction',
+	SUPPORT: 'Support (from your hand, in your Action Step)',
 	RESUPPLY: 'Resupply',
 	CLEANUP: 'Clean-up',
 	CONTROL: 'Control (on taking control)',

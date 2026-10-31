@@ -439,6 +439,8 @@ function zonePhrase(
 				return fromWord('Status card')
 			case 'JUNK':
 				return 'from the Junk'
+			case 'REWARD_PILE':
+				return 'from the Reward pile'
 			case 'INCIDENT_DECK':
 				return 'from the Incident deck'
 			case 'ENCOUNTER_DECK':
@@ -665,6 +667,8 @@ export function describeZoneSpec(z: ZoneSpec): string {
 			return `${your} Status card`
 		case 'JUNK':
 			return 'the Junk'
+		case 'REWARD_PILE':
+			return 'the Reward pile'
 		case 'INCIDENT_DECK':
 			return 'the Incident deck'
 		case 'ENCOUNTER_DECK':
@@ -1164,6 +1168,10 @@ const TRIGGER_PHRASES: Record<TriggerSpec['on'], string> = {
 	INCIDENT_TAKEN: 'After taking an Incident',
 	INCIDENT_RETURNED: 'After returning an Incident',
 	DECK_CYCLED: 'After you cycle your deck',
+	CARD_PROMOTED: 'After you promote',
+	CARD_JUNKED: 'After you junk',
+	CARD_EXHAUSTED: 'After you exhaust',
+	RESOURCE_SPENT: 'After spending',
 	ATTACKED: 'When you are attacked',
 	ATTACK_MADE: 'After you attack',
 	MISSION_COMPLETED: 'After completing a mission',
@@ -1203,6 +1211,14 @@ export function describeTrigger(trigger: TriggerSpec): string {
 		}
 		case 'PUT_INTO_PLAY':
 			return `After ${actor(trigger.seat, 'putting', 'puts')} ${withArticle(describeFilter(trigger.filter))} into play`
+		case 'CARD_PROMOTED':
+			return `After ${actor(trigger.seat, 'you promote', 'promotes')} ${withArticle(describeFilter(trigger.filter))}`
+		case 'CARD_JUNKED':
+			return `After ${actor(trigger.seat, 'you junk', 'junks')} ${withArticle(describeFilter(trigger.filter))}`
+		case 'CARD_EXHAUSTED':
+			return `After ${actor(trigger.seat, 'you exhaust', 'exhausts')} ${trigger.dutyOfficer === true ? 'a Duty Officer' : withArticle(describeFilter(trigger.filter))}`
+		case 'RESOURCE_SPENT':
+			return `After spending ${trigger.res !== undefined ? resourceToken(trigger.res) : 'resources'}`
 		case 'CARD_DEPLOYED':
 			return `After ${actor(trigger.seat, 'deploying', 'deploys')} ${withArticle(describeFilter(trigger.filter))}`
 		case 'CARD_LOGGED':

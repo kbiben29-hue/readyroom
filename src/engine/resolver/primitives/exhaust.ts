@@ -1,5 +1,6 @@
 import type { Effect } from '../nodes'
 import type { Primitive } from './index'
+import { emit } from '../runtime'
 import { pickSingle } from '../runtime'
 import { resolveQuery } from '../../queries/resolveQuery'
 
@@ -23,12 +24,15 @@ export const exhaust: Primitive<Extract<Effect, { k: 'EXHAUST' }>> = {
 		if (r.kind === 'suspended') return r.state
 		if (r.kind === 'none') return state
 		const iid = r.iids[0]!
-		return {
-			...state,
-			cards: {
-				...state.cards,
-				[iid]: { ...state.cards[iid]!, exhausted: true },
+		return emit(
+			{
+				...state,
+				cards: {
+					...state.cards,
+					[iid]: { ...state.cards[iid]!, exhausted: true },
+				},
 			},
-		}
+			{ k: 'CARD_EXHAUSTED', iid, seat: ctx.actor },
+		)
 	},
 }

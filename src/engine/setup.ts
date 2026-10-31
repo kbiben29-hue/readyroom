@@ -20,7 +20,12 @@
 
 import type { CardDef } from '../data/schema'
 import type { DeckId } from '../data/ids'
-import { DEFAULT_BOX, inBox, type GameBox } from '../data/boxes'
+import {
+	DEFAULT_BOX,
+	inBox,
+	type Expansion,
+	type GameBox,
+} from '../data/boxes'
 import type { Effect } from './resolver/nodes'
 import type { GameState, MissionState, PlayerState, TrackTable } from './state'
 import type { Seat, ZoneRef } from './resolver/queries'
@@ -44,6 +49,10 @@ export interface SetupConfig {
 	/** Which box's common cards the game uses (Market, Locations, Encounters,
 	 *  Incidents). Absent = the original game, so older saves replay as before. */
 	box?: GameBox | undefined
+	/** Expansions mixed into the base box (Second Contact): their commons
+	 *  join the Market and Location decks, their crews become playable.
+	 *  Absent = none. */
+	expansions?: Expansion[] | undefined
 	/** An agreed first player (an online invite: the captain who answers it
 	 *  opens). Absent = the random draw of §2.1 #17. The draw is still made
 	 *  either way, so the seed stream is the same as a random game's. */
@@ -90,9 +99,14 @@ export interface CardCatalog {
 	boards: Partial<Record<DeckId, BoardMissions>>
 }
 
-/** A common card of the chosen box (src/data/boxes.ts). */
-function isCommon(d: CardDef, box: GameBox): boolean {
-	return d.deck === 'COMMON' && inBox(d, box)
+/** A common card of the chosen box and expansions (src/data/boxes.ts).
+ *  Reward-pile cards are set aside, never part of the Market. */
+function isCommon(
+	d: CardDef,
+	box: GameBox,
+	exps: readonly Expansion[] = [],
+): boolean {
+	return d.deck === 'COMMON' && inBox(d, box, exps) && d.rewardPile !== true
 }
 
 // ---------------------------------------------------------------------------
@@ -119,10 +133,12 @@ export function setupGame(
 ): GameState {
 	let s = state
 	const box = config.box ?? DEFAULT_BOX
-	s = setupMarket(s, catalog, box) // §2.1 #2/#3/#7
-	s = setupEncounterDeck(s, catalog, box) // #4
+	const exps = config.expansions ?? []
+	s = setupMarket(s, catalog, box, exps) // §2.1 #2/#3/#7
+	s = setupEncounterDeck(s, catalog, box, exps) // #4
 	s = setupIncidentDeck(s, config, catalog) // #5 (+ crew INCIDENT_DECK, §2.1.1)
-	s = setupLocationDeck(s, catalog, box) // #8/#9/#10
+	s = setupLocationDeck(s, catalog, box, exps) // #8/#9/#10
+	s = setupRewardPile(s, catalog, box, exps) // Second Contact central setup #5
 	s = setupStardateTrack(s, config, catalog) // #11/#13
 	s = setupSupply(s, config, catalog) // #15 (token supplies are unbounded)
 	s = setupStartingPlayer(s, config.startingSeat) // #17
@@ -142,11 +158,12 @@ export function setupMarket(
 	state: GameState,
 	catalog: CardCatalog,
 	box: GameBox = DEFAULT_BOX,
+	exps: readonly Expansion[] = [],
 ): GameState {
 	let s = state
 	for (const suit of ['PERSON', 'CARGO', 'SHIP', 'ALLY'] as const) {
 		const defs = catalog.defs.filter(
-			(d) => isCommon(d, box) && d.suit === suit,
+			(d) => isCommon(d, box, exps) && d.suit === suit,
 		)
 		s = placeShuffledDeck(s, defs, { k: 'MARKET_DECK', suit }, null, 'cm')
 	}
@@ -156,7 +173,31 @@ export function setupMarket(
 			throw new Error(`setupMarket: no ${suit} cards offerable`)
 		s = moveCard(s, top, { k: 'MARKET_OFFER', suit })
 	}
+	// Second Contact central setup #3: once the Market is out, flip the top
+	// card of each of the four Market decks into the Junk — once per
+	// expansion added (4 cards with one, 8 with two, …).
+	for (let n = 0; n < exps.length; n++)
+		for (const suit of ['PERSON', 'CARGO', 'SHIP', 'ALLY'] as const) {
+			const top = s.zones[zoneKey({ k: 'MARKET_DECK', suit })]?.[0]
+			if (top !== undefined) s = moveCard(s, top, { k: 'JUNK' })
+		}
 	return s
+}
+
+/** Second Contact central setup #5: every card marked REWARDS is set aside
+ *  in the Reward pile — a virtual supply only explicit effects reach (never
+ *  the Market; it cannot be scanned for or junked). */
+export function setupRewardPile(
+	state: GameState,
+	catalog: CardCatalog,
+	box: GameBox = DEFAULT_BOX,
+	exps: readonly Expansion[] = [],
+): GameState {
+	const defs = catalog.defs.filter(
+		(d) => d.deck === 'COMMON' && d.rewardPile === true && inBox(d, box, exps),
+	)
+	if (defs.length === 0) return state
+	return placeShuffledDeck(state, defs, { k: 'REWARD_PILE' }, null, 'cm')
 }
 
 /** §2.1 #4: place the shuffled Encounter deck facedown above the Market. */
@@ -164,9 +205,10 @@ export function setupEncounterDeck(
 	state: GameState,
 	catalog: CardCatalog,
 	box: GameBox = DEFAULT_BOX,
+	exps: readonly Expansion[] = [],
 ): GameState {
 	const defs = catalog.defs.filter(
-		(d) => isCommon(d, box) && d.suit === 'ENCOUNTER',
+		(d) => isCommon(d, box, exps) && d.suit === 'ENCOUNTER',
 	)
 	return placeShuffledDeck(state, defs, { k: 'ENCOUNTER_DECK' }, null, 'cm')
 }
@@ -183,7 +225,8 @@ export function setupIncidentDeck(
 	let s = state
 	const box = config.box ?? DEFAULT_BOX
 	for (const d of catalog.defs.filter(
-		(d) => isCommon(d, box) && d.suit === 'INCIDENT',
+		(d) =>
+			isCommon(d, box, config.expansions ?? []) && d.suit === 'INCIDENT',
 	)) {
 		const r = mintInto(s, d.id, null, { k: 'INCIDENT_DECK' }, 'cm')
 		s = r.state
@@ -221,16 +264,17 @@ export function setupLocationDeck(
 	state: GameState,
 	catalog: CardCatalog,
 	box: GameBox = DEFAULT_BOX,
+	exps: readonly Expansion[] = [],
 ): GameState {
 	const starting = catalog.defs.filter(
 		(d) =>
-			isCommon(d, box) &&
+			isCommon(d, box, exps) &&
 			d.suit === 'LOCATION' &&
 			d.locationTier === 'STARTING',
 	)
 	const advanced = catalog.defs.filter(
 		(d) =>
-			isCommon(d, box) &&
+			isCommon(d, box, exps) &&
 			d.suit === 'LOCATION' &&
 			d.locationTier === 'ADVANCED',
 	)
@@ -596,7 +640,13 @@ export function assertSetupCompleteness(
 	const expected = new Set<string>()
 	for (const d of catalog.defs) {
 		if (d.backOf !== undefined) continue // one card with its front
-		if (isCommon(d, config.box ?? DEFAULT_BOX) || chosen.has(d.deck))
+		const exps = config.expansions ?? []
+		const common =
+			isCommon(d, config.box ?? DEFAULT_BOX, exps) ||
+			(d.deck === 'COMMON' &&
+				d.rewardPile === true &&
+				inBox(d, config.box ?? DEFAULT_BOX, exps))
+		if (common || chosen.has(d.deck))
 			expected.add(d.id)
 	}
 	for (const st of catalog.stardates) expected.add(st.id)

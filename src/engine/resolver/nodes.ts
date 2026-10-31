@@ -509,6 +509,25 @@ export type TriggerSpec =
 	| { on: 'INCIDENT_TAKEN'; orReturned?: boolean | undefined } // orReturned = "whenever you take or return an INCIDENT" (1PER22)
 	| { on: 'INCIDENT_RETURNED'; seat?: TriggerSeat | undefined } // "after [your opponent] returning an INCIDENT" (2KHA01)
 	| { on: 'DECK_CYCLED' } // "after you cycle your deck" (2KHA03)
+	// Second Contact SUPPORT triggers
+	| {
+			on: 'CARD_PROMOTED' // "after you promote a PERSON"
+			filter?: CardFilter | undefined
+			seat?: TriggerSeat | undefined
+	  }
+	| {
+			on: 'CARD_JUNKED' // "after you junk a PERSON / a card from the Market"
+			filter?: CardFilter | undefined
+			seat?: TriggerSeat | undefined
+	  }
+	| {
+			on: 'CARD_EXHAUSTED' // "after you exhaust a Duty Officer"
+			filter?: CardFilter | undefined
+			seat?: TriggerSeat | undefined
+			/** only a Duty Officer */
+			dutyOfficer?: boolean | undefined
+	  }
+	| { on: 'RESOURCE_SPENT'; res?: ResourceId | undefined } // "after spending {LAT}"
 	| { on: 'ATTACKED' } // opponent resolved an ATTACK on you
 	// "When you would be attacked" (1SIS06, 1SIS10, 1PER19): before the first
 	// negative effect of an opponent's ATTACK operation applies to you. `effect`

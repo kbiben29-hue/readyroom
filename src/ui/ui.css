@@ -3856,3 +3856,9 @@ h3,
 	opacity: 0.55;
 	cursor: default;
 }
+
+/* card detail: the PLAY operation a card was played for this turn */
+.chip-played {
+	background: var(--orange);
+	color: #12121c;
+}

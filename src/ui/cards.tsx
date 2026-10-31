@@ -1190,8 +1190,23 @@ export function CardDetailHost() {
 						},
 					}
 				: null
-		const why =
-			notHere ??
+		// A PLAY operation of a card already out of the hand is not "blocked":
+		// the card was played. Say which operation it was played for, this turn.
+		const liveZone = realState.cards[detailIid]?.zone.k
+		const playedOut =
+			notHere === undefined &&
+			op.type === 'PLAY' &&
+			liveZone !== undefined &&
+			liveZone !== 'HAND'
+		const playedNow =
+			playedOut &&
+			realState.resolvedOps?.turn === realState.turnNumber &&
+			realState.resolvedOps.refs.some(
+				(r) => r.card === detailIid && r.opIndex === i,
+			)
+		const why = playedOut
+			? null
+			: notHere ??
 			(op.type !== 'ACTIVATION' && op.type !== 'PLAY'
 				? usable.ok
 					? null
@@ -1200,11 +1215,14 @@ export function CardDetailHost() {
 					? turnBlockReason
 					: usable.message)
 		return (
-			<OpBlock key={i} blocked={!usable.ok} run={run}>
+			<OpBlock key={i} blocked={!usable.ok && !playedOut} run={run}>
 				<div className="op-detail-head">
 					<span className={`op-type op-type-${op.type.toLowerCase()}`}>
 						{op.type}
 					</span>
+					{playedNow ? (
+						<span className="chip chip-played">played this turn</span>
+					) : null}
 					{op.costsAction ? (
 						<span className="chip">costs an action</span>
 					) : null}

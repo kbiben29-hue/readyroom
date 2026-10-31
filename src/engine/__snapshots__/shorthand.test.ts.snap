@@ -2370,5 +2370,474 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
     "ACTI | {−1 DIL} › WARP",
     "ACTI | {−1 CARD} › BEAM",
   ],
+  "3ALL01-3": [
+    "PLAY | FIND ·#BEVERAGE / #AMBASSADOR / #TELEPATH",
+    "CLEA | §«temporarily increase your hand size by 1» / #STARFLEET + #BEVERAGE + #AMBASSADOR IF 'at least' ⇒ LOG",
+  ],
+  "3ALL02-3": [
+    "PLAY | PROMOTE ·<PERSON>",
+    "PLAY ACT | {−1 CARD ·#STARFLEET} › SCAN2 <PERSON>",
+    "CLEA | +1 RESEARCH / DUTY IF non-≥1 #AUGMENT ⇒ LOG",
+  ],
+  "3ALL03-3": [
+    "PLAY ACT | ( +ALLY(junk) | +CARGO(junk) ) LOG",
+    "SUPP | JUNK : FIND IF ≥1 OPP[#LOWER_DECKER] ⇒ +1<INCIDENT>",
+  ],
+  "3CAR01-3": [
+    "PLAY ACT | DEPLOY ({−1 CARD} › +CARGO)?",
+    "ACTI | BEAM ·<CARGO> OPP[(+1 CARD)?]",
+    "REAC | ENTER ·#BETAZOID : +1 LAT",
+    "RESU | (RECALL)?",
+  ],
+  "3CAR02-3": [
+    "PLAY ACT ATTACK | {−1 LAT} › DEPLOY OPP[LOG ·<PERSON>]",
+    "REAC | LOG ·<PERSON> : +1 CARD",
+    "RESU | REFRESH (LOG ·<PERSON>)? REFRESH",
+  ],
+  "3CAR03-3": [
+    "PLAY ACT REQ[MILITARY ≥5] | 1 SEND / #DOCTOR max3 IF 'at least' ⇒ +1 GLO",
+    "PLAY | {+1<INCIDENT> LOG ·<PERSON> / <DIRECTIVE>} › +1 MILITARY",
+  ],
+  "3FRE01-25": [
+    "REAC | + ANY_SPECIALTY : {−1 CARD ·<PERSON>} › 1 SEND",
+    "REAC | −<INCIDENT> : WARP",
+    "ENDG | 1 VP / 2 LOG",
+  ],
+  "3FRE02-25": [
+    "PLAY ACT | DEPLOY (BEAM)? ({−1 DIL} › +1 LOWEST_SPECIALTY)? EXHAUST",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "3FRE03-25": [
+    "PLAY ACT | DEPLOY WARP REFRESH ·<SHIP> / <SHIP>",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "PASS | §«You may have an additional PERSON on duty.»",
+    "DEV | −6 DIL",
+  ],
+  "3FRE04-25": [
+    "PLAY ACT | ( FIND ·<PERSON> | FIND ·<CARGO> ) ≤2×(DUPLICATE ·<PERSON> / <CARGO>) LOG +2 GLO LOG",
+    "DEV | −3 LAT",
+  ],
+  "3FRE05-25": [
+    "SUPP | LOG : ( +2 DIL | +1 FROM_DISCARD ) (( FREE_PLAY ·#LOWER_DECKER | PROMOTE ·#LOWER_DECKER ))?",
+    "REAC | +ANY : +1 RESEARCH ({−1 DIL} › FREE_PLAY)?",
+    "DEV | −2 DIL",
+  ],
+  "3FRE06-25": [
+    "PLAY ACT | {REQ[≥1 <LOCATION>]} › +1<ENCOUNTER> (look 2) LOG ·<LOCATION> ✓⇒ +1 RESEARCH",
+    "DEV | LOG ·#STARFLEET LOG ·#STARFLEET",
+  ],
+  "3FRE07-25": [
+    "PLAY | (REFRESH ·<SHIP>)? DEPLOY",
+    "REAC | +ANY : SCAN2 'same suit' instead",
+    "DEV | −2 DIL",
+  ],
+  "3FRE08-25": [
+    "PLAY ACT | CONTROL",
+    "CONT | (FREE_PLAY ·<INCIDENT>)?",
+    "ACTI | BEAM",
+    "ACTI REQ[RESEARCH ≥5] | IF ≥2 #ANOMALY ⇒ LOG / CARD +1<ENCOUNTER> LOG ELSE LOG / CARD",
+    "DEV | −2 LAT −2 DIL",
+  ],
+  "3FRE09-25": [
+    "PLAY ACT | +1 CARD each(({−1 CARD ·<PERSON>/<CARGO>/<SHIP>/<ALLY>/<ENCOUNTER>/<INCIDENT>} › +1 GLO)?) PROMOTE",
+    "ACTI REQ[MILITARY ≥5] | 1 SEND / 1 + OPP[#SPY]",
+    "DEV | −2 DIL",
+  ],
+  "3FRE10-25": [
+    "PLAY | ({LOG ·<SHIP>} › +2 GLO)? ≤2×(−1<INCIDENT>)",
+    "ACTI ATTACK | OPP[−1 AWAY] ✓⇒ +1 GLO",
+    "SPEC | LOG ·"3FRE10/25" : FIND ·"3FRE10/25"",
+    "DEV | −2 DIL",
+  ],
+  "3FRE11-25": [
+    "PLAY ACT | DEPLOY (BEAM)? ({−1 DIL} › +1 LOWEST_SPECIALTY)? EXHAUST",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "3FRE12-25": [
+    "PLAY | +1 RESEARCH (−1<INCIDENT>)?",
+    "REAC | +<INCIDENT> : −1<INCIDENT> TOP_DECK +1 ACT",
+  ],
+  "3FRE13-25": [
+    "PLAY ACT | {+1<INCIDENT>} › DEVELOP",
+    "SUPP | EXHAUST ·<SHIP> : REFRESH (BEAM)? IF ≥1 #SYNTHETIC ⇒ +1 GLO",
+    "ACTI ACT | +1 DIL / 1 + <LOCATION> + <LOCATION> IF ≥1 #ENGINEER ⇒ ({−1 CARD} › +1 ACT)?",
+  ],
+  "3FRE14-25": [
+    "PLAY ACT REQ[INFLUENCE ≥5] | {−1 LAT} › SCAN #ORION FREE_PLAY",
+    "SUPP | PROMOTE ·#LOWER_DECKER : +2 ANY_SPECIALTY (PROMOTE)?",
+    "PASS | §«You may additionally have another PERSON with STARFLEET on duty.»",
+  ],
+  "3FRE15-25": [
+    "PLAY ACT | {−1 CARD} › −1<INCIDENT> IF =skill:RESEARCH? ⇒ +2 CARD −1 CARD",
+    "PLAY ACT | IF ≥1 #TIME_TRAVEL ⇒ −1<INCIDENT> +2 CARD −1 CARD",
+  ],
+  "3FRE16-25": [
+    "PLAY ACT | +1 CARD (+ALLY(junk))? IF non-≥1 RESERVE ⇒ LOG",
+  ],
+  "3FRE17-25": [
+    "PLAY ACT | ≤3×({−1 CARD ·<PERSON>} › 1 SEND)",
+    "PLAY | +1 CARD −1 CARD ≤2 WARP",
+  ],
+  "3FRE18-25": [
+    "PLAY ACT | 1 SEND (TOP_DECK)?",
+    "PLAY | +1 DIL (( BEAM | RECALL ))?",
+  ],
+  "3FRE19-25": [
+    "PLAY ACT | CONTROL",
+    "CONT | (+PERSON)? (LOG)?",
+    "ACTI | IF AWAY ≥1 ⇒ +1 CARD IF ≥4 #LOWER_DECKER ⇒ +1 CARD +1 DIL",
+  ],
+  "3FRE20-25": [
+    "PLAY ACT | +1<INCIDENT> +ALLY +1 INFLUENCE ( {−1 LAT} › | TOP_DECK )",
+  ],
+  "3FRE21-25": [
+    "PLAY ACT | JUNK (+1<INCIDENT>)? ({−1 CARD ·<INCIDENT>} › +CARGO)?",
+  ],
+  "3FRE22-25": [
+    "PLAY ACT | (+1 FROM_DISCARD ·non-#LOWER_DECKER)? {−1 DIL} › 1 SEND ({−1 CARD ·#LOWER_DECKER} › CONTROL again)?",
+    "ACTI | {TOP_DECK} › +PERSON",
+  ],
+  "3FRE23-25": [
+    "PLAY | {−1 ACT} › +1 CARD / ACT unused +1 CARD FREE_PLAY",
+    "SUPP | PROMOTE ·<PERSON> : DUPLICATE ·<PERSON>",
+    "ACTI ACT | {DISMISS ·#LOWER_DECKER +1<INCIDENT>} › +1<ENCOUNTER>",
+  ],
+  "3FRE24-25": [
+    "PLAY ACT | {+2<INCIDENT>} › +SHIP FREE_PLAY",
+    "SUPP | ENTER ·<ALLY> : +1 LAT 1 SEND",
+    "ACTI ACT | ( +1 RESEARCH / skill:RESEARCH IF 'at least' ⇒ DISMISS | +1 INFLUENCE / skill:INFLUENCE IF 'at least' ⇒ DISMISS | +1 MILITARY / skill:MILITARY IF 'at least' ⇒ DISMISS )",
+  ],
+  "3FRE25-25": [
+    "PLAY ACT | {TOP_DECK} › −1<INCIDENT> (PROMOTE ·<PERSON>)?",
+  ],
+  "3LOC01-2": [
+    "CONT | ({+1<INCIDENT>} › SCAN #ORION)?",
+    "ACTI | {−1 AWAY} › 2 REVEAL + CARD",
+    "REAC | ENTER ·#SCIENTIST / #ORION : 1 SEND",
+  ],
+  "3LOC02-2": [
+    "CONT | ({−1 LAT} › +SHIP (FREE_PLAY)?)?",
+    "ACTI | {LOG ·<SHIP>} › +1 ACT ( +1 DIL | +1 LAT )",
+    "ENDG | 1 VP / #ORION",
+  ],
+  "3PER01-13": [
+    "PLAY ACT | {LOG} › +3 DIL",
+    "REAC REQ[RESEARCH ≥5] | ENTER ·<ENCOUNTER> : +1 ANY_SPECIALTY",
+    "PASS | §«You may additionally have another PERSON with VULCAN/ROMULAN/AMBASSADOR on duty.»",
+    "SPEC | IF non-≥1 LOG ⇒ −2 VP",
+  ],
+  "3PER02-13": [
+    "PLAY ACT ATTACK | STEAL 2 DIL",
+    "PASS | §«Increase your hand size by 1.»",
+    "REAC REQ[INFLUENCE ≥5] | − LAT : REFRESH ·#HUMAN / #KLINGON / #BUSINESS / #CROSSOVER",
+    "SPEC | IF non-≥1 LOG ⇒ −2 VP",
+  ],
+  "3PER03-13": [
+    "PLAY ACT | ( FIND ·#KLINGON | FIND ·<SHIP> ) IF =<SHIP> #KLINGON? ⇒ +1 GLO",
+    "REAC REQ[MILITARY ≥5] | CONTROL : pick 2 ( +1 CARD | JUNK | {−1 CARD} › +1 GLO )",
+    "SPEC | IF non-≥1 LOG ⇒ −2 VP",
+  ],
+  "3PER04-13": [
+    "PLAY ACT | +1 FROM_DISCARD / #BEVERAGE + #ENGINEER + #NX_01 (DUPLICATE ·<PERSON> / <DIRECTIVE>)? (PROMOTE)?",
+    "ACTI | FREE_PLAY ·<SHIP> #STARFLEET",
+    "ACTI | ( +1 FROM_DISCARD ·<SHIP> | +1 FROM_DISCARD ·#HOLOGRAM / #NX_01 )",
+    "SPEC | IF non-≥1 LOG ⇒ −1 VP",
+  ],
+  "3PER05-13": [
+    "PLAY | {−3 CARD} › +1 ACT",
+    "SUPP | JUNK ·<PERSON> : DUPLICATE ·<PERSON>",
+    "SUPP | PROMOTE ·<PERSON> : DUPLICATE ·<PERSON>",
+    "SPEC | IF non-≥1 LOG ⇒ −2 VP",
+  ],
+  "3PER06-13": [
+    "PLAY | +1 LAT ≤2×(+1<INCIDENT> FIND)",
+    "SUPP | EXHAUST DUTY : REFRESH (1 SEND)?",
+    "SPEC | IF non-≥1 LOG ⇒ −1 VP",
+  ],
+  "3PER07-13": [
+    "PLAY ACT | +1 ANY_SPECIALTY ({−1 LAT} › +1 ANY_SPECIALTY)? IF ≥1 #VULCAN ⇒ +1 ANY_SPECIALTY (PROMOTE)?",
+    "REAC | +ANY : SCAN2 'same suit' instead +1 CARD",
+    "SPEC | IF non-≥1 LOG ⇒ −1 VP",
+  ],
+  "3PER08-13": [
+    "PLAY | +1 CARD (FREE_PLAY ·<INCIDENT>)? IF ≥1 #ANCIENT ⇒ LOG (FIND ·<INCIDENT> −1<INCIDENT>)?",
+  ],
+  "3PER09-13": [
+    "PLAY ACT ATTACK | {−1 CARD} › pick 2 ( STEAL 1 LAT | +SHIP(junk) | +1 INFLUENCE | +1 MILITARY )",
+    "ACTI ATTACK | {−2 LAT} › 1 SEND (OPP[−1 AWAY] ✓⇒ +1 GLO)?",
+  ],
+  "3PER10-13": [
+    "PLAY | BEAM ✓⇒ +2 DIL (WARP)?",
+    "SUPP | +PERSON : +1 CARD (1 SEND)?",
+    "ACTI | WARP ✓⇒ +2 CARD −1 CARD",
+  ],
+  "3PER11-13": [
+    "PLAY ACT | +1 MILITARY +1 CARD (LOG ✓⇒ +2 GLO (PROMOTE)?)?",
+    "REAC | +ANY : LOG ✓⇒ +1 DIL +1 CARD",
+  ],
+  "3PER12-13": [
+    "PLAY ACT | {DISMISS} › +1 INFLUENCE +1 MILITARY +1 GLO",
+    "SUPP | ENTER ·#KLINGON : +SHIP ( {−1 ACT −1 CARD ·<INCIDENT>} › | +1<INCIDENT> )",
+    "ACTI | {LOG ·#KLINGON / #SHADY / #LOWER_DECKER} › +1 INFLUENCE +2 CARD",
+  ],
+  "3PER13-13": [
+    "PLAY ATTACK | FIND EXHAUST ·OPP[CARD] EXHAUST ·OPP[CARD]",
+    "PLAY | {−1 CARD} › +1 LAT +1 INFLUENCE",
+    "REAC REQ[INFLUENCE ≥6] | +PERSON : {−1 CARD} › FREE_PLAY",
+  ],
+  "3PIK01-26": [
+    "REAC | ENTER ·#TIME_TRAVEL : {LOG ·<INCIDENT>} › +1 GLO",
+  ],
+  "3PIK02-26": [
+    "REAC | ENTER ·skill:RESEARCH / skill:INFLUENCE / skill:MILITARY : ( IF =skill:RESEARCH? ⇒ +1 RESEARCH | IF =skill:INFLUENCE? ⇒ +1 INFLUENCE | IF =skill:MILITARY? ⇒ +1 MILITARY )",
+    "CLEA | IF non-≥1 #SHADY / #ATTACK ⇒ +1 INFLUENCE ELSE IF GLO ≥1 ⇒ −1 GLO",
+  ],
+  "3PIK03-26": [
+    "CONT | +1 ACT",
+    "ACTI | +1 CARD / 2 <SHIP> max3",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "3PIK04-26": [
+    "PLAY | ({DISMISS ·<SHIP>} › CONTROL again)? ({EXHAUST ·<SHIP>} › +2 CARD −1 CARD)?",
+    "ACTI | +2 DIL ( FIND ·<SHIP> | REFRESH ·<SHIP> )",
+    "ACTI | {−1 CARD} › REFRESH ·<LOCATION>",
+    "DEV | −3 DIL REQ[non-≥1 "3PIK08/26"]",
+  ],
+  "3PIK05-26": [
+    "PLAY | ( (+1 FROM_DISCARD ·<PERSON>)? | (+1 FROM_DISCARD ·<CARGO>)? | (+1 FROM_DISCARD ·<SHIP>)? | (+1 FROM_DISCARD ·<ALLY>)? )",
+    "PLAY | +1 CARD / #TELEPATH + #TELEPATH max6 TOP_DECK / #TELEPATH",
+    "DEV | −3 DIL −1 LAT",
+  ],
+  "3PIK06-26": [
+    "PLAY | FIND",
+    "PLAY ACT REQ[RESEARCH ≥9] | ( SCAN2 <PERSON> | SCAN2 <CARGO> | SCAN2 <ALLY> ) +1 GLO IF ≥1 #DOCTOR ⇒ +1 GLO LOG",
+    "DEV | −3 DIL +1<INCIDENT>",
+  ],
+  "3PIK07-26": [
+    "PLAY ACT | CONTROL",
+    "CONT | +1 CARD (BEAM)?",
+    "ACTI ACT | +1 CARD +1 GLO / 2 CARD LOG / CARD",
+    "CLEA | (BEAM)? +1 DIL / CARD",
+    "DEV | −2 DIL −2 LAT",
+  ],
+  "3PIK08-26": [
+    "PLAY | (FIND ·<CARGO> FREE_PLAY)?",
+    "ACTI ACT | {−1 CARD} › +CARGO(junk) ({−1 LAT} › +1 CARD +1 GLO)?",
+    "DEV | ( −3 LAT | REQ[≥1 "3PIK20/26"] )",
+  ],
+  "3PIK09-26": [
+    "PLAY | (+1 FROM_DISCARD ·<DIRECTIVE>)? (FREE_PLAY ·<DIRECTIVE>)?",
+    "PLAY ACT | {+1<INCIDENT>} › SCAN3 <PERSON> +1 CARD",
+    "ACTI ACT | {−1 CARD ·<PERSON>} › ( +PERSON | +SHIP ) +1 CARD DISMISS",
+    "DEV | −2 DIL REQ[≥2 <INCIDENT>]",
+  ],
+  "3PIK10-26": [
+    "PLAY | FREE_PLAY ·#STARFLEET",
+    "PLAY | PROMOTE ( PROMOTE ·<PERSON> | PROMOTE ·<PERSON> ·DISCARD_PILE )",
+    "ACTI | REFRESH ·"3PIK02/26"",
+    "PASS | §«You may have an additional PERSON on duty.»",
+    "DEV | −3 DIL",
+  ],
+  "3PIK11-26": [
+    "PLAY ACT | {+1<INCIDENT>} › SCAN1 <ALLY>",
+    "CLEA | IF ≥1 #WEAPON ⇒ LOG +1 GLO",
+  ],
+  "3PIK12-26": [
+    "PLAY ACT | FREE_PLAY ·<INCIDENT> ✓⇒ (BEAM ✓⇒ 1 SEND)?",
+    "PLAY ACT REQ[RESEARCH ≥6] | SCAN #DOCTOR +1 CARD",
+  ],
+  "3PIK13-26": [
+    "PLAY ACT | {−1 CARD ·#STARFLEET} › +SHIP ({−1 CARD} › FREE_PLAY)? IF non-≥1 #AUGMENT ⇒ +1<INCIDENT>",
+    "ACTI ACT | {−1 CARD} › 1 SEND",
+    "RESU | (DUPLICATE ·<PERSON>)?",
+  ],
+  "3PIK14-26": [
+    "PLAY ACT | {−1 CARD} › −1<INCIDENT> IF =skill:INFLUENCE? ⇒ +1 LAT",
+    "PLAY ACT | IF ≥1 #AMBASSADOR ⇒ −1<INCIDENT> +1 LAT",
+  ],
+  "3PIK15-26": [
+    "PLAY | {−1 CARD} › RECALL ·non-#TIME_TRAVEL LOG ·#TIME_TRAVEL",
+  ],
+  "3PIK16-26": [
+    "PLAY | +2 CARD −1 CARD (WARP)?",
+    "PLAY | {REQ[≥1 <LOCATION>] +1<INCIDENT>} › CONTROL again",
+  ],
+  "3PIK17-26": [
+    "PLAY ACT | DEPLOY",
+    "ACTI | {LOG ·<ENCOUNTER>} › DESTROY",
+    "REAC | +<INCIDENT> : +2 CARD",
+    "RESU | DESTROY ·<PERSON> / <ALLY>",
+  ],
+  "3PIK18-26": [
+    "PLAY ACT | {REQ[≥1 <LOCATION>]} › +1<ENCOUNTER> (look 2) LOG ·<LOCATION> ✓⇒ +1 RESEARCH",
+  ],
+  "3PIK19-26": [
+    "PLAY ACT | DEPLOY ( WARP | BEAM )",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON> REFRESH ·"3PIK02/26"",
+  ],
+  "3PIK20-26": [
+    "PLAY ACT | {−3 DIL} › +SHIP IF =#ATTACK? ⇒ +1<INCIDENT>",
+    "ACTI ACT | (FREE_PLAY ·<INCIDENT>)? {LOG} › CONTROL",
+    "RESU | +1 DIL (RECALL)?",
+  ],
+  "3PIK21-26": [
+    "PLAY ACT | {LOG} › +3 DIL +1 ANY_SPECIALTY IF =skill:MILITARY? ⇒ +1 INFLUENCE",
+    "ACTI | {−1 CARD ·skill:RESEARCH} › FIND",
+    "RESU | IF 'at least' ⇒ ({EXHAUST ·"3PIK21/26"} › ( +1 GLO | +1 CARD ))?",
+  ],
+  "3PIK22-26": [
+    "PLAY ACT | {+1<INCIDENT>} › SCAN1 <CARGO> +1 CARD / <LOCATION> IF AWAY ≥2 ⇒ +1 MILITARY",
+    "ACTI | BEAM",
+  ],
+  "3PIK23-26": [
+    "PLAY ACT | +1 RESEARCH (−1<INCIDENT>)? JUNK",
+    "REAC | − CARD ·skill:MILITARY : −1<INCIDENT>",
+    "RESU REQ[MILITARY ≥5] | (1 SEND)?",
+  ],
+  "3PIK24-26": [
+    "PLAY ACT | {−2 DIL} › ( +PERSON | +ALLY )",
+    "PLAY ACT REQ[INFLUENCE ≥5] | {−2 DIL} › +PERSON/CARGO/SHIP/ALLY(+junk)",
+    "REAC | EXHAUST ·"3PIK02/26" : {−1 CARD} › +1 FROM_DISCARD",
+  ],
+  "3PIK25-26": [
+    "PLAY | ( +1 LAT | +2 DIL ) ≤3×({−1 CARD ·<CARGO> / <SHIP> / <ALLY>} › +1 LAT +1 DIL) (FIND ·<ENCOUNTER>)?",
+  ],
+  "3PIK26-26": [
+    "PLAY ACT | WARP ({−1 DIL} › 1 SEND)? ({+1<INCIDENT>} › 1 SEND)?",
+    "REAC | DEPLOY ·<SHIP> : ({−1 CARD} › +1 GLO)? ({−1 CARD} › FIND ·"3PIK16/26")?",
+    "RESU | (WARP ✓⇒ +1 DIL)?",
+  ],
+  "3RIK01-25": [
+    "ACTI | ( {TOP_DECK ·<PERSON>} › +1 FROM_DISCARD ·<PERSON> | {TOP_DECK ·<CARGO>} › +1 FROM_DISCARD ·<CARGO> | {TOP_DECK ·<SHIP>} › +1 FROM_DISCARD ·<SHIP> | {TOP_DECK ·<ALLY>} › +1 FROM_DISCARD ·<ALLY> | {TOP_DECK ·<DIRECTIVE>} › +1 FROM_DISCARD ·<DIRECTIVE> | {TOP_DECK ·<INCIDENT>} › +1 FROM_DISCARD ·<INCIDENT> )",
+    "ACTI ACT | {+1<INCIDENT>} › 1 SEND IF ≥1 <LOCATION> ⇒ ({−1 LAT} › CONTROL again)?",
+  ],
+  "3RIK02-25": [
+    "PLAY ACT | DEPLOY ( WARP | BEAM )",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+  ],
+  "3RIK03-25": [
+    "PLAY | {EXHAUST ·<CAPTAIN>} › CONTROL",
+    "CONT | (SCAN #SYNTHETIC)?",
+    "ACTI | {LOG} › (−1<INCIDENT>)? IF =#ANDROID? ⇒ +3 GLO",
+    "ENDG REQ[RESEARCH ≥9] | 3 VP",
+    "DEV | LOG ·<SHIP>",
+  ],
+  "3RIK04-25": [
+    "PLAY | {+1<INCIDENT>} › DEPLOY",
+    "PLAY ACT | {−4 DIL} › SCAN #SCIENTIST +1 CARD DEPLOY",
+    "DEV | −1 DIL / 2 MILITARY level",
+  ],
+  "3RIK05-25": [
+    "SUPP | EXHAUST ·<CAPTAIN> : {−1 CARD} › SCAN1 <CARGO> IF =#BEVERAGE? ⇒ +1 CARD",
+    "PASS | §«Increase your hand size by 1.»",
+    "CLEA | IF ≥1 "3RIK14/25" ⇒ §«temporarily increase your hand size by 1»",
+    "DEV | −1 DIL −1 LAT",
+  ],
+  "3RIK06-25": [
+    "PLAY ACT ATTACK | DEPLOY IF ≥1 <LOCATION> ⇒ OPP[+1<INCIDENT>] REFRESH",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | {−1 DIL} › RECALL",
+    "DEV | −5 DIL",
+  ],
+  "3RIK07-25": [
+    "PLAY ATTACK | DISMISS ·OPP[<SHIP>] ({−2 DIL} › +2 CARD OPP[+1<INCIDENT>])?",
+    "PLAY REQ[INFLUENCE ≥5] | {DISMISS ·#WEAPON} › CONTROL LOG",
+    "DEV | −3 DIL",
+  ],
+  "3RIK08-25": [
+    "PLAY ACT | +1 DIL +2 DIL / <LOCATION>",
+    "PLAY ACT | +1 ANY_SPECIALTY / skill:ANY",
+    "DEV | −1 DIL −1 LAT LOG ·"3RIK23/25"",
+  ],
+  "3RIK09-25": [
+    "RESU | EXHAUST +1<INCIDENT>",
+    "CLEA | IF ≥1 CARD ⇒ LOG",
+    "DEV | −3 DIL REQ[≥1 <ENCOUNTER>]",
+  ],
+  "3RIK10-25": [
+    "PLAY ACT | {−1 LAT −1 CARD ·<DIRECTIVE>} › +ALLY(+junk) JUNK",
+    "PLAY | {−1 CARD ·#STARFLEET} › −1<INCIDENT>",
+    "CLEA | +1 GLO / #BEVERAGE max3 OPP[+1 GLO / #BEVERAGE max5]",
+  ],
+  "3RIK11-25": [
+    "PLAY | (RECALL)? (+1 CARD)? {TOP_DECK} › JUNK",
+    "PLAY ACT | {−1 DIL} › DUPLICATE ·<PERSON> / <CARGO> / <ALLY> IF ≥1 #NX_01 ⇒ ( +1 ANY_SPECIALTY | +1 GLO )",
+  ],
+  "3RIK12-25": [
+    "PLAY ACT | 1 SEND (BEAM)? IF ≥1 #STARFLEET ⇒ (PROMOTE)?",
+  ],
+  "3RIK13-25": [
+    "PLAY | FIND ·<SHIP> +1 DIL",
+    "PLAY ACT | {−1 CARD ·<SHIP>} › SCAN #WEAPON +1 CARD",
+    "ACTI | {−1 CARD} › −1 DECK +1 GLO",
+  ],
+  "3RIK14-25": [
+    "PLAY | {−1 ACT} › +1 CARD / ACT unused +1 CARD FREE_PLAY",
+    "SUPP | PROMOTE ·<PERSON> : DUPLICATE ·<PERSON>",
+    "ACTI ACT | {−1 CARD ·skill:RESEARCH +1<INCIDENT>} › DEVELOP",
+  ],
+  "3RIK15-25": [
+    "PLAY | +1 CARD ( TOP_DECK | −1 CARD | LOG )",
+    "ACTI | REFRESH",
+  ],
+  "3RIK16-25": [
+    "PLAY | IF ≥1 #SCIENTIST ⇒ ({−2 DIL} › +1 ACT)? IF ≥1 #WEAPON ⇒ +1 MILITARY ({EXHAUST ·<CAPTAIN>} › RECALL)?",
+    "ACTI ACT | +CARGO",
+  ],
+  "3RIK17-25": [
+    "PLAY ACT | {REQ[≥1 <LOCATION>]} › +1<ENCOUNTER> (look 2) LOG ·<LOCATION> ✓⇒ +1 RESEARCH",
+  ],
+  "3RIK18-25": [
+    "PLAY ACT | {TOP_DECK} › +PERSON",
+    "PLAY ACT | {+1<INCIDENT>} › +ALLY",
+  ],
+  "3RIK19-25": [
+    "PLAY ACT | {+1<INCIDENT>} › +SHIP",
+    "PLAY ACT | {−2 CARD} › +CARGO",
+    "PLAY | +2 DIL",
+  ],
+  "3RIK20-25": [
+    "PLAY ACT | {−1 CARD} › −1<INCIDENT> IF =skill:MILITARY? ⇒ +2 DIL",
+    "PLAY ACT | IF ≥1 #COMMUNICATION ⇒ −1<INCIDENT> +2 DIL",
+  ],
+  "3RIK21-25": [
+    "PLAY | +2 CARD −1 CARD (≤3 WARP)?",
+    "PLAY ACT | 1 SEND / <SHIP> #STARFLEET",
+  ],
+  "3RIK22-25": [
+    "PLAY ACT | CONTROL",
+    "CONT | ({EXHAUST ·"3RIK02/25"} › +1 INFLUENCE)? ({−1 DIL} › 1 SEND)?",
+    "ACTI | IF AWAY ≥1 ⇒ +1 CARD IF AWAY ≥3 ⇒ +1 CARD",
+  ],
+  "3RIK23-25": [
+    "PLAY ACT | (WARP)? +1 DIL / 1 + <LOCATION> IF 'at least' ⇒ +1 RESEARCH ELSE +1 MILITARY",
+  ],
+  "3RIK24-25": [
+    "PLAY ACT | {TOP_DECK} › −1<INCIDENT> (PROMOTE ·<PERSON>)?",
+  ],
+  "3RIK25-25": [
+    "PLAY ACT | {DISMISS} › 1 SEND",
+    "ACTI | pick 2 ( +2 LAT | FREE_PLAY ·<DIRECTIVE> / <PERSON> | PROMOTE ·<PERSON> ) DISMISS",
+  ],
+  "3SHI01-2": [
+    "PLAY | DEPLOY WARP",
+    "ACTI | WARP",
+    "ACTI | {−1 DIL} › BEAM",
+    "ACTI | {LOG ·<PERSON> #STARFLEET −1 CARD ·<DIRECTIVE> EXHAUST ·<SHIP>} › +1<ENCOUNTER> LOG",
+  ],
+  "3SHI02-2": [
+    "PLAY ACT | DEPLOY (WARP)?",
+    "REAC | ENTER ·#ANOMALY / #COMMUNICATION / #TIME_TRAVEL : +1 DIL CARD (WARP)?",
+  ],
 }
 `;

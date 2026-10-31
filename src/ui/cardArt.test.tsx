@@ -102,6 +102,17 @@ describe('card art', () => {
 		expect(host.querySelector('.card-ops')).not.toBeNull()
 	})
 
+	it('marks an exhausted card only when no action token shows it', () => {
+		const bare = render(<CardFace def={DEF} size="board" exhausted />)
+		expect(bare.querySelector('.exhausted-mark')).not.toBeNull()
+		const chit = render(
+			<CardFace def={DEF} size="board" exhausted actionTokens={1} />,
+		)
+		expect(chit.querySelector('.exhausted-mark')).toBeNull()
+		const ready = render(<CardFace def={DEF} size="board" />)
+		expect(ready.querySelector('.exhausted-mark')).toBeNull()
+	})
+
 	it('keeps the live overlays on top of the scan', () => {
 		const host = render(
 			<CardFace

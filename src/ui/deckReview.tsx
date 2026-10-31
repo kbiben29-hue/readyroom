@@ -37,6 +37,7 @@ const DECK_ORDER = [
 	'GEO',
 	'SOV',
 	'KIR',
+	'ARC',
 	'COMMON',
 ] as const
 

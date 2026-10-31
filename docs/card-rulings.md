@@ -998,3 +998,30 @@ side is its Advanced side one higher plus ×1 at step 0, as on every box-1 board
   stay `2KIRK…`, and crew-board mission ids may carry a 4-letter code (`2KIRK/M1`).
 - **Keyed on:** `src/data/cards/crew/kir.json`, `src/data/cards/boards/kir.json`; tests
   `src/engine/tbg-box.test.ts`.
+
+## 057 — The 2ARC crew deck (To Boldly Go): first implementation
+
+- **Starting Away Teams:** 2 on the CAPTAIN (the printed "2+"); 2ARC06 and 2ARC07 each add 2 from
+  the supply when enlisted (`onEnlist` + the new `ADD_AWAY_TEAMS`, which grows the pool and the
+  seat's total together).
+- **Earth (2ARC02, Status):** resources sit on it as resource tokens (`PLACE_TOKENS`), and "gain
+  (all / 3) resources from Earth" is `TAKE_TOKENS` ({DIL} first, then {LAT}, then {GLO} when only
+  some are taken). Not modelled yet: SHIPs warping to Earth, and the protection of cards beamed
+  there from recall and dismissal.
+- **New amount `UNIQUE_TRAITS`:** the different traits among your in-play cards (2ARC01's
+  endgame).
+- **2ARC01 Resupply "3+ resources at Earth":** offered whenever Earth holds any token; it takes up
+  to 3.
+- **2ARC04 "5+ different species logged":** 5+ logged cards with a species trait. Its "best"
+  Focus icon has no model yet (no Focus for now, as 2ENC05).
+- **2ARC08 "4+ cards beamed to Earth":** 4+ of your cards beamed anywhere.
+- **2ARC11 "remove all opponent AWAY TEAMs" there:** up to 6 removals, +1 {GLO} each.
+- **Put on top of your Reserve deck (2ARC19, 2ARC23):** not modelled yet; 2ARC19 keeps the gained
+  CARGO on top of the Draw deck, 2ARC23 scans to the top of the Draw deck. 2ARC23's "look at the
+  top 2 cards of your Reserve deck" is not modelled. 2ARC19's reaction to dismissing a SHIP is
+  not modelled (no CARD_DISMISSED trigger yet).
+- **2ARC/M2 "at the same controlled LOCATION":** an ANDORIAN, a VULCAN and a TELLARITE beamed
+  anywhere (no same-LOCATION predicate yet).
+- **Crew board glyphs:** read off the printed Advanced side.
+- **Keyed on:** `src/data/cards/crew/arc.json`, `src/data/cards/boards/arc.json`; tests
+  `src/engine/tbg-box.test.ts`.

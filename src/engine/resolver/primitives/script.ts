@@ -2,7 +2,7 @@ import type { Effect } from '../nodes'
 import type { Primitive } from './index'
 import type { EffectCtx } from '../../state'
 import type { CardInstanceId } from '../../ids'
-import { placeEnlisted } from './enlistDevelopment'
+import { placeEnlisted } from './enlistPlace'
 
 type State = Parameters<Primitive<Effect>['execute']>[0]
 

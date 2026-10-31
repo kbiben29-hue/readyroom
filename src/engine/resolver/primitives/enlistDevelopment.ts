@@ -1,8 +1,9 @@
 import type { Effect } from '../nodes'
 import type { Primitive } from './index'
-import { pickCards, answered, answerSingle, moveCard } from '../runtime'
+import { pickCards, answered, answerSingle } from '../runtime'
 import { evalAmount, resolveQuery } from '../../queries/resolveQuery'
 import { canPayAll } from './index'
+import { placeEnlisted } from './enlistPlace'
 import { cardDef } from '../../cards'
 import type { GameState, EffectCtx } from '../../state'
 import type { CardInstanceId } from '../../ids'
@@ -210,23 +211,4 @@ export function discountCost(
 		default:
 			return { node, off }
 	}
-}
-
-/** Enlist = the Development goes on top of the Draw deck; a card's `onEnlist`
- *  ("When enlisting this card, …" — 2ARC06/07) then resolves for its owner. */
-export function placeEnlisted(
-	state: GameState,
-	iid: CardInstanceId,
-	seat: 0 | 1,
-): GameState {
-	const next = moveCard(state, iid, { k: 'DRAW', seat }, { toTop: true })
-	const onEnlist = cardDef(next.cards[iid]!.def).onEnlist
-	if (onEnlist !== undefined)
-		next.stack.push({
-			k: 'EFFECT',
-			node: onEnlist,
-			ctx: { actor: seat, source: iid, bindings: {} },
-			ip: 0,
-		})
-	return next
 }

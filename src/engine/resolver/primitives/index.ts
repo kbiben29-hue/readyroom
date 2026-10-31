@@ -81,6 +81,9 @@ import { triggerControl } from './triggerControl'
 import { exhaust } from './exhaust'
 import { refresh } from './refresh'
 import { placeResourceOnMarket } from './placeResourceOnMarket'
+import { placeTokens } from './placeTokens'
+import { takeTokens } from './takeTokens'
+import { addAwayTeams } from './addAwayTeams'
 import { wipeMarket } from './wipeMarket'
 import { wipeNeutralZone } from './wipeNeutralZone'
 import { drone } from './drone'
@@ -188,6 +191,9 @@ export const PRIMITIVES: {
 	EXHAUST: exhaust,
 	REFRESH: refresh,
 	PLACE_RESOURCE_ON_MARKET: placeResourceOnMarket,
+	PLACE_TOKENS: placeTokens,
+	TAKE_TOKENS: takeTokens,
+	ADD_AWAY_TEAMS: addAwayTeams,
 	WIPE_MARKET: wipeMarket,
 	WIPE_NEUTRAL_ZONE: wipeNeutralZone,
 	DRONE: drone,

@@ -756,6 +756,16 @@ export function evalAmount(
 					if (top === undefined) return 0
 					return stardateSequence(state.cards[top]?.def ?? '')
 				}
+				case 'UNIQUE_TRAITS': {
+					const seen = new Set<string>()
+					for (const iid of resolveQuery(
+						state,
+						{ zones: ['IN_PLAY'], seat: 'SELF' },
+						ctx,
+					))
+						for (const t of effectiveTraits(state, iid)) seen.add(t)
+					return seen.size
+				}
 				case 'HIGHEST_MULTIPLIER': {
 					// the highest glyph VALUE reached on any track (as final scoring)
 					const p = player(state, ctx.actor)

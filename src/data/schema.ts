@@ -170,6 +170,7 @@ const AmountSchema: z.ZodType<Amount> = z.lazy(() =>
 		z.object({ k: z.literal('UNUSED_ACTIONS') }).strict(),
 		z.object({ k: z.literal('STARDATE_SEQUENCE') }).strict(),
 		z.object({ k: z.literal('HIGHEST_MULTIPLIER') }).strict(),
+		z.object({ k: z.literal('UNIQUE_TRAITS') }).strict(),
 		z
 			.object({
 				k: z.enum(['MIN', 'MAX', 'SUM']),
@@ -768,6 +769,24 @@ export const EffectSchema: z.ZodType<Effect> = z.lazy(() =>
 				target: QuerySchema.optional(),
 			})
 			.strict(),
+		z
+			.object({
+				k: z.literal('PLACE_TOKENS'),
+				res: ResourceSchema,
+				amount: AmountSchema,
+				target: QuerySchema,
+			})
+			.strict(),
+		z
+			.object({
+				k: z.literal('TAKE_TOKENS'),
+				target: QuerySchema,
+				max: AmountSchema.optional(),
+			})
+			.strict(),
+		z
+			.object({ k: z.literal('ADD_AWAY_TEAMS'), amount: AmountSchema })
+			.strict(),
 		z.object({ k: z.literal('WIPE_MARKET') }).strict(),
 		z.object({ k: z.literal('WIPE_NEUTRAL_ZONE') }).strict(),
 		z
@@ -1027,6 +1046,9 @@ export interface CardDef {
 	 *  a matching MODIFIER_ATTACH node purely so describe() round-trips. */
 	passives?: string[] | undefined
 	cannotBePlayed?: boolean | undefined
+	/** "When enlisting this card, …" (2ARC06, 2ARC07): resolved right after the
+	 *  Development is enlisted, by its owner. */
+	onEnlist?: Effect | undefined
 	/** "This card cannot be promoted." (1SIS13) — PROMOTE never
 	 *  offers it. */
 	cannotBePromoted?: boolean | undefined
@@ -1125,6 +1147,7 @@ export const CardDefSchema = z
 		locationTier: z.enum(['STARTING', 'ADVANCED']).optional(),
 		passives: z.array(z.string().min(1)).optional(),
 		cannotBePlayed: z.boolean().optional(),
+		onEnlist: EffectSchema.optional(),
 		cannotBePromoted: z.boolean().optional(),
 		treatedAsLocation: z.boolean().optional(),
 	})

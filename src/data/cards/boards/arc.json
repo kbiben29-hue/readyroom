@@ -1,0 +1,604 @@
+[
+	{
+		"deck": "ARC",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 7
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 8,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2ARC/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": {
+									"ids": [
+										"2ARC03-23"
+									]
+								},
+								"withAwayTeam": true,
+								"secured": true
+							},
+							"value": 1
+						},
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"filter": {
+										"ids": [
+											"2ARC03-23"
+										]
+									}
+								},
+								{
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "COMPARE",
+							"a": {
+								"k": "RESOURCE",
+								"res": "DIL"
+							},
+							"op": "GE",
+							"b": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 4
+								},
+								"body": {
+									"k": "TAKE_CONTROL",
+									"target": {
+										"zones": [
+											"NEUTRAL_LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"withShip": {
+											"ids": [
+												"2ARC03-23"
+											]
+										}
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FIND",
+								"filter": {
+									"ids": [
+										"2ARC15-23",
+										"1BUR16-26",
+										"2ARC22-23"
+									]
+								},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									},
+									{
+										"k": "RESERVE",
+										"seat": 0
+									}
+								]
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "ARC",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 8,
+						"value": 3
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2ARC/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": {
+									"ids": [
+										"2ARC03-23"
+									]
+								},
+								"withAwayTeam": true,
+								"secured": true
+							},
+							"value": 1
+						},
+						{
+							"k": "SAME_SHIP",
+							"requirements": [
+								{
+									"filter": {
+										"ids": [
+											"2ARC03-23"
+										]
+									}
+								},
+								{
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "COMPARE",
+							"a": {
+								"k": "RESOURCE",
+								"res": "DIL"
+							},
+							"op": "GE",
+							"b": 4
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 4
+								},
+								"body": {
+									"k": "TAKE_CONTROL",
+									"target": {
+										"zones": [
+											"NEUTRAL_LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"withShip": {
+											"ids": [
+												"2ARC03-23"
+											]
+										}
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FIND",
+								"filter": {
+									"ids": [
+										"2ARC15-23",
+										"1BUR16-26",
+										"2ARC22-23"
+									]
+								},
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									},
+									{
+										"k": "DRAW",
+										"seat": 0
+									},
+									{
+										"k": "RESERVE",
+										"seat": 0
+									}
+								]
+							}
+						}
+					]
+				},
+				"vp": 4
+			},
+			{
+				"index": 1,
+				"cardId": "2ARC/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"BEAMED_ANY"
+								],
+								"filter": {
+									"traits": [
+										"ANDORIAN"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"BEAMED_ANY"
+								],
+								"filter": {
+									"traits": [
+										"VULCAN"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"BEAMED_ANY"
+								],
+								"filter": {
+									"traits": [
+										"TELLARITE"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						},
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "COMMUNICATION"
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Scan 2 of PERSON",
+									"body": {
+										"k": "SCAN_N",
+										"n": 2,
+										"suits": [
+											"PERSON"
+										]
+									}
+								},
+								{
+									"label": "Scan 1 of ALLY",
+									"body": {
+										"k": "SCAN_N",
+										"n": 1,
+										"suits": [
+											"ALLY"
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"traits": [
+											"ROMULAN"
+										]
+									}
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "DESTROY",
+											"target": {
+												"zones": [
+													{
+														"k": "DISCARD",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"traits": [
+														"ROMULAN"
+													]
+												}
+											}
+										},
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 3
+										}
+									]
+								}
+							}
+						}
+					]
+				},
+				"vp": 3
+			},
+			{
+				"index": 2,
+				"cardId": "2ARC/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "DIFFERENT_SPECIES_IN_PLAY",
+							"count": 5,
+							"filter": {
+								"not": {
+									"traits": [
+										"HUMAN"
+									]
+								}
+							}
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"TIME_TRAVEL"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 2
+						},
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"suits": [
+										"INCIDENT"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 1
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_ACTION",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"from": {
+										"k": "FLEET",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "GAIN_ACTION",
+									"amount": 1
+								}
+							}
+						}
+					]
+				},
+				"vp": 2
+			}
+		]
+	}
+]

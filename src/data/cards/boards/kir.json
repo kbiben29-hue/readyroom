@@ -1,6 +1,6 @@
 [
 	{
-		"deck": "KIRK",
+		"deck": "KIR",
 		"side": "BASIC",
 		"tracks": [
 			{
@@ -15,11 +15,11 @@
 						"value": 2
 					},
 					{
-						"step": 5,
+						"step": 3,
 						"value": 3
 					},
 					{
-						"step": 7,
+						"step": 6,
 						"value": 4
 					},
 					{
@@ -40,11 +40,11 @@
 						"value": 2
 					},
 					{
-						"step": 5,
+						"step": 3,
 						"value": 3
 					},
 					{
-						"step": 7,
+						"step": 6,
 						"value": 4
 					},
 					{
@@ -65,11 +65,11 @@
 						"value": 2
 					},
 					{
-						"step": 5,
+						"step": 3,
 						"value": 3
 					},
 					{
-						"step": 7,
+						"step": 6,
 						"value": 4
 					},
 					{
@@ -125,7 +125,7 @@
 		]
 	},
 	{
-		"deck": "KIRK",
+		"deck": "KIR",
 		"side": "ADVANCED",
 		"tracks": [
 			{
@@ -136,11 +136,11 @@
 						"value": 1
 					},
 					{
-						"step": 5,
+						"step": 3,
 						"value": 2
 					},
 					{
-						"step": 7,
+						"step": 6,
 						"value": 3
 					},
 					{
@@ -157,11 +157,11 @@
 						"value": 1
 					},
 					{
-						"step": 5,
+						"step": 3,
 						"value": 2
 					},
 					{
-						"step": 7,
+						"step": 6,
 						"value": 3
 					},
 					{
@@ -178,11 +178,11 @@
 						"value": 1
 					},
 					{
-						"step": 5,
+						"step": 3,
 						"value": 2
 					},
 					{
-						"step": 7,
+						"step": 6,
 						"value": 3
 					},
 					{

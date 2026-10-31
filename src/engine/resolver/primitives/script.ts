@@ -2,7 +2,7 @@ import type { Effect } from '../nodes'
 import type { Primitive } from './index'
 import type { EffectCtx } from '../../state'
 import type { CardInstanceId } from '../../ids'
-import { moveCard } from '../runtime'
+import { placeEnlisted } from './enlistDevelopment'
 
 type State = Parameters<Primitive<Effect>['execute']>[0]
 
@@ -54,6 +54,6 @@ registerScript('enlist.place', {
 		if (typeof pick !== 'string')
 			throw new Error(`enlist.place: no enlist.pick in bindings`)
 		const iid = pick as CardInstanceId
-		return moveCard(state, iid, { k: 'DRAW', seat: ctx.actor }, { toTop: true })
+		return placeEnlisted(state, iid, ctx.actor)
 	},
 })

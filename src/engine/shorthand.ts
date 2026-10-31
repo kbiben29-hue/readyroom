@@ -267,6 +267,8 @@ function amt(a: Amount): Amt {
 			return { n: '1', per: [glyph('ACT', 'unused')] }
 		case 'STARDATE_SEQUENCE':
 			return { n: 'SD#', per: [] }
+		case 'UNIQUE_TRAITS':
+			return { n: '1', per: [glyph('CARD', 'trait')] }
 		case 'HIGHEST_MULTIPLIER':
 			return { n: '×max', per: [] }
 		case 'UP_TO': {
@@ -839,6 +841,12 @@ export function shorthand(e: Effect): Tok[] {
 				glyph('MARKET'),
 				...counted((n) => glyph(e.res, n), e.amount, '+'),
 			]
+		case 'PLACE_TOKENS':
+			return [...counted((n) => glyph(e.res, n), e.amount, '+'), glyph('CARD')]
+		case 'TAKE_TOKENS':
+			return [glyph('CARD'), glyph('GLO', '+')]
+		case 'ADD_AWAY_TEAMS':
+			return counted((n) => glyph('AWAY', n), e.amount, '+')
 		case 'WIPE_MARKET':
 			return [glyph('WIPE_MARKET')]
 		case 'WIPE_NEUTRAL_ZONE':

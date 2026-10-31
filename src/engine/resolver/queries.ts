@@ -155,6 +155,7 @@ export type Amount =
 	| { k: 'RESOURCE'; res: ResourceId; seat?: 'SELF' | 'OPPONENT' | undefined }
 	| { k: 'UNUSED_ACTIONS' }
 	| { k: 'STARDATE_SEQUENCE' } // the current Stardate card's sequence number (2KIRK03); 0 when none
+	| { k: 'UNIQUE_TRAITS' } // different traits among your in-play cards (2ARC01)
 	| { k: 'HIGHEST_MULTIPLIER' } // your highest multiplier reached on any track (2KIRK09)
 	| { k: 'MIN' | 'MAX' | 'SUM'; terms: Amount[] } // SUM: "for each X and each Y" counts a card that is both twice (1CAR04)
 	| { k: 'UP_TO'; max: Amount } // player chooses 0..max

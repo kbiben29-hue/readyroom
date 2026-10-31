@@ -21,12 +21,7 @@ export const enlistDevelopment: Primitive<
 	execute(state, node, ctx, _frame) {
 		if (answered(ctx, 'enlist.dev')) {
 			const iid = answerSingle(ctx, 'enlist.dev')
-			return moveCard(
-				state,
-				iid,
-				{ k: 'DRAW', seat: ctx.actor },
-				{ toTop: true },
-			)
+			return placeEnlisted(state, iid, ctx.actor)
 		}
 		const cands = legalCandidates(state, node, ctx)
 		const r = pickCards(state, node, ctx, 'enlist.dev', {
@@ -41,12 +36,7 @@ export const enlistDevelopment: Primitive<
 		const iid = r.iids[0]!
 		const variants = costVariants(state, node, ctx, iid)
 		if (node.free === true || variants === null) {
-			return moveCard(
-				state,
-				iid,
-				{ k: 'DRAW', seat: ctx.actor },
-				{ toTop: true },
-			)
+			return placeEnlisted(state, iid, ctx.actor)
 		}
 		// Pay the cost first, then place — PAY_THEN with a scripted placement body.
 		// Several payable discount splits ("1 {DIL} or 1 {LAT} per STARBASE")
@@ -220,4 +210,23 @@ export function discountCost(
 		default:
 			return { node, off }
 	}
+}
+
+/** Enlist = the Development goes on top of the Draw deck; a card's `onEnlist`
+ *  ("When enlisting this card, …" — 2ARC06/07) then resolves for its owner. */
+export function placeEnlisted(
+	state: GameState,
+	iid: CardInstanceId,
+	seat: 0 | 1,
+): GameState {
+	const next = moveCard(state, iid, { k: 'DRAW', seat }, { toTop: true })
+	const onEnlist = cardDef(next.cards[iid]!.def).onEnlist
+	if (onEnlist !== undefined)
+		next.stack.push({
+			k: 'EFFECT',
+			node: onEnlist,
+			ctx: { actor: seat, source: iid, bindings: {} },
+			ip: 0,
+		})
+	return next
 }

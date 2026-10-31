@@ -14,7 +14,7 @@ import type { DeckId } from '../data/ids'
 import type { GameBox } from '../data/boxes'
 
 /** The To Boldly Go crews implemented so far. */
-const TBG_CREWS: DeckId[] = ['GEO', 'SOV', 'KIRK']
+const TBG_CREWS: DeckId[] = ['GEO', 'SOV', 'KIR']
 
 let catalog: CardCatalog
 beforeAll(async () => {

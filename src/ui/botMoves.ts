@@ -282,6 +282,8 @@ const NODE_VERB: Record<string, string> = {
 	EXHAUST: 'exhausted',
 	REFRESH: 'refreshed',
 	PLACE_RESOURCE_ON_MARKET: 'placed tokens on',
+	PLACE_TOKENS: 'placed tokens on',
+	TAKE_TOKENS: 'took the resources from',
 	ENLIST_RESERVE: 'enlisted',
 	ENLIST_DEVELOPMENT: 'enlisted',
 }

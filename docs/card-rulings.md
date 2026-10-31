@@ -992,7 +992,9 @@ side is its Advanced side one higher plus ×1 at step 0, as on every box-1 board
   checks the Action Step; the log half (CARD_LOGGED has no step filter) fires on any log.
 - **2KIRK/M2 "3 of the same species":** any species (other than HUMAN) on 3+ of your in-play
   cards that are neither HUMAN nor STARFLEET.
-- **Crew board glyphs:** placeholders (the printed ×5 maximum on every track) until read off the
-  printed board.
-- **Keyed on:** `src/data/cards/crew/kirk.json`, `src/data/cards/boards/kirk.json`; tests
+- **Crew board glyphs:** read off the printed Advanced side: every track ×1 at 2, ×2 at 3, ×3 at 6,
+  ×4 at 10 (Basic one higher, plus ×1 at 0).
+- **Deck id `KIR`:** a bare `KIRK` would trip the publish audit's card-name check; printed numbers
+  stay `2KIRK…`, and crew-board mission ids may carry a 4-letter code (`2KIRK/M1`).
+- **Keyed on:** `src/data/cards/crew/kir.json`, `src/data/cards/boards/kir.json`; tests
   `src/engine/tbg-box.test.ts`.

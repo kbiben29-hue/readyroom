@@ -253,6 +253,8 @@ export function describeAmount(amount: Amount): string {
 			return 'your unused actions'
 		case 'STARDATE_SEQUENCE':
 			return "the current Stardate card's sequence number"
+		case 'UNIQUE_TRAITS':
+			return 'the number of different traits you have in play'
 		case 'HIGHEST_MULTIPLIER':
 			return 'your highest multiplier on any Specialty track'
 		case 'MIN':
@@ -1028,6 +1030,12 @@ function render(node: Effect): string {
 		}
 		case 'PLACE_RESOURCE_ON_MARKET':
 			return `Place ${describeAmount(node.amount)} ${resourceToken(node.res)} on a Market card.`
+		case 'PLACE_TOKENS':
+			return `Place ${describeAmount(node.amount)} ${resourceToken(node.res)} on ${describeQuery(node.target)}.`
+		case 'TAKE_TOKENS':
+			return `Gain ${node.max !== undefined ? `up to ${describeAmount(node.max)}` : 'all'} resources from ${describeQuery(node.target)}.`
+		case 'ADD_AWAY_TEAMS':
+			return `Add ${describeAmount(node.amount)} AWAY TEAM from the supply to your CAPTAIN.`
 		case 'WIPE_MARKET':
 			return 'Wipe the Market.'
 		case 'WIPE_NEUTRAL_ZONE':

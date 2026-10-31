@@ -3,7 +3,7 @@
 		"id": "2KIRK01-25",
 		"cardId": "2KIRK01/25",
 		"suit": "CAPTAIN",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"HUMAN",
 			"STARFLEET"
@@ -101,7 +101,7 @@
 		"id": "2KIRK02-25",
 		"cardId": "2KIRK02/25",
 		"suit": "SHIP",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"STARFLEET"
 		],
@@ -277,7 +277,7 @@
 		"id": "2KIRK03-25",
 		"cardId": "2KIRK03/25",
 		"suit": "LOCATION",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"STARFLEET"
 		],
@@ -327,7 +327,7 @@
 		"id": "2KIRK04-25",
 		"cardId": "2KIRK04/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"ATTACK"
 		],
@@ -441,7 +441,7 @@
 		"id": "2KIRK05-25",
 		"cardId": "2KIRK05/25",
 		"suit": "SHIP",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"STARFLEET"
 		],
@@ -671,7 +671,7 @@
 		"id": "2KIRK06-25",
 		"cardId": "2KIRK06/25",
 		"suit": "SHIP",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"STARFLEET",
 			"ATTACK"
@@ -895,7 +895,7 @@
 		"id": "2KIRK07-25",
 		"cardId": "2KIRK07/25",
 		"suit": "PERSON",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"HUMAN",
 			"PILOT",
@@ -974,7 +974,7 @@
 		"id": "2KIRK08-25",
 		"cardId": "2KIRK08/25",
 		"suit": "PERSON",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"VULCAN",
 			"TELEPATH",
@@ -1084,7 +1084,7 @@
 		"id": "2KIRK09-25",
 		"cardId": "2KIRK09/25",
 		"suit": "LOCATION",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"VULCAN"
 		],
@@ -1201,7 +1201,7 @@
 		"id": "2KIRK10-25",
 		"cardId": "2KIRK10/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"ANOMALY",
 			"TIME_TRAVEL"
@@ -1282,7 +1282,7 @@
 		"id": "2KIRK11-25",
 		"cardId": "2KIRK11/25",
 		"suit": "SHIP",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"KLINGON",
 			"CLOAK"
@@ -1438,7 +1438,7 @@
 		"id": "2KIRK12-25",
 		"cardId": "2KIRK12/25",
 		"suit": "PERSON",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"HUMAN",
 			"ENGINEER",
@@ -1597,7 +1597,7 @@
 		"id": "2KIRK13-25",
 		"cardId": "2KIRK13/25",
 		"suit": "PERSON",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"HUMAN",
 			"OPS",
@@ -1717,7 +1717,7 @@
 		"id": "2KIRK14-25",
 		"cardId": "2KIRK14/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,
@@ -1778,7 +1778,7 @@
 		"id": "2KIRK15-25",
 		"cardId": "2KIRK15/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,
@@ -1879,7 +1879,7 @@
 		"id": "2KIRK16-25",
 		"cardId": "2KIRK16/25",
 		"suit": "INCIDENT",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,
@@ -1988,7 +1988,7 @@
 		"id": "2KIRK17-25",
 		"cardId": "2KIRK17/25",
 		"suit": "CARGO",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"ONGOING"
 		],
@@ -2173,7 +2173,7 @@
 		"id": "2KIRK18-25",
 		"cardId": "2KIRK18/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,
@@ -2228,7 +2228,7 @@
 		"id": "2KIRK19-25",
 		"cardId": "2KIRK19/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,
@@ -2294,7 +2294,7 @@
 		"id": "2KIRK20-25",
 		"cardId": "2KIRK20/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,
@@ -2419,7 +2419,7 @@
 		"id": "2KIRK21-25",
 		"cardId": "2KIRK21/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,
@@ -2548,7 +2548,7 @@
 		"id": "2KIRK22-25",
 		"cardId": "2KIRK22/25",
 		"suit": "PERSON",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"HUMAN",
 			"STARFLEET",
@@ -2721,7 +2721,7 @@
 		"id": "2KIRK23-25",
 		"cardId": "2KIRK23/25",
 		"suit": "PERSON",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"HUMAN",
 			"DOCTOR",
@@ -2841,7 +2841,7 @@
 		"id": "2KIRK24-25",
 		"cardId": "2KIRK24/25",
 		"suit": "PERSON",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [
 			"HUMAN",
 			"VULCAN",
@@ -3027,7 +3027,7 @@
 		"id": "2KIRK25-25",
 		"cardId": "2KIRK25/25",
 		"suit": "DIRECTIVE",
-		"deck": "KIRK",
+		"deck": "KIR",
 		"traits": [],
 		"skills": [],
 		"focus": null,

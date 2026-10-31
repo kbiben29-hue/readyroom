@@ -1,0 +1,2969 @@
+[
+	{
+		"id": "2ARC01-23",
+		"cardId": "2ARC01/23",
+		"suit": "CAPTAIN",
+		"deck": "ARC",
+		"traits": [
+			"HUMAN",
+			"NX_01",
+			"PILOT",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "PER",
+						"every": 3,
+						"of": {
+							"k": "UNIQUE_TRAITS"
+						}
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							}
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "MAY",
+						"body": {
+							"k": "PAY_THEN",
+							"cost": {
+								"k": "COST_EXHAUST",
+								"target": "THIS"
+							},
+							"body": {
+								"k": "TAKE_TOKENS",
+								"target": {
+									"zones": [
+										{
+											"k": "STATUS",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"ids": [
+											"2ARC02-23"
+										]
+									}
+								},
+								"max": 3
+							}
+						}
+					}
+				}
+			}
+		],
+		"awayTeams": 2
+	},
+	{
+		"id": "2ARC02-23",
+		"cardId": "2ARC02/23",
+		"suit": "STATUS",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DISCARDED",
+					"duringAction": true,
+					"filter": {
+						"suits": [
+							"DIRECTIVE"
+						]
+					}
+				},
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Place 1 Dilithium here",
+							"body": {
+								"k": "PLACE_TOKENS",
+								"res": "DIL",
+								"amount": 1,
+								"target": {
+									"zones": [
+										{
+											"k": "STATUS",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						},
+						{
+							"label": "Place 1 Latinum here",
+							"body": {
+								"k": "PLACE_TOKENS",
+								"res": "LAT",
+								"amount": 1,
+								"target": {
+									"zones": [
+										{
+											"k": "STATUS",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Beam a card from your hand here",
+										"body": {
+											"k": "BEAM",
+											"from": {
+												"k": "HAND",
+												"seat": 0
+											},
+											"filter": {
+												"not": {
+													"suits": [
+														"DIRECTIVE"
+													]
+												}
+											},
+											"count": 1,
+											"to": {
+												"zones": [
+													{
+														"k": "STATUS",
+														"seat": 0
+													}
+												],
+												"thisCard": true
+											},
+											"bind": "$2arc02.b"
+										}
+									},
+									{
+										"label": "Beam a card from your Staging Area here",
+										"body": {
+											"k": "BEAM",
+											"from": {
+												"k": "STAGING",
+												"seat": 0
+											},
+											"filter": {
+												"not": {
+													"suits": [
+														"DIRECTIVE"
+													]
+												}
+											},
+											"count": 1,
+											"to": {
+												"zones": [
+													{
+														"k": "STATUS",
+														"seat": 0
+													}
+												],
+												"thisCard": true
+											},
+											"bind": "$2arc02.b"
+										}
+									}
+								]
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "AND",
+									"terms": [
+										{
+											"k": "DID",
+											"bind": "$2arc02.b"
+										},
+										{
+											"k": "NOT",
+											"term": {
+												"k": "BOUND_SHARES_TRAIT",
+												"bind": "$2arc02.b",
+												"with": {
+													"zones": [
+														{
+															"k": "CAPTAIN",
+															"seat": 0
+														}
+													]
+												}
+											}
+										}
+									]
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "INFLUENCE",
+											"amount": 1
+										},
+										{
+											"k": "PLACE_TOKENS",
+											"res": "GLO",
+											"amount": 1,
+											"target": {
+												"zones": [
+													{
+														"k": "STATUS",
+														"seat": 0
+													}
+												],
+												"thisCard": true
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC03-23",
+		"cardId": "2ARC03/23",
+		"suit": "SHIP",
+		"deck": "ARC",
+		"traits": [
+			"HUMAN",
+			"NX_01",
+			"STARFLEET"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_EXHAUST",
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								},
+								"body": {
+									"k": "WARP",
+									"ship": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										},
+										"thisCard": true
+									},
+									"to": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC04-23",
+		"cardId": "2ARC04/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [
+			"AMBASSADOR",
+			"WILDCARD"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "LOG",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"traits": [
+									"ALIEN",
+									"AENAR",
+									"ANDORIAN",
+									"ANDROID",
+									"BAJORAN",
+									"BETAZOID",
+									"BORG",
+									"BREEN",
+									"CARDASSIAN",
+									"CHANGELING",
+									"FERENGI",
+									"HUMAN",
+									"JEM_HADAR",
+									"KAZON",
+									"KELPIEN",
+									"KLINGON",
+									"ORION",
+									"PAKLED",
+									"REMAN",
+									"ROMULAN",
+									"SYNTHETIC",
+									"TELLARITE",
+									"TRANSCENDENT",
+									"TRILL",
+									"VAU_NAKAT",
+									"VORTA",
+									"VULCAN",
+									"XB",
+									"XINDI"
+								]
+							}
+						},
+						"value": 5
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										{
+											"k": "RESERVE",
+											"seat": 0
+										}
+									]
+								}
+							},
+							"body": {
+								"k": "ENLIST_RESERVE"
+							}
+						},
+						{
+							"k": "TAKE_TOKENS",
+							"target": {
+								"zones": [
+									{
+										"k": "STATUS",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"2ARC02-23"
+									]
+								}
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 3
+							},
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "BEAM",
+										"from": {
+											"k": "LOG",
+											"seat": 0
+										},
+										"filter": {
+											"suits": [
+												"ALLY"
+											]
+										},
+										"count": 1,
+										"to": {
+											"zones": [
+												{
+													"k": "STATUS",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"ids": [
+													"2ARC02-23"
+												]
+											}
+										},
+										"bind": "$2arc04.b"
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "DID",
+											"bind": "$2arc04.b"
+										},
+										"then": {
+											"k": "MAY",
+											"body": {
+												"k": "SEQ",
+												"steps": [
+													{
+														"k": "FIND",
+														"filter": {
+															"suits": [
+																"INCIDENT"
+															]
+														},
+														"zones": [
+															{
+																"k": "HAND",
+																"seat": 0
+															},
+															{
+																"k": "DISCARD",
+																"seat": 0
+															},
+															{
+																"k": "DRAW",
+																"seat": 0
+															},
+															{
+																"k": "RESERVE",
+																"seat": 0
+															}
+														],
+														"bind": "$2arc04.i"
+													},
+													{
+														"k": "RETURN_INCIDENT",
+														"target": {
+															"zones": [
+																{
+																	"k": "HAND",
+																	"seat": 0
+																}
+															],
+															"bound": "$2arc04.i"
+														}
+													}
+												]
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC05-23",
+		"cardId": "2ARC05/23",
+		"suit": "PERSON",
+		"deck": "ARC",
+		"traits": [
+			"HUMAN",
+			"TIME_TRAVEL"
+		],
+		"skills": [
+			"SKILL_ANY"
+		],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"traits": [
+									"XINDI"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 2
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Draw a card",
+									"body": {
+										"k": "DRAW",
+										"count": 1
+									}
+								},
+								{
+									"label": "Draw a card from your Discard pile",
+									"body": {
+										"k": "DRAW_FROM_DISCARD",
+										"count": 1
+									}
+								}
+							]
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"ANOMALY"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"AMBASSADOR"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"ALIEN",
+											"XINDI"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "RECALL",
+						"target": {
+							"zones": [
+								{
+									"k": "STAGING",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"not": {
+									"traits": [
+										"TIME_TRAVEL"
+									]
+								}
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2ARC05_HAND"
+				}
+			}
+		],
+		"passives": [
+			"2ARC05_HAND"
+		]
+	},
+	{
+		"id": "2ARC06-23",
+		"cardId": "2ARC06/23",
+		"suit": "PERSON",
+		"deck": "ARC",
+		"traits": [
+			"ANDORIAN",
+			"IMPERIAL"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": "FOCUS_INFLUENCE",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 2
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"ANDORIAN",
+								"WEAPON"
+							]
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"bind": "$2arc06.d"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_IS",
+									"bind": "$2arc06.d",
+									"filter": {
+										"suits": [
+											"DIRECTIVE",
+											"CARGO"
+										]
+									}
+								},
+								"then": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 2
+								}
+							}
+						]
+					}
+				}
+			}
+		],
+		"onEnlist": {
+			"k": "ADD_AWAY_TEAMS",
+			"amount": 2
+		}
+	},
+	{
+		"id": "2ARC07-23",
+		"cardId": "2ARC07/23",
+		"suit": "PERSON",
+		"deck": "ARC",
+		"traits": [
+			"VULCAN",
+			"TELEPATH",
+			"AMBASSADOR"
+		],
+		"skills": [
+			"SKILL_INFLUENCE"
+		],
+		"focus": "FOCUS_RESEARCH",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_EXHAUST",
+					"filter": {
+						"suits": [
+							"CAPTAIN"
+						]
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"VULCAN",
+								"SCIENTIST"
+							]
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": [
+								"HUMAN"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 2
+							},
+							{
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Gain 1 RESEARCH",
+										"body": {
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "RESEARCH",
+											"amount": 1
+										}
+									},
+									{
+										"label": "Gain 1 INFLUENCE",
+										"body": {
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "INFLUENCE",
+											"amount": 1
+										}
+									},
+									{
+										"label": "Gain 1 MILITARY",
+										"body": {
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "MILITARY",
+											"amount": 1
+										}
+									}
+								]
+							}
+						]
+					}
+				}
+			}
+		],
+		"onEnlist": {
+			"k": "ADD_AWAY_TEAMS",
+			"amount": 2
+		}
+	},
+	{
+		"id": "2ARC08-23",
+		"cardId": "2ARC08/23",
+		"suit": "PERSON",
+		"deck": "ARC",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_REQUIRE",
+			"cond": {
+				"k": "COUNT_AT_LEAST",
+				"query": {
+					"zones": [
+						"BEAMED_ANY"
+					],
+					"seat": "SELF"
+				},
+				"value": 4
+			}
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"INCIDENT",
+										"DIRECTIVE"
+									]
+								},
+								"from": {
+									"k": "HAND",
+									"seat": 0
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PROMOTE",
+								"from": "STAGING",
+								"target": "THIS"
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 2
+							},
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Promote a PERSON from your hand",
+										"body": {
+											"k": "PROMOTE",
+											"from": "HAND",
+											"filter": {
+												"suits": [
+													"PERSON"
+												]
+											}
+										}
+									},
+									{
+										"label": "Promote a PERSON from your Discard pile",
+										"body": {
+											"k": "PROMOTE",
+											"from": "DISCARD",
+											"filter": {
+												"suits": [
+													"PERSON"
+												]
+											}
+										}
+									},
+									{
+										"label": "Promote a PERSON from your Staging Area",
+										"body": {
+											"k": "PROMOTE",
+											"from": "STAGING",
+											"filter": {
+												"suits": [
+													"PERSON"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "PLACE_TOKENS",
+						"res": "GLO",
+						"amount": 1,
+						"target": {
+							"zones": [
+								{
+									"k": "STATUS",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"ids": [
+									"2ARC02-23"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO04_DUTY_A"
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2GEO04_DUTY_B"
+				}
+			}
+		],
+		"passives": [
+			"2GEO04_DUTY_A",
+			"2GEO04_DUTY_B"
+		]
+	},
+	{
+		"id": "2ARC09-23",
+		"cardId": "2ARC09/23",
+		"suit": "ALLY",
+		"deck": "ARC",
+		"traits": [
+			"XINDI",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 4,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_REQUIRE",
+			"cond": {
+				"k": "AND",
+				"terms": [
+					{
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"suits": [
+									"INCIDENT"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 1
+					},
+					{
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"suits": [
+									"ENCOUNTER"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 1
+					}
+				]
+			}
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "INFLUENCE",
+							"amount": 2
+						},
+						{
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"XINDI"
+							],
+							"includeJunk": true
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"requires": {
+					"specialty": "INFLUENCE",
+					"min": 6
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"XINDI"
+										]
+									},
+									"seat": "OPPONENT"
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "TAKE",
+										"deck": "INCIDENT",
+										"count": 1
+									},
+									{
+										"k": "OPPONENT",
+										"body": {
+											"k": "TAKE",
+											"deck": "INCIDENT",
+											"count": 1
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "FORCE",
+							"body": {
+								"k": "EXHAUST",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "TAKE",
+							"deck": "ENCOUNTER",
+							"count": 1
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC10-23",
+		"cardId": "2ARC10/23",
+		"suit": "LOCATION",
+		"deck": "ARC",
+		"traits": [
+			"STARBASE",
+			"ENGINEER"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "BEAM",
+								"from": {
+									"k": "HAND",
+									"seat": 0
+								},
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								},
+								"count": 1,
+								"to": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"bind": "$2arc10.b"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "DID",
+									"bind": "$2arc10.b"
+								},
+								"then": {
+									"k": "SCAN_N",
+									"n": 1,
+									"suits": [
+										"SHIP"
+									]
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "LOCATION_AREA",
+									"seat": 0
+								}
+							],
+							"thisCard": true,
+							"withShip": true
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "DRAW",
+						"count": 1
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DEPLOYED",
+					"filter": {
+						"suits": [
+							"SHIP"
+						]
+					}
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"filter": {
+							"suits": [
+								"PERSON"
+							]
+						},
+						"from": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 1
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							{
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SHIP_WARPED"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"filter": {
+							"suits": [
+								"PERSON"
+							]
+						},
+						"from": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 1
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							{
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC11-23",
+		"cardId": "2ARC11/23",
+		"suit": "PERSON",
+		"deck": "ARC",
+		"traits": [
+			"HUMAN",
+			"WEAPON",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEND_AWAY_TEAM",
+					"count": 1,
+					"target": {
+						"zones": [
+							"LOCATIONS"
+						],
+						"filter": {
+							"suits": [
+								"LOCATION"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"from": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									]
+								},
+								"body": {
+									"k": "TAKE_TOKENS",
+									"target": {
+										"zones": [
+											{
+												"k": "MARKET_OFFER",
+												"suit": "PERSON"
+											},
+											{
+												"k": "MARKET_OFFER",
+												"suit": "CARGO"
+											},
+											{
+												"k": "MARKET_OFFER",
+												"suit": "SHIP"
+											},
+											{
+												"k": "MARKET_OFFER",
+												"suit": "ALLY"
+											}
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": true,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 3
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SELECT",
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"seat": "ANY",
+								"withShip": true
+							},
+							"bind": "$2arc11.l"
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "UP_TO",
+								"max": 6
+							},
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "REMOVE_AWAY_TEAM",
+										"count": 1,
+										"whose": "OPPONENT",
+										"target": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											},
+											"seat": "ANY",
+											"bound": "$2arc11.l"
+										},
+										"bind": "$2arc11.r"
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "DID",
+											"bind": "$2arc11.r"
+										},
+										"then": {
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "HAS_TRAIT_IN_PLAY",
+								"trait": "SECURITY"
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"bound": "$2arc11.l"
+									}
+								}
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC12-23",
+		"cardId": "2ARC12/23",
+		"suit": "PERSON",
+		"deck": "ARC",
+		"traits": [
+			"VULCAN",
+			"NX_01",
+			"TELEPATH",
+			"STARFLEET",
+			"SCIENTIST"
+		],
+		"skills": [
+			"SKILL_RESEARCH"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Promote a PERSON from your hand",
+										"body": {
+											"k": "PROMOTE",
+											"from": "HAND",
+											"filter": {
+												"suits": [
+													"PERSON"
+												]
+											}
+										}
+									},
+									{
+										"label": "Promote a PERSON from your Staging Area (this card included)",
+										"body": {
+											"k": "PROMOTE",
+											"from": "STAGING",
+											"filter": {
+												"suits": [
+													"PERSON"
+												]
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": [
+								"HUMAN",
+								"ENGINEER"
+							]
+						}
+					},
+					"body": {
+						"k": "DRAW_FROM_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"CARGO",
+								"DIRECTIVE"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Gain 1 Dilithium",
+							"body": {
+								"k": "GAIN_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							}
+						},
+						{
+							"label": "Spend 1 Dilithium to gain 1 RESEARCH",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC13-23",
+		"cardId": "2ARC13/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SELECT",
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$1pic18.loc"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"bound": "$1pic18.loc",
+											"withAwayTeam": true
+										},
+										"value": 1
+									},
+									{
+										"k": "OR",
+										"terms": [
+											{
+												"k": "COUNT_AT_LEAST",
+												"query": {
+													"zones": [
+														{
+															"k": "LOCATION_AREA",
+															"seat": 0
+														}
+													],
+													"bound": "$1pic18.loc",
+													"withShip": true
+												},
+												"value": 1
+											},
+											{
+												"k": "COUNT_AT_LEAST",
+												"query": {
+													"zones": [
+														{
+															"k": "BEAMED_TO",
+															"bound": "$1pic18.loc"
+														}
+													],
+													"filter": {
+														"suits": [
+															"SHIP"
+														]
+													}
+												},
+												"value": 1
+											}
+										]
+									}
+								]
+							},
+							"then": {
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1,
+								"look": 2,
+								"returnUnpicked": true
+							}
+						},
+						{
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "LOG",
+									"target": {
+										"zones": [
+											{
+												"k": "LOCATION_AREA",
+												"seat": 0
+											}
+										],
+										"bound": "$1pic18.loc"
+									}
+								},
+								{
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "RESEARCH",
+									"amount": 1
+								}
+							]
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC14-23",
+		"cardId": "2ARC14/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SCAN_N",
+							"n": 2,
+							"suits": [
+								"ALLY"
+							]
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC15-23",
+		"cardId": "2ARC15/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2,
+							"bind": [
+								"$1bur16.a",
+								"$1bur16.b"
+							]
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND",
+							"onlyBound": [
+								"$1bur16.a",
+								"$1bur16.b"
+							]
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "CHOICE",
+							"amount": {
+								"k": "SKILL_ICONS",
+								"specialty": "CHOSEN"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC16-23",
+		"cardId": "2ARC16/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [
+			"SKILL_INFLUENCE"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Draw a card",
+									"body": {
+										"k": "DRAW",
+										"count": 1
+									}
+								},
+								{
+									"label": "Warp a SHIP",
+									"body": {
+										"k": "WARP",
+										"ship": {
+											"zones": [
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											}
+										},
+										"to": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									}
+								},
+								{
+									"label": "Exhaust your CAPTAIN to do both",
+									"body": {
+										"k": "PAY_THEN",
+										"cost": {
+											"k": "COST_EXHAUST",
+											"filter": {
+												"suits": [
+													"CAPTAIN"
+												]
+											}
+										},
+										"body": {
+											"k": "SEQ",
+											"steps": [
+												{
+													"k": "DRAW",
+													"count": 1
+												},
+												{
+													"k": "WARP",
+													"ship": {
+														"zones": [
+															{
+																"k": "FLEET",
+																"seat": 0
+															}
+														],
+														"filter": {
+															"suits": [
+																"SHIP"
+															]
+														}
+													},
+													"to": {
+														"zones": [
+															"LOCATIONS"
+														],
+														"filter": {
+															"suits": [
+																"LOCATION"
+															]
+														}
+													}
+												}
+											]
+										}
+									}
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										},
+										"withShip": true
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TAKE_CONTROL",
+								"target": "FROM_LOCATION_DECK"
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC17-23",
+		"cardId": "2ARC17/23",
+		"suit": "CARGO",
+		"deck": "ARC",
+		"traits": [
+			"NX_01",
+			"CREATURE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Find a PERSON outside your Reserve deck",
+									"body": {
+										"k": "FIND",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											}
+										]
+									}
+								},
+								{
+									"label": "Find a PERSON in your Reserve deck and discard it",
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "FIND",
+												"filter": {
+													"suits": [
+														"PERSON"
+													]
+												},
+												"zones": [
+													{
+														"k": "RESERVE",
+														"seat": 0
+													}
+												],
+												"bind": "$2arc17.p"
+											},
+											{
+												"k": "DISCARD",
+												"count": 1,
+												"from": "HAND",
+												"onlyBound": [
+													"$2arc17.p"
+												]
+											}
+										]
+									}
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "CAPTAIN",
+											"seat": 0
+										}
+									]
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "HAS_TRAIT_IN_PLAY",
+								"trait": "ALIEN"
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									},
+									{
+										"k": "TAKE",
+										"deck": "INCIDENT",
+										"count": 1
+									},
+									{
+										"k": "OPPONENT",
+										"body": {
+											"k": "TAKE",
+											"deck": "INCIDENT",
+											"count": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC18-23",
+		"cardId": "2ARC18/23",
+		"suit": "SHIP",
+		"deck": "ARC",
+		"traits": [
+			"NX_01",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								},
+								"withShip": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Beam a card to a SHIP",
+										"body": {
+											"k": "BEAM",
+											"count": 1,
+											"to": {
+												"zones": [
+													{
+														"k": "FLEET",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"suits": [
+														"SHIP"
+													]
+												}
+											}
+										}
+									},
+									{
+										"label": "Recall a card beamed to a SHIP",
+										"body": {
+											"k": "RECALL",
+											"target": {
+												"zones": [
+													"BEAMED_TO_SHIP"
+												],
+												"seat": "SELF"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC19-23",
+		"cardId": "2ARC19/23",
+		"suit": "PERSON",
+		"deck": "ARC",
+		"traits": [
+			"HUMAN",
+			"NX_01",
+			"ENGINEER",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_CARD",
+							"suits": [
+								"CARGO"
+							],
+							"to": [
+								"DECK_TOP"
+							],
+							"bind": "$2arc19.g"
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Log it and gain 1 Dilithium",
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "LOG",
+												"target": {
+													"zones": [
+														{
+															"k": "DRAW",
+															"seat": 0
+														}
+													],
+													"bound": "$2arc19.g"
+												}
+											},
+											{
+												"k": "GAIN_RESOURCE",
+												"res": "DIL",
+												"amount": 1
+											}
+										]
+									}
+								},
+								{
+									"label": "Keep it and place 1 Dilithium on Earth",
+									"body": {
+										"k": "PLACE_TOKENS",
+										"res": "DIL",
+										"amount": 1,
+										"target": {
+											"zones": [
+												{
+													"k": "STATUS",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"ids": [
+													"2ARC02-23"
+												]
+											}
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "REFRESH",
+					"target": {
+						"zones": [
+							"IN_PLAY"
+						],
+						"filter": {
+							"suits": [
+								"SHIP",
+								"CARGO"
+							]
+						},
+						"seat": "SELF"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC20-23",
+		"cardId": "2ARC20/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"ALLY"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC21-23",
+		"cardId": "2ARC21/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"SHIP"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 2
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"CARGO"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC22-23",
+		"cardId": "2ARC22/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "DRAW_FROM_DISCARD",
+					"count": 1,
+					"filter": {
+						"suits": [
+							"DIRECTIVE",
+							"ENCOUNTER"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Enlist a Reserve",
+										"body": {
+											"k": "ENLIST_RESERVE"
+										}
+									},
+									{
+										"label": "Enlist a Development",
+										"body": {
+											"k": "ENLIST_DEVELOPMENT"
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "COST_TAKE_INCIDENT",
+											"count": 1
+										},
+										{
+											"k": "COST_EXHAUST",
+											"filter": {
+												"suits": [
+													"CAPTAIN"
+												]
+											}
+										}
+									]
+								},
+								"body": {
+									"k": "DRAW",
+									"count": {
+										"k": "PER",
+										"every": 2,
+										"of": {
+											"k": "COUNT",
+											"query": {
+												"zones": [
+													{
+														"k": "LOCATION_AREA",
+														"seat": 0
+													}
+												],
+												"filter": {
+													"suits": [
+														"LOCATION"
+													]
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2ARC23-23",
+		"cardId": "2ARC23/23",
+		"suit": "DIRECTIVE",
+		"deck": "ARC",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_EXHAUST",
+						"filter": {
+							"suits": [
+								"CAPTAIN"
+							]
+						}
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": [
+							"NX_01"
+						],
+						"to": [
+							"DECK_TOP"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Promote from your hand",
+								"body": {
+									"k": "PROMOTE",
+									"from": "HAND",
+									"filter": {
+										"suits": [
+											"PERSON"
+										],
+										"traits": [
+											"STARFLEET"
+										]
+									}
+								}
+							},
+							{
+								"label": "Promote from your Staging Area",
+								"body": {
+									"k": "PROMOTE",
+									"from": "STAGING",
+									"filter": {
+										"suits": [
+											"PERSON"
+										],
+										"traits": [
+											"STARFLEET"
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	}
+]

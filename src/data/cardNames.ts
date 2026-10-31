@@ -54,7 +54,7 @@ export function cardNameById(defId: string): string {
  *  as card 01: `1PIC01/24`) → the deck code. */
 export function deckLabel(deck: string): string {
 	// the captain card: 1PIC01/24 (box 1), 2GEO01/23 (To Boldly Go) …
-	const captain = new RegExp(`^\\d${deck}01/`)
+	const captain = new RegExp(`^\\d${deck}[A-Z]?01/`)
 	for (const [number, card] of index)
 		if (captain.test(number)) return card.name
 	return deck

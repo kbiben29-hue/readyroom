@@ -54,7 +54,7 @@ const MissionSchema = z
 		index: z.union([z.literal(0), z.literal(1), z.literal(2)]),
 		cardId: z
 			.string()
-			.regex(/^\d[A-Z]{3}\/M[1-3]$/)
+			.regex(/^\d[A-Z]{3,4}\/M[1-3]$/)
 			.optional(),
 		goal: PredicateSchema,
 		reward: EffectSchema,

@@ -153,7 +153,15 @@ function MarketSuitCol({ suit }: { suit: MarketSuit }) {
 			</div>
 			<div className="market-offer-slot">
 				{offers.length > 0 ? (
-					offers.map((iid) => <CardSprite key={iid} iid={iid} size="board" />)
+					offers.map((iid) => (
+						// a click opens the card's detail, like a card anywhere else
+						<CardSprite
+							key={iid}
+							iid={iid}
+							size="board"
+							onClick={() => useGameStore.getState().cardClicked(iid)}
+						/>
+					))
 				) : (
 					<div className="empty-slot muted">empty</div>
 				)}

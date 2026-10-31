@@ -385,7 +385,10 @@ export function setupDeck(
 	catalog: CardCatalog,
 ): GameState {
 	const deckId = pl(config, seat).deck
-	const defs = catalog.defs.filter((d) => d.deck === deckId)
+	// a double-sided card's back is the same card, set up front side up
+	const defs = catalog.defs.filter(
+		(d) => d.deck === deckId && d.backOf === undefined,
+	)
 	let s = state
 	const prefix = `p${seat}`
 
@@ -592,6 +595,7 @@ export function assertSetupCompleteness(
 	const chosen = new Set(config.players.map((p) => p.deck))
 	const expected = new Set<string>()
 	for (const d of catalog.defs) {
+		if (d.backOf !== undefined) continue // one card with its front
 		if (isCommon(d, config.box ?? DEFAULT_BOX) || chosen.has(d.deck))
 			expected.add(d.id)
 	}

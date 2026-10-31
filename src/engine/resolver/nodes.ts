@@ -71,6 +71,9 @@ export type EffectNode =
 			from?: ZoneSpec | ZoneSpec[] | undefined
 			/** 'THIS' = only the resolving card itself ("… this card to …") */
 			target?: 'THIS' | undefined
+			/** the (first) put card — "reveal a card and put it on top of your
+			 *  deck … if the revealed card …" (2KHA19) */
+			bind?: string | undefined
 	  }
 	// must be an in-play card; bind = the exhausted card ("exhaust a SHIP to
 	// refresh ITS LOCATION" — 1BUR21)
@@ -328,6 +331,17 @@ export type EffectNode =
 	| { k: 'PLACE_TOKENS'; res: ResourceId; amount: Amount; target: CardQuery } // tokens from the supply onto a card (2ARC02)
 	| { k: 'TAKE_TOKENS'; target: CardQuery; max?: Amount | undefined } // gain a card's tokens (all, or up to `max`)
 	| { k: 'ADD_AWAY_TEAMS'; amount: Amount } // more Away Teams on your CAPTAIN from the supply (2ARC06/07)
+	// Trait-marking crew board (2KHA): mark an unmarked board trait, or one of
+	// `opponentCaptain` entries for a (different) trait of the opponent's
+	// CAPTAIN, taken from a card of `from` (or any trait: 'ANY').
+	| {
+			k: 'MARK_TRAIT'
+			traits: TraitId[]
+			opponentCaptain: number
+			from: CardQuery | 'ANY'
+	  }
+	| { k: 'FLIP'; target: CardQuery | 'THIS'; to: string } // turn a double-sided card to its `to` side (2KHA01/02)
+	| { k: 'GIVE'; target: CardQuery | 'THIS'; to: 'DISCARD' | 'HAND' } // a card of yours becomes your opponent's (2KHA05, 2KHA19–21)
 	| { k: 'WIPE_MARKET' }
 	| { k: 'WIPE_NEUTRAL_ZONE' } // spares Locations bearing tokens
 	// Borg drone tokens (1CAR02): reserved, no meaning in this box (rules/08 →
@@ -493,7 +507,8 @@ export type TriggerSpec =
 	| { on: 'AWAY_TEAM_SENT'; neutral?: boolean | undefined } // neutral = "to a neutral LOCATION" (1PER18)
 	| { on: 'SHIP_WARPED' }
 	| { on: 'INCIDENT_TAKEN'; orReturned?: boolean | undefined } // orReturned = "whenever you take or return an INCIDENT" (1PER22)
-	| { on: 'INCIDENT_RETURNED' } // "after returning an INCIDENT"
+	| { on: 'INCIDENT_RETURNED'; seat?: TriggerSeat | undefined } // "after [your opponent] returning an INCIDENT" (2KHA01)
+	| { on: 'DECK_CYCLED' } // "after you cycle your deck" (2KHA03)
 	| { on: 'ATTACKED' } // opponent resolved an ATTACK on you
 	// "When you would be attacked" (1SIS06, 1SIS10, 1PER19): before the first
 	// negative effect of an opponent's ATTACK operation applies to you. `effect`

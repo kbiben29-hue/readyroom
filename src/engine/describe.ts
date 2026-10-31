@@ -255,6 +255,14 @@ export function describeAmount(amount: Amount): string {
 			return "the current Stardate card's sequence number"
 		case 'UNIQUE_TRAITS':
 			return 'the number of different traits you have in play'
+		case 'MARKED_TRAITS':
+			return 'the number of traits you have marked'
+		case 'TOKENS_ON':
+			return `the ${resourceToken(amount.res)} on ${describeQuery(amount.query)}`
+		case 'AWAY_POOL':
+			return 'all of your AWAY TEAMs'
+		case 'COMPLETED_MISSION_VP':
+			return 'the VP of your completed missions'
 		case 'HIGHEST_MULTIPLIER':
 			return 'your highest multiplier on any Specialty track'
 		case 'MIN':
@@ -583,7 +591,7 @@ export function describePredicate(pred: Predicate): string {
 		case 'BOUND_IS':
 			return `the ${pred.bind} card is ${describeFilter(pred.filter)}`
 		case 'BOUND_SHARES_TRAIT':
-			return `the ${pred.bind} card shares at least one trait with ${traitPartnerTarget(pred.with)}`
+			return `the ${pred.bind} card shares at least one ${pred.except !== undefined ? `non-${pred.except.join('/')} ` : ''}trait with ${traitPartnerTarget(pred.with)}`
 		case 'LOG_LEGAL': {
 			const what =
 				pred.filter !== undefined
@@ -1036,6 +1044,20 @@ function render(node: Effect): string {
 			return `Gain ${node.max !== undefined ? `up to ${describeAmount(node.max)}` : 'all'} resources from ${describeQuery(node.target)}.`
 		case 'ADD_AWAY_TEAMS':
 			return `Add ${describeAmount(node.amount)} AWAY TEAM from the supply to your CAPTAIN.`
+		case 'MARK_TRAIT':
+			return node.from === 'ANY'
+				? 'Mark any trait on your board.'
+				: `Mark a trait of ${describeQuery(node.from)} on your board.`
+		case 'FLIP':
+			return node.target === 'THIS'
+				? 'Flip this card.'
+				: `Flip ${describeQuery(node.target)}.`
+		case 'GIVE': {
+			const what = node.target === 'THIS' ? 'this card' : describeQuery(node.target)
+			return node.to === 'HAND'
+				? `Give ${what} to your opponent, into their hand.`
+				: `Put ${what} in your opponent's Discard pile.`
+		}
 		case 'WIPE_MARKET':
 			return 'Wipe the Market.'
 		case 'WIPE_NEUTRAL_ZONE':
@@ -1141,6 +1163,7 @@ const TRIGGER_PHRASES: Record<TriggerSpec['on'], string> = {
 	SHIP_WARPED: 'After your ship warps',
 	INCIDENT_TAKEN: 'After taking an Incident',
 	INCIDENT_RETURNED: 'After returning an Incident',
+	DECK_CYCLED: 'After you cycle your deck',
 	ATTACKED: 'When you are attacked',
 	ATTACK_MADE: 'After you attack',
 	MISSION_COMPLETED: 'After completing a mission',
@@ -1198,6 +1221,12 @@ export function describeTrigger(trigger: TriggerSpec): string {
 			return trigger.neutral === true
 				? 'After sending an Away Team to a neutral Location'
 				: TRIGGER_PHRASES.AWAY_TEAM_SENT
+		case 'INCIDENT_RETURNED':
+			return trigger.seat === 'OPPONENT'
+				? 'After your opponent returns an Incident'
+				: trigger.seat === 'ANY'
+					? 'After any player returns an Incident'
+					: TRIGGER_PHRASES.INCIDENT_RETURNED
 		case 'INCIDENT_TAKEN':
 			return trigger.orReturned === true
 				? 'Whenever you take or return an Incident'

@@ -30,6 +30,8 @@ export const costPut: Primitive<Extract<Effect, { k: 'COST_PUT' }>> = {
 		if (r.kind === 'suspended') return r.state
 		if (r.kind === 'none')
 			return failOperation(state, 'COST_PUT: no legal selection')
+		if (node.bind !== undefined && r.iids.length > 0)
+			ctx.bindings[node.bind] = r.iids[0]!
 		const to = specToRef(node.to, ctx.actor)
 		let next = state
 		for (const iid of r.iids) {

@@ -83,6 +83,9 @@ import { refresh } from './refresh'
 import { placeResourceOnMarket } from './placeResourceOnMarket'
 import { placeTokens } from './placeTokens'
 import { takeTokens } from './takeTokens'
+import { markTrait } from './markTrait'
+import { flip } from './flip'
+import { give } from './give'
 import { addAwayTeams } from './addAwayTeams'
 import { wipeMarket } from './wipeMarket'
 import { wipeNeutralZone } from './wipeNeutralZone'
@@ -194,6 +197,9 @@ export const PRIMITIVES: {
 	PLACE_TOKENS: placeTokens,
 	TAKE_TOKENS: takeTokens,
 	ADD_AWAY_TEAMS: addAwayTeams,
+	MARK_TRAIT: markTrait,
+	FLIP: flip,
+	GIVE: give,
 	WIPE_MARKET: wipeMarket,
 	WIPE_NEUTRAL_ZONE: wipeNeutralZone,
 	DRONE: drone,

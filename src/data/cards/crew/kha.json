@@ -1,0 +1,3323 @@
+[
+	{
+		"id": "2KHA01A-22",
+		"cardId": "2KHA01A/22",
+		"suit": "CAPTAIN",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN",
+			"AUGMENT"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_GAINED"
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "MARK_TRAIT",
+						"traits": [
+							"AMBASSADOR",
+							"BUSINESS",
+							"ENGINEER",
+							"CREATURE",
+							"DOCTOR",
+							"SYNTHETIC",
+							"SCIENTIST",
+							"SPY",
+							"TELEPATH",
+							"CLOAK"
+						],
+						"opponentCaptain": 2,
+						"from": {
+							"zones": [
+								"ALL_OWNED",
+								"LOCATIONS"
+							],
+							"seat": "ANY",
+							"bound": "$event.card"
+						}
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "LOCATION_CONTROLLED"
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "MARK_TRAIT",
+						"traits": [
+							"AMBASSADOR",
+							"BUSINESS",
+							"ENGINEER",
+							"CREATURE",
+							"DOCTOR",
+							"SYNTHETIC",
+							"SCIENTIST",
+							"SPY",
+							"TELEPATH",
+							"CLOAK"
+						],
+						"opponentCaptain": 2,
+						"from": {
+							"zones": [
+								"ALL_OWNED",
+								"LOCATIONS"
+							],
+							"seat": "ANY",
+							"bound": "$event.card"
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"INCIDENT"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 2,
+								"bind": [
+									"$2kha01.a",
+									"$2kha01.b"
+								]
+							},
+							{
+								"k": "DISCARD",
+								"count": 1,
+								"from": "HAND",
+								"onlyBound": [
+									"$2kha01.a",
+									"$2kha01.b"
+								]
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "INCIDENT_RETURNED",
+					"seat": "OPPONENT"
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_DISCARD",
+							"count": 1
+						},
+						"body": {
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain 1 Dilithium",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									}
+								},
+								{
+									"label": "Gain 1 Latinum",
+									"body": {
+										"k": "GAIN_RESOURCE",
+										"res": "LAT",
+										"amount": 1
+									}
+								}
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2KHA01_BOARD"
+				}
+			}
+		],
+		"passives": [
+			"2KHA01_BOARD"
+		],
+		"awayTeams": 4
+	},
+	{
+		"id": "2KHA01B-22",
+		"cardId": "2KHA01B/22",
+		"suit": "CAPTAIN",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN",
+			"AUGMENT"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_GAINED"
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "MARK_TRAIT",
+						"traits": [
+							"AMBASSADOR",
+							"BUSINESS",
+							"ENGINEER",
+							"CREATURE",
+							"DOCTOR",
+							"SYNTHETIC",
+							"SCIENTIST",
+							"SPY",
+							"TELEPATH",
+							"CLOAK"
+						],
+						"opponentCaptain": 2,
+						"from": {
+							"zones": [
+								"ALL_OWNED",
+								"LOCATIONS"
+							],
+							"seat": "ANY",
+							"bound": "$event.card"
+						}
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "LOCATION_CONTROLLED"
+				},
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "MARK_TRAIT",
+						"traits": [
+							"AMBASSADOR",
+							"BUSINESS",
+							"ENGINEER",
+							"CREATURE",
+							"DOCTOR",
+							"SYNTHETIC",
+							"SCIENTIST",
+							"SPY",
+							"TELEPATH",
+							"CLOAK"
+						],
+						"opponentCaptain": 2,
+						"from": {
+							"zones": [
+								"ALL_OWNED",
+								"LOCATIONS"
+							],
+							"seat": "ANY",
+							"bound": "$event.card"
+						}
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "INCIDENT_RETURNED",
+					"seat": "OPPONENT"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Gain 1 Dilithium",
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 1
+								}
+							},
+							{
+								"label": "Gain 1 Latinum",
+								"body": {
+									"k": "GAIN_RESOURCE",
+									"res": "LAT",
+									"amount": 1
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2KHA01_BOARD"
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2KHA01B_NO_REQ"
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "MARKED_TRAITS"
+						},
+						"op": "GE",
+						"b": 12
+					},
+					"then": {
+						"k": "SCORE_VP",
+						"amount": {
+							"k": "SUM",
+							"terms": [
+								{
+									"k": "COUNT",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"seat": "SELF",
+										"countIcons": "FOCUS"
+									}
+								},
+								{
+									"k": "COUNT",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"seat": "SELF",
+										"countIcons": "FOCUS"
+									}
+								},
+								{
+									"k": "COUNT",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"seat": "SELF",
+										"countIcons": "FOCUS"
+									}
+								}
+							]
+						}
+					},
+					"else": {
+						"k": "SCORE_VP",
+						"amount": {
+							"k": "COUNT",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"seat": "SELF",
+								"countIcons": "FOCUS"
+							}
+						}
+					}
+				}
+			}
+		],
+		"passives": [
+			"2KHA01_BOARD",
+			"2KHA01B_NO_REQ"
+		],
+		"awayTeams": 4,
+		"backOf": "2KHA01A-22"
+	},
+	{
+		"id": "2KHA02A-22",
+		"cardId": "2KHA02A/22",
+		"suit": "LOCATION",
+		"deck": "KHA",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "CONTROLLED_LOCATION",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2KHA02_HAND"
+				}
+			}
+		],
+		"passives": [
+			"2KHA02_HAND"
+		]
+	},
+	{
+		"id": "2KHA02B-22",
+		"cardId": "2KHA02B/22",
+		"suit": "LOCATION",
+		"deck": "KHA",
+		"traits": [
+			"ANOMALY",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "CONTROLLED_LOCATION",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						},
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": {
+								"k": "AWAY_POOL"
+							},
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "NOT",
+							"term": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								},
+								"value": 1
+							}
+						}
+					},
+					"body": {
+						"k": "DRAW",
+						"count": 1
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"AUGMENT"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "ENLIST_DEVELOPMENT"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "INCIDENT_RETURNED"
+				},
+				"effect": {
+					"k": "REFRESH",
+					"target": {
+						"zones": [
+							{
+								"k": "LOCATION_AREA",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			}
+		],
+		"backOf": "2KHA02A-22"
+	},
+	{
+		"id": "2KHA03-22",
+		"cardId": "2KHA03/22",
+		"suit": "LOCATION",
+		"deck": "KHA",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "CONTROLLED_LOCATION",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_REQUIRE",
+								"cond": {
+									"k": "COMPARE",
+									"a": {
+										"k": "TOKENS_ON",
+										"res": "DIL",
+										"query": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"thisCard": true
+										}
+									},
+									"op": "GE",
+									"b": 1
+								}
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "LAT",
+								"amount": 1
+							},
+							{
+								"k": "COST_TAKE_INCIDENT",
+								"count": 1
+							}
+						]
+					},
+					"body": {
+						"k": "TAKE_CONTROL",
+						"target": {
+							"zones": [
+								"NEUTRAL_LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						},
+						"requireSecured": true
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "DECK_CYCLED"
+				},
+				"effect": {
+					"k": "PLACE_TOKENS",
+					"res": "DIL",
+					"amount": 2,
+					"target": {
+						"zones": [
+							{
+								"k": "LOCATION_AREA",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COMPARE",
+						"a": {
+							"k": "TOKENS_ON",
+							"res": "DIL",
+							"query": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						"op": "GE",
+						"b": 4
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TAKE_TOKENS",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							},
+							{
+								"k": "FLIP",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"ids": [
+											"2KHA02A-22"
+										]
+									}
+								},
+								"to": "2KHA02B-22"
+							},
+							{
+								"k": "TRIGGER_CONTROL",
+								"target": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"ids": [
+											"2KHA02B-22"
+										]
+									}
+								}
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA04-22",
+		"cardId": "2KHA04/22",
+		"suit": "SHIP",
+		"deck": "KHA",
+		"traits": [
+			"AUGMENT",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 5,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"suits": [
+									"PERSON"
+								],
+								"traits": [
+									"MIND_CONTROL"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 1
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										},
+										"seat": "OPPONENT"
+									},
+									"value": 2
+								}
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "SEND_AWAY_TEAM",
+										"count": 1,
+										"target": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										}
+									},
+									{
+										"k": "DRAW",
+										"count": 1
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA05-22",
+		"cardId": "2KHA05/22",
+		"suit": "DIRECTIVE",
+		"deck": "KHA",
+		"traits": [
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_TAKE_INCIDENT",
+					"count": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "GIVE",
+						"target": {
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"INCIDENT"
+								]
+							}
+						},
+						"to": "HAND"
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SCAN_FOR_TRAIT",
+								"traits": [
+									"CLOAK",
+									"SPY"
+								]
+							},
+							{
+								"k": "DRAW",
+								"count": 1
+							},
+							{
+								"k": "DESTROY",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA06-22",
+		"cardId": "2KHA06/22",
+		"suit": "PERSON",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN",
+			"MIND_CONTROL",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_TAKE_INCIDENT",
+			"count": 1
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2,
+							"bind": [
+								"$2kha06.a",
+								"$2kha06.b"
+							]
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND",
+							"onlyBound": [
+								"$2kha06.a",
+								"$2kha06.b"
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT",
+							"free": true
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "INCIDENT_TAKEN"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							},
+							"withShip": true
+						}
+					}
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA07-22",
+		"cardId": "2KHA07/22",
+		"suit": "PERSON",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN",
+			"MIND_CONTROL",
+			"OPS",
+			"STARFLEET",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_TAKE_INCIDENT",
+			"count": 1
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "DECK_TOP"
+						},
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$2kirk13.loc"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AWAY_TEAMS_AT",
+								"at": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"bound": "$2kirk13.loc"
+								},
+								"seat": "OPPONENT",
+								"value": 1
+							},
+							"then": {
+								"k": "DISCARD",
+								"count": 1,
+								"from": "HAND",
+								"whose": "OPPONENT"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "SHIP_WARPED"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"PERSON"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"NEUTRAL_LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"atBound": "$event.card"
+								}
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA08-22",
+		"cardId": "2KHA08/22",
+		"suit": "CARGO",
+		"deck": "KHA",
+		"traits": [
+			"CREATURE",
+			"MIND_CONTROL",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "DUTY_OFFICER",
+										"seat": 1
+									}
+								],
+								"seat": "OPPONENT"
+							},
+							"value": 1
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DISMISS",
+								"target": {
+									"zones": [
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 1
+										}
+									],
+									"seat": "OPPONENT"
+								}
+							},
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 2,
+								"target": {
+									"zones": [
+										"NEUTRAL_LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"ignoreBlocking": true
+							},
+							{
+								"k": "OPPONENT",
+								"body": {
+									"k": "MAY",
+									"body": {
+										"k": "DRAW",
+										"count": 2
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								}
+							],
+							"bind": "$2kha08.f"
+						},
+						{
+							"k": "LOG",
+							"target": {
+								"zones": [
+									{
+										"k": "HAND",
+										"seat": 0
+									}
+								],
+								"bound": "$2kha08.f"
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "RETURN_INCIDENT",
+								"target": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA09-22",
+		"cardId": "2KHA09/22",
+		"suit": "DIRECTIVE",
+		"deck": "KHA",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "LAT",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "WARP",
+					"ship": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": [
+								"SHIP"
+							],
+							"traits": [
+								"CLOAK"
+							]
+						}
+					},
+					"to": {
+						"zones": [
+							"LOCATIONS"
+						],
+						"filter": {
+							"suits": [
+								"LOCATION"
+							]
+						}
+					},
+					"count": {
+						"k": "UP_TO",
+						"max": 3
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_DISCARD",
+								"count": 2
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 1
+							}
+						]
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON",
+							"CARGO",
+							"ALLY"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA10-22",
+		"cardId": "2KHA10/22",
+		"suit": "DIRECTIVE",
+		"deck": "KHA",
+		"traits": [
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "LOG",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"ids": [
+									"2KHA13-22"
+								]
+							}
+						},
+						"value": 1
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FIND",
+										"filter": {},
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											}
+										],
+										"bind": "$2kha10.f"
+									},
+									{
+										"k": "LOG",
+										"target": {
+											"zones": [
+												{
+													"k": "HAND",
+													"seat": 0
+												}
+											],
+											"bound": "$2kha10.f"
+										}
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "MARK_TRAIT",
+								"traits": [
+									"AMBASSADOR",
+									"BUSINESS",
+									"ENGINEER",
+									"CREATURE",
+									"DOCTOR",
+									"SYNTHETIC",
+									"SCIENTIST",
+									"SPY",
+									"TELEPATH",
+									"CLOAK"
+								],
+								"opponentCaptain": 2,
+								"from": {
+									"zones": [
+										{
+											"k": "DISCARD",
+											"seat": 1
+										}
+									],
+									"seat": "OPPONENT"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": [
+								"AUGMENT"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "MAY",
+								"body": {
+									"k": "GIVE",
+									"target": {
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"INCIDENT"
+											]
+										}
+									},
+									"to": "DISCARD"
+								}
+							},
+							{
+								"k": "GIVE",
+								"target": "THIS",
+								"to": "DISCARD"
+							},
+							{
+								"k": "OPPONENT",
+								"body": {
+									"k": "LOG",
+									"target": {
+										"zones": [
+											{
+												"k": "DISCARD",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"ids": [
+												"2KHA10-22"
+											]
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA11-22",
+		"cardId": "2KHA11/22",
+		"suit": "CARGO",
+		"deck": "KHA",
+		"traits": [
+			"ATTACK",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 2
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "NOT",
+						"term": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "DEVELOPMENT",
+										"seat": 0
+									}
+								]
+							},
+							"value": 2
+						}
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MARK_TRAIT",
+							"traits": [
+								"AMBASSADOR",
+								"BUSINESS",
+								"ENGINEER",
+								"CREATURE",
+								"DOCTOR",
+								"SYNTHETIC",
+								"SCIENTIST",
+								"SPY",
+								"TELEPATH",
+								"CLOAK"
+							],
+							"opponentCaptain": 2,
+							"from": "ANY"
+						},
+						{
+							"k": "DESTROY",
+							"target": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							}
+						},
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "COMPLETED_MISSION_VP"
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA12-22",
+		"cardId": "2KHA12/22",
+		"suit": "LOCATION",
+		"deck": "KHA",
+		"traits": [
+			"STARBASE",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"NEUTRAL_LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							},
+							"withShip": true
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "TAKE_CONTROL",
+						"target": "THIS"
+					}
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_TAKE_INCIDENT",
+							"count": 1
+						},
+						"body": {
+							"k": "MARK_TRAIT",
+							"traits": [
+								"AMBASSADOR",
+								"BUSINESS",
+								"ENGINEER",
+								"CREATURE",
+								"DOCTOR",
+								"SYNTHETIC",
+								"SCIENTIST",
+								"SPY",
+								"TELEPATH",
+								"CLOAK"
+							],
+							"opponentCaptain": 2,
+							"from": {
+								"zones": [
+									{
+										"k": "JUNK"
+									}
+								],
+								"seat": "ANY"
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"SCIENTIST"
+						]
+					}
+				},
+				"effect": {
+					"k": "RETURN_INCIDENT",
+					"target": {
+						"zones": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						],
+						"filter": {
+							"suits": [
+								"INCIDENT"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DESTROY",
+								"target": {
+									"zones": [
+										{
+											"k": "DEVELOPMENT",
+											"seat": 0
+										}
+									]
+								}
+							},
+							{
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA13-22",
+		"cardId": "2KHA13/22",
+		"suit": "PERSON",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"STARFLEET"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										{
+											"k": "LOCATION_AREA",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_PUT",
+									"count": 2,
+									"to": {
+										"k": "DRAW",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										},
+										{
+											"k": "PROMOTE",
+											"from": "STAGING",
+											"target": "THIS"
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "CAPTAIN",
+										"seat": 0
+									}
+								]
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "FIND",
+									"filter": {
+										"traits": [
+											"AUGMENT"
+										]
+									},
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										},
+										{
+											"k": "DISCARD",
+											"seat": 0
+										},
+										{
+											"k": "DRAW",
+											"seat": 0
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								{
+									"k": "LOCATION_AREA",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"ids": [
+									"2KHA02B-22"
+								]
+							}
+						},
+						"value": 1
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "ENLIST_DEVELOPMENT",
+								"free": true,
+								"filter": {
+									"ids": [
+										"2KHA08-22"
+									]
+								}
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA14-22",
+		"cardId": "2KHA14/22",
+		"suit": "LOCATION",
+		"deck": "KHA",
+		"traits": [
+			"ANOMALY"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COMPARE",
+								"a": {
+									"k": "MARKED_TRAITS"
+								},
+								"op": "GE",
+								"b": 7
+							},
+							"then": {
+								"k": "GAIN_CARD",
+								"suits": [
+									"SHIP"
+								],
+								"onlyJunk": true
+							},
+							"else": {
+								"k": "DISCARD",
+								"count": 2,
+								"from": "HAND"
+							}
+						},
+						{
+							"k": "TAKE_CONTROL",
+							"target": "THIS"
+						}
+					]
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "NOOP"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"to": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								},
+								"bind": "$2kha14.to"
+							},
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									},
+									"bound": "$2kha14.to"
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA15-22",
+		"cardId": "2KHA15/22",
+		"suit": "DIRECTIVE",
+		"deck": "KHA",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON",
+							"CARGO",
+							"SHIP",
+							"ALLY"
+						],
+						"onlyJunk": true,
+						"to": [
+							"DISCARD"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA16-22",
+		"cardId": "2KHA16/22",
+		"suit": "SHIP",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DEPLOY",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Promote from your hand",
+											"body": {
+												"k": "PROMOTE",
+												"from": "HAND",
+												"filter": {
+													"suits": [
+														"PERSON"
+													]
+												}
+											}
+										},
+										{
+											"label": "Promote from your Discard pile",
+											"body": {
+												"k": "PROMOTE",
+												"from": "DISCARD",
+												"filter": {
+													"suits": [
+														"PERSON"
+													]
+												}
+											}
+										}
+									]
+								}
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "BEAM",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									},
+									"to": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"thisCard": true
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "1SIS03_NO_WARP"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "BEAM",
+					"count": 1,
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					},
+					"to": {
+						"zones": [
+							{
+								"k": "FLEET",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "BEAMED_TO",
+										"host": "THIS"
+									}
+								],
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								}
+							},
+							"value": 3
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FOR_EACH",
+								"over": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									],
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								},
+								"bind": "$2kha16.p",
+								"body": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										],
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										},
+										"bound": "$2kha16.p"
+									}
+								}
+							},
+							{
+								"k": "TAKE_CONTROL",
+								"target": "FROM_LOCATION_DECK"
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		],
+		"passives": [
+			"1SIS03_NO_WARP"
+		]
+	},
+	{
+		"id": "2KHA17-22",
+		"cardId": "2KHA17/22",
+		"suit": "PERSON",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN",
+			"AUGMENT",
+			"OPS"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "DRAW_FROM_DISCARD",
+						"count": 1
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"ids": [
+													"2KHA03-22"
+												]
+											},
+											"seat": "SELF"
+										},
+										"value": 1
+									},
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"ids": [
+													"2KHA18-22"
+												]
+											},
+											"seat": "SELF"
+										},
+										"value": 1
+									}
+								]
+							},
+							"then": {
+								"k": "GAIN_ACTION",
+								"amount": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"COMMUNICATION"
+										]
+									},
+									"seat": "SELF"
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "REPEAT",
+								"times": {
+									"k": "UP_TO",
+									"max": 2
+								},
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Draw from your deck",
+											"body": {
+												"k": "DRAW",
+												"count": 1
+											}
+										},
+										{
+											"label": "Draw from your Discard pile",
+											"body": {
+												"k": "DRAW_FROM_DISCARD",
+												"count": 1
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "LOCATION_CONTROLLED"
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "CHOOSE_ONE",
+						"options": [
+							{
+								"label": "Gain an action",
+								"body": {
+									"k": "GAIN_ACTION",
+									"amount": 1
+								}
+							},
+							{
+								"label": "Spend an action to enlist a Development and dismiss this card",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_ACTION"
+									},
+									"body": {
+										"k": "SEQ",
+										"steps": [
+											{
+												"k": "ENLIST_DEVELOPMENT"
+											},
+											{
+												"k": "DISMISS",
+												"target": "THIS"
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA18-22",
+		"cardId": "2KHA18/22",
+		"suit": "PERSON",
+		"deck": "KHA",
+		"traits": [
+			"HUMAN",
+			"AUGMENT",
+			"OPS"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "AND",
+								"terms": [
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"ids": [
+													"2KHA03-22"
+												]
+											},
+											"seat": "SELF"
+										},
+										"value": 1
+									},
+									{
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"ids": [
+													"2KHA17-22"
+												]
+											},
+											"seat": "SELF"
+										},
+										"value": 1
+									}
+								]
+							},
+							"then": {
+								"k": "GAIN_ACTION",
+								"amount": 1
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"WEAPON",
+											"SECURITY"
+										]
+									},
+									"seat": "SELF"
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "REPEAT",
+								"times": {
+									"k": "UP_TO",
+									"max": 2
+								},
+								"body": {
+									"k": "CHOOSE_ONE",
+									"options": [
+										{
+											"label": "Draw from your deck",
+											"body": {
+												"k": "DRAW",
+												"count": 1
+											}
+										},
+										{
+											"label": "Draw from your Discard pile",
+											"body": {
+												"k": "DRAW_FROM_DISCARD",
+												"count": 1
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_DEPLOYED",
+					"filter": {
+						"suits": [
+							"SHIP"
+						]
+					}
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "SEND_AWAY_TEAM",
+						"count": 1,
+						"target": {
+							"zones": [
+								"NEUTRAL_LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA19-22",
+		"cardId": "2KHA19/22",
+		"suit": "INCIDENT",
+		"deck": "KHA",
+		"traits": [
+			"ATTACK",
+			"SURPRISE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						},
+						"bind": "$2kha19.r"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GIVE",
+								"target": "THIS",
+								"to": "DISCARD"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_SHARES_TRAIT",
+									"bind": "$2kha19.r",
+									"with": {
+										"zones": [
+											{
+												"k": "CAPTAIN",
+												"seat": 1
+											}
+										],
+										"seat": "OPPONENT"
+									},
+									"except": [
+										"HUMAN"
+									]
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										},
+										{
+											"k": "OPPONENT",
+											"body": {
+												"k": "MAY",
+												"body": {
+													"k": "DRAW",
+													"count": 1
+												}
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA20-22",
+		"cardId": "2KHA20/22",
+		"suit": "INCIDENT",
+		"deck": "KHA",
+		"traits": [
+			"ATTACK",
+			"SURPRISE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						},
+						"bind": "$2kha20.r"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GIVE",
+								"target": "THIS",
+								"to": "DISCARD"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_SHARES_TRAIT",
+									"bind": "$2kha20.r",
+									"with": {
+										"zones": [
+											{
+												"k": "CAPTAIN",
+												"seat": 1
+											}
+										],
+										"seat": "OPPONENT"
+									},
+									"except": [
+										"HUMAN"
+									]
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										},
+										{
+											"k": "OPPONENT",
+											"body": {
+												"k": "MAY",
+												"body": {
+													"k": "DRAW",
+													"count": 1
+												}
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA21-22",
+		"cardId": "2KHA21/22",
+		"suit": "INCIDENT",
+		"deck": "KHA",
+		"traits": [
+			"ATTACK",
+			"SURPRISE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_PUT",
+						"count": 1,
+						"to": {
+							"k": "DRAW",
+							"seat": 0
+						},
+						"bind": "$2kha21.r"
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GIVE",
+								"target": "THIS",
+								"to": "DISCARD"
+							},
+							{
+								"k": "IF",
+								"cond": {
+									"k": "BOUND_SHARES_TRAIT",
+									"bind": "$2kha21.r",
+									"with": {
+										"zones": [
+											{
+												"k": "CAPTAIN",
+												"seat": 1
+											}
+										],
+										"seat": "OPPONENT"
+									},
+									"except": [
+										"HUMAN"
+									]
+								},
+								"then": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										},
+										{
+											"k": "OPPONENT",
+											"body": {
+												"k": "MAY",
+												"body": {
+													"k": "DRAW",
+													"count": 1
+												}
+											}
+										}
+									]
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2KHA22-22",
+		"cardId": "2KHA22/22",
+		"suit": "INCIDENT",
+		"deck": "KHA",
+		"traits": [
+			"SURPRISE"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "INCIDENT_DECK",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW_FROM_DISCARD",
+							"count": 1
+						},
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "MAY",
+								"body": {
+									"k": "WARP",
+									"ship": {
+										"zones": [
+											{
+												"k": "FLEET",
+												"seat": 0
+											}
+										],
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										}
+									},
+									"to": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										}
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"AUGMENT"
+											]
+										},
+										"seat": "SELF"
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "FREE_PLAY",
+									"filter": {
+										"suits": [
+											"INCIDENT"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "RETURN_INCIDENT",
+							"target": "THIS"
+						}
+					]
+				}
+			}
+		]
+	}
+]

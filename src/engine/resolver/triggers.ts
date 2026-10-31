@@ -36,6 +36,7 @@
 // OperationRef[] and string-keyed bindings; the loop guard is a string pair
 // array). Nothing below captures closures or wall-clock time.
 
+import { meetsRequirement } from '../modifiers'
 import type { GameState, GameEvent, OperationRef, Frame } from '../state'
 import { player, otherSeat, inPlayCards, zoneProps } from '../state'
 import { cardDef } from '../cards'
@@ -89,6 +90,8 @@ export function canonicalEventKey(event: GameEvent): string {
 		case 'LOCATION_CONTROLLED':
 		case 'SHIP_WARPED':
 			return `${event.k}:${event.seat}:${event.iid}`
+		case 'DECK_CYCLED':
+			return `${event.k}:${event.seat}`
 		case 'SPECIALTY_ADVANCED':
 			return `${event.k}:${event.seat}:${event.specialty}:${event.amount}`
 		case 'MISSION_COMPLETED':
@@ -132,6 +135,8 @@ export function eventTriggerKind(event: GameEvent): TriggerSpec['on'] | null {
 			return 'AWAY_TEAM_SENT'
 		case 'SHIP_WARPED':
 			return 'SHIP_WARPED'
+		case 'DECK_CYCLED':
+			return 'DECK_CYCLED'
 		case 'INCIDENT_TAKEN':
 			return 'INCIDENT_TAKEN'
 		case 'ENCOUNTER_TAKEN':
@@ -298,12 +303,14 @@ export function matchesTrigger(
 			return trigger.on === 'INCIDENT_TAKEN' && event.seat === ownerSeat
 		case 'CARD_RETURNED_INCIDENT':
 			// "after returning an INCIDENT" / "whenever you take or return an
-			// INCIDENT" (1PER22) — the owner's own return.
+			// INCIDENT" (1PER22) — the owner's own return; "after your opponent
+			// returns an INCIDENT" (2KHA01) with seat OPPONENT.
+			if (trigger.on === 'INCIDENT_RETURNED')
+				return seatMatches(trigger.seat, event.seat, ownerSeat)
 			if (event.seat !== ownerSeat) return false
-			return (
-				trigger.on === 'INCIDENT_RETURNED' ||
-				(trigger.on === 'INCIDENT_TAKEN' && trigger.orReturned === true)
-			)
+			return trigger.on === 'INCIDENT_TAKEN' && trigger.orReturned === true
+		case 'DECK_CYCLED':
+			return trigger.on === 'DECK_CYCLED' && event.seat === ownerSeat
 		case 'ENCOUNTER_TAKEN':
 			return trigger.on === 'ENCOUNTER_TAKEN' && event.seat === ownerSeat
 		case 'OPERATION_RESOLVED': {
@@ -456,7 +463,7 @@ export function reactionPayable(
 		return false
 	if (
 		op.requires !== undefined &&
-		player(state, ref.seat).specialties[op.requires.specialty] < op.requires.min
+		!meetsRequirement(state, ref.seat, op.requires)
 	)
 		return false
 	const ctx = {

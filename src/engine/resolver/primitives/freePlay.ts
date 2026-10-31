@@ -4,7 +4,6 @@ import { pickSingle, moveCard, suspend, answered, answer } from '../runtime'
 import { resolveQuery } from '../../queries/resolveQuery'
 import { cardDef } from '../../cards'
 import {
-	player,
 	zoneProps,
 	type GameState,
 	type EffectCtx,
@@ -12,7 +11,7 @@ import {
 } from '../../state'
 import type { CardInstanceId } from '../../ids'
 import type { Seat, ZoneSpec } from '../queries'
-import { forbidsAttackCards } from '../../modifiers'
+import { forbidsAttackCards, meetsRequirement } from '../../modifiers'
 import { hasAttack } from '../../dutyOfficers'
 import { probe } from '../probe'
 import { describe } from '../../describe'
@@ -134,8 +133,7 @@ export function playableOps(
 	def.operations.forEach((op, i) => {
 		if (op.type !== 'PLAY') return
 		if (op.requires !== undefined) {
-			const have = player(state, seat).specialties[op.requires.specialty]
-			if (have < op.requires.min) return
+			if (!meetsRequirement(state, seat, op.requires)) return
 		}
 		// a nested probe inside a probe is skipped: the outer dry-run only
 		// needs "some PLAY operation exists" (and stays cheap)

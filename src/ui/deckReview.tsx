@@ -39,6 +39,7 @@ const DECK_ORDER = [
 	'KIR',
 	'ARC',
 	'REB',
+	'KHA',
 	'COMMON',
 ] as const
 

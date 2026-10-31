@@ -12,6 +12,7 @@
 // operation's effect; phase 1 clears transient wildcard declarations
 // (rules/12 §12.12) and pops.
 
+import { meetsRequirement } from '../modifiers'
 import type { Effect, Operation } from './nodes'
 import type { GameState, EffectCtx, GameEvent, Frame } from '../state'
 import {
@@ -23,7 +24,6 @@ import {
 } from '../state'
 import { primitiveOf, canResolveEffect, isControl } from './primitives'
 import { recordFx } from '../fx'
-import { evalPredicate } from '../queries/resolveQuery'
 import { cardDef } from '../cards'
 import { altPlayOperation, type AltPlayRef } from '../altPlay'
 import {
@@ -191,15 +191,7 @@ export function executeOne(state: GameState): GameState {
 				}
 				// Specialty restriction gates the whole operation (rules/12).
 				if (op.requires !== undefined) {
-					const ok = evalPredicate(
-						state,
-						{
-							k: 'SPECIALTY_AT_LEAST',
-							specialty: op.requires.specialty,
-							value: op.requires.min,
-						},
-						ctx,
-					)
+					const ok = meetsRequirement(state, ctx.actor, op.requires)
 					if (!ok) {
 						return failOperation(
 							state,

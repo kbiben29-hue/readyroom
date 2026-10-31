@@ -43,6 +43,7 @@ import {
 	canSubstituteGlory as canSubstituteGloryFor,
 	stolenSources,
 	stealProtected,
+	blocksSpecialtyGain,
 } from '../modifiers'
 import type { GainCtx } from '../modifiers'
 import type { ResourceId, SpecialtyId, TraitId } from '../../data/ids'
@@ -1006,6 +1007,8 @@ export function advanceSpecialty(
 	specialty: SpecialtyId,
 	amount: number,
 ): GameState {
+	// a trait-marking board has no Specialty tracks (2KHA): no effect
+	if (blocksSpecialtyGain(state, seat)) return state
 	const p = player(state, seat)
 	const cur = p.specialties[specialty]
 	const nextVal = Math.max(

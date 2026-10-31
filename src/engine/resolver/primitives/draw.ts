@@ -6,6 +6,7 @@ import { cardDef } from '../../cards'
 import { emit, suspend, answer } from '../runtime'
 import { shuffle } from '../../rng'
 import { canPayAll } from './index'
+import { noCycleEnlist } from '../../modifiers'
 import type { GameState, EffectCtx } from '../../state'
 import type { CardInstanceId } from '../../ids'
 import type { Seat } from '../queries'
@@ -150,6 +151,7 @@ export function deckCanAdvance(
 	const discard = state.zones[`DISCARD:${seat}`] ?? []
 	const reserve = state.zones[`RESERVE:${seat}`] ?? []
 	if (discard.length > 0 || reserve.length > 0) return true
+	if (noCycleEnlist(state, seat)) return false
 	return affordableDevelopments(state, ctx).length > 0
 }
 
@@ -163,12 +165,18 @@ export function refillCycle(state: GameState, ctx: EffectCtx): CycleState {
 	const seat = ctx.actor
 	const discard = state.zones[`DISCARD:${seat}`] ?? []
 	const reserve = state.zones[`RESERVE:${seat}`] ?? []
-	const devs = affordableDevelopments(state, ctx)
+	// "You do not enlist when you cycle your deck" (2KHA01): no Reserve card,
+	// no Development offer — only the shuffled Discard refills the deck
+	const noEnlist = noCycleEnlist(state, seat)
+	const devs = noEnlist ? [] : affordableDevelopments(state, ctx)
 
 	let next = state
-	if (discard.length > 0) next = shuffleDiscardIntoDeck(next, seat)
+	if (discard.length > 0) {
+		next = shuffleDiscardIntoDeck(next, seat)
+		next = emit(next, { k: 'DECK_CYCLED', seat })
+	}
 
-	if (reserve.length > 0) {
+	if (reserve.length > 0 && !noEnlist) {
 		const top = next.zones[`RESERVE:${seat}`]?.[0]
 		if (top === undefined) return { kind: 'done', state: next } // unreachable (checked above)
 		next = moveCard(next, top, { k: 'DRAW', seat }, { toTop: true })

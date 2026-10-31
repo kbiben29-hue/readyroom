@@ -156,6 +156,12 @@ export type Amount =
 	| { k: 'UNUSED_ACTIONS' }
 	| { k: 'STARDATE_SEQUENCE' } // the current Stardate card's sequence number (2KIRK03); 0 when none
 	| { k: 'UNIQUE_TRAITS' } // different traits among your in-play cards (2ARC01)
+	| { k: 'MARKED_TRAITS' } // entries marked on your trait-marking board (2KHA)
+	| { k: 'TOKENS_ON'; res: ResourceId; query: Query } // resource tokens on the matched cards ("4+ {DIL} here" — 2KHA03)
+	| { k: 'AWAY_POOL' } // AWAY TEAMs left on your CAPTAIN ("send all of your AWAY TEAMs" — 2KHA02B)
+	// your completed missions' VP, as final scoring counts it (Advanced side
+	// only, rules/07 §7.4.1 #6) — "score it an additional time" (2KHA11)
+	| { k: 'COMPLETED_MISSION_VP' }
 	| { k: 'HIGHEST_MULTIPLIER' } // your highest multiplier reached on any track (2KIRK09)
 	| { k: 'MIN' | 'MAX' | 'SUM'; terms: Amount[] } // SUM: "for each X and each Y" counts a card that is both twice (1CAR04)
 	| { k: 'UP_TO'; max: Amount } // player chooses 0..max
@@ -211,7 +217,13 @@ export type Predicate =
 	// step of this operation (a primitive `bind` is written only when it
 	// actually happened — 1SIS08, 1BUR21, 1SEL07, 1PER09, 1SHR13)
 	| { k: 'DID'; bind: string | string[] }
-	| { k: 'BOUND_SHARES_TRAIT'; bind: string; with: Query } // shares a trait with a queried card
+	| {
+			k: 'BOUND_SHARES_TRAIT'
+			bind: string
+			with: Query
+			/** traits that do not count ("shares a non-HUMAN trait" — 2KHA19) */
+			except?: TraitId[] | undefined
+	  } // shares a trait with a queried card
 	| {
 			k: 'LOG_LEGAL'
 			filter?: CardFilter | undefined

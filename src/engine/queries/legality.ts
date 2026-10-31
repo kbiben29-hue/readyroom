@@ -23,7 +23,7 @@ import type { CardInstanceId } from '../ids'
 import type { Seat } from '../resolver/queries'
 import type { Operation } from '../resolver/nodes'
 import { altPlayGrants, altPlayOperation, type AltPlayRef } from '../altPlay'
-import { forbidsAttackCards } from '../modifiers'
+import { forbidsAttackCards, meetsRequirement } from '../modifiers'
 import { hasAttack } from '../dutyOfficers'
 
 const PLAIN_CTX = (seat: Seat, source: CardInstanceId) => ({
@@ -247,8 +247,7 @@ function operationResolvable(
 	op: Operation,
 ): boolean {
 	if (op.requires) {
-		const have = player(state, seat).specialties[op.requires.specialty]
-		if (have < op.requires.min) return false
+		if (!meetsRequirement(state, seat, op.requires)) return false
 	}
 	if (op.costsAction && player(state, seat).actions.available <= 0) return false
 	return probe(state, op.effect, PLAIN_CTX(seat, iid))
@@ -262,7 +261,7 @@ function operationBlockReason(
 ): string {
 	if (op.requires) {
 		const have = player(state, seat).specialties[op.requires.specialty]
-		if (have < op.requires.min) {
+		if (!meetsRequirement(state, seat, op.requires)) {
 			return `Requires ${op.requires.specialty} ${op.requires.min} (you have ${have})`
 		}
 	}

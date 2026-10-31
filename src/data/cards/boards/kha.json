@@ -1,0 +1,146 @@
+[
+	{
+		"deck": "KHA",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": []
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": []
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": []
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2KHA/M1",
+				"goal": {
+					"k": "COMPARE",
+					"a": {
+						"k": "MARKED_TRAITS"
+					},
+					"op": "GE",
+					"b": 6
+				},
+				"reward": {
+					"k": "TAKE",
+					"deck": "ENCOUNTER",
+					"count": 1
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "KHA",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": []
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": []
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": []
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2KHA/M1",
+				"goal": {
+					"k": "COMPARE",
+					"a": {
+						"k": "MARKED_TRAITS"
+					},
+					"op": "GE",
+					"b": 6
+				},
+				"reward": {
+					"k": "TAKE",
+					"deck": "ENCOUNTER",
+					"count": 1
+				},
+				"vp": 1
+			},
+			{
+				"index": 1,
+				"cardId": "2KHA/M2",
+				"goal": {
+					"k": "COMPARE",
+					"a": {
+						"k": "MARKED_TRAITS"
+					},
+					"op": "GE",
+					"b": 9
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "TAKE",
+							"deck": "ENCOUNTER",
+							"count": 1,
+							"look": 2,
+							"returnUnpicked": true
+						},
+						{
+							"k": "FLIP",
+							"target": {
+								"zones": [
+									{
+										"k": "CAPTAIN",
+										"seat": 0
+									}
+								]
+							},
+							"to": "2KHA01B-22"
+						}
+					]
+				},
+				"vp": 2
+			},
+			{
+				"index": 2,
+				"cardId": "2KHA/M3",
+				"goal": {
+					"k": "COMPARE",
+					"a": {
+						"k": "MARKED_TRAITS"
+					},
+					"op": "GE",
+					"b": 12
+				},
+				"isAttack": true,
+				"reward": {
+					"k": "FORCE",
+					"body": {
+						"k": "LOG",
+						"target": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"seat": "SELF",
+							"filter": {
+								"suits": [
+									"PERSON"
+								]
+							}
+						}
+					}
+				},
+				"vp": 3
+			}
+		]
+	}
+]

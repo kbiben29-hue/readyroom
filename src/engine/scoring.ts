@@ -12,6 +12,7 @@
 // Step 0 removes the Reserve deck and the Development pile from consideration
 // (§7.4 / §12.29) — they contribute nothing, not even printed VP or Focus.
 
+import { meetsRequirement } from './modifiers'
 import { cardDef } from './cards'
 import {
 	player,
@@ -20,7 +21,12 @@ import {
 	type GameState,
 	type EffectCtx,
 } from './state'
-import { evalAmount, resolveQuery, countIcons } from './queries/resolveQuery'
+import {
+	evalAmount,
+	evalPredicate,
+	resolveQuery,
+	countIcons,
+} from './queries/resolveQuery'
 import { shipTokensAt } from './queries/board'
 import { countIncidents } from './endgame'
 import type { CardInstanceId } from './ids'
@@ -227,6 +233,12 @@ function evalScoringOperation(
 			total += scoreVpAmount(state, node, ctx)
 			return
 		}
+		// "score 1 each; if X, score 3 each instead" (2KHA01B): only the taken branch
+		if (node.k === 'IF') {
+			if (evalPredicate(state, node.cond, ctx)) visit(node.then)
+			else if (node.else !== undefined) visit(node.else)
+			return
+		}
 		for (const child of effectChildren(node)) visit(child)
 	}
 	visit(effect)
@@ -312,7 +324,7 @@ export function score(state: GameState, seat: Seat): ScoreBreakdown {
 			// (rules/07 §7.1.2) — unevaluated when the track is too low.
 			if (
 				op.requires !== undefined &&
-				p.specialties[op.requires.specialty] < op.requires.min
+				!meetsRequirement(state, p.seat, op.requires)
 			)
 				return
 			const vp = evalScoringOperation(state, op.effect, { ...ctx, source: iid })

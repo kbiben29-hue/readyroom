@@ -512,6 +512,7 @@ export function evalPredicate(
 			const card = state.cards[iid]
 			if (card === undefined) return false
 			const own = new Set<string>(cardTraits(state, card.iid))
+			for (const t of pred.except ?? []) own.delete(t)
 			for (const other of resolveQuery(state, pred.with, ctx)) {
 				const oc = state.cards[other]
 				if (oc === undefined) continue
@@ -765,6 +766,23 @@ export function evalAmount(
 					))
 						for (const t of effectiveTraits(state, iid)) seen.add(t)
 					return seen.size
+				}
+				case 'MARKED_TRAITS':
+					return player(state, ctx.actor).markedTraits?.length ?? 0
+				case 'TOKENS_ON': {
+					let n = 0
+					for (const iid of resolveQuery(state, amount.query, ctx))
+						n += state.cards[iid]?.resourceTokens[amount.res] ?? 0
+					return n
+				}
+				case 'AWAY_POOL':
+					return player(state, ctx.actor).awayTeamsInPool
+				case 'COMPLETED_MISSION_VP': {
+					const p = player(state, ctx.actor)
+					if (p.boardSide !== 'ADVANCED') return 0
+					return p.missions
+						.filter((m) => m.completed)
+						.reduce((n, m) => n + m.vp, 0)
 				}
 				case 'HIGHEST_MULTIPLIER': {
 					// the highest glyph VALUE reached on any track (as final scoring)

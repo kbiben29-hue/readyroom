@@ -171,6 +171,16 @@ const AmountSchema: z.ZodType<Amount> = z.lazy(() =>
 		z.object({ k: z.literal('STARDATE_SEQUENCE') }).strict(),
 		z.object({ k: z.literal('HIGHEST_MULTIPLIER') }).strict(),
 		z.object({ k: z.literal('UNIQUE_TRAITS') }).strict(),
+		z.object({ k: z.literal('MARKED_TRAITS') }).strict(),
+		z
+			.object({
+				k: z.literal('TOKENS_ON'),
+				res: ResourceSchema,
+				query: QuerySchema,
+			})
+			.strict(),
+		z.object({ k: z.literal('AWAY_POOL') }).strict(),
+		z.object({ k: z.literal('COMPLETED_MISSION_VP') }).strict(),
 		z
 			.object({
 				k: z.enum(['MIN', 'MAX', 'SUM']),
@@ -273,6 +283,7 @@ export const PredicateSchema: z.ZodType<Predicate> = z.lazy(() =>
 				k: z.literal('BOUND_SHARES_TRAIT'),
 				bind: z.string().min(1),
 				with: QuerySchema,
+				except: z.array(TraitSchema).min(1).optional(),
 			})
 			.strict(),
 		z
@@ -434,6 +445,7 @@ export const EffectSchema: z.ZodType<Effect> = z.lazy(() =>
 				to: ZoneSpecSchema,
 				from: z.union([ZoneSpecSchema, z.array(ZoneSpecSchema)]).optional(),
 				target: z.literal('THIS').optional(),
+				bind: z.string().min(1).optional(),
 			})
 			.strict(),
 		z
@@ -787,6 +799,28 @@ export const EffectSchema: z.ZodType<Effect> = z.lazy(() =>
 		z
 			.object({ k: z.literal('ADD_AWAY_TEAMS'), amount: AmountSchema })
 			.strict(),
+		z
+			.object({
+				k: z.literal('MARK_TRAIT'),
+				traits: z.array(TraitSchema).min(1),
+				opponentCaptain: z.number().int().min(0),
+				from: z.union([QuerySchema, z.literal('ANY')]),
+			})
+			.strict(),
+		z
+			.object({
+				k: z.literal('FLIP'),
+				target: z.union([QuerySchema, z.literal('THIS')]),
+				to: z.string().min(1),
+			})
+			.strict(),
+		z
+			.object({
+				k: z.literal('GIVE'),
+				target: z.union([QuerySchema, z.literal('THIS')]),
+				to: z.enum(['DISCARD', 'HAND']),
+			})
+			.strict(),
 		z.object({ k: z.literal('WIPE_MARKET') }).strict(),
 		z.object({ k: z.literal('WIPE_NEUTRAL_ZONE') }).strict(),
 		z
@@ -978,7 +1012,13 @@ const TriggerSchema: z.ZodType<TriggerSpec> = z.discriminatedUnion('on', [
 			orReturned: z.boolean().optional(),
 		})
 		.strict(),
-	z.object({ on: z.literal('INCIDENT_RETURNED') }).strict(),
+	z
+		.object({
+			on: z.literal('INCIDENT_RETURNED'),
+			seat: TriggerSeatSchema.optional(),
+		})
+		.strict(),
+	z.object({ on: z.literal('DECK_CYCLED') }).strict(),
 	z.object({ on: z.literal('ATTACKED') }).strict(),
 	z
 		.object({
@@ -1049,6 +1089,10 @@ export interface CardDef {
 	/** "When enlisting this card, …" (2ARC06, 2ARC07): resolved right after the
 	 *  Development is enlisted, by its owner. */
 	onEnlist?: Effect | undefined
+	/** The back side of a double-sided card (2KHA01B, 2KHA02B): the def id of
+	 *  its front. Never set up as a card of its own — a FLIP turns the front
+	 *  instance to this side. */
+	backOf?: string | undefined
 	/** "This card cannot be promoted." (1SIS13) — PROMOTE never
 	 *  offers it. */
 	cannotBePromoted?: boolean | undefined
@@ -1148,6 +1192,7 @@ export const CardDefSchema = z
 		passives: z.array(z.string().min(1)).optional(),
 		cannotBePlayed: z.boolean().optional(),
 		onEnlist: EffectSchema.optional(),
+		backOf: z.string().min(1).optional(),
 		cannotBePromoted: z.boolean().optional(),
 		treatedAsLocation: z.boolean().optional(),
 	})

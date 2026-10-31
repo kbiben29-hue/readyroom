@@ -1044,3 +1044,39 @@ side is its Advanced side one higher plus ×1 at step 0, as on every box-1 board
   the three traits.
 - **Keyed on:** `src/data/cards/crew/reb.json`, `src/data/cards/boards/reb.json`; tests
   `src/engine/tbg-box.test.ts`.
+
+## 059 — The 2KHA crew deck (To Boldly Go): first implementation
+
+- **Trait-marking board:** `PlayerState.markedTraits`; the CAPTAIN's two PASSIVEs (after gaining
+  a card / after taking control of a LOCATION) each offer one `MARK_TRAIT`. The ten board traits
+  plus two entries for different traits of the opponent's CAPTAIN (non-HUMAN when it has two).
+  A card's trait goes on its own board entry first when that entry is unmarked; the rule that
+  one card cannot fill both opponent entries is met because each event marks one trait. Taking
+  a card (ENCOUNTER, INCIDENT, a given card) never marks: CARD_GAINED does not fire for a take.
+- **No Specialty tracks:** both sides of the crew board have no glyphs; `2KHA01_BOARD` makes
+  every Specialty gain do nothing and turns off enlisting on a deck cycle (no Reserve card, no
+  Development offer). There is no Reserve deck: no card starts there.
+- **Double-sided cards:** 2KHA01B and 2KHA02B declare `backOf`; setup makes one card set up
+  front side up, and `FLIP` turns the same instance (tokens, Away Teams and exhaustion stay).
+  2KHA/M2 flips the CAPTAIN; 2KHA03's Resupply flips 2KHA02A.
+- **Wrathful side:** `2KHA01B_NO_REQ` makes every Specialty restriction count as met (read off
+  the CAPTAIN card by `meetsRequirement`). Its Endgame scores 1 VP per Focus icon in play, or
+  3 each with 12 entries marked.
+- **Endgame IF:** an Endgame `IF` now scores only the branch taken. Before this, 1SHR12 and
+  2SOV11 scored their 4 VP whether or not 2+ AWAY TEAMs were there.
+- **2KHA03:** "Spend 1 {DIL} from this card" requires a {DIL} token here and pays the {DIL}
+  from your pool.
+- **2KHA05 / 2KHA10 / 2KHA19–21 "give":** `GIVE` makes the card the opponent's (2KHA05 into
+  their hand; the rest into their Discard pile).
+- **2KHA19–21:** the revealed card is the one put on the deck top (`COST_PUT bind`); "shares a
+  non-HUMAN trait" uses `BOUND_SHARES_TRAIT except`.
+- **2KHA/M3 "recall a PERSON and log the recalled card":** the opponent logs a PERSON of theirs
+  in play.
+- **Approximated:** 2KHA13's Clean-up checks 2KHA02B is in play, not that it is exhausted;
+  2KHA18 "gain a PERSON from the top of the deck" is any PERSON gain; 2KHA14's activation warps
+  any of your SHIPs.
+- **Not modelled yet:** 2KHA08 "put this card back in your Development pile"; 2KHA10's Special
+  (−1 VP per INCIDENT) and the INCIDENT it may give is not logged; the Bot-only Surprise text;
+  Cadet-mode Khan.
+- **Keyed on:** `src/data/cards/crew/kha.json`, `src/data/cards/boards/kha.json`; tests
+  `src/engine/kha-deck.test.ts`, `src/engine/tbg-box.test.ts`.

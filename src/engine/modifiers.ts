@@ -110,6 +110,15 @@ export interface RuleModifierHooks {
 	/** "This ship cannot be warped" (1SIS03): the SOURCE card is
 	 *  never offered to a WARP. */
 	cannotBeWarped?: boolean
+	/** "Effects that gain {RES}/{INF}/{MIL} have no effect for you" (2KHA: a
+	 *  trait-marking board has no Specialty tracks). */
+	noSpecialtyGain?: boolean
+	/** "You do not enlist when you cycle your deck" (2KHA01). */
+	noCycleEnlist?: boolean
+	/** "Ignore all {RES}/{INF}/{MIL} requirements" (2KHA01B): every Specialty
+	 *  restriction counts as met. Read from the CAPTAIN card itself (see
+	 *  `meetsRequirement`), since the passive layer is itself gated by them. */
+	ignoreRequirements?: boolean
 }
 
 /** Registry: id -> hooks. State only ever stores `{ id, source }`. */
@@ -256,6 +265,21 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 			).length,
 	},
 	// --- To Boldly Go: the 2REB crew deck ---
+	// --- Khan (2KHA) ---
+	'2KHA01_BOARD': {
+		describe: 'You do not enlist when you cycle your deck.',
+		noSpecialtyGain: true,
+		noCycleEnlist: true,
+	},
+	'2KHA01B_NO_REQ': {
+		describe:
+			'Ignore all {RES-restriction}/{INF-restriction}/{MIL-restriction} requirements.',
+		ignoreRequirements: true,
+	},
+	'2KHA02_HAND': {
+		describe: 'Increase your hand size by 1.',
+		handSize: (base) => base + 1,
+	},
 	'2REB01_HAND': {
 		describe: 'Your hand size is 3.',
 		handSize: () => 3,
@@ -399,6 +423,37 @@ function passiveRequirementMet(
 	)
 	if (op?.requires === undefined) return true
 	return p.specialties[op.requires.specialty] >= op.requires.min
+}
+
+/** Is a Specialty restriction met for `seat`? (rules/12; 2KHA01B ignores
+ *  them all). The ignore passive is read straight off the seat's CAPTAIN card
+ *  — not through activeModifiers, whose layers are themselves gated here. */
+export function meetsRequirement(
+	state: GameState,
+	seat: Seat,
+	req: { specialty: 'RESEARCH' | 'INFLUENCE' | 'MILITARY'; min: number },
+): boolean {
+	if (player(state, seat).specialties[req.specialty] >= req.min) return true
+	for (const iid of zonesOf(state, { k: 'CAPTAIN', seat })) {
+		const passives = cardDef(state.cards[iid]!.def).passives ?? []
+		if (passives.some((id) => MODIFIERS[id]?.ignoreRequirements === true))
+			return true
+	}
+	return false
+}
+
+/** Do `seat`'s Specialty gains have no effect (2KHA)? */
+export function blocksSpecialtyGain(state: GameState, seat: Seat): boolean {
+	return activeModifiers(state, seat).some(
+		(m) => hooksOf(m).noSpecialtyGain === true,
+	)
+}
+
+/** Does `seat` skip enlisting when cycling the deck (2KHA01)? */
+export function noCycleEnlist(state: GameState, seat: Seat): boolean {
+	return activeModifiers(state, seat).some(
+		(m) => hooksOf(m).noCycleEnlist === true,
+	)
 }
 
 /** The hooks for one active entry (missing ids are inert by design). */

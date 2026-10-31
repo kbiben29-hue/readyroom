@@ -1,4 +1,5 @@
 import type { Effect, Operation } from '../nodes'
+import { meetsRequirement } from '../../modifiers'
 import type { Primitive } from './index'
 import {
 	pickCards,
@@ -8,7 +9,7 @@ import {
 	answerSingle,
 	skipBenefit,
 } from '../runtime'
-import { evalPredicate, matchFilter } from '../../queries/resolveQuery'
+import { matchFilter } from '../../queries/resolveQuery'
 import { cardDef } from '../../cards'
 import { zonesOf } from '../../state'
 import { marketOffers } from '../../market'
@@ -111,15 +112,7 @@ function pushDup(
 	// skip the action cost (we push a plain EFFECT, no OPERATION frame), but the
 	// Specialty restriction still gates the operation (rules/08 §duplicate).
 	if (op.requires !== undefined) {
-		const ok = evalPredicate(
-			state,
-			{
-				k: 'SPECIALTY_AT_LEAST',
-				specialty: op.requires.specialty,
-				value: op.requires.min,
-			},
-			childCtx,
-		)
+		const ok = meetsRequirement(state, childCtx.actor, op.requires)
 		if (!ok) {
 			return skipBenefit(
 				state,

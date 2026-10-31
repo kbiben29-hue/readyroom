@@ -171,6 +171,7 @@ export type GameEvent =
 	| { k: 'AWAY_TEAM_SENT'; seat: Seat; location: string; count: number }
 	| { k: 'AWAY_TEAM_REMOVED'; seat: Seat; location: string; count: number }
 	| { k: 'LOCATION_CONTROLLED'; iid: CardInstanceId; seat: Seat }
+	| { k: 'DECK_CYCLED'; seat: Seat } // the Discard pile was shuffled in to refill the Draw deck
 	| { k: 'SHIP_WARPED'; iid: CardInstanceId; seat: Seat }
 	| {
 			k: 'SPECIALTY_ADVANCED'
@@ -258,6 +259,9 @@ export interface PlayerState {
 	dutyOfficerLimit: number // 1 by default
 	heldStardate: CardInstanceId | null // handed over; resolves in their Clean-up
 	modifiers: RuleModifier[]
+	/** Traits marked on a trait-marking crew board (2KHA): a board trait, or
+	 *  `OPP:<trait>` for an entry matching the opponent's CAPTAIN. Absent = none. */
+	markedTraits?: string[] | undefined
 }
 
 /** Where a token lives: a Location CardInstanceId, `'SUPPLY'`, or null (on the

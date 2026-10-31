@@ -269,6 +269,14 @@ function amt(a: Amount): Amt {
 			return { n: 'SD#', per: [] }
 		case 'UNIQUE_TRAITS':
 			return { n: '1', per: [glyph('CARD', 'trait')] }
+		case 'MARKED_TRAITS':
+			return { n: '1', per: [glyph('CHECK', 'trait')] }
+		case 'TOKENS_ON':
+			return { n: '1', per: [glyph(a.res), glyph('CARD')] }
+		case 'AWAY_POOL':
+			return { n: 'all', per: [glyph('AWAY')] }
+		case 'COMPLETED_MISSION_VP':
+			return { n: '1', per: [glyph('MISSION', 'VP')] }
 		case 'HIGHEST_MULTIPLIER':
 			return { n: '×max', per: [] }
 		case 'UP_TO': {
@@ -847,6 +855,12 @@ export function shorthand(e: Effect): Tok[] {
 			return [glyph('CARD'), glyph('GLO', '+')]
 		case 'ADD_AWAY_TEAMS':
 			return counted((n) => glyph('AWAY', n), e.amount, '+')
+		case 'MARK_TRAIT':
+			return [glyph('CARD', 'trait'), glyph('CHECK')]
+		case 'FLIP':
+			return [glyph('REVEAL')]
+		case 'GIVE':
+			return [glyph('CARD'), ...opp([glyph('DISCARD_PILE')])]
 		case 'WIPE_MARKET':
 			return [glyph('WIPE_MARKET')]
 		case 'WIPE_NEUTRAL_ZONE':
@@ -993,7 +1007,9 @@ export function shorthandTrigger(t: TriggerSpec): Tok[] {
 		case 'INCIDENT_TAKEN':
 			return [suit('INCIDENT', t.orReturned === true ? '±' : '+')]
 		case 'INCIDENT_RETURNED':
-			return [suit('INCIDENT', '−')]
+			return whose(t.seat, [suit('INCIDENT', '−')])
+		case 'DECK_CYCLED':
+			return [glyph('DISCARD_PILE'), glyph('DECK')]
 		case 'ATTACKED':
 			return opp([glyph('ATTACK')])
 		case 'WOULD_BE_ATTACKED':

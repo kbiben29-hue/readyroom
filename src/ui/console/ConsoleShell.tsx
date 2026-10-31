@@ -39,6 +39,7 @@ import { LogDrawer } from './LogDrawer'
 import { OpponentBand } from './OpponentBand'
 import { Viewscreen } from './Viewscreen'
 import './console.css'
+import { ConsoleFit } from './ConsoleFit'
 
 export function ConsoleShell({ state }: { state: GameState }) {
 	const session = useSession()
@@ -53,23 +54,25 @@ export function ConsoleShell({ state }: { state: GameState }) {
 	const incidentsLeft = state.zones['INCIDENT_DECK']?.length ?? 0
 	const alert = incidentsLeft <= 1 && state.result === null
 	return (
-		<div className={`frame console${alert ? ' frame-alert' : ''}`}>
-			<HeadBar state={state} incidentsLeft={incidentsLeft} />
-			<div className="frame-body">
-				<BotBar variant="console" />
-				<ErrorBanner />
-				<WarningBanner />
-				<RecoverableErrorBoundary title="while rendering the board">
-					<Board />
-				</RecoverableErrorBoundary>
+		<ConsoleFit>
+			<div className={`frame console${alert ? ' frame-alert' : ''}`}>
+				<HeadBar state={state} incidentsLeft={incidentsLeft} />
+				<div className="frame-body">
+					<BotBar variant="console" />
+					<ErrorBanner />
+					<WarningBanner />
+					<RecoverableErrorBoundary title="while rendering the board">
+						<Board />
+					</RecoverableErrorBoundary>
+				</div>
+				<PassDeviceBar state={state} />
+				<ChoicePanel />
+				<CardZoom />
+				<FlightLayer />
+				<BotHistory />
+				<BotHighlight />
 			</div>
-			<PassDeviceBar state={state} />
-			<ChoicePanel />
-			<CardZoom />
-			<FlightLayer />
-			<BotHistory />
-			<BotHighlight />
-		</div>
+		</ConsoleFit>
 	)
 }
 

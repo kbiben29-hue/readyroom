@@ -24,7 +24,7 @@ export const SHELL_QUERIES = {
 	phone: '(max-width: 767.98px)',
 	tablet: '(max-width: 1079.98px)',
 	/** Large touch tablets keep the touch shell in landscape, too. */
-	touch: '(hover: none) and (pointer: coarse)',
+	touch: '(any-pointer: coarse)',
 } as const
 
 export interface Viewport {
@@ -46,7 +46,8 @@ export function pickShell(v: Viewport, choice: ShellChoice): Shell {
 		case 'auto':
 			if (v.wide) return 'phone-wide'
 			if (v.phone) return 'phone'
-			if (v.tablet || v.touch) return 'tablet'
+			if (v.touch) return 'console'
+			if (v.tablet) return 'tablet'
 			return 'console'
 	}
 }
@@ -75,7 +76,18 @@ const CHOICES: readonly ShellChoice[] = ['auto', 'phone', 'tablet', 'console']
 
 export function readShellChoice(): ShellChoice {
 	try {
-		const v = globalThis.localStorage?.getItem(SHELL_KEY)
+		let v = globalThis.localStorage?.getItem(SHELL_KEY)
+		// Migrate the previous tablet default once; later explicit choices remain valid.
+		if (
+			mql(SHELL_QUERIES.touch)?.matches &&
+			!globalThis.localStorage?.getItem('ready-room.pc-tablet-v1')
+		) {
+			globalThis.localStorage?.setItem('ready-room.pc-tablet-v1', '1')
+			if (v === 'tablet') {
+				globalThis.localStorage?.removeItem(SHELL_KEY)
+				v = null
+			}
+		}
 		return CHOICES.includes(v as ShellChoice) ? (v as ShellChoice) : 'auto'
 	} catch {
 		return 'auto'

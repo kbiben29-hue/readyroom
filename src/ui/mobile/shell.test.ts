@@ -14,6 +14,7 @@ import {
 
 afterEach(() => {
 	vi.restoreAllMocks()
+	vi.unstubAllGlobals()
 	localStorage.clear()
 	resetShellChoiceCache()
 })
@@ -31,9 +32,9 @@ describe('shell selection', () => {
 		expect(shellForSize(1024, 768)).toBe('tablet')
 	})
 
-	it('keeps a large touch tablet in the tablet shell, with a console override', () => {
+	it('uses the PC console on touch tablets but preserves the phone layout', () => {
 		const ipad = { wide: false, phone: false, tablet: false, touch: true }
-		expect(pickShell(ipad, 'auto')).toBe('tablet')
+		expect(pickShell(ipad, 'auto')).toBe('console')
 		expect(pickShell(ipad, 'console')).toBe('console')
 		expect(pickShell({ ...ipad, phone: true }, 'auto')).toBe('phone')
 	})
@@ -47,6 +48,14 @@ describe('shell selection', () => {
 		expect(pickShell(side, 'phone')).toBe('phone-wide')
 		expect(pickShell(desk, 'tablet')).toBe('tablet')
 		expect(pickShell(desk, 'auto')).toBe('console')
+	})
+
+	it('moves the old iPad tablet preference to the PC default only once', () => {
+		vi.stubGlobal('matchMedia', () => ({ matches: true }) as MediaQueryList)
+		localStorage.setItem(SHELL_KEY, 'tablet')
+		expect(readShellChoice()).toBe('auto')
+		localStorage.setItem(SHELL_KEY, 'tablet')
+		expect(readShellChoice()).toBe('tablet')
 	})
 
 	it('persists the choice and survives unreadable storage', () => {

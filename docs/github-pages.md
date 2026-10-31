@@ -44,3 +44,7 @@ localhost. A plain HTTP address on your Wi-Fi is not an offline-install test.
 The production bundle excludes fetched card assets even if present locally.
 
 If renaming the repository, update the Pages `base` in vite.config.ts and this URL.
+
+On iPad, local games default to the PC console layout, fitted to the available
+screen width. Landscape gives larger cards; portrait keeps the same arrangement
+at a smaller scale. The layout menu still offers Phone and Tablet as alternatives.

@@ -1025,3 +1025,22 @@ side is its Advanced side one higher plus ×1 at step 0, as on every box-1 board
 - **Crew board glyphs:** read off the printed Advanced side.
 - **Keyed on:** `src/data/cards/crew/arc.json`, `src/data/cards/boards/arc.json`; tests
   `src/engine/tbg-box.test.ts`.
+
+## 058 — The 2REB crew deck (To Boldly Go): first implementation
+
+- **Hand size 3:** the CAPTAIN's PASSIVE `2REB01_HAND`, which also sizes the opening hand.
+- **RESEARCH and INFLUENCE:** no glyphs on either side of the crew board (always ×0 — rules for
+  Rebner); MILITARY read off the printed Advanced side.
+- **Wearing a HELMET:** a HELMET beamed to that Duty Officer (`BEAMED_TO host THIS`). The
+  one-HELMET-per-Duty-Officer limit is not enforced yet.
+- **2REB03 "Cost: your opponent may draw 2 cards":** resolved as its `onEnlist` (the opponent may
+  draw 2) with no other cost.
+- **2REB05 "free if you have 1+ AWAY TEAM on" 2REB04:** a choice with a `COST_REQUIRE`.
+- **2REB06/11 "draw and reveal a card" per opponent SHIP:** draws; the drawn WEAPON to log may be
+  any WEAPON in hand.
+- **Not modelled yet:** 2REB09's reaction to drawing through the CAPTAIN's operations; 2REB15
+  "This card cannot be logged"; 2REB/M2's "scan for a {MIL-focus}" (the reward draws 3 only);
+  2REB/M1's "none of the contributing cards are PAKLED" checks every in-play PAKLED with one of
+  the three traits.
+- **Keyed on:** `src/data/cards/crew/reb.json`, `src/data/cards/boards/reb.json`; tests
+  `src/engine/tbg-box.test.ts`.

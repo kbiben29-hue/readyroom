@@ -22,8 +22,7 @@ function candidates(
 }
 
 /** TAKE_TOKENS: gain the resource tokens sitting on a card ("gain all
- *  resources from Earth" — 2ARC04; "gain 3 resources from Earth", `max` 3 —
- *  2ARC01). With `max`, {DIL} goes first, then {LAT}, then {GLO}. */
+ *  resources from …" — 2ARC04; "gain 3 resources from …", `max` 3 — 2ARC01). With `max`, {DIL} goes first, then {LAT}, then {GLO}. */
 export const takeTokens: Primitive<Extract<Effect, { k: 'TAKE_TOKENS' }>> = {
 	isCost: false,
 	canResolve(state, node, ctx) {

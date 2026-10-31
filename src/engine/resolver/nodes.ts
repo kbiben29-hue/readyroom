@@ -325,7 +325,7 @@ export type EffectNode =
 			amount: Amount
 			target?: MarketQuery | undefined
 	  }
-	| { k: 'PLACE_TOKENS'; res: ResourceId; amount: Amount; target: CardQuery } // tokens from the supply onto a card (2ARC02 Earth)
+	| { k: 'PLACE_TOKENS'; res: ResourceId; amount: Amount; target: CardQuery } // tokens from the supply onto a card (2ARC02)
 	| { k: 'TAKE_TOKENS'; target: CardQuery; max?: Amount | undefined } // gain a card's tokens (all, or up to `max`)
 	| { k: 'ADD_AWAY_TEAMS'; amount: Amount } // more Away Teams on your CAPTAIN from the supply (2ARC06/07)
 	| { k: 'WIPE_MARKET' }

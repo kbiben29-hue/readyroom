@@ -1,0 +1,2799 @@
+[
+	{
+		"id": "2REB01-22",
+		"cardId": "2REB01/22",
+		"suit": "CAPTAIN",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"SHADY"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PASSIVE",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MODIFIER_ATTACH",
+					"id": "2REB01_HAND"
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "NOT",
+							"term": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "HAND",
+											"seat": 0
+										}
+									]
+								},
+								"value": 1
+							}
+						}
+					},
+					"body": {
+						"k": "DRAW",
+						"count": 2
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 1
+					},
+					"body": {
+						"k": "DRAW",
+						"count": 2
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "PER",
+						"every": 2,
+						"of": {
+							"k": "COUNT",
+							"query": {
+								"zones": [
+									"ALL_OWNED"
+								],
+								"filter": {
+									"suits": [
+										"CARGO"
+									],
+									"not": {
+										"traits": [
+											"HELMET"
+										]
+									}
+								},
+								"seat": "SELF"
+							}
+						}
+					}
+				}
+			}
+		],
+		"passives": [
+			"2REB01_HAND"
+		],
+		"awayTeams": 6
+	},
+	{
+		"id": "2REB02-22",
+		"cardId": "2REB02/22",
+		"suit": "SHIP",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"BUSINESS"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEPLOYED",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "GAIN_CARD",
+										"suits": [
+											"CARGO"
+										],
+										"onlyJunk": true,
+										"bind": "$2reb02.g"
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "BOUND_IS",
+											"bind": "$2reb02.g",
+											"filter": {
+												"traits": [
+													"WEAPON",
+													"ANOMALY"
+												]
+											}
+										},
+										"then": {
+											"k": "ADVANCE_SPECIALTY",
+											"specialty": "MILITARY",
+											"amount": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB03-22",
+		"cardId": "2REB03/22",
+		"suit": "CARGO",
+		"deck": "REB",
+		"traits": [
+			"HELMET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 1
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "REFRESH",
+								"target": {
+									"zones": [
+										{
+											"k": "CAPTAIN",
+											"seat": 0
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"onEnlist": {
+			"k": "OPPONENT",
+			"body": {
+				"k": "MAY",
+				"body": {
+					"k": "DRAW",
+					"count": 2
+				}
+			}
+		}
+	},
+	{
+		"id": "2REB04-22",
+		"cardId": "2REB04/22",
+		"suit": "LOCATION",
+		"deck": "REB",
+		"traits": [
+			"BUSINESS"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 2
+				},
+				{
+					"k": "COST_REQUIRE",
+					"cond": {
+						"k": "SPECIALTY_AT_LEAST",
+						"specialty": "MILITARY",
+						"value": 5
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "FREE_PLAY",
+						"filter": {
+							"suits": [
+								"SHIP"
+							]
+						},
+						"from": {
+							"k": "HAND",
+							"seat": 0
+						}
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "PER",
+						"every": 4,
+						"of": {
+							"k": "RESOURCE",
+							"res": "GLO"
+						}
+					}
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": {
+								"k": "UNUSED_ACTIONS"
+							}
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": {
+								"k": "UNUSED_ACTIONS"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB05-22",
+		"cardId": "2REB05/22",
+		"suit": "CARGO",
+		"deck": "REB",
+		"traits": [
+			"WEAPON",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "CHOOSE_ONE",
+			"options": [
+				{
+					"label": "Spend 5 Dilithium",
+					"body": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 5
+					}
+				},
+				{
+					"label": "Free: an Away Team on the business LOCATION",
+					"body": {
+						"k": "COST_REQUIRE",
+						"cond": {
+							"k": "AWAY_TEAMS_AT",
+							"at": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"ids": [
+										"2REB04-22"
+									]
+								}
+							},
+							"value": 1
+						}
+					}
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						},
+						{
+							"k": "LOG",
+							"target": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							},
+							"bind": "$2reb05.l"
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": 1
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$2reb05.l"
+							},
+							"then": {
+								"k": "ADVANCE_SPECIALTY",
+								"specialty": "MILITARY",
+								"amount": {
+									"k": "SUM",
+									"terms": [
+										{
+											"k": "ICON_COUNT",
+											"bind": "$2reb05.l",
+											"kind": "SKILL"
+										},
+										{
+											"k": "ICON_COUNT",
+											"bind": "$2reb05.l",
+											"kind": "SKILL"
+										}
+									]
+								}
+							}
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Discard a SHADY",
+									"body": {
+										"k": "DISCARD",
+										"count": 1,
+										"from": "HAND",
+										"filter": {
+											"traits": [
+												"SHADY"
+											]
+										}
+									}
+								},
+								{
+									"label": "Log this card",
+									"body": {
+										"k": "LOG",
+										"target": "THIS"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB06-22",
+		"cardId": "2REB06/22",
+		"suit": "SHIP",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 4,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "SEQ",
+			"steps": [
+				{
+					"k": "COST_RESOURCE",
+					"res": "DIL",
+					"amount": 3
+				},
+				{
+					"k": "COST_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			]
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"seat": "OPPONENT"
+								}
+							},
+							"body": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"filter": {
+										"traits": [
+											"WEAPON"
+										]
+									},
+									"from": {
+										"k": "HAND",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "FORCE",
+									"body": {
+										"k": "LOG",
+										"target": {
+											"zones": [
+												{
+													"k": "HAND",
+													"seat": 0
+												},
+												{
+													"k": "DISCARD",
+													"seat": 0
+												},
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											}
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB07-22",
+		"cardId": "2REB07/22",
+		"suit": "SHIP",
+		"deck": "REB",
+		"traits": [
+			"PAKLED"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 1,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "LAT",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "MILITARY",
+							"amount": {
+								"k": "SKILL_ICONS",
+								"specialty": "MILITARY"
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": [
+								"HELMET"
+							]
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DISMISS",
+								"target": "THIS"
+							},
+							{
+								"k": "PUT_ON_DECK_TOP",
+								"target": {
+									"zones": [
+										{
+											"k": "DISCARD",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB08-22",
+		"cardId": "2REB08/22",
+		"suit": "PERSON",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"IMPERIAL"
+		],
+		"skills": [],
+		"focus": "FOCUS_MILITARY",
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DEVELOPMENT",
+		"developmentCost": {
+			"k": "COST_RESOURCE",
+			"res": "LAT",
+			"amount": 2
+		},
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {},
+							"zones": [
+								{
+									"k": "HAND",
+									"seat": 0
+								},
+								{
+									"k": "DISCARD",
+									"seat": 0
+								},
+								{
+									"k": "DRAW",
+									"seat": 0
+								},
+								{
+									"k": "RESERVE",
+									"seat": 0
+								}
+							]
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "FREE_PLAY",
+								"filter": {
+									"suits": [
+										"INCIDENT"
+									]
+								},
+								"from": {
+									"k": "HAND",
+									"seat": 0
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_REQUIRE",
+								"cond": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											{
+												"k": "BEAMED_TO",
+												"host": "THIS"
+											}
+										],
+										"filter": {
+											"ids": [
+												"2REB03-22"
+											]
+										}
+									},
+									"value": 1
+								}
+							},
+							{
+								"k": "COST_RESOURCE",
+								"res": "DIL",
+								"amount": 4
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "TAKE",
+								"deck": "ENCOUNTER",
+								"count": 1
+							},
+							{
+								"k": "LOG",
+								"target": "THIS"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB09-22",
+		"cardId": "2REB09/22",
+		"suit": "PERSON",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"SPY",
+			"ATTACK"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"NEUTRAL_LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							}
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND",
+							"whose": "OPPONENT"
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "DISMISS",
+										"target": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"SPY"
+												]
+											},
+											"seat": "OPPONENT"
+										},
+										"bind": "$2reb09.d"
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "DID",
+											"bind": "$2reb09.d"
+										},
+										"then": {
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB10-22",
+		"cardId": "2REB10/22",
+		"suit": "PERSON",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"AMBASSADOR"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "SEND_AWAY_TEAM",
+							"count": 1,
+							"target": {
+								"zones": [
+									"LOCATIONS"
+								],
+								"filter": {
+									"suits": [
+										"LOCATION"
+									]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"traits": [
+											"BUSINESS",
+											"SHADY"
+										]
+									}
+								},
+								"body": {
+									"k": "SEND_AWAY_TEAM",
+									"count": 1,
+									"target": {
+										"zones": [
+											"LOCATIONS"
+										],
+										"filter": {
+											"suits": [
+												"LOCATION"
+											]
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_ACTION"
+								},
+								"body": {
+									"k": "ADVANCE_SPECIALTY",
+									"specialty": "MILITARY",
+									"amount": {
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"HELMET"
+												]
+											},
+											"seat": "SELF"
+										}
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									],
+									"filter": {
+										"traits": [
+											"HELMET"
+										]
+									}
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "LAT",
+										"amount": 1
+									},
+									{
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB11-22",
+		"cardId": "2REB11/22",
+		"suit": "SHIP",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"ATTACK"
+		],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									},
+									"seat": "OPPONENT"
+								}
+							},
+							"body": {
+								"k": "DRAW",
+								"count": 1
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_LOG",
+									"filter": {
+										"traits": [
+											"WEAPON"
+										]
+									},
+									"from": {
+										"k": "HAND",
+										"seat": 0
+									}
+								},
+								"body": {
+									"k": "FORCE",
+									"body": {
+										"k": "LOG",
+										"target": {
+											"zones": [
+												{
+													"k": "HAND",
+													"seat": 0
+												},
+												{
+													"k": "DISCARD",
+													"seat": 0
+												},
+												{
+													"k": "FLEET",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"SHIP"
+												]
+											}
+										}
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "WARP",
+						"ship": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"filter": {
+								"suits": [
+									"SHIP"
+								]
+							},
+							"thisCard": true
+						},
+						"to": {
+							"zones": [
+								"LOCATIONS"
+							],
+							"filter": {
+								"suits": [
+									"LOCATION"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1
+					},
+					"body": {
+						"k": "BEAM",
+						"count": 1,
+						"to": {
+							"zones": [
+								{
+									"k": "FLEET",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB12-22",
+		"cardId": "2REB12/22",
+		"suit": "CARGO",
+		"deck": "REB",
+		"traits": [
+			"HELMET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "LAT",
+							"amount": 1
+						},
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "DIL",
+							"amount": 1
+						},
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Promote from your hand",
+									"body": {
+										"k": "PROMOTE",
+										"from": "HAND",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									}
+								},
+								{
+									"label": "Promote from your Staging Area",
+									"body": {
+										"k": "PROMOTE",
+										"from": "STAGING",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_TAKE_INCIDENT",
+						"count": 1
+					},
+					"body": {
+						"k": "ENLIST_DEVELOPMENT",
+						"filter": {
+							"ids": [
+								"2REB03-22"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB13-22",
+		"cardId": "2REB13/22",
+		"suit": "PERSON",
+		"deck": "REB",
+		"traits": [
+			"PAKLED",
+			"ENGINEER"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "RESERVE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "MAY",
+							"body": {
+								"k": "DRAW_FROM_DISCARD",
+								"count": 1,
+								"filter": {
+									"traits": [
+										"PAKLED"
+									]
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"CARGO"
+										]
+									},
+									"bind": "$2reb13.d"
+								},
+								"body": {
+									"k": "SEQ",
+									"steps": [
+										{
+											"k": "GAIN_RESOURCE",
+											"res": "DIL",
+											"amount": 4
+										},
+										{
+											"k": "IF",
+											"cond": {
+												"k": "BOUND_IS",
+												"bind": "$2reb13.d",
+												"filter": {
+													"traits": [
+														"WEAPON"
+													]
+												}
+											},
+											"then": {
+												"k": "ADVANCE_SPECIALTY",
+												"specialty": "MILITARY",
+												"amount": 1
+											}
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										{
+											"k": "BEAMED_TO",
+											"host": "THIS"
+										}
+									],
+									"filter": {
+										"traits": [
+											"HELMET"
+										]
+									}
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "MAY",
+								"body": {
+									"k": "DRAW_FROM_DISCARD",
+									"count": 1,
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "WARP",
+								"ship": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								},
+								"to": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "BEAM",
+								"count": 1,
+								"to": {
+									"zones": [
+										{
+											"k": "FLEET",
+											"seat": 0
+										}
+									],
+									"filter": {
+										"suits": [
+											"SHIP"
+										]
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "DIL",
+					"amount": 1
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB14-22",
+		"cardId": "2REB14/22",
+		"suit": "INCIDENT",
+		"deck": "REB",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": -2,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RECALL",
+						"from": {
+							"k": "DUTY_OFFICER",
+							"seat": 0
+						}
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "RETURN_INCIDENT",
+								"target": "THIS"
+							},
+							{
+								"k": "MAY",
+								"body": {
+									"k": "PAY_THEN",
+									"cost": {
+										"k": "COST_RESOURCE",
+										"res": "DIL",
+										"amount": 1
+									},
+									"body": {
+										"k": "CHOOSE_ONE",
+										"options": [
+											{
+												"label": "Refresh a SHIP",
+												"body": {
+													"k": "REFRESH",
+													"target": {
+														"zones": [
+															"IN_PLAY"
+														],
+														"filter": {
+															"suits": [
+																"SHIP"
+															]
+														},
+														"seat": "SELF"
+													}
+												}
+											},
+											{
+												"label": "Draw a HELMET from your Discard pile",
+												"body": {
+													"k": "DRAW_FROM_DISCARD",
+													"count": 1,
+													"filter": {
+														"traits": [
+															"HELMET"
+														]
+													}
+												}
+											}
+										]
+									}
+								}
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB15-22",
+		"cardId": "2REB15/22",
+		"suit": "DIRECTIVE",
+		"deck": "REB",
+		"traits": [],
+		"skills": [
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "DISCARD",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "GAIN_RESOURCE",
+							"res": "GLO",
+							"amount": 1
+						},
+						{
+							"k": "FOR_EACH",
+							"over": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"HELMET"
+									]
+								},
+								"seat": "SELF"
+							},
+							"bind": "$2reb15.h",
+							"body": {
+								"k": "DISMISS",
+								"target": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"seat": "SELF",
+									"bound": "$2reb15.h"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 5
+				},
+				"effect": {
+					"k": "IF",
+					"cond": {
+						"k": "COUNT_AT_LEAST",
+						"query": {
+							"zones": [
+								"IN_PLAY"
+							],
+							"filter": {
+								"traits": [
+									"HELMET"
+								]
+							},
+							"seat": "SELF"
+						},
+						"value": 2
+					},
+					"then": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FOR_EACH",
+								"over": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"HELMET"
+										]
+									},
+									"seat": "SELF"
+								},
+								"bind": "$2reb15.h",
+								"body": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"seat": "SELF",
+										"bound": "$2reb15.h"
+									}
+								}
+							},
+							{
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FOR_EACH",
+										"over": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"ONGOING"
+												]
+											},
+											"seat": "SELF"
+										},
+										"bind": "$2reb15.o",
+										"body": {
+											"k": "EXHAUST",
+											"target": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"seat": "SELF",
+												"bound": "$2reb15.o"
+											}
+										}
+									},
+									{
+										"k": "FOR_EACH",
+										"over": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										},
+										"bind": "$2reb15.l",
+										"body": {
+											"k": "EXHAUST",
+											"target": {
+												"zones": [
+													{
+														"k": "LOCATION_AREA",
+														"seat": 0
+													}
+												],
+												"bound": "$2reb15.l"
+											}
+										}
+									}
+								]
+							},
+							{
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						]
+					},
+					"else": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "FOR_EACH",
+								"over": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"HELMET"
+										]
+									},
+									"seat": "SELF"
+								},
+								"bind": "$2reb15.h",
+								"body": {
+									"k": "DISMISS",
+									"target": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"seat": "SELF",
+										"bound": "$2reb15.h"
+									}
+								}
+							},
+							{
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "FOR_EACH",
+										"over": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"ONGOING"
+												]
+											},
+											"seat": "SELF"
+										},
+										"bind": "$2reb15.o",
+										"body": {
+											"k": "EXHAUST",
+											"target": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"seat": "SELF",
+												"bound": "$2reb15.o"
+											}
+										}
+									},
+									{
+										"k": "FOR_EACH",
+										"over": {
+											"zones": [
+												{
+													"k": "LOCATION_AREA",
+													"seat": 0
+												}
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										},
+										"bind": "$2reb15.l",
+										"body": {
+											"k": "EXHAUST",
+											"target": {
+												"zones": [
+													{
+														"k": "LOCATION_AREA",
+														"seat": 0
+													}
+												],
+												"bound": "$2reb15.l"
+											}
+										}
+									}
+								]
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB16-22",
+		"cardId": "2REB16/22",
+		"suit": "DIRECTIVE",
+		"deck": "REB",
+		"traits": [
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "BEAM",
+							"from": {
+								"k": "HAND",
+								"seat": 0
+							},
+							"filter": {
+								"traits": [
+									"HELMET"
+								]
+							},
+							"count": 1,
+							"to": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							},
+							"bind": "$2reb16.h"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$2reb16.h"
+							},
+							"then": {
+								"k": "GAIN_CARD",
+								"suits": [
+									"CARGO"
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_REQUIRE",
+								"cond": {
+									"k": "SPECIALTY_AT_LEAST",
+									"specialty": "MILITARY",
+									"value": 15
+								}
+							},
+							{
+								"k": "COST_LOG",
+								"filter": {
+									"traits": [
+										"WEAPON"
+									]
+								},
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									{
+										"k": "DISCARD",
+										"seat": 0
+									}
+								]
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DRAW",
+								"count": 3
+							},
+							{
+								"k": "DISCARD",
+								"count": 1,
+								"from": "HAND"
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB17-22",
+		"cardId": "2REB17/22",
+		"suit": "DIRECTIVE",
+		"deck": "REB",
+		"traits": [],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "JUNK",
+							"target": {
+								"zones": [
+									{
+										"k": "MARKET_OFFER",
+										"suit": "PERSON"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "CARGO"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "SHIP"
+									},
+									{
+										"k": "MARKET_OFFER",
+										"suit": "ALLY"
+									}
+								]
+							}
+						},
+						{
+							"k": "DRAW",
+							"count": 1
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 1
+					},
+					"body": {
+						"k": "GAIN_CARD",
+						"suits": [
+							"PERSON",
+							"CARGO",
+							"SHIP",
+							"ALLY"
+						],
+						"onlyJunk": true,
+						"to": [
+							"DISCARD"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB18-22",
+		"cardId": "2REB18/22",
+		"suit": "DIRECTIVE",
+		"deck": "REB",
+		"traits": [
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "DEPLOY",
+					"target": {
+						"zones": [
+							{
+								"k": "STAGING",
+								"seat": 0
+							}
+						],
+						"thisCard": true
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "BEAM",
+							"from": {
+								"k": "HAND",
+								"seat": 0
+							},
+							"filter": {
+								"traits": [
+									"HELMET"
+								]
+							},
+							"count": 1,
+							"to": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							},
+							"bind": "$2reb18.h"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$2reb18.h"
+							},
+							"then": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_TAKE_INCIDENT",
+									"count": 1
+								},
+								"body": {
+									"k": "GAIN_CARD",
+									"suits": [
+										"SHIP",
+										"ALLY"
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"suits": [
+								"INCIDENT"
+							]
+						}
+					},
+					"body": {
+						"k": "ADVANCE_SPECIALTY",
+						"specialty": "MILITARY",
+						"amount": 1
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB19-22",
+		"cardId": "2REB19/22",
+		"suit": "PERSON",
+		"deck": "REB",
+		"traits": [
+			"PAKLED"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_CARD",
+					"suits": [
+						"PERSON"
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 3
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "DIL",
+						"amount": 1
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": [
+							"ENGINEER"
+						]
+					}
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 6
+				},
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 1
+					},
+					"body": {
+						"k": "SCAN_FOR_TRAIT",
+						"traits": [
+							"SHADY",
+							"SCIENTIST"
+						]
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_DISCARD",
+							"count": 1,
+							"filter": {
+								"suits": [
+									"PERSON"
+								]
+							},
+							"bind": "$2reb19.d"
+						},
+						"body": {
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "GAIN_RESOURCE",
+									"res": "DIL",
+									"amount": 3
+								},
+								{
+									"k": "IF",
+									"cond": {
+										"k": "BOUND_IS",
+										"bind": "$2reb19.d",
+										"filter": {
+											"traits": [
+												"ENGINEER"
+											]
+										}
+									},
+									"then": {
+										"k": "GAIN_RESOURCE",
+										"res": "GLO",
+										"amount": 1
+									}
+								},
+								{
+									"k": "IF",
+									"cond": {
+										"k": "COUNT_AT_LEAST",
+										"query": {
+											"zones": [
+												{
+													"k": "BEAMED_TO",
+													"host": "THIS"
+												}
+											],
+											"filter": {
+												"traits": [
+													"HELMET"
+												]
+											}
+										},
+										"value": 1
+									},
+									"then": {
+										"k": "ADVANCE_SPECIALTY",
+										"specialty": "MILITARY",
+										"amount": 1
+									}
+								}
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB20-22",
+		"cardId": "2REB20/22",
+		"suit": "LOCATION",
+		"deck": "REB",
+		"traits": [
+			"PAKLED"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "TAKE_CONTROL",
+					"target": "THIS"
+				}
+			},
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "FIND",
+					"filter": {
+						"traits": [
+							"HELMET"
+						]
+					},
+					"zones": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						},
+						{
+							"k": "DRAW",
+							"seat": 0
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "BEAM",
+							"from": {
+								"k": "HAND",
+								"seat": 0
+							},
+							"filter": {
+								"traits": [
+									"HELMET"
+								]
+							},
+							"count": 1,
+							"to": {
+								"zones": [
+									{
+										"k": "LOCATION_AREA",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							},
+							"bind": "$2reb20.h"
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "DID",
+								"bind": "$2reb20.h"
+							},
+							"then": {
+								"k": "SEQ",
+								"steps": [
+									{
+										"k": "SEND_AWAY_TEAM",
+										"count": 1,
+										"target": {
+											"zones": [
+												"LOCATIONS"
+											],
+											"filter": {
+												"suits": [
+													"LOCATION"
+												]
+											}
+										},
+										"bind": "$2reb20.l"
+									},
+									{
+										"k": "IF",
+										"cond": {
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													"LOCATIONS"
+												],
+												"filter": {
+													"suits": [
+														"LOCATION"
+													]
+												},
+												"bound": "$2reb20.l",
+												"withShip": true
+											},
+											"value": 1
+										},
+										"then": {
+											"k": "GAIN_RESOURCE",
+											"res": "GLO",
+											"amount": 1
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "BEAM",
+					"from": {
+						"k": "HAND",
+						"seat": 0
+					},
+					"filter": {
+						"traits": [
+							"HELMET"
+						]
+					},
+					"count": 1,
+					"to": {
+						"zones": [
+							{
+								"k": "DUTY_OFFICER",
+								"seat": 0
+							}
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB21-22",
+		"cardId": "2REB21/22",
+		"suit": "CARGO",
+		"deck": "REB",
+		"traits": [
+			"HELMET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND"
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "2REB22-22",
+		"cardId": "2REB22/22",
+		"suit": "CARGO",
+		"deck": "REB",
+		"traits": [
+			"HELMET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 0,
+		"vpAsterisk": false,
+		"startPosition": "AVAILABLE",
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DRAW",
+							"count": 2
+						},
+						{
+							"k": "DISCARD",
+							"count": 1,
+							"from": "HAND"
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PROMOTE",
+					"from": "HAND",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			}
+		]
+	}
+]

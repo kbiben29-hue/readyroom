@@ -435,9 +435,9 @@ const samples: { [K in Effect['k']]: Effect & { k: K } } = {
 } as { [K in Effect['k']]: Effect & { k: K } }
 
 vitestDescribe('describe() is total over every node kind', () => {
-	it('renders all 76 kinds to non-empty English without placeholders/leaks', () => {
+	it('renders all 79 kinds to non-empty English without placeholders/leaks', () => {
 		const kinds = Object.keys(samples)
-		expect(kinds.length).toBe(76)
+		expect(kinds.length).toBe(79)
 		const rendered = Object.entries(samples).map(([k, node]) => ({
 			k,
 			out: describe(node as Effect),

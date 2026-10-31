@@ -1,0 +1,368 @@
+[
+	{
+		"deck": "REB",
+		"side": "BASIC",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": []
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": []
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 0,
+						"value": 1
+					},
+					{
+						"step": 3,
+						"value": 2
+					},
+					{
+						"step": 6,
+						"value": 3
+					},
+					{
+						"step": 9,
+						"value": 4
+					},
+					{
+						"step": 12,
+						"value": 5
+					},
+					{
+						"step": 15,
+						"value": 6
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2REB/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "ENGINEER"
+						},
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "SCIENTIST"
+						},
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "COMMUNICATION"
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT",
+							"discount": [
+								{
+									"res": [
+										"DIL",
+										"LAT"
+									],
+									"amount": 1
+								}
+							]
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "OR",
+									"terms": [
+										{
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"filter": {
+													"allTraits": [
+														"PAKLED",
+														"ENGINEER"
+													]
+												},
+												"seat": "SELF"
+											},
+											"value": 1
+										},
+										{
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"filter": {
+													"allTraits": [
+														"PAKLED",
+														"SCIENTIST"
+													]
+												},
+												"seat": "SELF"
+											},
+											"value": 1
+										},
+										{
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"filter": {
+													"allTraits": [
+														"PAKLED",
+														"COMMUNICATION"
+													]
+												},
+												"seat": "SELF"
+											},
+											"value": 1
+										}
+									]
+								}
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 2
+							}
+						}
+					]
+				},
+				"vp": 0
+			}
+		]
+	},
+	{
+		"deck": "REB",
+		"side": "ADVANCED",
+		"tracks": [
+			{
+				"specialty": "RESEARCH",
+				"multipliers": []
+			},
+			{
+				"specialty": "INFLUENCE",
+				"multipliers": []
+			},
+			{
+				"specialty": "MILITARY",
+				"multipliers": [
+					{
+						"step": 3,
+						"value": 1
+					},
+					{
+						"step": 6,
+						"value": 2
+					},
+					{
+						"step": 9,
+						"value": 3
+					},
+					{
+						"step": 12,
+						"value": 4
+					},
+					{
+						"step": 15,
+						"value": 5
+					}
+				]
+			}
+		],
+		"missions": [
+			{
+				"index": 0,
+				"cardId": "2REB/M1",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "ENGINEER"
+						},
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "SCIENTIST"
+						},
+						{
+							"k": "HAS_TRAIT_IN_PLAY",
+							"trait": "COMMUNICATION"
+						}
+					]
+				},
+				"reward": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ENLIST_DEVELOPMENT",
+							"discount": [
+								{
+									"res": [
+										"DIL",
+										"LAT"
+									],
+									"amount": 1
+								}
+							]
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "OR",
+									"terms": [
+										{
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"filter": {
+													"allTraits": [
+														"PAKLED",
+														"ENGINEER"
+													]
+												},
+												"seat": "SELF"
+											},
+											"value": 1
+										},
+										{
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"filter": {
+													"allTraits": [
+														"PAKLED",
+														"SCIENTIST"
+													]
+												},
+												"seat": "SELF"
+											},
+											"value": 1
+										},
+										{
+											"k": "COUNT_AT_LEAST",
+											"query": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"filter": {
+													"allTraits": [
+														"PAKLED",
+														"COMMUNICATION"
+													]
+												},
+												"seat": "SELF"
+											},
+											"value": 1
+										}
+									]
+								}
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 2
+							}
+						}
+					]
+				},
+				"vp": 3
+			},
+			{
+				"index": 1,
+				"cardId": "2REB/M2",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									"IN_PLAY"
+								],
+								"filter": {
+									"traits": [
+										"WEAPON"
+									]
+								},
+								"seat": "SELF"
+							},
+							"value": 2
+						},
+						{
+							"k": "SPECIALTY_AT_LEAST",
+							"specialty": "MILITARY",
+							"value": 6
+						}
+					]
+				},
+				"reward": {
+					"k": "DRAW",
+					"count": 3
+				},
+				"vp": 1
+			},
+			{
+				"index": 2,
+				"cardId": "2REB/M3",
+				"goal": {
+					"k": "AND",
+					"terms": [
+						{
+							"k": "COUNT_AT_LEAST",
+							"query": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"filter": {
+									"suits": [
+										"SHIP"
+									]
+								}
+							},
+							"value": 4
+						},
+						{
+							"k": "COMPARE",
+							"a": {
+								"k": "RESOURCE",
+								"res": "DIL"
+							},
+							"op": "GE",
+							"b": 8
+						}
+					]
+				},
+				"reward": {
+					"k": "TAKE_CONTROL",
+					"target": "FROM_LOCATION_DECK"
+				},
+				"vp": 3
+			}
+		]
+	}
+]

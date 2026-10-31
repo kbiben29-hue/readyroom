@@ -1397,7 +1397,21 @@
 		"vp": 0,
 		"vpAsterisk": false,
 		"startPosition": "DEVELOPMENT",
-		"developmentCost": null,
+		"developmentCost": {
+			"k": "COST_REQUIRE",
+			"cond": {
+				"k": "COUNT_AT_LEAST",
+				"query": {
+					"zones": [
+						{
+							"k": "HAND",
+							"seat": 0
+						}
+					]
+				},
+				"value": 0
+			}
+		},
 		"operations": [
 			{
 				"type": "PLAY",
@@ -2614,7 +2628,7 @@
 									}
 								},
 								{
-									"label": "Keep it and place 1 Dilithium on Earth",
+									"label": "Keep it and place 1 Dilithium on your Status card",
 									"body": {
 										"k": "PLACE_TOKENS",
 										"res": "DIL",

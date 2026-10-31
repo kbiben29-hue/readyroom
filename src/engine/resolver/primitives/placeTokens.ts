@@ -4,7 +4,7 @@ import { pickSingle } from '../runtime'
 import { evalAmount, resolveQuery } from '../../queries/resolveQuery'
 
 /** PLACE_TOKENS: put N resource tokens from the supply on a card ("place 1
- *  {DIL} on Earth" — 2ARC02, 2ARC19). Several matching cards → the player picks. */
+ *  {DIL} here" — 2ARC02, 2ARC19). Several matching cards → the player picks. */
 export const placeTokens: Primitive<Extract<Effect, { k: 'PLACE_TOKENS' }>> = {
 	isCost: false,
 	canResolve(state, node, ctx) {

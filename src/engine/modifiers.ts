@@ -255,6 +255,11 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 				(sp) => player(state, seat).specialties[sp] >= 6,
 			).length,
 	},
+	// --- To Boldly Go: the 2REB crew deck ---
+	'2REB01_HAND': {
+		describe: 'Your hand size is 3.',
+		handSize: () => 3,
+	},
 	// --- To Boldly Go common cards ---
 	'2PER03_HAND': {
 		describe: 'If you have 8+ {GLO}, increase your hand size by 2.',

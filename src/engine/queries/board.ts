@@ -8,7 +8,7 @@
 //     block, controlled Locations are never blocked — rules/12 §12.15).
 
 import { otherSeat, type GameState } from '../state'
-import { cardDef } from '../cards'
+import { cardDef, hasCardDef } from '../cards'
 import type { CardInstanceId } from '../ids'
 import type { Seat } from '../resolver/queries'
 import { blocksSendsTo, ignoresOpponentShips } from '../modifiers'
@@ -68,7 +68,8 @@ function securingTokensAt(
 			card.zone.k === 'FLEET' &&
 			card.shipTokenAt === locIid
 		)
-			n += (cardDef(card.def).secureWeight ?? 1) - 1
+			// a face-down card (seat projection) has no def to read
+			n += hasCardDef(card.def) ? (cardDef(card.def).secureWeight ?? 1) - 1 : 0
 	}
 	return n
 }

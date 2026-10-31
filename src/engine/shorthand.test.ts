@@ -330,6 +330,7 @@ describe('shorthand readability budget', () => {
 		// 30 for box 1 (+ MAL), 40 with To Boldly Go's commons (box-1 reprints
 		// repeat their rule sentences); its crews add their Duty Officer slots,
 		// hand sizes and wild Skills
-		expect(withRules).toBeLessThanOrEqual(60)
+		// Second Contact adds hand-size and Duty Officer rule sentences
+		expect(withRules).toBeLessThanOrEqual(70)
 	})
 })

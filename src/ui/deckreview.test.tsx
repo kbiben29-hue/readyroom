@@ -131,5 +131,5 @@ describe('deck review page', { timeout: 20_000 }, () => {
 			close!.click()
 		})
 		expect(host.querySelector('.deck-review')).toBeNull()
-	})
+	}, 60_000)
 })

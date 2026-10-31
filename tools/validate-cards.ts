@@ -65,9 +65,16 @@ const GROUPS: ReadonlyArray<{ file: string; label: string; expected: number }> =
 		{ file: 'tbg/common/location.json', label: 'TBG LOCATION', expected: 20 },
 		{ file: 'tbg/common/encounter.json', label: 'TBG ENCOUNTER', expected: 8 },
 		{ file: 'tbg/common/incident.json', label: 'TBG INCIDENT', expected: 6 },
+		// Second Contact (box 3) common cards; the 8 PERSONs marked REWARDS
+		// start in the Reward pile
+		{ file: 'sc/common/person.json', label: 'SC PERSON', expected: 13 },
+		{ file: 'sc/common/cargo.json', label: 'SC CARGO', expected: 3 },
+		{ file: 'sc/common/ship.json', label: 'SC SHIP', expected: 2 },
+		{ file: 'sc/common/ally.json', label: 'SC ALLY', expected: 3 },
+		{ file: 'sc/common/location.json', label: 'SC LOCATION', expected: 2 },
 	]
 
-const OVERALL_EXPECTED = 573
+const OVERALL_EXPECTED = 596
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -218,14 +225,14 @@ async function main(): Promise<void> {
 			warnings.push(
 				`${file}:${id}: file is outside the 14 counted groups (expected counts do not cover it)`,
 			)
-		} else if (/^(tbg\/)?common\//.test(group.file)) {
+		} else if (/^(tbg\/|sc\/)?common\//.test(group.file)) {
 			if (card.deck !== 'COMMON') {
 				warnings.push(
 					`${file}:${id}: deck ${card.deck} does not match the common/ file grouping`,
 				)
 			}
 			const expectedSuit = group.file
-				.replace(/^(tbg\/)?common\//, '')
+				.replace(/^(tbg\/|sc\/)?common\//, '')
 				.replace('.json', '')
 				.toUpperCase()
 			// The Stardate group has no single suit (DIRECTIVE faces) — skip the check.

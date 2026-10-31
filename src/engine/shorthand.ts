@@ -820,7 +820,9 @@ export function shorthand(e: Effect): Tok[] {
 				glyph('RECRYSTALLIZE', e.amount === 'ALL' ? 'all' : amt(e.amount).n),
 			]
 		case 'SCORE_VP':
-			return counted((n) => glyph('VP', n), e.amount, '')
+			return counted((n) => glyph('VP', n), e.amount, e.negate === true ? '−' : '')
+		case 'TAKE_REWARD':
+			return [glyph('REVEAL', String(e.look)), glyph('CARD', '+')]
 
 		// board
 		case 'SEND_AWAY_TEAM':

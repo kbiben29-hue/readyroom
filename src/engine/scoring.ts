@@ -256,6 +256,15 @@ function scoreVpAmount(
 	node: Extract<Effect, { k: 'SCORE_VP' }>,
 	ctx: EffectCtx,
 ): number {
+	const vp = scoreVpMagnitude(state, node, ctx)
+	return node.negate === true ? -vp : vp
+}
+
+function scoreVpMagnitude(
+	state: GameState,
+	node: Extract<Effect, { k: 'SCORE_VP' }>,
+	ctx: EffectCtx,
+): number {
 	const q = node.amount
 	if (
 		q !== null &&

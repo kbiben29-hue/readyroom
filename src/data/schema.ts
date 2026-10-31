@@ -926,7 +926,20 @@ export const EffectSchema: z.ZodType<Effect> = z.lazy(() =>
 			.strict(),
 		// ---------------- scoring (docs/effect-dsl.md §7 example) --------------------
 		// Illegal outside ENDGAME / SPECIAL operations — enforced in the superRefine.
-		z.object({ k: z.literal('SCORE_VP'), amount: AmountSchema }).strict(),
+		z
+			.object({
+				k: z.literal('SCORE_VP'),
+				amount: AmountSchema,
+				negate: z.boolean().optional(),
+			})
+			.strict(),
+		z
+			.object({
+				k: z.literal('TAKE_REWARD'),
+				look: z.number().int().min(1),
+				filter: CardFilterSchema.optional(),
+			})
+			.strict(),
 		// ---------------- escape hatch (docs/effect-dsl.md §8) ------------------------
 		z.object({ k: z.literal('SCRIPT'), fn: z.string().min(1) }).strict(),
 	]),

@@ -1,0 +1,424 @@
+[
+	{
+		"id": "3CAR01-3",
+		"cardId": "3CAR01/3",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"BETAZOID",
+			"ANOMALY",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "DEPLOY",
+							"target": {
+								"zones": [
+									{
+										"k": "STAGING",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "PAY_THEN",
+								"cost": {
+									"k": "COST_DISCARD",
+									"count": 1
+								},
+								"body": {
+									"k": "GAIN_CARD",
+									"suits": [
+										"CARGO"
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "BEAM",
+							"from": {
+								"k": "DISCARD",
+								"seat": 0
+							},
+							"filter": {
+								"suits": [
+									"CARGO"
+								]
+							},
+							"to": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							},
+							"count": 1
+						},
+						{
+							"k": "OPPONENT",
+							"body": {
+								"k": "MAY",
+								"body": {
+									"k": "DRAW",
+									"count": 1
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"BETAZOID"
+						]
+					}
+				},
+				"effect": {
+					"k": "GAIN_RESOURCE",
+					"res": "LAT",
+					"amount": 1
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "RECALL",
+						"target": {
+							"zones": [
+								{
+									"k": "BEAMED_TO",
+									"host": "THIS"
+								}
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"id": "3CAR02-3",
+		"cardId": "3CAR02/3",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"CREATURE",
+			"ATTACK",
+			"ONGOING"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": true,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_RESOURCE",
+						"res": "LAT",
+						"amount": 1
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "DEPLOY",
+								"target": {
+									"zones": [
+										{
+											"k": "STAGING",
+											"seat": 0
+										}
+									],
+									"thisCard": true
+								}
+							},
+							{
+								"k": "FORCE",
+								"body": {
+									"k": "LOG",
+									"target": {
+										"zones": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											"IN_PLAY"
+										],
+										"seat": "SELF",
+										"filter": {
+											"suits": [
+												"PERSON"
+											]
+										}
+									}
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_LOGGED",
+					"seat": "ANY",
+					"filter": {
+						"suits": [
+							"PERSON"
+						]
+					}
+				},
+				"effect": {
+					"k": "DRAW",
+					"count": 1
+				}
+			},
+			{
+				"type": "RESUPPLY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						},
+						{
+							"k": "MAY",
+							"body": {
+								"k": "LOG",
+								"target": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"suits": [
+											"PERSON"
+										]
+									},
+									"seat": "SELF"
+								}
+							}
+						},
+						{
+							"k": "REFRESH",
+							"target": {
+								"zones": [
+									{
+										"k": "FLEET",
+										"seat": 0
+									}
+								],
+								"thisCard": true
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3CAR03-3",
+		"cardId": "3CAR03/3",
+		"suit": "CARGO",
+		"deck": "COMMON",
+		"traits": [
+			"SHADY",
+			"DOCTOR",
+			"STARFLEET"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"requires": {
+					"specialty": "MILITARY",
+					"min": 5
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "MIN",
+								"terms": [
+									{
+										"k": "COUNT",
+										"query": {
+											"zones": [
+												"IN_PLAY"
+											],
+											"filter": {
+												"traits": [
+													"DOCTOR"
+												]
+											},
+											"seat": "SELF",
+											"exceptThis": true
+										}
+									},
+									3
+								]
+							},
+							"body": {
+								"k": "SEND_AWAY_TEAM",
+								"count": 1,
+								"target": {
+									"zones": [
+										"LOCATIONS"
+									],
+									"filter": {
+										"suits": [
+											"LOCATION"
+										]
+									}
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COMPARE",
+								"a": {
+									"k": "MIN",
+									"terms": [
+										{
+											"k": "COUNT",
+											"query": {
+												"zones": [
+													"IN_PLAY"
+												],
+												"filter": {
+													"traits": [
+														"DOCTOR"
+													]
+												},
+												"seat": "SELF",
+												"exceptThis": true
+											}
+										},
+										3
+									]
+								},
+								"op": "GE",
+								"b": 3
+							},
+							"then": {
+								"k": "GAIN_RESOURCE",
+								"res": "GLO",
+								"amount": 1
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "COST_TAKE_INCIDENT",
+								"count": 1
+							},
+							{
+								"k": "COST_LOG",
+								"filter": {
+									"suits": [
+										"PERSON",
+										"DIRECTIVE"
+									]
+								},
+								"from": [
+									{
+										"k": "HAND",
+										"seat": 0
+									},
+									"IN_PLAY"
+								]
+							}
+						]
+					},
+					"body": {
+						"k": "ADVANCE_SPECIALTY",
+						"specialty": "MILITARY",
+						"amount": 1
+					}
+				}
+			}
+		]
+	}
+]

@@ -398,6 +398,7 @@ const samples: { [K in Effect['k']]: Effect & { k: K } } = {
 		from: query0,
 	},
 	FLIP: { k: 'FLIP', target: 'THIS', to: '2KHA01B' },
+	TAKE_REWARD: { k: 'TAKE_REWARD', look: 2, filter: { traits: ['CROSSOVER'] } },
 	GIVE: { k: 'GIVE', target: 'THIS', to: 'DISCARD' },
 	WIPE_MARKET: { k: 'WIPE_MARKET' },
 	WIPE_NEUTRAL_ZONE: { k: 'WIPE_NEUTRAL_ZONE' },
@@ -443,9 +444,9 @@ const samples: { [K in Effect['k']]: Effect & { k: K } } = {
 } as { [K in Effect['k']]: Effect & { k: K } }
 
 vitestDescribe('describe() is total over every node kind', () => {
-	it('renders all 82 kinds to non-empty English without placeholders/leaks', () => {
+	it('renders all 83 kinds to non-empty English without placeholders/leaks', () => {
 		const kinds = Object.keys(samples)
-		expect(kinds.length).toBe(82)
+		expect(kinds.length).toBe(83)
 		const rendered = Object.entries(samples).map(([k, node]) => ({
 			k,
 			out: describe(node as Effect),

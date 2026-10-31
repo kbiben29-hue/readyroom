@@ -1048,6 +1048,8 @@ function render(node: Effect): string {
 			return `Gain ${node.max !== undefined ? `up to ${describeAmount(node.max)}` : 'all'} resources from ${describeQuery(node.target)}.`
 		case 'ADD_AWAY_TEAMS':
 			return `Add ${describeAmount(node.amount)} AWAY TEAM from the supply to your CAPTAIN.`
+		case 'TAKE_REWARD':
+			return `Look at ${node.look} random ${describeFilter(node.filter)} from the Reward pile. Take one of them and destroy the other${node.look > 2 ? 's' : ''}.`
 		case 'MARK_TRAIT':
 			return node.from === 'ANY'
 				? 'Mark any trait on your board.'
@@ -1128,6 +1130,8 @@ function render(node: Effect): string {
 
 		// -------- scoring (1) --------
 		case 'SCORE_VP': {
+			if (node.negate === true)
+				return `Score −${describeAmount(node.amount)} VP.`
 			const per = perOf(node.amount)
 			if (per !== undefined) {
 				return `Score 1 VP for every ${per.every} ${perBasePhrase(per.base)}${perCapTail(per)}, rounded down.`

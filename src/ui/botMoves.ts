@@ -285,6 +285,7 @@ const NODE_VERB: Record<string, string> = {
 	PLACE_TOKENS: 'placed tokens on',
 	TAKE_TOKENS: 'took the resources from',
 	GIVE: 'gave',
+	TAKE_REWARD: 'took a Reward card',
 	FLIP: 'flipped',
 	ENLIST_RESERVE: 'enlisted',
 	ENLIST_DEVELOPMENT: 'enlisted',

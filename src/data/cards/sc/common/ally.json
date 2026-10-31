@@ -1,0 +1,437 @@
+[
+	{
+		"id": "3ALL01-3",
+		"cardId": "3ALL01/3",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"BETAZOID",
+			"SPY",
+			"TELEPATH"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "FIND",
+					"filter": {
+						"traits": [
+							"BEVERAGE",
+							"AMBASSADOR",
+							"TELEPATH"
+						]
+					},
+					"zones": [
+						{
+							"k": "HAND",
+							"seat": 0
+						},
+						{
+							"k": "DISCARD",
+							"seat": 0
+						},
+						{
+							"k": "DRAW",
+							"seat": 0
+						}
+					]
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "REPEAT",
+							"times": {
+								"k": "SUM",
+								"terms": [
+									{
+										"k": "MIN",
+										"terms": [
+											{
+												"k": "COUNT",
+												"query": {
+													"zones": [
+														"IN_PLAY"
+													],
+													"filter": {
+														"traits": [
+															"STARFLEET"
+														]
+													},
+													"seat": "SELF"
+												}
+											},
+											1
+										]
+									},
+									{
+										"k": "MIN",
+										"terms": [
+											{
+												"k": "COUNT",
+												"query": {
+													"zones": [
+														"IN_PLAY"
+													],
+													"filter": {
+														"traits": [
+															"BEVERAGE"
+														]
+													},
+													"seat": "SELF"
+												}
+											},
+											1
+										]
+									},
+									{
+										"k": "MIN",
+										"terms": [
+											{
+												"k": "COUNT",
+												"query": {
+													"zones": [
+														"IN_PLAY"
+													],
+													"filter": {
+														"traits": [
+															"AMBASSADOR"
+														]
+													},
+													"seat": "SELF"
+												}
+											},
+											1
+										]
+									}
+								]
+							},
+							"body": {
+								"k": "MODIFIER_ATTACH",
+								"id": "TEMP_HAND_PLUS_1",
+								"stack": true
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COMPARE",
+								"a": {
+									"k": "SUM",
+									"terms": [
+										{
+											"k": "MIN",
+											"terms": [
+												{
+													"k": "COUNT",
+													"query": {
+														"zones": [
+															"IN_PLAY"
+														],
+														"filter": {
+															"traits": [
+																"STARFLEET"
+															]
+														},
+														"seat": "SELF"
+													}
+												},
+												1
+											]
+										},
+										{
+											"k": "MIN",
+											"terms": [
+												{
+													"k": "COUNT",
+													"query": {
+														"zones": [
+															"IN_PLAY"
+														],
+														"filter": {
+															"traits": [
+																"BEVERAGE"
+															]
+														},
+														"seat": "SELF"
+													}
+												},
+												1
+											]
+										},
+										{
+											"k": "MIN",
+											"terms": [
+												{
+													"k": "COUNT",
+													"query": {
+														"zones": [
+															"IN_PLAY"
+														],
+														"filter": {
+															"traits": [
+																"AMBASSADOR"
+															]
+														},
+														"seat": "SELF"
+													}
+												},
+												1
+											]
+										}
+									]
+								},
+								"op": "GE",
+								"b": 2
+							},
+							"then": {
+								"k": "LOG",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3ALL02-3",
+		"cardId": "3ALL02/3",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"AUGMENT"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "CHOOSE_ONE",
+					"options": [
+						{
+							"label": "Promote from your hand",
+							"body": {
+								"k": "PROMOTE",
+								"from": "HAND",
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								}
+							}
+						},
+						{
+							"label": "Promote from your Staging Area",
+							"body": {
+								"k": "PROMOTE",
+								"from": "STAGING",
+								"filter": {
+									"suits": [
+										"PERSON"
+									]
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_DISCARD",
+						"count": 1,
+						"filter": {
+							"traits": [
+								"STARFLEET"
+							]
+						}
+					},
+					"body": {
+						"k": "SCAN_N",
+						"n": 2,
+						"suits": [
+							"PERSON"
+						]
+					}
+				}
+			},
+			{
+				"type": "CLEANUP",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "ADVANCE_SPECIALTY",
+							"specialty": "RESEARCH",
+							"amount": {
+								"k": "COUNT",
+								"query": {
+									"zones": [
+										{
+											"k": "DUTY_OFFICER",
+											"seat": 0
+										}
+									]
+								}
+							}
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "NOT",
+								"term": {
+									"k": "COUNT_AT_LEAST",
+									"query": {
+										"zones": [
+											"IN_PLAY"
+										],
+										"filter": {
+											"traits": [
+												"AUGMENT"
+											]
+										},
+										"seat": "SELF",
+										"exceptThis": true
+									},
+									"value": 1
+								}
+							},
+							"then": {
+								"k": "LOG",
+								"target": "THIS"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	{
+		"id": "3ALL03-3",
+		"cardId": "3ALL03/3",
+		"suit": "ALLY",
+		"deck": "COMMON",
+		"traits": [
+			"LOWER_DECKER"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 3,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "PLAY",
+				"costsAction": true,
+				"isAttack": false,
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "CHOOSE_ONE",
+							"options": [
+								{
+									"label": "Gain an ALLY from the Junk",
+									"body": {
+										"k": "GAIN_CARD",
+										"suits": [
+											"ALLY"
+										],
+										"onlyJunk": true
+									}
+								},
+								{
+									"label": "Gain a CARGO from the Junk",
+									"body": {
+										"k": "GAIN_CARD",
+										"suits": [
+											"CARGO"
+										],
+										"onlyJunk": true
+									}
+								}
+							]
+						},
+						{
+							"k": "LOG",
+							"target": "THIS"
+						}
+					]
+				}
+			},
+			{
+				"type": "SUPPORT",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "CARD_JUNKED"
+				},
+				"effect": {
+					"k": "SEQ",
+					"steps": [
+						{
+							"k": "FIND",
+							"filter": {},
+							"zones": [
+								{
+									"k": "JUNK"
+								}
+							]
+						},
+						{
+							"k": "IF",
+							"cond": {
+								"k": "COUNT_AT_LEAST",
+								"query": {
+									"zones": [
+										"IN_PLAY"
+									],
+									"filter": {
+										"traits": [
+											"LOWER_DECKER"
+										]
+									},
+									"seat": "OPPONENT"
+								},
+								"value": 1
+							},
+							"then": {
+								"k": "TAKE",
+								"deck": "INCIDENT",
+								"count": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+]

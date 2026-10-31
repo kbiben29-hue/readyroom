@@ -431,7 +431,12 @@ export type EffectNode =
 	// --- Scoring (docs/effect-dsl.md §7) ----------------------------------------
 	// Used in the §7 ENDGAME example; absent from the §4 tables. Scoring-only:
 	// illegal outside an ENDGAME or SPECIAL operation.
-	| { k: 'SCORE_VP'; amount: Amount }
+	// negate: the amount scores as negative VP ("if not logged, this card
+	// scores −2 VP" — Second Contact's Reward cards)
+	| { k: 'SCORE_VP'; amount: Amount; negate?: boolean | undefined }
+	// Krulmuth-B: look at `look` random cards from the Reward pile (matching
+	// `filter`), take one to your hand and destroy the rest
+	| { k: 'TAKE_REWARD'; look: number; filter?: CardFilter | undefined }
 	// --- Escape hatch (docs/effect-dsl.md §8) ------------------------------------
 	| { k: 'SCRIPT'; fn: string } // named handler in a small registry; budget ≤ 5
 

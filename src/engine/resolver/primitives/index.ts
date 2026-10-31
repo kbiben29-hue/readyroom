@@ -86,6 +86,7 @@ import { takeTokens } from './takeTokens'
 import { markTrait } from './markTrait'
 import { flip } from './flip'
 import { give } from './give'
+import { takeReward } from './takeReward'
 import { addAwayTeams } from './addAwayTeams'
 import { wipeMarket } from './wipeMarket'
 import { wipeNeutralZone } from './wipeNeutralZone'
@@ -200,6 +201,7 @@ export const PRIMITIVES: {
 	MARK_TRAIT: markTrait,
 	FLIP: flip,
 	GIVE: give,
+	TAKE_REWARD: takeReward,
 	WIPE_MARKET: wipeMarket,
 	WIPE_NEUTRAL_ZONE: wipeNeutralZone,
 	DRONE: drone,

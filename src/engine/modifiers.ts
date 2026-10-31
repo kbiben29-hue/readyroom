@@ -265,6 +265,16 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 			).length,
 	},
 	// --- To Boldly Go: the 2REB crew deck ---
+	// --- Second Contact commons ---
+	'3PER01_DUTY': {
+		describe:
+			'You may additionally have another PERSON with VULCAN/ROMULAN/AMBASSADOR on duty.',
+		dutyOfficerSlot: { traits: ['VULCAN', 'ROMULAN', 'AMBASSADOR'] },
+	},
+	'3PER02_HAND': {
+		describe: 'Increase your hand size by 1.',
+		handSize: (base) => base + 1,
+	},
 	// --- 2KHA ---
 	'2KHA01_BOARD': {
 		describe: 'You do not enlist when you cycle your deck.',

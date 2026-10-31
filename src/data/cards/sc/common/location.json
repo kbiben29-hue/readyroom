@@ -1,0 +1,250 @@
+[
+	{
+		"id": "3LOC01-2",
+		"cardId": "3LOC01/2",
+		"suit": "LOCATION",
+		"deck": "COMMON",
+		"traits": [
+			"ANOMALY",
+			"TIME_TRAVEL"
+		],
+		"skills": [],
+		"focus": null,
+		"vp": 2,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_TAKE_INCIDENT",
+							"count": 1
+						},
+						"body": {
+							"k": "SCAN_FOR_TRAIT",
+							"traits": [
+								"ORION"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_REMOVE_AWAY_TEAM",
+						"count": 1,
+						"from": {
+							"zones": [
+								{
+									"k": "LOCATION_AREA",
+									"seat": 0
+								}
+							],
+							"thisCard": true
+						}
+					},
+					"body": {
+						"k": "TAKE_REWARD",
+						"look": 2,
+						"filter": {
+							"traits": [
+								"CROSSOVER"
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "REACTION",
+				"costsAction": false,
+				"isAttack": false,
+				"trigger": {
+					"on": "PUT_INTO_PLAY",
+					"filter": {
+						"traits": [
+							"SCIENTIST",
+							"ORION"
+						]
+					}
+				},
+				"effect": {
+					"k": "SEND_AWAY_TEAM",
+					"count": 1,
+					"target": {
+						"zones": [
+							"LOCATIONS"
+						],
+						"seat": "ANY",
+						"thisCard": true
+					}
+				}
+			}
+		],
+		"locationTier": "STARTING"
+	},
+	{
+		"id": "3LOC02-2",
+		"cardId": "3LOC02/2",
+		"suit": "LOCATION",
+		"deck": "COMMON",
+		"traits": [
+			"ORION"
+		],
+		"skills": [
+			"SKILL_INFLUENCE",
+			"SKILL_MILITARY"
+		],
+		"focus": null,
+		"vp": 1,
+		"vpAsterisk": false,
+		"startPosition": null,
+		"developmentCost": null,
+		"operations": [
+			{
+				"type": "CONTROL",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "MAY",
+					"body": {
+						"k": "PAY_THEN",
+						"cost": {
+							"k": "COST_RESOURCE",
+							"res": "LAT",
+							"amount": 1
+						},
+						"body": {
+							"k": "SEQ",
+							"steps": [
+								{
+									"k": "GAIN_CARD",
+									"suits": [
+										"SHIP"
+									],
+									"bind": "$3loc02.g"
+								},
+								{
+									"k": "MAY",
+									"body": {
+										"k": "FREE_PLAY",
+										"filter": {
+											"suits": [
+												"SHIP"
+											]
+										},
+										"from": [
+											{
+												"k": "HAND",
+												"seat": 0
+											},
+											{
+												"k": "DISCARD",
+												"seat": 0
+											},
+											{
+												"k": "DRAW",
+												"seat": 0
+											}
+										],
+										"bound": "$3loc02.g"
+									}
+								}
+							]
+						}
+					}
+				}
+			},
+			{
+				"type": "ACTIVATION",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "PAY_THEN",
+					"cost": {
+						"k": "COST_LOG",
+						"filter": {
+							"suits": [
+								"SHIP"
+							]
+						},
+						"from": [
+							{
+								"k": "HAND",
+								"seat": 0
+							},
+							{
+								"k": "DISCARD",
+								"seat": 0
+							}
+						]
+					},
+					"body": {
+						"k": "SEQ",
+						"steps": [
+							{
+								"k": "GAIN_ACTION",
+								"amount": 1
+							},
+							{
+								"k": "CHOOSE_ONE",
+								"options": [
+									{
+										"label": "Gain 1 Dilithium",
+										"body": {
+											"k": "GAIN_RESOURCE",
+											"res": "DIL",
+											"amount": 1
+										}
+									},
+									{
+										"label": "Gain 1 Latinum",
+										"body": {
+											"k": "GAIN_RESOURCE",
+											"res": "LAT",
+											"amount": 1
+										}
+									}
+								]
+							}
+						]
+					}
+				}
+			},
+			{
+				"type": "ENDGAME",
+				"costsAction": false,
+				"isAttack": false,
+				"effect": {
+					"k": "SCORE_VP",
+					"amount": {
+						"k": "COUNT",
+						"query": {
+							"zones": [
+								"ALL_OWNED"
+							],
+							"filter": {
+								"traits": [
+									"ORION"
+								]
+							},
+							"seat": "SELF"
+						}
+					}
+				}
+			}
+		],
+		"locationTier": "ADVANCED"
+	}
+]

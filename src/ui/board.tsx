@@ -426,6 +426,11 @@ export function CrewBoard({ seat }: { seat: Seat }) {
 	if (state === null) return null
 	const pl = player(state, seat)
 	const done = pl.missions.filter((m) => m.completed).length
+	// a board printing no Specialty tracks at all marks traits instead (2KHA)
+	const marking =
+		pl.markedTraits !== undefined ||
+		SPECIALTIES.every((s) => pl.tracks[s].length === 0)
+	const marked = pl.markedTraits ?? []
 	return (
 		<section
 			className="panel crew-board crew-console"
@@ -441,6 +446,22 @@ export function CrewBoard({ seat }: { seat: Seat }) {
 				{/* The console reads like the printed board: three specialty bars
               lit up to the marker, each capped by its position and the
               multiplier Focus icons score at right now (docs/ui-lcars.md §4.1). */}
+				{marking && (
+					<div className="console-marked" aria-label="Traits marked">
+						<strong>Traits marked {marked.length}/12</strong>{' '}
+						<span className="muted">
+							{marked.length === 0
+								? 'none yet'
+								: marked
+										.map((t) =>
+											t.startsWith('OPP:')
+												? `${t.slice(4).replace(/_/g, ' ')} (opponent's captain)`
+												: t.replace(/_/g, ' '),
+										)
+										.join(', ')}
+						</span>
+					</div>
+				)}
 				<div className="console-tracks">
 					{SPECIALTIES.map((s) => (
 						<SpecialtyBar

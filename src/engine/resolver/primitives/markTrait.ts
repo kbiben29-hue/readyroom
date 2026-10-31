@@ -15,7 +15,7 @@ export function markedTraits(state: GameState, seat: 0 | 1): string[] {
 }
 
 /** Traits of the opponent's CAPTAIN usable for the board's opponent entries:
- *  non-HUMAN if possible (rules for Khan). */
+ *  non-HUMAN if possible (the 2KHA crew rules). */
 function opponentCaptainTraits(state: GameState, seat: 0 | 1): TraitId[] {
 	const other = (1 - seat) as 0 | 1
 	const cap = zonesOf(state, { k: 'CAPTAIN', seat: other })[0]

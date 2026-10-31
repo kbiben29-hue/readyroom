@@ -265,7 +265,7 @@ export const MODIFIERS: Record<string, RuleModifierHooks> = {
 			).length,
 	},
 	// --- To Boldly Go: the 2REB crew deck ---
-	// --- Khan (2KHA) ---
+	// --- 2KHA ---
 	'2KHA01_BOARD': {
 		describe: 'You do not enlist when you cycle your deck.',
 		noSpecialtyGain: true,

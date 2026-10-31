@@ -1,8 +1,8 @@
 // The 2KHA crew deck from To Boldly Go (src/data/cards/crew/kha.json).
 // Pins its setup (no Reserve deck, two double-sided cards set up front side
 // up), the trait-marking board (MARK_TRAIT and its two opponent-CAPTAIN
-// entries), FLIP, GIVE, the rule changes (no Specialty gains, Wrathful Khan
-// ignoring requirements) and the Wrathful endgame.
+// entries), FLIP, GIVE, the rule changes (no Specialty gains, the flipped CAPTAIN
+// ignoring requirements) and the flipped CAPTAIN's endgame.
 
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -29,8 +29,8 @@ for (const deck of ['kha', 'kir']) {
 }
 register([...byCardId.values()])
 const def = (cardId: string): string => byCardId.get(cardId)!.id
-const KHAN = def('2KHA01A/22')
-const WRATHFUL = def('2KHA01B/22')
+const CAP_FRONT = def('2KHA01A/22')
+const CAP_BACK = def('2KHA01B/22')
 const OPP_CAPTAIN = def('2KIRK01/25') // HUMAN, STARFLEET
 
 const BOARD: TraitId[] = ['SPY', 'DOCTOR', 'CLOAK']
@@ -90,13 +90,13 @@ const MARK: Effect = {
 }
 
 function table(): GameState {
-	let s = place(fresh(), KHAN, ID('khan'), { k: 'CAPTAIN', seat: 0 }, 0)
-	s = place(s, OPP_CAPTAIN, ID('kirk'), { k: 'CAPTAIN', seat: 1 }, 1)
+	let s = place(fresh(), CAP_FRONT, ID('kc'), { k: 'CAPTAIN', seat: 0 }, 0)
+	s = place(s, OPP_CAPTAIN, ID('oc'), { k: 'CAPTAIN', seat: 1 }, 1)
 	return s
 }
 
 function markWith(s: GameState, trait?: TraitId): GameState {
-	return resolve(s, MARK, 'khan', trait)
+	return resolve(s, MARK, 'kc', trait)
 }
 
 let catalog: CardCatalog
@@ -119,14 +119,14 @@ describe('KHA setup', () => {
 			catalog,
 		)
 		const zone = (k: string) => s.zones[zoneKey({ k, seat: 0 } as never)] ?? []
-		expect(zone('CAPTAIN').map((i) => s.cards[i]!.def)).toEqual([KHAN])
+		expect(zone('CAPTAIN').map((i) => s.cards[i]!.def)).toEqual([CAP_FRONT])
 		expect(zone('RESERVE')).toHaveLength(0)
 		expect(zone('DEVELOPMENT')).toHaveLength(8)
 		expect(zone('LOCATION_AREA').map((i) => s.cards[i]!.def).sort()).toEqual(
 			[def('2KHA02A/22'), def('2KHA03/22')].sort(),
 		)
 		expect(zone('HAND').length + zone('DRAW').length).toBe(10)
-		expect(Object.values(s.cards).some((c) => c.def === WRATHFUL)).toBe(false)
+		expect(Object.values(s.cards).some((c) => c.def === CAP_BACK)).toBe(false)
 		expect(s.players[0].missions.map((m) => m.cardId)).toEqual([
 			'2KHA/M1',
 			'2KHA/M2',
@@ -158,30 +158,30 @@ describe('MARK_TRAIT', () => {
 })
 
 describe('rule changes', () => {
-	it('Specialty gains have no effect for Khan', () => {
-		const s = resolve(table(), { k: 'ADVANCE_SPECIALTY', specialty: 'MILITARY', amount: 3 }, 'khan')
+	it('Specialty gains have no effect for this crew', () => {
+		const s = resolve(table(), { k: 'ADVANCE_SPECIALTY', specialty: 'MILITARY', amount: 3 }, 'kc')
 		expect(s.players[0].specialties.MILITARY).toBe(0)
 	})
 
-	it('only the Wrathful side ignores Specialty requirements', () => {
+	it('only the flipped side ignores Specialty requirements', () => {
 		const req = { specialty: 'MILITARY' as const, min: 5 }
 		expect(meetsRequirement(table(), 0, req)).toBe(false)
-		const s = resolve(table(), { k: 'FLIP', target: { zones: [{ k: 'CAPTAIN', seat: 0 }] }, to: WRATHFUL }, 'khan')
-		expect(s.cards[ID('khan')]!.def).toBe(WRATHFUL)
+		const s = resolve(table(), { k: 'FLIP', target: { zones: [{ k: 'CAPTAIN', seat: 0 }] }, to: CAP_BACK }, 'kc')
+		expect(s.cards[ID('kc')]!.def).toBe(CAP_BACK)
 		expect(meetsRequirement(s, 0, req)).toBe(true)
 	})
 
 	it('GIVE puts a card in the opponent’s Discard pile as theirs', () => {
 		let s = place(table(), 'kxIncident', ID('i1'), { k: 'HAND', seat: 0 }, 0)
-		s = resolve(s, { k: 'GIVE', target: { zones: [{ k: 'HAND', seat: 0 }], seat: 'SELF' }, to: 'DISCARD' }, 'khan')
+		s = resolve(s, { k: 'GIVE', target: { zones: [{ k: 'HAND', seat: 0 }], seat: 'SELF' }, to: 'DISCARD' }, 'kc')
 		expect(s.cards[ID('i1')]!.owner).toBe(1)
 		expect(s.zones[zoneKey({ k: 'DISCARD', seat: 1 })]).toContain(ID('i1'))
 	})
 })
 
-describe('Wrathful endgame', () => {
-	function wrathful(marked: number): GameState {
-		let s = place(fresh(), WRATHFUL, ID('wk'), { k: 'CAPTAIN', seat: 0 }, 0)
+describe('flipped CAPTAIN endgame', () => {
+	function flipped(marked: number): GameState {
+		let s = place(fresh(), CAP_BACK, ID('wk'), { k: 'CAPTAIN', seat: 0 }, 0)
 		s = place(s, 'kxFocus', ID('fa'), { k: 'STAGING', seat: 0 }, 0)
 		s = place(s, 'kxFocus', ID('fb'), { k: 'STAGING', seat: 0 }, 0)
 		const markedTraits = Array.from({ length: marked }, (_, i) => `T${i}`)
@@ -193,10 +193,10 @@ describe('Wrathful endgame', () => {
 	const vp = (s: GameState) => score(s, 0).endgame.find((e) => e.card === ID('wk'))?.vp
 
 	it('scores 1 VP per Focus icon', () => {
-		expect(vp(wrathful(11))).toBe(2)
+		expect(vp(flipped(11))).toBe(2)
 	})
 
 	it('scores 3 VP per Focus icon with all 12 traits marked', () => {
-		expect(vp(wrathful(12))).toBe(6)
+		expect(vp(flipped(12))).toBe(6)
 	})
 })

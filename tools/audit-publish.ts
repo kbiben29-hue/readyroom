@@ -41,6 +41,8 @@ const ALLOWED_BINARIES = new Set<string>([
 ])
 
 const BINARY = /\.(png|jpe?g|gif|webp|bmp|tiff?|pdf|psd|icns|ico)$/i
+/** font files (OFL, public/fonts/): binary, so random bytes would read as names */
+const FONT = /\.(ttf|otf|woff2?)$/i
 const LOCAL_ONLY = [
 	'vendor/stcc/',
 	'public/stcc/',
@@ -175,6 +177,7 @@ async function main(): Promise<void> {
 			names !== null &&
 			NAME_SCOPE.some((p) => file.startsWith(p)) &&
 			!BINARY.test(file) &&
+			!FONT.test(file) &&
 			!file.endsWith('.md')
 		)
 			nameHits(file, names, errors)

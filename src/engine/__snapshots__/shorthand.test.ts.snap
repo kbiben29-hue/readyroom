@@ -1629,6 +1629,128 @@ exports[`shorthand golden > pins the whole catalogue (review this snapshot like 
   "2INC06-6": [
     "PLAY ACT | {−1 LAT} › −1<INCIDENT> (REFRESH ·<SHIP>)?",
   ],
+  "2KHA01A-22": [
+    "PASS | +ANY : (CARD trait CHECK)?",
+    "PASS | CONTROL : (CARD trait CHECK)?",
+    "ACTI | {−1 CARD ·<INCIDENT>} › +2 CARD −1 CARD",
+    "PASS | OPP[−<INCIDENT>] : ({−1 CARD} › ( +1 DIL | +1 LAT ))?",
+    "PASS | §«You do not enlist when you cycle your deck.»",
+  ],
+  "2KHA01B-22": [
+    "PASS | +ANY : (CARD trait CHECK)?",
+    "PASS | CONTROL : (CARD trait CHECK)?",
+    "REAC | OPP[−<INCIDENT>] : {−1 CARD} › ( +1 DIL | +1 LAT )",
+    "PASS | §«You do not enlist when you cycle your deck.»",
+    "PASS | §«Ignore all {RES-restriction}/{INF-restriction}/{MIL-restriction} requirements.»",
+    "ENDG | IF 'at least' ⇒ 1 VP / focus:ANY + focus:ANY + focus:ANY ELSE 1 VP / focus:ANY",
+  ],
+  "2KHA02A-22": [
+    "PASS | §«Increase your hand size by 1.»",
+  ],
+  "2KHA02B-22": [
+    "CONT ATTACK | OPP[+1<INCIDENT>] SEND all / AWAY",
+    "ACTI | {REQ[non-AWAY ≥1]} › +1 CARD",
+    "REAC | ENTER ·#AUGMENT : +1 CARD (DEVELOP)?",
+    "PASS | −<INCIDENT> : REFRESH",
+  ],
+  "2KHA03-22": [
+    "ACTI | +1 LAT",
+    "ACTI | {REQ['at least'] −1 DIL −1 LAT +1<INCIDENT>} › CONTROL",
+    "PASS | DISCARD_PILE DECK : +2 DIL CARD",
+    "RESU | IF 'at least' ⇒ CARD + GLO REVEAL CONTROL again LOG",
+  ],
+  "2KHA04-22": [
+    "PLAY ACT | DEPLOY IF non-≥2 OPP[<SHIP>] ⇒ 1 SEND +1 CARD",
+    "ACTI | {−1 DIL} › WARP",
+    "ACTI | {−1 CARD} › BEAM",
+    "ACTI | PROMOTE ·<PERSON>",
+    "DEV | −3 DIL REQ[≥1 <PERSON> #MIND_CONTROL]",
+  ],
+  "2KHA05-22": [
+    "PLAY ATTACK | {−1 DIL} › CARD OPP[DISCARD_PILE]",
+    "PLAY ACT | {−1 DIL} › SCAN #CLOAK / #SPY +1 CARD DESTROY",
+    "DEV | −2 DIL +1<INCIDENT>",
+  ],
+  "2KHA06-22": [
+    "PLAY | +2 CARD −1 CARD",
+    "PLAY ACT | DEVELOP free LOG",
+    "REAC | +<INCIDENT> : {−1 DIL} › 1 SEND",
+    "RESU | +1 DIL",
+    "DEV | +1<INCIDENT>",
+  ],
+  "2KHA07-22": [
+    "PLAY ACT ATTACK | −1 DECK 1 SEND IF OPP[AWAY ≥1] ⇒ OPP[−1 CARD]",
+    "REAC | WARP : {−1 CARD ·<PERSON>} › 1 SEND +1 GLO",
+    "DEV | +1<INCIDENT>",
+  ],
+  "2KHA08-22": [
+    "PLAY ATTACK | {REQ[≥1 OPP[DUTY]]} › DISMISS ·OPP[CARD] 2 SEND OPP[(+2 CARD)?]",
+    "PLAY | FIND LOG (−1<INCIDENT>)? LOG",
+    "DEV | −1 DIL −1 LAT",
+  ],
+  "2KHA09-22": [
+    "PLAY | ≤3 WARP",
+    "PLAY ACT | {−2 CARD −1 DIL} › +PERSON/CARGO/ALLY",
+    "DEV | −2 LAT",
+  ],
+  "2KHA10-22": [
+    "PLAY ACT ATTACK | +1 GLO OPP[FIND LOG] (CARD trait CHECK)?",
+    "PLAY ATTACK | {−1 CARD ·#AUGMENT} › (CARD OPP[DISCARD_PILE])? CARD OPP[DISCARD_PILE] OPP[LOG ·"2KHA10/22"]",
+    "DEV | −1 LAT REQ[≥1 "2KHA13/22"]",
+  ],
+  "2KHA11-22": [
+    "PLAY ATTACK | CARD trait CHECK DESTROY ·<LOCATION> DEPLOY",
+    "ENDG | 1 VP / MISSION VP",
+    "DEV | −2 DIL −1 LAT REQ[non-≥2 CARD]",
+  ],
+  "2KHA12-22": [
+    "PLAY ACT | IF ≥1 <LOCATION> ⇒ CONTROL",
+    "CONT | ({+1<INCIDENT>} › CARD trait CHECK)?",
+    "REAC | ENTER ·#SCIENTIST : −1<INCIDENT>",
+    "ACTI | {+1<INCIDENT>} › DESTROY +1 GLO",
+  ],
+  "2KHA13-22": [
+    "PLAY ACT | +1 DIL / #STARFLEET +1 DIL / <LOCATION> ({TOP_DECK} › +1 GLO PROMOTE)?",
+    "ACTI | REFRESH ({−1 CARD} › FIND ·#AUGMENT)?",
+    "CLEA | IF ≥1 "2KHA02B/22" ⇒ DEVELOP free ·"2KHA08/22" LOG",
+  ],
+  "2KHA14-22": [
+    "PLAY ACT | JUNK IF 'at least' ⇒ +SHIP(junk) ELSE −2 CARD CONTROL",
+    "CONT | ",
+    "ACTI | {−1 DIL} › WARP 1 SEND",
+  ],
+  "2KHA15-22": [
+    "PLAY | JUNK +1 CARD",
+    "PLAY ACT | {−1 LAT} › +PERSON/CARGO/SHIP/ALLY(junk)",
+  ],
+  "2KHA16-22": [
+    "PLAY | {+1<INCIDENT>} › DEPLOY (( PROMOTE ·<PERSON> | PROMOTE ·<PERSON> ·DISCARD_PILE ))? (BEAM ·<PERSON>)?",
+    "PASS | §«This ship cannot be warped.»",
+    "ACTI | BEAM ·<PERSON>",
+    "ACTI ACT | {REQ[≥3 <PERSON>]} › DISMISS ·<PERSON> / <PERSON> CONTROL ·'deck' LOG",
+  ],
+  "2KHA17-22": [
+    "PLAY | {−1 CARD} › +1 FROM_DISCARD",
+    "PLAY ACT | 1 SEND IF ≥1 "2KHA03/22" + ≥1 "2KHA18/22" ⇒ +1 ACT IF ≥1 #COMMUNICATION ⇒ ≤2×(( +1 CARD | +1 FROM_DISCARD ))",
+    "REAC | CONTROL : {−1 CARD} › ( +1 ACT | {−1 ACT} › DEVELOP DISMISS )",
+  ],
+  "2KHA18-22": [
+    "PLAY ACT | {+1<INCIDENT>} › +PERSON",
+    "PLAY ACT | 1 SEND IF ≥1 "2KHA03/22" + ≥1 "2KHA17/22" ⇒ +1 ACT IF ≥1 #WEAPON / #SECURITY ⇒ ≤2×(( +1 CARD | +1 FROM_DISCARD ))",
+    "REAC | DEPLOY ·<SHIP> : {−1 CARD} › 1 SEND",
+  ],
+  "2KHA19-22": [
+    "PLAY ACT ATTACK | {TOP_DECK} › CARD OPP[DISCARD_PILE] IF 'shares a trait' ⇒ +1 GLO OPP[(+1 CARD)?]",
+  ],
+  "2KHA20-22": [
+    "PLAY ACT ATTACK | {TOP_DECK} › CARD OPP[DISCARD_PILE] IF 'shares a trait' ⇒ +1 GLO OPP[(+1 CARD)?]",
+  ],
+  "2KHA21-22": [
+    "PLAY ACT ATTACK | {TOP_DECK} › CARD OPP[DISCARD_PILE] IF 'shares a trait' ⇒ +1 GLO OPP[(+1 CARD)?]",
+  ],
+  "2KHA22-22": [
+    "PLAY ACT | +1 FROM_DISCARD OPP[(WARP)?] IF non-≥1 #AUGMENT ⇒ (FREE_PLAY ·<INCIDENT>)? −1<INCIDENT>",
+  ],
   "2KIRK01-25": [
     "REAC | ENTER ·#KLINGON : {−1 CARD} › +1 MILITARY",
     "ACTI | {TOP_DECK} › +1 FROM_DISCARD ·<DIRECTIVE>",

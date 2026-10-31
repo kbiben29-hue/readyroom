@@ -3,7 +3,10 @@ import { createRoot } from 'react-dom/client'
 
 import { DesktopRoot } from './desktop/DesktopRoot'
 import { isDesktop } from './desktop/bridge'
+import * as nativeBridge from './desktop/bridge'
 import App from './ui/App'
+import * as browserBridge from './desktop/browserBridge'
+import { prepareOfflineApp } from './offline'
 import { createWorkerRunner } from './ui/botRunner'
 import { RecoverableErrorBoundary } from './ui/errorScreen'
 import { setBotRunner } from './ui/store'
@@ -18,16 +21,29 @@ setBotRunner(createWorkerRunner())
 // shows the recoverable error screen with a copyable session, never a white
 // page. The GameFlow board also has its own boundary, so a board crash keeps
 // the top bar / undo usable.
-createRoot(document.getElementById('root')!).render(
-	<StrictMode>
-		<RecoverableErrorBoundary>
-			{isDesktop() ? (
-				<DesktopRoot>
+function renderApp() {
+	createRoot(document.getElementById('root')!).render(
+		<StrictMode>
+			<RecoverableErrorBoundary>
+				{isDesktop() || import.meta.env.MODE === 'pages' ? (
+					<DesktopRoot bridge={isDesktop() ? nativeBridge : browserBridge}>
+						<App />
+					</DesktopRoot>
+				) : (
 					<App />
-				</DesktopRoot>
-			) : (
-				<App />
-			)}
-		</RecoverableErrorBoundary>
-	</StrictMode>,
-)
+				)}
+			</RecoverableErrorBoundary>
+		</StrictMode>,
+	)
+}
+
+if (import.meta.env.MODE === 'pages') {
+	void prepareOfflineApp()
+		.then(renderApp)
+		.catch((error) => {
+			const root = document.getElementById('root')!
+			root.textContent =
+				'Offline setup could not finish. Connect to the internet and reload. ' +
+				String(error)
+		})
+} else renderApp()

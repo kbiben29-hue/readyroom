@@ -23,12 +23,15 @@ export const SHELL_QUERIES = {
 	wide: '(orientation: landscape) and (max-height: 499.98px)',
 	phone: '(max-width: 767.98px)',
 	tablet: '(max-width: 1079.98px)',
+	/** Large touch tablets keep the touch shell in landscape, too. */
+	touch: '(hover: none) and (pointer: coarse)',
 } as const
 
 export interface Viewport {
 	wide: boolean
 	phone: boolean
 	tablet: boolean
+	touch?: boolean
 }
 
 /** The shell for a viewport and a player's choice. Pure. */
@@ -43,7 +46,7 @@ export function pickShell(v: Viewport, choice: ShellChoice): Shell {
 		case 'auto':
 			if (v.wide) return 'phone-wide'
 			if (v.phone) return 'phone'
-			if (v.tablet) return 'tablet'
+			if (v.tablet || v.touch) return 'tablet'
 			return 'console'
 	}
 }
@@ -124,6 +127,7 @@ export function readViewport(): Viewport {
 		wide: mql(SHELL_QUERIES.wide)?.matches ?? false,
 		phone: mql(SHELL_QUERIES.phone)?.matches ?? false,
 		tablet: mql(SHELL_QUERIES.tablet)?.matches ?? false,
+		touch: mql(SHELL_QUERIES.touch)?.matches ?? false,
 	}
 }
 

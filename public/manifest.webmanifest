@@ -1,7 +1,7 @@
 {
 	"name": "Ready Room",
 	"short_name": "Ready Room",
-	"description": "Unofficial fan implementation — play Star Trek: Captain's Chair on your phone, locally or online.",
+	"description": "Unofficial fan implementation \u2014 play Star Trek: Captain's Chair on your phone, locally or online.",
 	"start_url": "./",
 	"scope": "./",
 	"display": "standalone",
@@ -14,6 +14,11 @@
 			"sizes": "any",
 			"type": "image/svg+xml",
 			"purpose": "any"
+		},
+		{
+			"src": "apple-touch-icon.png",
+			"sizes": "180x180",
+			"type": "image/png"
 		}
 	]
 }

@@ -23,9 +23,12 @@ import {
 	type StccCard,
 } from '../data/stcc'
 
-const modules: Record<string, unknown> = ['test', 'desktop', 'hosted'].includes(
-	import.meta.env.MODE,
-)
+const modules: Record<string, unknown> = [
+	'test',
+	'desktop',
+	'hosted',
+	'pages',
+].includes(import.meta.env.MODE)
 	? {}
 	: import.meta.glob('../../vendor/stcc/*.json', {
 			eager: true,
@@ -45,7 +48,7 @@ const customPacks: unknown[] =
 const customImages: Record<string, string> = Object.assign(
 	{},
 	...Object.values(
-		['test', 'desktop', 'hosted'].includes(import.meta.env.MODE)
+		['test', 'desktop', 'hosted', 'pages'].includes(import.meta.env.MODE)
 			? {}
 			: import.meta.glob<Record<string, string>>(
 					'../../vendor/custom/*.images.json',

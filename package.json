@@ -24,7 +24,14 @@
 		"prepare": "husky",
 		"tauri": "tauri",
 		"desktop:dev": "tauri dev",
-		"desktop:build": "tauri build"
+		"desktop:build": "tauri build",
+		"ios:check": "node tools/ios-check.mjs",
+		"ios:init": "npm run ios:check && tauri ios init",
+		"ios:dev": "npm run ios:check && tauri ios dev",
+		"ios:build": "npm run ios:check && tauri ios build",
+		"ios:open": "tauri ios dev --open",
+		"build:pages": "npm run validate:cards && npm run audit:publish && tsc -b && vite build --mode pages",
+		"preview:pages": "vite preview --mode pages --host 127.0.0.1"
 	},
 	"lint-staged": {
 		"*": "prettier --write --ignore-unknown --ignore-path .prettierignore"

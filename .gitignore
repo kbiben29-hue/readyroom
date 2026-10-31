@@ -44,3 +44,8 @@ coverage/
 
 # games mirrored by the dev server for `npm run game` (vite.config.ts)
 .debug/
+
+# Generated native iPad project and Apple signing assets
+src-tauri/gen/apple/
+*.mobileprovision
+*.p12

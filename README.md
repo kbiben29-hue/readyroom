@@ -169,3 +169,15 @@ Card images and text are © WizKids. Star Trek and related marks are trademarks 
 
 The code in this repository is MIT-licensed (see [LICENSE](LICENSE)). The license covers only
 the code written here, not the game, its cards, its art or its rules text.
+
+## Native iPadOS build
+
+The native shell has an iPadOS configuration and touch-tablet layout selection.
+See [docs/ipados.md](docs/ipados.md) for Xcode setup, first-run card download,
+offline play, and signing/distribution steps. Start with `npm run ios:check`.
+
+## Play on iPad through GitHub Pages
+
+The GitHub Pages build supports Safari and Add to Home Screen, with local card
+storage for offline play. See [docs/github-pages.md](docs/github-pages.md) for
+publishing and installation. No Xcode is needed for this version.

@@ -31,6 +31,13 @@ describe('shell selection', () => {
 		expect(shellForSize(1024, 768)).toBe('tablet')
 	})
 
+	it('keeps a large touch tablet in the tablet shell, with a console override', () => {
+		const ipad = { wide: false, phone: false, tablet: false, touch: true }
+		expect(pickShell(ipad, 'auto')).toBe('tablet')
+		expect(pickShell(ipad, 'console')).toBe('console')
+		expect(pickShell({ ...ipad, phone: true }, 'auto')).toBe('phone')
+	})
+
 	it('the stored choice overrides the viewport', () => {
 		const phone = { wide: false, phone: true, tablet: true }
 		const desk = { wide: false, phone: false, tablet: false }
@@ -62,6 +69,11 @@ describe('shell selection', () => {
 	})
 
 	it('reads as the console without matchMedia (jsdom, old browsers)', () => {
-		expect(readViewport()).toEqual({ wide: false, phone: false, tablet: false })
+		expect(readViewport()).toEqual({
+			wide: false,
+			phone: false,
+			tablet: false,
+			touch: false,
+		})
 	})
 })

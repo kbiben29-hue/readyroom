@@ -12,49 +12,64 @@ import {
 	type StccProgress,
 } from '../data/stccFetch'
 import { loadStccFrom } from '../ui/stcc'
-import {
-	OPEN_CARD_DATABASE,
-	STCC_SOURCE,
-	readManifest,
-	readVendorJson,
-	stccBase,
-	stccFolder,
-	tauriIo,
-} from './bridge'
+import * as nativeBridge from './bridge'
+
+export type CardDataBridge = Pick<
+	typeof nativeBridge,
+	| 'OPEN_CARD_DATABASE'
+	| 'STCC_SOURCE'
+	| 'readManifest'
+	| 'readVendorJson'
+	| 'stccBase'
+	| 'stccFolder'
+	| 'tauriIo'
+>
 
 type Screen =
 	| { kind: 'checking' }
 	| { kind: 'setup'; manifest: StccManifest | null }
 	| { kind: 'app' }
 
-async function installData(): Promise<void> {
-	await loadStccFrom(`${stccBase()}/public`, readVendorJson)
+async function installData(bridge: CardDataBridge): Promise<void> {
+	await loadStccFrom(`${bridge.stccBase()}/public`, bridge.readVendorJson)
 }
 
-export function DesktopRoot({ children }: { children: ReactNode }) {
+export function DesktopRoot({
+	children,
+	bridge = nativeBridge,
+}: {
+	children: ReactNode
+	bridge?: CardDataBridge
+}) {
 	const [screen, setScreen] = useState<Screen>({ kind: 'checking' })
 
-	const check = useCallback(async (force: boolean) => {
-		const manifest = await readManifest().catch(() => null)
-		if (!force && stccUpToDate(manifest, STCC_SOURCE)) {
-			await installData()
-			setScreen({ kind: 'app' })
-		} else setScreen({ kind: 'setup', manifest })
-	}, [])
+	const check = useCallback(
+		async (force: boolean) => {
+			const manifest = await bridge.readManifest().catch(() => null)
+			if (!force && stccUpToDate(manifest, bridge.STCC_SOURCE)) {
+				await installData(bridge)
+				setScreen({ kind: 'app' })
+			} else setScreen({ kind: 'setup', manifest })
+		},
+		[bridge],
+	)
 
 	useEffect(() => {
 		void check(false)
 		const open = () => void check(true)
-		window.addEventListener(OPEN_CARD_DATABASE, open)
-		return () => window.removeEventListener(OPEN_CARD_DATABASE, open)
+		window.addEventListener(bridge.OPEN_CARD_DATABASE, open)
+		return () => window.removeEventListener(bridge.OPEN_CARD_DATABASE, open)
 	}, [check])
 
 	if (screen.kind === 'app') return children
 	if (screen.kind === 'checking') return null
 	return (
 		<StccSetup
+			bridge={bridge}
 			manifest={screen.manifest}
-			onDone={() => void installData().then(() => setScreen({ kind: 'app' }))}
+			onDone={() =>
+				void installData(bridge).then(() => setScreen({ kind: 'app' }))
+			}
 		/>
 	)
 }
@@ -66,9 +81,11 @@ const PHASE_LABEL: Record<StccProgress['phase'], string> = {
 }
 
 function StccSetup({
+	bridge,
 	manifest,
 	onDone,
 }: {
+	bridge: CardDataBridge
 	manifest: StccManifest | null
 	onDone: () => void
 }) {
@@ -76,17 +93,17 @@ function StccSetup({
 	const [running, setRunning] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const [folder, setFolder] = useState<string | null>(null)
-	const upToDate = stccUpToDate(manifest, STCC_SOURCE)
+	const upToDate = stccUpToDate(manifest, bridge.STCC_SOURCE)
 
 	useEffect(() => {
-		void stccFolder().then(setFolder, () => {})
-	}, [])
+		void bridge.stccFolder().then(setFolder, () => {})
+	}, [bridge])
 
 	const download = async () => {
 		setRunning(true)
 		setError(null)
 		try {
-			const res = await fetchStcc(STCC_SOURCE, tauriIo, {
+			const res = await fetchStcc(bridge.STCC_SOURCE, bridge.tauriIo, {
 				now: () => new Date().toISOString(),
 				onProgress: setProgress,
 			})
@@ -105,7 +122,7 @@ function StccSetup({
 	const status =
 		manifest === null
 			? 'Not downloaded yet.'
-			: manifest.sha !== STCC_SOURCE.sha
+			: manifest.sha !== bridge.STCC_SOURCE.sha
 				? 'A newer version of the card database is available.'
 				: upToDate
 					? `Up to date: ${manifest.images} card scans, ${manifest.icons} icons.`
@@ -118,9 +135,10 @@ function StccSetup({
 				<h2>Card database</h2>
 				<p>
 					Card names, rules text, scans and icons come from the STCC Card
-					Database (<code>{STCC_SOURCE.site}</code>). They are © WizKids and not
-					part of this app, so Ready Room downloads its own copy onto this
-					computer (about 340 MB, once).
+					Database (<code>{bridge.STCC_SOURCE.site}</code>). They are © WizKids
+					and not part of this app, so Ready Room downloads its own copy onto
+					this device (about 340 MB, once). After downloading, local games work
+					offline.
 				</p>
 				<p className="muted small">
 					{status}

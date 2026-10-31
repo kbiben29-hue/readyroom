@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 
 import react from '@vitejs/plugin-react'
+import { pagesOffline } from './tools/pages-offline.ts'
 import { defineConfig, type Plugin } from 'vite'
 
 /** `vite build --mode desktop` (the Tauri build) and `--mode hosted` (the Fly
@@ -10,7 +11,7 @@ import { defineConfig, type Plugin } from 'vite'
  *  the scans/icons Vite copied from public/stcc/ are removed, even when they
  *  were fetched on this machine. The desktop app downloads its own copy on
  *  first launch (docs/desktop.md). */
-const CODE_ONLY = new Set(['desktop', 'hosted'])
+const CODE_ONLY = new Set(['desktop', 'hosted', 'pages'])
 
 function dropStcc(): Plugin {
 	let outDir = 'dist'
@@ -62,10 +63,12 @@ function debugGames(): Plugin {
 }
 
 export default defineConfig(({ mode }) => ({
+	base: mode === 'pages' ? '/readyroom/' : '/',
 	plugins: [
 		react(),
 		debugGames(),
 		...(CODE_ONLY.has(mode) ? [dropStcc()] : []),
+		...(mode === 'pages' ? [pagesOffline()] : []),
 	],
 	// the house-AI worker (src/ui/botWorker.ts) is a module worker; ES output
 	// keeps it valid if it ever code-splits (iife can't)

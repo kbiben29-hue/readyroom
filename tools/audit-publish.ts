@@ -36,6 +36,8 @@ const ALLOWED_BINARIES = new Set<string>([
 	'src-tauri/icons/icon.png',
 	'src-tauri/icons/icon.icns',
 	'src-tauri/icons/icon.ico',
+	// Home Screen copy of our own app icon, not a card scan
+	'public/apple-touch-icon.png',
 ])
 
 const BINARY = /\.(png|jpe?g|gif|webp|bmp|tiff?|pdf|psd|icns|ico)$/i

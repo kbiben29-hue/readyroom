@@ -37,6 +37,44 @@
 				}
 			} catch (e) {}
 		</script>
+		<script>
+			// This runs even if a cached page points to a bundle that cannot load.
+			window.addEventListener('load', function () {
+				setTimeout(function () {
+					var root = document.getElementById('root')
+					if (!root || !root.querySelector('.boot')) return
+					root.textContent = 'Ready Room could not finish loading. '
+					var retry = document.createElement('button')
+					retry.textContent = 'Update and retry'
+					retry.onclick = function () {
+						if (!navigator.serviceWorker) return location.reload()
+						navigator.serviceWorker
+							.getRegistration()
+							.then(function (reg) {
+								if (!reg) return location.reload()
+								return reg.update().then(function () {
+									setTimeout(function () {
+										location.reload()
+									}, 3000)
+								})
+							})
+							.catch(function () {
+								location.reload()
+							})
+					}
+					root.appendChild(retry)
+				}, 15000)
+			})
+			navigator.serviceWorker &&
+				navigator.serviceWorker.addEventListener('message', function (event) {
+					if (
+						event.data &&
+						event.data.type === 'ready-room-updated' &&
+						document.querySelector('#root .boot')
+					)
+						location.reload()
+				})
+		</script>
 		<!-- first-paint loader: the bundle can take seconds on a phone; React
 		     replaces #root's children on its first render -->
 		<style>

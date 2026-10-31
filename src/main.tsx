@@ -45,5 +45,9 @@ if (import.meta.env.MODE === 'pages') {
 			root.textContent =
 				'Offline setup could not finish. Connect to the internet and reload. ' +
 				String(error)
+			const retry = document.createElement('button')
+			retry.textContent = 'Retry'
+			retry.onclick = () => location.reload()
+			root.appendChild(retry)
 		})
 } else renderApp()

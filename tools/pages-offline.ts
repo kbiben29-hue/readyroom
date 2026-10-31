@@ -31,14 +31,13 @@ const CARDS = 'ready-room-card-images-v1';
 const BASE = ${JSON.stringify(base)};
 const URLS = ${JSON.stringify(files.map((f) => base + f))};
 self.addEventListener('install', event => {
- event.waitUntil(caches.open(SHELL).then(cache => cache.addAll(URLS)));
+ event.waitUntil(caches.open(SHELL).then(async cache => { await cache.addAll(URLS); await self.skipWaiting(); }));
 });
 self.addEventListener('activate', event => {
  event.waitUntil((async () => {
-  for (const key of await caches.keys()) {
-   if (key.startsWith('ready-room-shell-') && key !== SHELL) await caches.delete(key);
-  }
+  // Retain earlier shells so tabs already open can finish using their assets.
   await self.clients.claim();
+  for (const client of await self.clients.matchAll({type:'window'})) client.postMessage({type:'ready-room-updated'});
  })());
 });
 self.addEventListener('fetch', event => {
@@ -47,9 +46,9 @@ self.addEventListener('fetch', event => {
  if (url.pathname.startsWith(BASE + 'stcc/')) {
   event.respondWith(caches.open(CARDS).then(cache => cache.match(event.request)).then(hit => hit || new Response('Card not downloaded', {status:404})));
  } else if (event.request.mode === 'navigate' && url.pathname.startsWith(BASE)) {
-  event.respondWith(caches.open(SHELL).then(cache => cache.match(BASE + 'index.html')).then(hit => hit || fetch(event.request)));
- } else if (URLS.includes(url.pathname)) {
-  event.respondWith(caches.open(SHELL).then(cache => cache.match(event.request)).then(hit => hit || fetch(event.request)));
+  event.respondWith(fetch(event.request).then(response => { if (!response.ok) throw new Error('Navigation failed'); return response; }).catch(() => caches.open(SHELL).then(cache => cache.match(BASE + 'index.html'))));
+ } else if (URLS.includes(url.pathname) || url.pathname.startsWith(BASE + 'assets/')) {
+  event.respondWith(caches.match(event.request).then(hit => hit || fetch(event.request)));
  }
 });
 `,

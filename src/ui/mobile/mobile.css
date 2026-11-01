@@ -807,6 +807,10 @@ button.pb-pile:not(:disabled) {
 .pb-peek .pb-tile {
 	height: 92px;
 }
+/* phones: a bit over three card faces across, so the row reads as scrollable */
+.pb-phone .pb-peek {
+	grid-auto-columns: calc((100% - 18px) / 3.4);
+}
 
 /* ------------------------------------------------------------ sheets */
 .pb-scrim {

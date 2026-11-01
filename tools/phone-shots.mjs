@@ -73,10 +73,16 @@ const tapFirstHandCard = async (page) => {
 	await el.click({ timeout: 5000 })
 }
 
+const tab = (name) => async (page) =>
+	page.getByRole('tab', { name }).or(page.getByText(name, { exact: true })).first().click({ timeout: 5000 })
+
 const steps = [
 	['action', advance],
+	['hand-sheet', async (p) => p.getByText(/^Hand/).first().click({ timeout: 5000 })],
+	['close', async (p) => p.keyboard.press('Escape')],
+	['sector', tab('Sector')],
+	['crew', tab('Crew')],
 	['tap-card', tapFirstHandCard],
-	['scroll', async (p) => p.mouse.wheel(0, 600)],
 ]
 
 await shoot('iphone13', 'iPhone 13', steps)

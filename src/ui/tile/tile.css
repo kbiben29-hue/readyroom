@@ -618,20 +618,21 @@
 	}
 }
 
-/* Full card faces on the tablet board; phones keep their compact text layout.
- * Legality buttons and live state remain separate from the printed artwork. */
+/* Full card faces on the touch shells (tablet and phones). Legality buttons
+ * and live state remain separate from the printed artwork: the lit lines stay
+ * under the scan, so tapping a line still plays it. */
 .pb-card-scan {
 	display: none;
 }
-.pb-tablet .pb-card-scan {
+.pb .pb-card-scan {
 	display: block;
 	margin: 6px auto 8px;
 	text-align: center;
 }
-.pb-tablet .pb-card-scan[role='button'] {
+.pb .pb-card-scan[role='button'] {
 	cursor: pointer;
 }
-.pb-tablet .pb-card-scan img {
+.pb .pb-card-scan img {
 	display: block;
 	width: 100%;
 	height: auto;
@@ -639,15 +640,36 @@
 	object-fit: contain;
 	border-radius: 6px;
 }
-.pb-tablet .pb-peek .pb-tile:has(.pb-card-scan) {
-	height: 166px;
+/* phones: a readable card face, centred in the wide tile */
+.pb-phone .pb-card-scan img,
+.pb-phone-wide .pb-card-scan img {
+	width: auto;
+	max-width: min(100%, 240px);
+	max-height: 336px;
+	margin: 0 auto;
+}
+/* the hand dock: just the card faces */
+.pb .pb-peek .pb-tile:has(.pb-card-scan) {
+	height: auto;
 	padding: 3px 3px 3px 6px;
 }
-.pb-tablet .pb-peek .pb-tile:has(.pb-card-scan) > :not(.pb-card-scan) {
+.pb .pb-peek .pb-tile:has(.pb-card-scan) > :not(.pb-card-scan) {
 	display: none;
 }
-.pb-tablet .pb-peek .pb-card-scan {
+.pb .pb-peek .pb-card-scan {
 	margin: 0;
+}
+.pb-phone .pb-peek .pb-card-scan img,
+.pb-phone-wide .pb-peek .pb-card-scan img {
+	width: 100%;
+	max-width: none;
+	height: auto;
+	max-height: none;
+	aspect-ratio: 63 / 88;
+	object-fit: cover;
+}
+.pb-tablet .pb-peek .pb-tile:has(.pb-card-scan) {
+	height: 166px;
 }
 .pb-tablet .pb-peek .pb-card-scan img {
 	height: 158px;

@@ -46,6 +46,7 @@ describe('sound effects', () => {
 			'alert',
 			'warning',
 			'undo',
+			'beam',
 			'victory',
 			'defeat',
 		]
@@ -56,6 +57,7 @@ describe('sound effects', () => {
 		setSoundSettings({ enabled: false, volume: 0.3 })
 		expect(JSON.parse(localStorage.getItem(SOUND_KEY)!)).toEqual({
 			enabled: false,
+			music: true,
 			volume: 0.3,
 		})
 		setSoundSettings({ enabled: true, volume: 0.6 })

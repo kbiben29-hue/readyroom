@@ -51,6 +51,14 @@ export function cueDispatch(
 	const incidentsAfter = zonesOf(after, { k: 'INCIDENT_DECK' }).length
 	if (!alerted && incidentsAfter < incidentsBefore) redAlert('warning')
 
+	// a card beamed aboard, or an Away Team sent down to a Location
+	const beamed = (st: GameState) =>
+		Object.values(st.cards).filter((c) => c.beamedTo !== null).length
+	const away = (st: GameState) =>
+		Object.values(st.awayTeamsAt).reduce((n, [a, b]) => n + a + b, 0)
+	if (beamed(after) > beamed(before) || away(after) > away(before))
+		playCue('beam')
+
 	// any mission completed through an effect, not the button
 	if (intent.t !== 'COMPLETE_MISSION') {
 		const done = (s: GameState) =>

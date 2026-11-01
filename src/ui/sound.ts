@@ -14,11 +14,13 @@ export const SOUND_KEY = 'ready-room.sound'
 
 export interface SoundSettings {
 	enabled: boolean
+	/** the theme on the main menu */
+	music: boolean
 	/** 0..1 */
 	volume: number
 }
 
-const DEFAULT: SoundSettings = { enabled: true, volume: 0.6 }
+const DEFAULT: SoundSettings = { enabled: true, music: true, volume: 0.6 }
 
 function readSettings(): SoundSettings {
 	try {
@@ -27,6 +29,7 @@ function readSettings(): SoundSettings {
 		const v = JSON.parse(raw) as Partial<SoundSettings>
 		return {
 			enabled: typeof v.enabled === 'boolean' ? v.enabled : DEFAULT.enabled,
+			music: typeof v.music === 'boolean' ? v.music : DEFAULT.music,
 			volume:
 				typeof v.volume === 'number' && v.volume >= 0 && v.volume <= 1
 					? v.volume
@@ -48,6 +51,7 @@ export function setSoundSettings(next: Partial<SoundSettings>): void {
 		// private window: keep it for this session only
 	}
 	if (master !== null) master.gain.value = settings.volume
+	syncMusic()
 	for (const l of listeners) l()
 }
 
@@ -86,7 +90,7 @@ function fileFor(cue: string): string | null {
 const buffers = new Map<string, AudioBuffer>()
 const loading = new Set<string>()
 
-function load(c: AudioContext, cue: string): void {
+function load(c: AudioContext, cue: string, then?: () => void): void {
 	if (buffers.has(cue) || loading.has(cue)) return
 	const url = fileFor(cue)
 	if (url === null) return
@@ -94,7 +98,10 @@ function load(c: AudioContext, cue: string): void {
 	fetch(url)
 		.then((r) => r.arrayBuffer())
 		.then((data) => c.decodeAudioData(data))
-		.then((b) => buffers.set(cue, b))
+		.then((b) => {
+			buffers.set(cue, b)
+			then?.()
+		})
 		.catch(() => {
 			// an unreadable file stays silent
 		})
@@ -119,6 +126,7 @@ function ensure(): AudioContext | null {
 		master.gain.value = settings.volume
 		master.connect(ctx.destination)
 		for (const cue of CUE_NAMES) load(ctx, cue)
+		load(ctx, THEME, syncMusic)
 	} catch {
 		ctx = null
 		master = null
@@ -131,7 +139,9 @@ export function installSoundUnlock(): void {
 	if (typeof window === 'undefined') return
 	const unlock = () => {
 		const c = ensure()
-		if (c !== null && c.state === 'suspended') void c.resume()
+		if (c !== null && c.state === 'suspended')
+			void c.resume().then(syncMusic, () => undefined)
+		else syncMusic()
 	}
 	window.addEventListener('pointerdown', unlock, { capture: true })
 	window.addEventListener('keydown', unlock, { capture: true })
@@ -165,6 +175,7 @@ export type Cue =
 	| 'alert'
 	| 'warning'
 	| 'undo'
+	| 'beam'
 	| 'victory'
 	| 'defeat'
 
@@ -197,6 +208,7 @@ const CUE_NAMES: Cue[] = [
 	'alert',
 	'warning',
 	'undo',
+	'beam',
 	'victory',
 	'defeat',
 ]
@@ -252,6 +264,64 @@ export function panAt(x: number): number {
 	const w = typeof window !== 'undefined' ? window.innerWidth : 0
 	if (w <= 0) return 0
 	return Math.max(-0.8, Math.min(0.8, (x / w) * 2 - 1))
+}
+
+// ---------------------------------------------------------------------------
+// Main-menu theme (sounds/theme.*), looped while the menu is open
+// ---------------------------------------------------------------------------
+
+const THEME = 'theme'
+const FADE_S = 1.2
+let wantMusic = false
+let music: { src: AudioBufferSourceNode; gain: GainNode } | null = null
+
+function syncMusic(): void {
+	const on = wantMusic && settings.enabled && settings.music
+	if (!on) {
+		if (music !== null && ctx !== null) {
+			const { src, gain } = music
+			const t = ctx.currentTime
+			gain.gain.cancelScheduledValues(t)
+			gain.gain.setValueAtTime(gain.gain.value, t)
+			gain.gain.linearRampToValueAtTime(0, t + FADE_S)
+			try {
+				src.stop(t + FADE_S + 0.05)
+			} catch {
+				// already stopped
+			}
+		}
+		music = null
+		return
+	}
+	if (music !== null) return
+	const c = ctx
+	if (c === null || master === null || c.state !== 'running') return
+	const b = buffers.get(THEME)
+	if (b === undefined) {
+		load(c, THEME, syncMusic)
+		return
+	}
+	try {
+		const src = c.createBufferSource()
+		src.buffer = b
+		src.loop = true
+		const gain = c.createGain()
+		gain.gain.setValueAtTime(0, c.currentTime)
+		gain.gain.linearRampToValueAtTime(0.8, c.currentTime + FADE_S)
+		src.connect(gain)
+		gain.connect(master)
+		src.start()
+		music = { src, gain }
+	} catch {
+		music = null
+	}
+}
+
+/** The main menu is open (true) or closed (false). The theme starts once
+ *  audio is unlocked by the first tap or key press. */
+export function setMenuMusic(on: boolean): void {
+	wantMusic = on
+	syncMusic()
 }
 
 // ---------------------------------------------------------------------------

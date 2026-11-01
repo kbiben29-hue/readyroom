@@ -41,6 +41,7 @@ import { ConsoleShell } from './console/ConsoleShell'
 import { SettingsPanel } from './SettingsPanel'
 import { RedAlertFlash } from './alertFlash'
 import { ThemeSwitch } from './ThemeSwitch'
+import { setMenuMusic } from './sound'
 import { deckLabel } from '../data/cardNames'
 import type { BotId } from '../bot/types'
 import {
@@ -259,6 +260,11 @@ function opponentsOf(
 }
 
 function SetupScreen({ catalogReady }: { catalogReady: boolean }) {
+	// the theme plays while the main menu is open
+	useEffect(() => {
+		setMenuMusic(true)
+		return () => setMenuMusic(false)
+	}, [])
 	const catalog = useCatalog()
 	const startGame = useGameStore((s) => s.startGame)
 	const error = useGameStore((s) => s.error)

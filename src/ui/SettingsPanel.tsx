@@ -135,6 +135,16 @@ function SoundControls() {
 					aria-label="Sound effects"
 				/>
 			</label>
+			<label className="layout-switch" title="The theme on the main menu">
+				<span className="nav-label">Menu music</span>
+				<input
+					type="checkbox"
+					checked={sound.music}
+					disabled={!sound.enabled}
+					onChange={(e) => setSoundSettings({ music: e.target.checked })}
+					aria-label="Menu music"
+				/>
+			</label>
 			<label className="layout-switch" title="Sound effects volume">
 				<span className="nav-label">Volume</span>
 				<input

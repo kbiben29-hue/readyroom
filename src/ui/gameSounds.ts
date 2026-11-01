@@ -74,7 +74,9 @@ export function installButtonClicks(): void {
 	if (typeof document === 'undefined') return
 	document.addEventListener('click', (e) => {
 		const t = e.target as Element | null
-		const btn = t?.closest?.('button, [role="button"], select, [data-anchor^="card:"], [data-iid]')
+		const btn = t?.closest?.(
+			'button, [role="button"], select, [data-anchor^="card:"], [data-iid]',
+		)
 		if (btn === null || btn === undefined) return
 		if ((btn as HTMLButtonElement).disabled) return
 		// React handlers ran first (bubbling reached the document last); a

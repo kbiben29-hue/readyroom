@@ -347,7 +347,8 @@ function commit(intent: Intent, decider: Seat): void {
 		...(intent.t === 'RESOLVE_CHOICE' || isBoundary(intent)
 			? { selected: [] }
 			: {}),
-	})	try {
+	})
+	try {
 		cueDispatch(before, a.state, intent, viewerSeat)
 	} catch {
 		// sound must never break a move

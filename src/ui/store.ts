@@ -1368,3 +1368,7 @@ export function confirmChoice(selection: unknown): void {
 	if (choice === null) return
 	useGameStore.getState().settle(selection)
 }
+
+// dev-only handle for the layout screenshot script (tools/phone-shots.mjs)
+if (import.meta.env.DEV)
+	(globalThis as { __rrStore?: typeof useGameStore }).__rrStore = useGameStore

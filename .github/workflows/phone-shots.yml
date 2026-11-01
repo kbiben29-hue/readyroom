@@ -1,0 +1,52 @@
+# Phone screenshots: runs the dev server with the card database and takes
+# iPhone-sized WebKit screenshots of a game in progress (tools/phone-shots.mjs).
+# The PNGs are pushed to the `shots` branch so they can be read with plain git.
+
+name: Phone shots
+
+on:
+  push:
+    branches: ['dev/phone**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phone-shots-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Fetch the STCC card database
+        run: npm run fetch-cards || echo "fetch-cards failed (continuing)"
+      - name: Install Playwright WebKit
+        run: |
+          npm i --no-save playwright
+          npx playwright install --with-deps webkit
+      - name: Take screenshots
+        run: |
+          mkdir -p /tmp/shots
+          (npx vite --port 5173 --strictPort > /tmp/shots/vite.log 2>&1 &)
+          for i in $(seq 1 60); do curl -sf http://localhost:5173/ > /dev/null && break; sleep 2; done
+          node tools/phone-shots.mjs /tmp/shots > /tmp/shots/run.log 2>&1 || echo "shots exited $?" >> /tmp/shots/run.log
+          tail -40 /tmp/shots/run.log
+      - name: Publish the shots
+        if: always()
+        run: |
+          cd /tmp/shots
+          git init -q
+          git config user.name "phone-shots"
+          git config user.email "phone-shots@users.noreply.github.com"
+          git checkout -q -b shots
+          git add -A
+          git commit -q -m "Shots for ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" shots

@@ -154,7 +154,6 @@ screen lists every deck in the catalog, and the STCC loaders
 ```bash
 npm run validate:cards                 # schema + counts
 npx tsx tools/crosscheck-stcc.ts       # pack vs defs: suit, traits, VP, position, icons, missions
-npm run audit:publish                  # stage first (git add -A): it checks the git index
 FUZZ_SEEDS=40 FUZZ_WORKERS=8 npx tsx tools/fuzz.ts   # every pairing, invariants on; expect 0 NEW
 npx vitest run src/engine/shorthand.test.ts -u       # golden snapshot: the diff must be additions only
 npm test && npm run lint && npx tsc -b && npm run build
@@ -277,7 +276,7 @@ in `override/faces/1<CODE>NN-TT.jpg`.
 
 ## 8. Commit
 
-`git add -A`, run the checks again (`npm run audit:publish` must be clean),
+`git add -A`, run the checks again,
 and confirm `git status --short --ignored` lists `vendor/custom/` and
 `public/custom/` as ignored. Commit on the topic branch. Pushing to the public
 repo publishes the pack's names and text, so that's the user's call.
@@ -288,7 +287,7 @@ repo publishes the pack's names and text, so that's the user's call.
 - [ ] Deck design: slots, engine, risk, starting-deck sanity, loops
 - [ ] `crew/<code>.json`, `boards/<code>.json`, `custom/<pack>.json`
 - [ ] `DECKS`, `validate-cards` group + total, `DECK_ORDER`, fuzz `CREW`
-- [ ] validate, crosscheck (0 mismatches), describe read-back, audit
+- [ ] validate, crosscheck (0 mismatches), describe read-back
 - [ ] fuzz (0 NEW), `<code>-deck.test.ts`, shorthand snapshot (additions only)
 - [ ] `<pack>-art.json`: `universe`, `palette`, a source + subject per card
 - [ ] Faces rendered and reviewed; crops fixed

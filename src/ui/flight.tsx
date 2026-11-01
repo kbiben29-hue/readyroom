@@ -17,6 +17,7 @@ import { emitDelta } from './delta'
 import { iconUrl } from './icons'
 import { RESOURCE_GLYPH } from './format'
 import { glyphMarkup } from './shorthandGlyphs'
+import { panAt, playCue } from './sound'
 
 const FLIGHT_MS = 720
 const STAGGER_MS = 80
@@ -110,6 +111,7 @@ function fly(host: HTMLElement, f: Flight, run: Running): void {
 	}
 	if (f.fromPool !== null) emitDelta(f.fromPool, -f.n)
 
+	playCue('swoosh', { pan: panAt(from.x), panTo: panAt(to.x) })
 	const dx = to.x - from.x
 	const dy = to.y - from.y
 	// arc: lift the midpoint perpendicular-ish, more for longer flights
@@ -160,6 +162,7 @@ function fly(host: HTMLElement, f: Flight, run: Running): void {
 			landed++
 			if (landed === count && f.toPool !== null) emitDelta(f.toPool, f.n)
 			if (landed === count) {
+				playCue('land', { pan: panAt(to.x) })
 				to.el.classList.remove('fx-land')
 				// reflow so a second landing restarts the pulse
 				void to.el.offsetWidth

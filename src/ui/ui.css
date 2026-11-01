@@ -3862,3 +3862,85 @@ h3,
 	background: var(--orange);
 	color: #12121c;
 }
+
+/* ---- Red alert lighting (alertFlash.tsx) ---------------------------------- */
+.red-alert-flash {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 95;
+	box-shadow:
+		inset 0 0 90px 30px rgba(255, 20, 20, 0.85),
+		inset 0 0 260px 40px rgba(200, 0, 0, 0.45);
+	background: rgba(255, 0, 0, 0.12);
+	opacity: 0;
+	animation: red-alert-pulse 0.7s ease-in-out 4;
+}
+.red-alert-warning {
+	animation: red-alert-pulse 0.9s ease-in-out 1;
+}
+@keyframes red-alert-pulse {
+	0% {
+		opacity: 0;
+	}
+	35% {
+		opacity: 1;
+	}
+	70% {
+		opacity: 0.25;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+/* two rotating-beacon glows sweeping in from the top corners */
+.red-alert-beacon {
+	position: absolute;
+	top: -30vh;
+	width: 70vw;
+	height: 90vh;
+	background: radial-gradient(
+		ellipse at center,
+		rgba(255, 60, 40, 0.55) 0%,
+		rgba(255, 0, 0, 0.18) 40%,
+		transparent 70%
+	);
+	mix-blend-mode: screen;
+}
+.red-alert-beacon-l {
+	left: -25vw;
+	animation: red-alert-sweep-l 0.7s ease-in-out infinite;
+}
+.red-alert-beacon-r {
+	right: -25vw;
+	animation: red-alert-sweep-r 0.7s ease-in-out infinite;
+}
+.red-alert-warning .red-alert-beacon {
+	display: none;
+}
+@keyframes red-alert-sweep-l {
+	0%,
+	100% {
+		transform: translateX(-10vw) rotate(-15deg);
+	}
+	50% {
+		transform: translateX(10vw) rotate(15deg);
+	}
+}
+@keyframes red-alert-sweep-r {
+	0%,
+	100% {
+		transform: translateX(10vw) rotate(15deg);
+	}
+	50% {
+		transform: translateX(-10vw) rotate(-15deg);
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.red-alert-flash {
+		animation: red-alert-pulse 2.8s ease-in-out 1;
+	}
+	.red-alert-beacon {
+		display: none;
+	}
+}

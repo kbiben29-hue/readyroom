@@ -39,6 +39,7 @@ import { useDefIndex } from './defs'
 import { MobileShell } from './mobile/MobileShell'
 import { ConsoleShell } from './console/ConsoleShell'
 import { SettingsPanel } from './SettingsPanel'
+import { RedAlertFlash } from './alertFlash'
 import { ThemeSwitch } from './ThemeSwitch'
 import { deckLabel } from '../data/cardNames'
 import type { BotId } from '../bot/types'
@@ -210,6 +211,7 @@ function Overlays({
 				/>
 			)}
 			{settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
+			<RedAlertFlash />
 		</>
 	)
 }

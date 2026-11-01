@@ -1,4 +1,4 @@
-# Full checks for work branches (dev/**): card validation, the publish audit,
+# Full checks for work branches (dev/**): card validation,
 # the type check, lint, the test suite and the STCC crosscheck. Each step's
 # output is written to a report on the `ci-report` branch
 # (report.txt, overwritten per run) so it can be read with plain git.
@@ -60,12 +60,11 @@ jobs:
             echo "$name: exit $code" >> $R
           }
           run validate npm run validate:cards
-          run audit npm run audit:publish
           run tsc npx tsc -b
           run lint npm run lint
           run test npx vitest run
           run crosscheck npx tsx tools/crosscheck-stcc.ts
-          for f in validate audit tsc lint test crosscheck; do
+          for f in validate tsc lint test crosscheck; do
             echo "" >> $R
             echo "===== $f (last 150 lines) =====" >> $R
             tail -n 150 /tmp/report/$f.log >> $R

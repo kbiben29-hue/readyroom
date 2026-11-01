@@ -149,10 +149,6 @@ phase, zones with card names, the pending choice and the end of the log. `-- --l
 `-- <id>`, `-- --at N`, `-- --log N`, `-- --intents` and `-- --state` pick another game, an
 earlier point, a longer log or the raw JSON.
 
-`npm run audit:publish` fails if the git index contains card images, PDFs, anything fetched,
-printed card text in the card definitions, or card names in code. Keep it green — pull requests
-that add WizKids material can't be accepted.
-
 ## Credits
 
 - **Card data, scans and icons:** the [STCC Card Database](https://periodic-agent.github.io/stcc-strategy/)

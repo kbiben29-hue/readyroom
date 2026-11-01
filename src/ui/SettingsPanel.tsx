@@ -13,6 +13,7 @@ import {
 	type BotSpeed,
 } from './store'
 import { ThemeSwitch } from './ThemeSwitch'
+import { playCue, redAlert, setSoundSettings, useSoundSettings } from './sound'
 
 const RECAP_LABEL: Record<BotRecap, string> = {
 	hit: 'When it affects you',
@@ -49,6 +50,7 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
 				<div className="settings-body">
 					<LayoutSwitch />
 					<ThemeSwitch />
+					<SoundControls />
 					{botGame && (
 						<label className="layout-switch">
 							<span className="nav-label">House AI speed</span>
@@ -114,5 +116,51 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
 				</div>
 			</aside>
 		</div>
+	)
+}
+
+function SoundControls() {
+	const sound = useSoundSettings()
+	return (
+		<>
+			<label className="layout-switch" title="Sound effects on or off">
+				<span className="nav-label">Sound effects</span>
+				<input
+					type="checkbox"
+					checked={sound.enabled}
+					onChange={(e) => {
+						setSoundSettings({ enabled: e.target.checked })
+						if (e.target.checked) playCue('play')
+					}}
+					aria-label="Sound effects"
+				/>
+			</label>
+			<label className="layout-switch" title="Sound effects volume">
+				<span className="nav-label">Volume</span>
+				<input
+					type="range"
+					min={0}
+					max={100}
+					step={5}
+					value={Math.round(sound.volume * 100)}
+					disabled={!sound.enabled}
+					onChange={(e) =>
+						setSoundSettings({ volume: Number(e.target.value) / 100 })
+					}
+					onPointerUp={() => playCue('play')}
+					aria-label="Volume"
+				/>
+			</label>
+			<label className="layout-switch" title="Hear and see a red alert">
+				<span className="nav-label">Test red alert</span>
+				<button
+					type="button"
+					className="btn"
+					onClick={() => redAlert('alert')}
+				>
+					Red alert
+				</button>
+			</label>
+		</>
 	)
 }

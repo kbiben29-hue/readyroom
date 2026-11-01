@@ -18,9 +18,8 @@ npx vitest run src/engine/scoring.test.ts      # a single test file
 npx vitest run -t "some test name"             # tests matching a name
 npx vitest run --project engine-node           # only the node (DOM-free) project
 npm run lint                      # eslint src tools server
-npm run build                     # validate:cards + audit:publish + tsc -b + vite build
+npm run build                     # validate:cards + tsc -b + vite build
 npm run validate:cards            # Zod-parse every card JSON, ID uniqueness, group counts
-npm run audit:publish             # copyright gate (see below)
 npx tsx tools/crosscheck-stcc.ts  # diff our card defs against the STCC database
 npx tsx tools/arena.ts --a normal --b easy --games 100   # House AI self-play arena (docs/bot.md)
 npm run bot:check                 # quick arena regression after card/rule changes

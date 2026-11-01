@@ -63,6 +63,8 @@ import { project, HIDDEN_DEF, type ProjectedState } from './projection'
 import { poolDiff } from '../engine/fx'
 import { residualChanges, type Motion } from './flow'
 import { loadBrowserCatalog } from './browserCatalog'
+import { cueDispatch } from './gameSounds'
+import { playCue } from './sound'
 import { getSessionStore, mirrorToDevServer } from './persistence'
 import {
 	singleLegalAction,
@@ -345,7 +347,11 @@ function commit(intent: Intent, decider: Seat): void {
 		...(intent.t === 'RESOLVE_CHOICE' || isBoundary(intent)
 			? { selected: [] }
 			: {}),
-	})
+	})	try {
+		cueDispatch(before, a.state, intent, viewerSeat)
+	} catch {
+		// sound must never break a move
+	}
 }
 
 /** Ask the bot that must move (if any) for its intent and commit it after the
@@ -1081,6 +1087,7 @@ export const useGameStore = create<GameStore>((set) => ({
 		// a bot decision in flight belongs to the state being taken back
 		cancelBot()
 		if (!adapter.undo(policy.count)) return
+		playCue('undo')
 		deciders = deciders.slice(0, adapter.session.log.length)
 		set({
 			botLog: trimBotLog(

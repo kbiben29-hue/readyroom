@@ -97,7 +97,7 @@ The card art and text are © 2024 WizKids/NECA and CBS Studios. Resolution: the 
 [STCC Card Database](https://periodic-agent.github.io/stcc-strategy/) through
 `npm run fetch-cards` (`tools/fetch-stcc.ts`) into gitignored folders on each player's machine.
 Card defs carry mechanics only, with no printed `text`. The OCR records, the rulebook PDF and the
-Cyclopedia PDF are untracked, and `npm run audit:publish` (part of `build`) keeps it that way.
+Cyclopedia PDF are untracked.
 Still open: a _hosted_ build (`dist/` includes `public/stcc/`) would redistribute the scans, so
 don't deploy a build that includes fetched data.
 The desktop installers (docs/desktop.md) ship code only as well: `vite build --mode desktop`

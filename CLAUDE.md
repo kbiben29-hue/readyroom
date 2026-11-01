@@ -52,10 +52,6 @@ it must never be scaled past one machine because game state and deadline timers 
 
 ## Hard rules
 
-- **No WizKids/CBS material in git.** No card images, PDFs, printed card text or card _names_ in
-  code, tests or card data. Refer to cards by id (e.g. `1PIC08/24`); names and printed wording are
-  joined in at runtime from the fetched STCC data (`src/data/stcc.ts`, `src/data/cardNames.ts`).
-  `tools/audit-publish.ts` enforces this and is part of `npm run build` — keep it green.
 - **The STCC database is the source of truth for card data** (including errata). `crosscheck-stcc`
   reports divergence. Assume the fetched STCC files are present when working locally, and use the
   original game icons from them.

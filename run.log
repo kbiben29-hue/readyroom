@@ -1,0 +1,16 @@
+[iphone13] step tap-card failed: locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-iid]').first()
+
+[iphone13] done, body html 41986 chars
+[iphone13-land] step tap-card failed: locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-iid]').first()
+
+[iphone13-land] done, body html 41909 chars
+[iphoneSE] done, body html 41986 chars
+[iphone15max-land] step tap-card failed: locator.click: Timeout 5000ms exceeded.
+Call log:
+  - waiting for locator('[data-iid]').first()
+
+[iphone15max-land] done, body html 41909 chars

@@ -137,7 +137,7 @@ interface ToneOpts {
 	dur: number
 	gain?: number
 	attack?: number
-	pan?: number
+	pan?: number | undefined
 }
 
 function tone(c: AudioContext, out: AudioNode, o: ToneOpts): void {
@@ -174,8 +174,8 @@ interface NoiseOpts {
 	to: number
 	q?: number
 	gain?: number
-	pan?: number
-	panTo?: number
+	pan?: number | undefined
+	panTo?: number | undefined
 }
 
 function whoosh(c: AudioContext, out: AudioNode, o: NoiseOpts): void {
@@ -247,9 +247,9 @@ function now(): number {
 
 export interface CueOpts {
 	/** -1 (left) .. 1 (right) — where on screen it happens */
-	pan?: number
+	pan?: number | undefined
 	/** a swoosh's pan at the end of its flight */
-	panTo?: number
+	panTo?: number | undefined
 }
 
 export function playCue(cue: Cue, opts: CueOpts = {}): void {

@@ -32,11 +32,14 @@ describe('shell selection', () => {
 		expect(shellForSize(1024, 768)).toBe('tablet')
 	})
 
-	it('uses the PC console on touch tablets but preserves the phone layout', () => {
+	it('uses the PC console on touch tablets and phones', () => {
 		const ipad = { wide: false, phone: false, tablet: false, touch: true }
 		expect(pickShell(ipad, 'auto')).toBe('console')
 		expect(pickShell(ipad, 'console')).toBe('console')
-		expect(pickShell({ ...ipad, phone: true }, 'auto')).toBe('phone')
+		expect(pickShell({ ...ipad, phone: true }, 'auto')).toBe('console')
+		expect(pickShell({ ...ipad, wide: true }, 'auto')).toBe('console')
+		// the phone layout stays available from the menu
+		expect(pickShell({ ...ipad, phone: true }, 'phone')).toBe('phone')
 	})
 
 	it('the stored choice overrides the viewport', () => {

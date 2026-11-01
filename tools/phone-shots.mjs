@@ -78,13 +78,19 @@ const tab = (name) => async (page) =>
 
 const steps = [
 	['action', advance],
-	['hand-sheet', async (p) => p.getByText(/^Hand/).first().click({ timeout: 5000 })],
-	['close', async (p) => p.keyboard.press('Escape')],
-	['sector', tab('Sector')],
-	['crew', tab('Crew')],
 	['tap-card', tapFirstHandCard],
+	['close', async (p) => p.keyboard.press('Escape')],
+	[
+		'scrolled',
+		async (p) =>
+			p.evaluate(() => {
+				const h = document.querySelector('.console-fit-host')
+				if (h) h.scrollTop = h.scrollHeight
+			}),
+	],
 ]
 
 await shoot('iphone13', 'iPhone 13', steps)
 await shoot('iphone13-land', 'iPhone 13 landscape', steps)
 await shoot('iphoneSE', 'iPhone SE', steps.slice(0, 1))
+await shoot('iphone15max-land', 'iPhone 15 Pro Max landscape', steps)

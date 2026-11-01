@@ -1,9 +1,19 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
-/** Keep the PC table arrangement and scale its canvas to the tablet's space. */
+/** The PC canvas is never laid out shorter than this (CSS px before the
+ *  zoom): a phone on its side is wide enough but too short, so the canvas
+ *  keeps its rows and the page scrolls the rest into view. */
+export const MIN_CANVAS_H = 720
+
+/** Keep the PC table arrangement and scale its canvas to the device's space
+ *  (iPad and iPhone alike). */
 export function desktopFit(width: number, height: number) {
 	const scale = Math.min(1, width / 1080)
-	return { scale, width: width / scale, height: height / scale }
+	return {
+		scale,
+		width: width / scale,
+		height: Math.max(height / scale, MIN_CANVAS_H),
+	}
 }
 
 export function ConsoleFit({ children }: { children: ReactNode }) {
@@ -17,7 +27,7 @@ export function ConsoleFit({ children }: { children: ReactNode }) {
 			const width = el.clientWidth
 			const height = el.clientHeight
 			setFit(
-				touch && width >= 600 && width > 0 && height > 0
+				touch && width > 0 && height > 0
 					? desktopFit(width, height)
 					: null,
 			)

@@ -44,9 +44,10 @@ export function pickShell(v: Viewport, choice: ShellChoice): Shell {
 		case 'phone':
 			return v.wide ? 'phone-wide' : 'phone'
 		case 'auto':
+			// iPad and iPhone play on the PC console, fitted to the screen
+			if (v.touch) return 'console'
 			if (v.wide) return 'phone-wide'
 			if (v.phone) return 'phone'
-			if (v.touch) return 'console'
 			if (v.tablet) return 'tablet'
 			return 'console'
 	}
@@ -84,6 +85,17 @@ export function readShellChoice(): ShellChoice {
 		) {
 			globalThis.localStorage?.setItem('ready-room.pc-tablet-v1', '1')
 			if (v === 'tablet') {
+				globalThis.localStorage?.removeItem(SHELL_KEY)
+				v = null
+			}
+		}
+		// ...and the phone preference, once, now phones default to the PC too
+		if (
+			mql(SHELL_QUERIES.touch)?.matches &&
+			!globalThis.localStorage?.getItem('ready-room.pc-phone-v1')
+		) {
+			globalThis.localStorage?.setItem('ready-room.pc-phone-v1', '1')
+			if (v === 'phone') {
 				globalThis.localStorage?.removeItem(SHELL_KEY)
 				v = null
 			}

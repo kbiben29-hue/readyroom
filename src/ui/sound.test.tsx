@@ -46,7 +46,6 @@ describe('sound effects', () => {
 			'alert',
 			'warning',
 			'undo',
-			'prompt',
 			'victory',
 			'defeat',
 		]

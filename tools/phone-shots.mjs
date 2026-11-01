@@ -73,9 +73,6 @@ const tapFirstHandCard = async (page) => {
 	await el.click({ timeout: 5000 })
 }
 
-const tab = (name) => async (page) =>
-	page.getByRole('tab', { name }).or(page.getByText(name, { exact: true })).first().click({ timeout: 5000 })
-
 const steps = [
 	['action', advance],
 	['tap-card', tapFirstHandCard],

@@ -1,0 +1,2 @@
+[31m     [31m×[31m beats first-legal in a seat-swapped pair of games[39m[33m 66935[2mms[22m[39m
+[41m[1m FAIL [22m[49m [30m[43m engine-node [49m[39m src/bot/ismcts.test.ts[2m > [22mISMCTS bot[2m > [22mbeats first-legal in a seat-swapped pair of games

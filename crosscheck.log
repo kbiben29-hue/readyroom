@@ -1,0 +1,23 @@
+our defs with cardId: 620, matched 620
+
+MISMATCHES (4 cards; 7 modelling differences accepted, see ACCEPTED):
+  2ARC03/23 NX-01 Enterprise
+    skills: ours [SKILL_RESEARCH] / stcc []
+  2ARC04/23 Founding the Federation
+    focus: ours null / stcc FOCUS_ANY
+  2SOV06/24 T'Pau
+    skills: ours [SKILL_ANY,SKILL_ANY] / stcc [SKILL_VARIABLE,SKILL_VARIABLE]
+  2ENC05/8 New Federation Applicants
+    focus: ours null / stcc FOCUS_ANY
+
+MISSIONS (48 board missions with cardId; 0 issue(s)):
+
+OUT OF SCOPE (solo/Bot, see todo/15) (4):
+  1DIR02/2 Directive Reinforce (Solo Campaign)
+  1DIR01/2 Directive Conspiracy (Solo Challenge)
+  2DIR02/2 Directive Reinforce (Solo Campaign)
+  2DIR01/2 Directive Time is Running Out (Solo Challenge)
+
+NOT IMPLEMENTED (11):
+  promo1/Promo: 5
+  promo2/Promo: 6

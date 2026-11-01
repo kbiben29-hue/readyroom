@@ -1,0 +1,253 @@
+sha: fcf736dc5bf03953ab71e58f349e2d18c8a65e5d
+branch: dev/theme-trim
+validate: exit 0
+tsc: exit 0
+lint: exit 0
+test: exit 1
+crosscheck: exit 0
+
+===== validate (last 150 lines) =====
+
+> ready-room@0.1.0 validate:cards
+> tsx tools/validate-cards.ts
+
+COUNT  COMMON PERSON     25 / 25
+COUNT  COMMON CARGO      16 / 16
+COUNT  COMMON SHIP       13 / 13
+COUNT  COMMON ALLY       13 / 13
+COUNT  COMMON LOCATION   20 / 20
+COUNT  COMMON ENCOUNTER  8 / 8
+COUNT  COMMON INCIDENT   6 / 6
+COUNT  COMMON STARDATE   32 / 32
+COUNT  PIC               24 / 24
+COUNT  SIS               25 / 25
+COUNT  SEL               24 / 24
+COUNT  SHR               24 / 24
+COUNT  BUR               26 / 26
+COUNT  KOL               24 / 24
+COUNT  MAL               25 / 25
+COUNT  GEO               23 / 23
+COUNT  SOV               24 / 24
+COUNT  KIR               25 / 25
+COUNT  ARC               23 / 23
+COUNT  REB               22 / 22
+COUNT  KHA               24 / 24
+COUNT  PIK               26 / 26
+COUNT  FRE               25 / 25
+COUNT  RIK               25 / 25
+COUNT  TBG PERSON        26 / 26
+COUNT  TBG CARGO         18 / 18
+COUNT  TBG SHIP          13 / 13
+COUNT  TBG ALLY          16 / 16
+COUNT  TBG LOCATION      20 / 20
+COUNT  TBG ENCOUNTER     8 / 8
+COUNT  TBG INCIDENT      6 / 6
+COUNT  SC PERSON         13 / 13
+COUNT  SC CARGO          3 / 3
+COUNT  SC SHIP           2 / 2
+COUNT  SC ALLY           3 / 3
+COUNT  SC LOCATION       2 / 2
+COUNT  TOTAL             652 / 672
+
+CARD VALIDATION: 0 error(s), 16 warning(s)
+WARN  src/data/cards/crew/kha.json:2KHA06/22: trait MIND_CONTROL is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA07/22: trait MIND_CONTROL is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA08/22: trait MIND_CONTROL is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA19/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA20/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA21/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA22/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/pik.json:3PIK17/26: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB03/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB12/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB21/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB22/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/tbg/common/cargo.json:2CAR05/18: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/tbg/common/cargo.json:2CAR12/18: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/tbg/common/encounter.json:2ENC02/8: trait ATTACK present but no operation has isAttack: true (rules/05 §5.2.2)
+WARN  src/data/cards/tbg/common/incident.json:2INC01/6: trait SURPRISE is solo-play only (rules/12 §12.30)
+
+===== tsc (last 150 lines) =====
+
+===== lint (last 150 lines) =====
+
+> ready-room@0.1.0 lint
+> eslint src tools server
+
+
+===== test (last 150 lines) =====
+ [32m✓[39m [30m[43m engine-node [49m[39m server/app.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 203[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/queries/counting.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/bot/explain.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 6962[2mms[22m[39m
+   [32m✓[39m decideExplained [2m(4)[22m
+     [33m[2m✓[22m[39m returns the same intent as decide (heuristic levels)[33m 808[2mms[22m[39m
+     [33m[2m✓[22m[39m returns the same intent as decide (ISMCTS), with visit shares[33m 3327[2mms[22m[39m
+     [33m[2m✓[22m[39m the Hard level answers the same with and without explaining[33m 2213[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/seatView.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 435[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/session/remote.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/borg-inert.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 330[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/chooseOne.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/draw.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/engine-bugs.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 329[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/queries/traits.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/force.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/invariants.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 419[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/data/stcc.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/queries/board.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/payThen.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/bot/evaluate.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 585[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m server/hosting.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 103[2mms[22m[39m
+ [31m❯[39m [30m[43m engine-node [49m[39m src/bot/ismcts.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 86720[2mms[22m[39m
+   [31m❯[39m ISMCTS bot [2m(8)[22m
+     [33m[2m✓[22m[39m is deterministic for an iteration budget and does not mutate[33m 1377[2mms[22m[39m
+     [33m[2m✓[22m[39m always returns a legal intent (choices of both seats included)[33m 14413[2mms[22m[39m
+     [33m[2m✓[22m[39m takes a forced decision (and a completable mission) without searching[33m 376[2mms[22m[39m
+     [33m[2m✓[22m[39m does not leak the hidden arrangement (no-cheat invariance)[33m 2185[2mms[22m[39m
+     [33m[2m✓[22m[39m counts availability: root edges are available every iteration, visits sum up[33m 545[2mms[22m[39m
+     [32m✓[39m stops at a time budget through the injected clock[32m 232[2mms[22m[39m
+     [32m✓[39m makeBot('hard') is the ISMCTS search, time-boxed by an injected clock[32m 259[2mms[22m[39m
+[31m     [31m×[31m beats first-legal in a seat-swapped pair of games[39m[33m 66935[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/queries/amount.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/data/stccFetch.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/session/interrupts.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 430[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/fx.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/glory.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/costEvents.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/shorthandLive.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 332[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/forkState.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2611[2mms[22m[39m
+   [32m✓[39m forkState [2m(2)[22m
+     [33m[2m✓[22m[39m the probe, firstLegalSelection and reduce never write outside the forked stack[33m 2338[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/second-contact.test.ts [2m([22m[2m31 tests[22m[2m)[22m[33m 70807[2mms[22m[39m
+   [32m✓[39m Second Contact fuzz [2m(24)[22m
+     [33m[2m✓[22m[39m PIK against PIC on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 2704[2mms[22m[39m
+     [33m[2m✓[22m[39m PIK against SHR on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 2101[2mms[22m[39m
+     [33m[2m✓[22m[39m PIK against KOL on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 3157[2mms[22m[39m
+     [33m[2m✓[22m[39m PIK against GEO on TBG + Second Contact reaches GAME_OVER with invariants[33m 2429[2mms[22m[39m
+     [33m[2m✓[22m[39m PIK against SOV on TBG + Second Contact reaches GAME_OVER with invariants[33m 4981[2mms[22m[39m
+     [33m[2m✓[22m[39m PIK against KHA on TBG + Second Contact reaches GAME_OVER with invariants[33m 3751[2mms[22m[39m
+     [33m[2m✓[22m[39m PIK against FRE on TBG + Second Contact reaches GAME_OVER with invariants[33m 3577[2mms[22m[39m
+     [33m[2m✓[22m[39m PIK against RIK on TBG + Second Contact reaches GAME_OVER with invariants[33m 4168[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against PIC on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 2188[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against SHR on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 1763[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against KOL on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 3295[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against GEO on TBG + Second Contact reaches GAME_OVER with invariants[33m 2267[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against SOV on TBG + Second Contact reaches GAME_OVER with invariants[33m 2937[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against KHA on TBG + Second Contact reaches GAME_OVER with invariants[33m 2959[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against PIK on TBG + Second Contact reaches GAME_OVER with invariants[33m 3245[2mms[22m[39m
+     [33m[2m✓[22m[39m FRE against RIK on TBG + Second Contact reaches GAME_OVER with invariants[33m 3027[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against PIC on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 2814[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against SHR on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 2178[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against KOL on ORIGINAL + Second Contact reaches GAME_OVER with invariants[33m 2651[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against GEO on TBG + Second Contact reaches GAME_OVER with invariants[33m 2757[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against SOV on TBG + Second Contact reaches GAME_OVER with invariants[33m 3023[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against KHA on TBG + Second Contact reaches GAME_OVER with invariants[33m 2328[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against PIK on TBG + Second Contact reaches GAME_OVER with invariants[33m 2836[2mms[22m[39m
+     [33m[2m✓[22m[39m RIK against FRE on TBG + Second Contact reaches GAME_OVER with invariants[33m 3297[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/chronicle.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/session/opponents.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 423[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/queries/inPlay.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/bot/valueTrain.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/red-alert.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/rng.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/queries/idle.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 372[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/data/cardNames.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/may.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/advanceSpecialty.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/pik-deck.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 335[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/resolver/primitives/costAction.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m [30m[43m engine-node [49m[39m src/engine/tbg-box.test.ts [2m([22m[2m63 tests[22m[2m)[22m[33m 38380[2mms[22m[39m
+   [32m✓[39m To Boldly Go fuzz [2m(60)[22m
+     [33m[2m✓[22m[39m GEO/SOV in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1596[2mms[22m[39m
+     [33m[2m✓[22m[39m GEO/KIR in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 891[2mms[22m[39m
+     [33m[2m✓[22m[39m GEO/ARC in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1243[2mms[22m[39m
+     [33m[2m✓[22m[39m GEO/REB in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1110[2mms[22m[39m
+     [33m[2m✓[22m[39m GEO/KHA in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1272[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV/GEO in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 972[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV/KIR in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1263[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV/ARC in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1379[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV/REB in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1428[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV/KHA in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 938[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR/GEO in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1066[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR/SOV in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 1095[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR/ARC in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 829[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR/REB in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 943[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR/KHA in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 792[2mms[22m[39m
+     [33m[2m✓[22m[39m ARC/GEO in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 810[2mms[22m[39m
+     [33m[2m✓[22m[39m ARC/SOV in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 817[2mms[22m[39m
+     [33m[2m✓[22m[39m ARC/KIR in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 874[2mms[22m[39m
+     [33m[2m✓[22m[39m ARC/REB in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 810[2mms[22m[39m
+     [33m[2m✓[22m[39m ARC/KHA in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 784[2mms[22m[39m
+     [33m[2m✓[22m[39m REB/GEO in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 636[2mms[22m[39m
+     [33m[2m✓[22m[39m REB/SOV in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 832[2mms[22m[39m
+     [33m[2m✓[22m[39m REB/KIR in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 774[2mms[22m[39m
+     [33m[2m✓[22m[39m REB/ARC in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 704[2mms[22m[39m
+     [33m[2m✓[22m[39m REB/KHA in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 859[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA/GEO in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 628[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA/SOV in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 731[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA/KIR in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 891[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA/ARC in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 820[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA/REB in the To Boldly Go box reaches GAME_OVER with invariants after every intent[33m 789[2mms[22m[39m
+     [33m[2m✓[22m[39m GEO against SIS on the original box reaches GAME_OVER[33m 418[2mms[22m[39m
+     [33m[2m✓[22m[39m GEO against SEL on the original box reaches GAME_OVER[33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV against PIC on the original box reaches GAME_OVER[33m 342[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV against SIS on the original box reaches GAME_OVER[33m 459[2mms[22m[39m
+     [33m[2m✓[22m[39m SOV against SEL on the original box reaches GAME_OVER[33m 338[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR against KOL on the original box reaches GAME_OVER[33m 321[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR against SIS on the original box reaches GAME_OVER[33m 400[2mms[22m[39m
+     [33m[2m✓[22m[39m KIR against SEL on the original box reaches GAME_OVER[33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m ARC against SIS on the original box reaches GAME_OVER[33m 377[2mms[22m[39m
+     [33m[2m✓[22m[39m REB against KOL on the original box reaches GAME_OVER[33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m REB against SIS on the original box reaches GAME_OVER[33m 368[2mms[22m[39m
+     [33m[2m✓[22m[39m REB against SEL on the original box reaches GAME_OVER[33m 376[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA against KOL on the original box reaches GAME_OVER[33m 306[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA against SIS on the original box reaches GAME_OVER[33m 377[2mms[22m[39m
+     [33m[2m✓[22m[39m KHA against SEL on the original box reaches GAME_OVER[33m 324[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m [30m[43m engine-node [49m[39m src/bot/ismcts.test.ts[2m > [22mISMCTS bot[2m > [22mbeats first-legal in a seat-swapped pair of games
+[31m[1mError[22m: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[36m [2m❯[22m src/bot/ismcts.test.ts:[2m215:2[22m[39m
+    [90m213|[39m  })
+    [90m214|[39m
+    [90m215|[39m  it('beats first-legal in a seat-swapped pair of games', () => {
+    [90m   |[39m  [31m^[39m
+    [90m216|[39m   const hard = makeIsmctsBot({ iterations: 16 })
+    [90m217|[39m   let wins = 0
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m139 passed[39m[22m[90m (140)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1338 passed[39m[22m[90m (1339)[39m
+[2m   Start at [22m 22:25:56
+[2m   Duration [22m 193.62s[2m (tests 82%, import 8%, environment 7%, transform 2%)[22m
+
+
+::error file=/home/runner/work/readyroom/readyroom/src/bot/ismcts.test.ts,title=[engine-node] src/bot/ismcts.test.ts > ISMCTS bot > beats first-legal in a seat-swapped pair of games,line=215,column=2::Error: Test timed out in 60000ms.%0AIf this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".%0A ❯ src/bot/ismcts.test.ts:215:2%0A%0A
+
+===== crosscheck (last 150 lines) =====
+our defs with cardId: 620, matched 620
+
+MISMATCHES (4 cards; 7 modelling differences accepted, see ACCEPTED):
+  2ARC03/23 NX-01 Enterprise
+    skills: ours [SKILL_RESEARCH] / stcc []
+  2ARC04/23 Founding the Federation
+    focus: ours null / stcc FOCUS_ANY
+  2SOV06/24 T'Pau
+    skills: ours [SKILL_ANY,SKILL_ANY] / stcc [SKILL_VARIABLE,SKILL_VARIABLE]
+  2ENC05/8 New Federation Applicants
+    focus: ours null / stcc FOCUS_ANY
+
+MISSIONS (48 board missions with cardId; 0 issue(s)):
+
+OUT OF SCOPE (solo/Bot, see todo/15) (4):
+  1DIR02/2 Directive Reinforce (Solo Campaign)
+  1DIR01/2 Directive Conspiracy (Solo Challenge)
+  2DIR02/2 Directive Reinforce (Solo Campaign)
+  2DIR01/2 Directive Time is Running Out (Solo Challenge)
+
+NOT IMPLEMENTED (11):
+  promo1/Promo: 5
+  promo2/Promo: 6

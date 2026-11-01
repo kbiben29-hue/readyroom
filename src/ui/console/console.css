@@ -820,6 +820,12 @@ kbd {
 	height: 100%;
 	overflow: hidden;
 }
+.console-rotate-hint {
+	margin: 18px 12px;
+	text-align: center;
+	font-size: 15px;
+	opacity: 0.6;
+}
 /* a canvas taller than the screen (a phone on its side) scrolls */
 .console-fit-host:has(.console-fitted) {
 	overflow-x: hidden;

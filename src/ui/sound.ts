@@ -272,6 +272,8 @@ export function panAt(x: number): number {
 
 const THEME = 'theme'
 const FADE_S = 1.2
+/** the theme comes in fast; leaving it fades out gently */
+const FADE_IN_S = 0.25
 let wantMusic = false
 let music: { src: AudioBufferSourceNode; gain: GainNode } | null = null
 
@@ -307,7 +309,7 @@ function syncMusic(): void {
 		src.loop = true
 		const gain = c.createGain()
 		gain.gain.setValueAtTime(0, c.currentTime)
-		gain.gain.linearRampToValueAtTime(0.8, c.currentTime + FADE_S)
+		gain.gain.linearRampToValueAtTime(0.8, c.currentTime + FADE_IN_S)
 		src.connect(gain)
 		gain.connect(master)
 		src.start()

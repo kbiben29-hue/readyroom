@@ -1,0 +1,59 @@
+
+> ready-room@0.1.0 validate:cards
+> tsx tools/validate-cards.ts
+
+COUNT  COMMON PERSON     25 / 25
+COUNT  COMMON CARGO      16 / 16
+COUNT  COMMON SHIP       13 / 13
+COUNT  COMMON ALLY       13 / 13
+COUNT  COMMON LOCATION   20 / 20
+COUNT  COMMON ENCOUNTER  8 / 8
+COUNT  COMMON INCIDENT   6 / 6
+COUNT  COMMON STARDATE   32 / 32
+COUNT  PIC               24 / 24
+COUNT  SIS               25 / 25
+COUNT  SEL               24 / 24
+COUNT  SHR               24 / 24
+COUNT  BUR               26 / 26
+COUNT  KOL               24 / 24
+COUNT  MAL               25 / 25
+COUNT  GEO               23 / 23
+COUNT  SOV               24 / 24
+COUNT  KIR               25 / 25
+COUNT  ARC               23 / 23
+COUNT  REB               22 / 22
+COUNT  KHA               24 / 24
+COUNT  PIK               26 / 26
+COUNT  FRE               25 / 25
+COUNT  RIK               25 / 25
+COUNT  TBG PERSON        26 / 26
+COUNT  TBG CARGO         18 / 18
+COUNT  TBG SHIP          13 / 13
+COUNT  TBG ALLY          16 / 16
+COUNT  TBG LOCATION      20 / 20
+COUNT  TBG ENCOUNTER     8 / 8
+COUNT  TBG INCIDENT      6 / 6
+COUNT  SC PERSON         13 / 13
+COUNT  SC CARGO          3 / 3
+COUNT  SC SHIP           2 / 2
+COUNT  SC ALLY           3 / 3
+COUNT  SC LOCATION       2 / 2
+COUNT  TOTAL             652 / 672
+
+CARD VALIDATION: 0 error(s), 16 warning(s)
+WARN  src/data/cards/crew/kha.json:2KHA06/22: trait MIND_CONTROL is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA07/22: trait MIND_CONTROL is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA08/22: trait MIND_CONTROL is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA19/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA20/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA21/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/kha.json:2KHA22/22: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/pik.json:3PIK17/26: trait SURPRISE is solo-play only (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB03/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB12/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB21/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/crew/reb.json:2REB22/22: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/tbg/common/cargo.json:2CAR05/18: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/tbg/common/cargo.json:2CAR12/18: trait HELMET is not used in this box (rules/12 §12.30)
+WARN  src/data/cards/tbg/common/encounter.json:2ENC02/8: trait ATTACK present but no operation has isAttack: true (rules/05 §5.2.2)
+WARN  src/data/cards/tbg/common/incident.json:2INC01/6: trait SURPRISE is solo-play only (rules/12 §12.30)

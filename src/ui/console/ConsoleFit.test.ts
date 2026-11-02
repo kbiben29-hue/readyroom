@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { desktopFit, MAX_PORTRAIT_H, MIN_CANVAS_H } from './ConsoleFit'
+import { desktopFit, MAX_PORTRAIT_H } from './ConsoleFit'
 
 describe('PC board fitting', () => {
 	it('keeps the PC canvas wide enough in portrait and fits it to the screen', () => {
@@ -16,7 +16,7 @@ describe('PC board fitting', () => {
 		}
 	})
 
-	it('fits a phone by width and never lays the canvas out too short', () => {
+	it('fits a phone by width, keeping the whole canvas on screen sideways', () => {
 		for (const [width, height] of [
 			[390, 844],
 			[844, 390],
@@ -24,8 +24,8 @@ describe('PC board fitting', () => {
 		]) {
 			const fit = desktopFit(width!, height!)
 			expect(fit.width * fit.scale).toBeCloseTo(width!)
-			if (width! > height!)
-				expect(fit.height).toBeGreaterThanOrEqual(MIN_CANVAS_H)
+			// on its side the canvas is exactly the screen (the hand stays in view)
+			if (width! > height!) expect(fit.height * fit.scale).toBeCloseTo(height!)
 			else expect(fit.height).toBeLessThanOrEqual(MAX_PORTRAIT_H)
 			expect(fit.rotateHint).toBe(width! < height!)
 		}

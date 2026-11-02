@@ -3874,7 +3874,7 @@ h3,
 		inset 0 0 260px 40px rgba(200, 0, 0, 0.45);
 	background: rgba(255, 0, 0, 0.12);
 	opacity: 0;
-	animation: red-alert-pulse 0.7s ease-in-out 4;
+	animation: red-alert-pulse 0.7s ease-in-out 2;
 }
 .red-alert-warning {
 	animation: red-alert-pulse 0.9s ease-in-out 1;
@@ -3938,7 +3938,7 @@ h3,
 }
 @media (prefers-reduced-motion: reduce) {
 	.red-alert-flash {
-		animation: red-alert-pulse 2.8s ease-in-out 1;
+		animation: red-alert-pulse 1.4s ease-in-out 1;
 	}
 	.red-alert-beacon {
 		display: none;

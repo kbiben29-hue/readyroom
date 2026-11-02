@@ -1,10 +1,5 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 
-/** The PC canvas is never laid out shorter than this (CSS px before the
- *  zoom): a phone on its side is wide enough but too short, so the canvas
- *  keeps its rows and the page scrolls the rest into view. */
-export const MIN_CANVAS_H = 720
-
 /** The tallest PC canvas on a phone held upright. */
 export const MAX_PORTRAIT_H = 1000
 
@@ -19,9 +14,9 @@ export function desktopFit(width: number, height: number) {
 	return {
 		scale,
 		width: width / scale,
-		height: phonePortrait
-			? Math.min(tall, MAX_PORTRAIT_H)
-			: Math.max(tall, MIN_CANVAS_H),
+		// otherwise exactly the screen: the table scrolls inside the canvas and
+		// the hand dock stays pinned to the bottom, as on the PC
+		height: phonePortrait ? Math.min(tall, MAX_PORTRAIT_H) : tall,
 		rotateHint: phonePortrait,
 	}
 }

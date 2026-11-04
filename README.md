@@ -1,64 +1,68 @@
 # Ready Room
 
-An unofficial, fan-made rules engine and web app for playing
-[_Star Trek: Captain's Chair_](https://boardgamegeek.com/boardgame/422541/star-trek-captains-chair)
-(WizKids, 2024 — designed by Dávid Turczi & Nigel Buckle) in the browser: hot-seat on one screen,
-against our own House AI, or asynchronously online against a friend, on desktop or phone, with
-replay, undo and saved games.
+Ready Room lets you play
+[_Star Trek: Captain's Chair_](https://boardgamegeek.com/boardgame/422541/star-trek-captains-chair),
+the 2024 WizKids deck-builder by Dávid Turczi and Nigel Buckle, in a web browser. It is a fan
+project with no official standing. Two people can share one screen, you can take on a computer
+opponent built for this project, or you can play a friend online with each of you taking turns
+whenever it suits you. It runs on computers, tablets and phones, and every game can be saved,
+rewound move by move and watched again afterwards.
 
 > [!WARNING]
-> **This is still being tested.** Every card is implemented and the engine has a
-> large automated test suite, but the game has seen little real play yet. Expect rules bugs,
-> cards that resolve slightly wrong, rough edges in the UI, and save files that may not load in a
-> later version. Bug reports are very welcome — please attach the exported session (Replay →
-> Export .json) so the game can be replayed exactly.
+> **Treat this as a test version.** All of the cards have been built and thousands of automated
+> checks run against the rules engine, but very few full games have been played by people so
+> far. You may hit a rule that is handled wrongly, a card that does not behave quite as printed,
+> a clumsy screen, or a saved game that an update can no longer open. If something goes wrong,
+> please report it and include the game file (Replay → Export .json), which lets the exact game
+> be played back.
 
-![The desktop board with card faces from the STCC Card Database](docs/screenshots/board-stcc-cards.png)
+![The computer layout showing card scans from the STCC Card Database](docs/screenshots/board-stcc-cards.png)
 
-<sub>**Disclaimer:** the card art and card text in this screenshot are © WizKids and are shown only
-to illustrate what the app looks like once the card database is fetched. The card scans come from
-the [STCC Card Database](https://periodic-agent.github.io/stcc-strategy/) and are **not**
-distributed with this repository. Star Trek and related marks are trademarks of CBS Studios Inc.
-This project is not affiliated with or endorsed by WizKids or CBS.</sub>
+<sub>**Note on the picture above:** the cards' artwork and wording belong to WizKids. They appear
+here only to show how the game looks after the card database has been downloaded. The scans are
+taken from the [STCC Card Database](https://periodic-agent.github.io/stcc-strategy/) and do
+**not** come bundled with this project. Star Trek and its associated marks are trademarks of CBS
+Studios Inc. WizKids and CBS have no connection to this project and have not approved it.</sub>
 
-Without the card database, cards show their number and the app's own shorthand glyphs:
+If the card database has not been downloaded, each card is drawn with its card number and a
+compact set of symbols created for this project:
 
-![The desktop board without card data](docs/screenshots/board-desktop.png)
+![The computer layout with no card database](docs/screenshots/board-desktop.png)
 
 <p align="center">
-  <img src="docs/screenshots/board-phone.png" alt="The phone layout" width="300">
+  <img src="docs/screenshots/board-phone.png" alt="The game on a phone" width="300">
   &nbsp;&nbsp;
-  <img src="docs/screenshots/shorthand.png" alt="The card shorthand guide" width="520">
+  <img src="docs/screenshots/shorthand.png" alt="The guide to the card symbols" width="520">
 </p>
 
-## No cards in this repository
+## Where the cards come from
 
-**This repository contains no card images, no printed card text and no rulebook** — apart from
-the one illustrative screenshot above. Those belong to WizKids and CBS. The game gets its cards
-from the community-maintained
-**[STCC Card Database](https://periodic-agent.github.io/stcc-strategy/)**: `npm run fetch-cards`
-downloads card scans, rules text and icons from it onto your own machine. Put the two together and
-you have the full game, while neither repository redistributes the other's material.
+Apart from the sample picture at the top, you won't find card scans, card wording or the
+rulebook stored here; that material is owned by WizKids and CBS. Instead, the cards are loaded
+from the **[STCC Card Database](https://periodic-agent.github.io/stcc-strategy/)**, a project
+run by fans of the game. Running `npm run fetch-cards` copies the scans, card text and symbols
+from it onto your own computer. The two projects together make a complete game, and each keeps
+its own material.
 
-You still need to know the rules — [buy the game](https://wizkids.com/).
+Knowing how to play is up to you, so [pick up a copy of the game](https://wizkids.com/).
 
-## Desktop app
+## Installing the app
 
-Prebuilt apps for **macOS** and **Windows** are on the
-[Releases page](https://github.com/rwolffgang/ready-room/releases). On first launch the app
-downloads the STCC card database (about 340 MB) onto your computer, the same way
-`npm run fetch-cards` does. The card database is not part of the download. The builds are not
-code-signed, so the first launch needs one extra click:
+Ready-made versions for **Windows** and **macOS** are published on the
+[Releases page](https://github.com/rwolffgang/ready-room/releases). The installer does not
+include the card database: the first time the app opens, it downloads it (roughly 340 MB),
+which is the same thing `npm run fetch-cards` does. Because the apps are not signed, your
+computer will ask you to confirm the first time you open one:
 
-- macOS: right-click the app → **Open**.
-- Windows: SmartScreen → **More info** → **Run anyway**.
+- On a Mac, right-click the app and choose **Open**.
+- On Windows, when SmartScreen appears, click **More info** and then **Run anyway**.
 
-See [`docs/desktop.md`](docs/desktop.md) for details.
+[`docs/desktop.md`](docs/desktop.md) has the full details.
 
-## Installation from source
+## Running it from the source code
 
-**You need:** [Node.js](https://nodejs.org/) 22 or newer (with npm), git, and an internet
-connection for the card download.
+**Before you start, install** [Node.js](https://nodejs.org/) version 22 or later (npm comes with
+it) and git. You'll also need to be online to download the cards.
 
 ```bash
 git clone https://github.com/rwolffgang/ready-room.git
@@ -68,86 +72,100 @@ npm run fetch-cards
 npm run dev
 ```
 
-Then open <http://localhost:5173>, pick two captains and press **Start game**.
+Next, go to <http://localhost:5173> in your browser, choose a captain for each side and click
+**Start game**.
 
-`npm run fetch-cards` downloads the STCC card database (about 340 MB of card scans plus JSON) into
-`vendor/stcc/` and `public/stcc/`. Both folders are gitignored. The script pins a specific
-upstream commit ([`tools/stcc-source.json`](tools/stcc-source.json)) so everyone plays with the
-same data; run `npm run fetch-cards -- --latest` to move to the newest one. Without the download
-the game still runs, but shows text-only cards like the second screenshot above.
+The `npm run fetch-cards` step saves the STCC card database (around 340 MB of scans and JSON
+files) to `vendor/stcc/` and `public/stcc/`, two folders that git ignores. It always fetches one
+particular version of the database, recorded in
+[`tools/stcc-source.json`](tools/stcc-source.json), so every player has identical cards. To
+switch to the most recent version instead, run `npm run fetch-cards -- --latest`. You can play
+without downloading anything; the cards will just appear as text, as in the second picture
+above.
 
-### Updating
+### Getting the latest version
 
 ```bash
 git pull
 npm install
-npm run fetch-cards   # only downloads again if the pinned commit changed
+npm run fetch-cards   # skipped unless the recorded database version has changed
 ```
 
-## Playing
+## Ways to play
 
-- **Hot-seat:** both captains share one screen. Games autosave in the browser; **Continue a saved
-  game** picks them up again, and a session can be exported and imported as a small file.
-  Finished games stay in the list with their result and open on the Final Score screen.
-- **Against the House AI:** **Play vs House AI** on the start screen, or set either seat to it
-  (Easy / Normal / Hard). It is our own computer opponent, not the official solo Bot, which
-  needs the solo rulebook ([`docs/bot.md`](docs/bot.md)). Its moves run in a ticker, and
-  **AI turn** shows what each of its turns did, starting with what it did to you.
-- **On a phone or tablet:** below 1080px wide the game switches to phone and tablet layouts, with
-  every card's operations drawn as a short line of glyphs ([`docs/shorthand.md`](docs/shorthand.md)).
-  **Learn the card glyphs** on the start screen teaches them.
-- **Online, asynchronously:** run the game server next to the app and use **Play online**:
+- **Two players, one screen:** take turns on the same device. The browser saves the game as you
+  go, and **Continue a saved game** brings back anything unfinished. Any game can be saved to a
+  small file and loaded again later. Completed games remain listed with how they ended, and
+  opening one shows its final scores.
+- **Versus the computer:** choose **Play vs House AI** on the opening screen, or hand either seat
+  to the computer, at Easy, Normal or Hard. This opponent was written for this project and is a
+  different thing from the solo-mode Bot in the official game, which relies on the solo rulebook
+  ([`docs/bot.md`](docs/bot.md)). Each of its moves scrolls past in a ticker, and **AI turn**
+  sums up what it did during its turn, leading with anything that affected you.
+- **Phones and tablets:** on a touch screen the game uses the same table layout as on a
+  computer, scaled to fit the screen. A phone layout is also available from the menu; it shows
+  each card's abilities as a short row of symbols ([`docs/shorthand.md`](docs/shorthand.md)),
+  and **Learn the card glyphs** on the opening screen explains them.
+- **Online, at your own pace:** start the game server alongside the app, then choose **Play
+  online**:
 
   ```bash
-  npm run server -- --host 0.0.0.0   # authoritative game server, port 8787
-  npm run dev -- --host              # the app, reachable from phones on your network
+  npm run server -- --host 0.0.0.0   # the game server, which has the final say, on port 8787
+  npm run dev -- --host              # the app, visible to phones on the same network
   ```
 
-  Hail a captain under Hails: pick yours and send the invite link. Your friend picks theirs when
-  they open it and takes the first turn; each of you plays on your own device. Details, decisions
-  and known limits: [`docs/ui-mobile.md`](docs/ui-mobile.md).
+  Under Hails, choose your captain and send your friend the invite link. When they open it they
+  choose their own captain and move first, and from then on each of you plays on your own
+  device. [`docs/ui-mobile.md`](docs/ui-mobile.md) explains how this works and what it can't do
+  yet.
 
-- **Hosted on the internet:** a single Fly.io machine (about $4/month) runs the server and the app
-  from one address — see [`docs/deploy.md`](docs/deploy.md).
+- **On a server of your own:** one small Fly.io machine, costing roughly $4 a month, can serve
+  both the game server and the app from a single web address. The steps are in
+  [`docs/deploy.md`](docs/deploy.md).
 
-## How it works
+## Under the hood
 
-**Card effects are data, not code.** Every card is a JSON definition (`src/data/cards/`) whose
-operations are trees in a typed **effect DSL** ([`docs/effect-dsl.md`](docs/effect-dsl.md)).
-A single **halting stack machine** ([`docs/state-machine.md`](docs/state-machine.md)) interprets
-them. The engine is pure and serialisable, which makes replay, undo, deterministic tests and
-mid-effect saves straightforward. REACTIONs can interrupt a resolving operation because the stack
-is data rather than the JS call stack.
+**What each card does is described in data rather than written as code.** Each card has a JSON
+file in `src/data/cards/`, and its abilities are written as trees in a typed mini-language for
+card effects ([`docs/effect-dsl.md`](docs/effect-dsl.md)). Those trees are carried out by one
+interpreter that keeps its work on a stack and can pause at any point
+([`docs/state-machine.md`](docs/state-machine.md)). Since the whole game state is plain data with
+no hidden side effects, it is simple to replay a game, take moves back, write repeatable tests
+and save in the middle of an ability. It also means a REACTION can jump in while another ability
+is still resolving, since that stack lives in the game data and not inside JavaScript itself.
 
-The card definitions carry mechanics only: suit, traits, skills, VP and effect trees. Names and
-printed wording are joined in at runtime from the fetched database by card number (`1PIC08/24` =
-Picard card 8 of 24); see `src/data/stcc.ts`.
+The card files hold only the game mechanics: suit, traits, skills, VP and the effect trees. A
+card's name and printed text are looked up from the downloaded database while the game runs,
+matched on the card number (`1PIC08/24` means the 8th of Picard's 24 cards); the code for this is
+in `src/data/stcc.ts`.
 
 ```
-src/engine/   rules engine: resolver, turn structure, market, scoring
-src/data/     card definitions (mechanics only) and the STCC join layer
-src/ui/       React UI (desktop, phone, online play)
-server/       authoritative game server for online play
-rules/        the rules, restructured in our own words for implementation
-docs/         architecture, data model, effect DSL, state machine, UI spec
-tools/        fetch-stcc, card validation, STCC cross-check, publish audit
+src/engine/   the rules: effect resolution, turn order, the Market, scoring
+src/data/     card definitions (mechanics only) and the link to the STCC data
+src/ui/       the React interface (computer, phone and online play)
+server/       the game server used for online games
+rules/        the game rules, rewritten in our own words for building the engine
+docs/         design notes: architecture, data model, effect DSL, state machine, UI
+tools/        card download, card checks, comparison against the STCC data
+sounds/       the sound effects and menu music, replaceable by name (see sounds/README.md)
 ```
 
-## Development
+## Working on the code
 
 ```bash
-npm test                          # vitest (runs without fetched data)
+npm test                          # the vitest suite (needs no downloaded cards)
 npm run lint
-npm run build                     # validates cards, runs the publish audit, type-checks, builds
-npx tsx tools/crosscheck-stcc.ts  # compare our card defs against the STCC database
-npm run game                      # summarise the newest local game (while npm run dev runs)
+npm run build                     # checks the cards and types, then builds the app
+npx tsx tools/crosscheck-stcc.ts  # look for differences between our cards and the STCC data
+npm run game                      # summary of your latest local game (with npm run dev running)
 ```
 
-While `npm run dev` runs, every autosave of a local game is also written to
-`.debug/games/<id>.json` (gitignored). `npm run game` replays the newest one and prints the turn,
-phase, zones with card names, the pending choice and the end of the log. `-- --list`,
-`-- <id>`, `-- --at N`, `-- --log N`, `-- --intents` and `-- --state` pick another game, an
-earlier point, a longer log or the raw JSON.
+Whenever `npm run dev` is running, each automatic save of a local game also lands in
+`.debug/games/<id>.json`, which git ignores. `npm run game` plays the most recent of these back
+and prints the turn and phase, what is in each zone (with card names), any choice waiting to be
+made and the last part of the log. Add `-- --list`, `-- <id>`, `-- --at N`, `-- --log N`,
+`-- --intents` or `-- --state` to choose a different game, stop at an earlier move, show more of
+the log or dump the raw JSON.
 
 ## Credits
 
@@ -166,14 +184,15 @@ Card images and text are © WizKids. Star Trek and related marks are trademarks 
 The code in this repository is MIT-licensed (see [LICENSE](LICENSE)). The license covers only
 the code written here, not the game, its cards, its art or its rules text.
 
-## Native iPadOS build
+## Playing in a browser on iPad or iPhone
 
-The native shell has an iPadOS configuration and touch-tablet layout selection.
-See [docs/ipados.md](docs/ipados.md) for Xcode setup, first-run card download,
-offline play, and signing/distribution steps. Start with `npm run ios:check`.
+A version of the game is published on GitHub Pages. It runs in Safari, can be added to the Home
+Screen, and keeps the downloaded cards on the device so it works without a connection. Nothing
+needs to be installed through Xcode. [docs/github-pages.md](docs/github-pages.md) explains how
+to publish it and how to install it.
 
-## Play on iPad through GitHub Pages
+## Building a native iPad app
 
-The GitHub Pages build supports Safari and Add to Home Screen, with local card
-storage for offline play. See [docs/github-pages.md](docs/github-pages.md) for
-publishing and installation. No Xcode is needed for this version.
+The app's native wrapper also has an iPadOS setup. [docs/ipados.md](docs/ipados.md) covers
+setting up Xcode, the first download of the cards, offline play, and signing the app and sharing
+it. Begin by running `npm run ios:check`.

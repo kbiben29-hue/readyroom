@@ -1,7 +1,7 @@
 # GitHub Pages on iPad
 
 The Pages build is a standalone web app at
-https://kbiben29-hue.github.io/readyroom/ . It does not need Xcode or a running Mac.
+https://kbiben29-hue.github.io/readyroom-play/ . It does not need Xcode or a running Mac.
 
 ## Publish
 
@@ -39,7 +39,7 @@ npm run build:pages
 npm run preview:pages
 ```
 
-Open the preview's `/readyroom/` path. Service workers require HTTPS, except for
+Open the preview's `/readyroom/` path (or set PAGES_BASE=/readyroom-play/). Service workers require HTTPS, except for
 localhost. A plain HTTP address on your Wi-Fi is not an offline-install test.
 The production bundle excludes fetched card assets even if present locally.
 

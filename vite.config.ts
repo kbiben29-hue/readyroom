@@ -63,7 +63,8 @@ function debugGames(): Plugin {
 }
 
 export default defineConfig(({ mode }) => ({
-	base: mode === 'pages' ? '/readyroom/' : '/',
+	// PAGES_BASE: the play site's path (the public readyroom-play repo)
+	base: mode === 'pages' ? (process.env.PAGES_BASE ?? '/readyroom/') : '/',
 	plugins: [
 		react(),
 		debugGames(),

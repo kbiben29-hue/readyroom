@@ -1,0 +1,59 @@
+# Publishes the playable web version (iPad / iPhone / any browser) to the
+# public repo kbiben29-hue/readyroom-play, whose GitHub Pages site is the play
+# link. This repo can stay private: the public repo only ever holds the
+# compiled game, never the source or the notes.
+#
+# Needs the repository secret PLAY_TOKEN: a fine-grained token with
+# Contents: Read and write on readyroom-play.
+
+name: Publish play site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publish-play
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      PLAY_TOKEN: ${{ secrets.PLAY_TOKEN }}
+    steps:
+      - name: Skip without PLAY_TOKEN
+        if: env.PLAY_TOKEN == ''
+        run: echo "::warning::PLAY_TOKEN is not set; nothing published"
+      - uses: actions/checkout@v4
+        if: env.PLAY_TOKEN != ''
+      - uses: actions/setup-node@v4
+        if: env.PLAY_TOKEN != ''
+        with:
+          node-version: 24
+          cache: npm
+      - if: env.PLAY_TOKEN != ''
+        run: npm ci
+      - name: Build the web version
+        if: env.PLAY_TOKEN != ''
+        run: PAGES_BASE=/readyroom-play/ npm run build:pages
+      - name: Push it to readyroom-play
+        if: env.PLAY_TOKEN != ''
+        run: |
+          cd dist
+          touch .nojekyll
+          cat > README.md <<'EOF'
+          # Ready Room — play
+
+          Play in your browser: https://kbiben29-hue.github.io/readyroom-play/
+
+          Windows and Mac downloads: https://github.com/kbiben29-hue/readyroom-play/releases/latest
+          EOF
+          git init -q
+          git config user.name "publish-play"
+          git config user.email "publish-play@users.noreply.github.com"
+          git checkout -q -b gh-pages
+          git add -A
+          git commit -q -m "Play site build"
+          git push -f "https://x-access-token:${PLAY_TOKEN}@github.com/kbiben29-hue/readyroom-play.git" gh-pages

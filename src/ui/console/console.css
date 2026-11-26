@@ -854,9 +854,6 @@ kbd {
 .dock-fan .hand-row > .card {
 	touch-action: none;
 }
-.hand-row > .card.drag-source {
-	opacity: 0.35;
-}
 .drag-ghost {
 	position: fixed;
 	z-index: 120;

@@ -54,10 +54,23 @@ export function onHandPointerDown(e: ReactPointerEvent): void {
 		const h = r.width > 0 ? (r.height / r.width) * w : w * 1.4
 		grabX = w / 2
 		grabY = h * 0.35
-		ghost.style.width = `${w}px`
-		ghost.style.height = `${h}px`
+		// inline, so no card style from the board can move or hide the copy
+		Object.assign(ghost.style, {
+			position: 'fixed',
+			left: '0px',
+			top: '0px',
+			width: `${w}px`,
+			height: `${h}px`,
+			zIndex: '1000',
+			pointerEvents: 'none',
+			margin: '0',
+			transform: 'rotate(-3deg)',
+			opacity: '0.95',
+			visibility: 'visible',
+		})
 		document.body.appendChild(ghost)
-		cardEl.classList.add('drag-source')
+		// the board re-renders the card's class list, so fade it inline
+		cardEl.style.opacity = '0.35'
 		document.body.classList.add('card-dragging')
 	}
 
@@ -75,7 +88,7 @@ export function onHandPointerDown(e: ReactPointerEvent): void {
 		window.removeEventListener('keydown', key)
 		window.removeEventListener('touchmove', noScroll)
 		ghost?.remove()
-		cardEl.classList.remove('drag-source')
+		cardEl.style.opacity = ''
 		document.body.classList.remove('card-dragging', 'card-drop-ready')
 	}
 

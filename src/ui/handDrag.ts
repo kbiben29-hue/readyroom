@@ -13,6 +13,7 @@
 // it sits exactly under the pointer on a fitted iPad / iPhone screen too.
 
 import type { PointerEvent as ReactPointerEvent } from 'react'
+import type { CardInstanceId } from '../engine/ids'
 import { useGameStore } from './store'
 
 /** Movement (screen px) before a press becomes a drag. */
@@ -23,7 +24,7 @@ export function onHandPointerDown(e: ReactPointerEvent): void {
 	const target = e.target instanceof Element ? e.target : null
 	const cardEl = target?.closest<HTMLElement>('[data-anchor^="card:"]')
 	if (cardEl === null || cardEl === undefined) return
-	const iid = cardEl.dataset.anchor!.slice('card:'.length)
+	const iid = cardEl.dataset.anchor!.slice('card:'.length) as CardInstanceId
 	const startX = e.clientX
 	const startY = e.clientY
 	const pointerId = e.pointerId

@@ -705,6 +705,9 @@ export interface GameStore {
 	openBotHistory: (whyMove?: number | null) => void
 	closeBotHistory: () => void
 	cardClicked: (iid: CardInstanceId) => void
+	/** A hand card dragged onto the table (handDrag.ts): play it when it has
+	 *  exactly one legal way to be played, else open its detail. */
+	cardDropped: (iid: CardInstanceId) => void
 	setSelected: (iids: CardInstanceId[]) => void
 	clearSelection: () => void
 	setDetail: (iid: CardInstanceId | null) => void
@@ -1156,6 +1159,25 @@ export const useGameStore = create<GameStore>((set) => ({
 
 	openBotHistory: (whyMove = null) => set({ botHistoryOpen: true, whyMove }),
 	closeBotHistory: () => set({ botHistoryOpen: false, whyMove: null }),
+
+	cardDropped: (iid) => {
+		cancelPendingDetail()
+		const s = useGameStore.getState()
+		if (
+			s.state === null ||
+			s.botToMove !== null ||
+			s.pendingChoice !== null ||
+			onlineController.active()
+		) {
+			set({ detailIid: iid })
+			return
+		}
+		const plays = s.legal.filter(
+			(it) => it.t === 'PLAY_CARD' && it.iid === iid,
+		)
+		if (plays.length === 1) s.dispatch(plays[0]!)
+		else set({ detailIid: iid })
+	},
 
 	cardClicked: (iid) => {
 		const { selected, state, viewerSeat, pendingChoice, botToMove } =

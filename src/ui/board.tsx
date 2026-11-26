@@ -5,6 +5,7 @@
 // Hook discipline: every component calls its hooks unconditionally at the top
 // (React rules even though the react-hooks linter plugin is not configured).
 
+import { onHandPointerDown } from './handDrag'
 import type { ReactNode } from 'react'
 import type { GameState } from '../engine/state'
 import { zoneKey, player } from '../engine/state'
@@ -694,7 +695,11 @@ export function Hand({ seat }: { seat: Seat }) {
 					{iids.length} card{iids.length === 1 ? '' : 's'}
 				</span>
 			</div>
-			<div className="hand-row">
+			<div
+				className="hand-row"
+				// drag a card up onto the table to play it (handDrag.ts)
+				onPointerDown={mine ? onHandPointerDown : undefined}
+			>
 				{iids.map((iid) => {
 					const card = state.cards[iid]
 					if (card === undefined) return null

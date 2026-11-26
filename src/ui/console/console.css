@@ -849,3 +849,39 @@ kbd {
 .console-fitted .frame-body {
 	overflow: hidden;
 }
+
+/* ---- dragging a hand card onto the table (handDrag.ts) ------------------- */
+.dock-fan .hand-row > .card {
+	touch-action: none;
+}
+.hand-row > .card.drag-source {
+	opacity: 0.35;
+}
+.drag-ghost {
+	position: fixed;
+	z-index: 120;
+	margin: 0;
+	pointer-events: none;
+	transform: rotate(-3deg);
+	box-shadow: 0 14px 34px #000c;
+	opacity: 0.95;
+}
+.drag-ghost img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+body.card-dragging,
+body.card-dragging * {
+	cursor: grabbing !important;
+	user-select: none;
+	-webkit-user-select: none;
+}
+body.card-dragging .table {
+	outline: 3px dashed #ffcc6655;
+	outline-offset: -6px;
+	transition: outline-color 0.15s ease;
+}
+body.card-drop-ready .table {
+	outline-color: #ffcc66;
+}

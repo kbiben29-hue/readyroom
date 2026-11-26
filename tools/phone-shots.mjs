@@ -73,8 +73,22 @@ const tapFirstHandCard = async (page) => {
 	await el.click({ timeout: 5000 })
 }
 
+const dragUp = (release) => async (page) => {
+	const card = page.locator('.hand-row [data-anchor^="card:"]').first()
+	const box = await card.boundingBox()
+	if (!box) throw new Error('no hand card')
+	const x = box.x + box.width / 2
+	const y = box.y + 10
+	await page.mouse.move(x, y)
+	await page.mouse.down()
+	for (let k = 1; k <= 8; k++) await page.mouse.move(x - k * 10, y - k * 30)
+	if (release) await page.mouse.up()
+}
+
 const steps = [
 	['action', advance],
+	['dragging', dragUp(false)],
+	['dropped', async (p) => p.mouse.up()],
 	['tap-card', tapFirstHandCard],
 	['close', async (p) => p.keyboard.press('Escape')],
 	[
